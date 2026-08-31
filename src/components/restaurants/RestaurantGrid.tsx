@@ -147,7 +147,7 @@ export default function RestaurantGrid({
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [cuisines, setCuisines] = useState(defaultCuisines);
+  const [cuisines, setCuisines] = useState<Array<{name: string; Icon: React.ElementType}>>(defaultCuisines);
   const [cuisinesLoading, setCuisinesLoading] = useState(true);
 
   useEffect(() => {

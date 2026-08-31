@@ -79,7 +79,7 @@ export default function FeaturedProducts({
 
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
   const [featuredOnly, setFeaturedOnly] = useState(false);
-  const [categories, setCategories] = useState(defaultCategories);
+  const [categories, setCategories] = useState<Array<{name: string; value: string; icon: React.ElementType}>>(defaultCategories);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   useEffect(() => {
     const handleStorage = () => {
