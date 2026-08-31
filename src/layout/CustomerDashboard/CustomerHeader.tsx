@@ -13,6 +13,7 @@ export default function CustomerHeader({
 }) {
   const [openCart, setOpenCart] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
@@ -47,6 +48,34 @@ export default function CustomerHeader({
 
     void fetchUnreadCount();
   }, []);
+
+  // Fetch cart item count
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          "https://mr-santosh-grocery-backend.onrender.com/api/v1/cart",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const data = await res.json();
+        if (res.ok && data.success) {
+          setCartCount(data?.data?.cart?.itemCount || 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch cart count", err);
+      }
+    };
+
+    void fetchCartCount();
+  }, [openCart]); // Re-fetch when cart modal closes
 
   return (
     <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white border-b border-[#E5E7EB]">
@@ -85,9 +114,15 @@ export default function CustomerHeader({
 
         <button
           onClick={() => setOpenCart(true)}
-          className="w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]"
+          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]"
         >
           <ShoppingBag size={18} className="text-[#64748B]" />
+
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#00A63E] rounded-full text-[10px] text-white font-bold flex items-center justify-center">
+              {cartCount > 99 ? "99+" : cartCount}
+            </span>
+          )}
         </button>
 
         <CartModal selectedProduct="" open={openCart} onClose={() => setOpenCart(false)} />

@@ -25,6 +25,7 @@ import RetailerLayout from "./layout/RetailerDashboard/RetailerLayout";
 import SupplierLayout from "./layout/SupplierDashboard/SupplierLayout";
 import RestaurantLayout from "./layout/RestaurantDashboard/RestaurantLayout";
 import RestaurantBackendLayout from "./layout/RestaurantBackendDashboard/RestaurantBackendLayout";
+import PaymentVerify from "./pages/PaymentVerify";
 
 function App() {
   return (
@@ -49,6 +50,8 @@ function App() {
         <Route path="/privacy-policy" element={<PolicyPage />} />
         <Route path="/cookies-policy" element={<CookiesPage />} />
         <Route path="/dispute-resolution" element={<DisputePage />} />
+
+        <Route path="/customer/payment-verify" element={<PaymentVerify />} />
 
         <Route path="/customer/dashboard/*" element={<CustomerLayout />} />
         <Route path="/customer/dashboard/checkout" element={<Checkout />} />

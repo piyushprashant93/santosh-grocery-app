@@ -50,6 +50,7 @@ export default function CartModal({
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [clearingCart, setClearingCart] = useState(false);
 
   const saveCartToStorage = (cartData: Cart | null) => {
   if (!cartData) {
@@ -224,6 +225,37 @@ export default function CartModal({
     }
   };
 
+  const handleClearCart = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    const confirmed = window.confirm("Are you sure you want to empty your cart?");
+    if (!confirmed) return;
+
+    setClearingCart(true);
+    try {
+      const res = await fetch(`${API_BASE}/cart/clear`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "Failed to clear cart.");
+      }
+
+      setCart(null);
+      saveCartToStorage(null);
+    } catch (err: any) {
+      alert(err.message || "Something went wrong clearing the cart.");
+    } finally {
+      setClearingCart(false);
+    }
+  };
+
   if (!open) return null;
 
   const items = cart?.items || [];
@@ -252,9 +284,25 @@ export default function CartModal({
             </span>
           </div>
 
-          <button onClick={onClose}>
-            <X className="text-gray-400" />
-          </button>
+          <div className="flex items-center gap-3">
+            {items.length > 0 && (
+              <button
+                onClick={handleClearCart}
+                disabled={clearingCart}
+                className="text-xs text-red-400 hover:text-red-500 flex items-center gap-1 disabled:opacity-50"
+              >
+                {clearingCart ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Trash2 size={14} />
+                )}
+                Clear All
+              </button>
+            )}
+            <button onClick={onClose}>
+              <X className="text-gray-400" />
+            </button>
+          </div>
         </div>
 
         {loading ? (

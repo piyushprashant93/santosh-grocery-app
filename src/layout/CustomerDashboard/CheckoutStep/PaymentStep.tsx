@@ -16,7 +16,7 @@ interface CardApi {
 }
 
 interface AvailableMethod {
-  id: "wallet" | "card" | "cash";
+  id: "wallet" | "card" | "cash" | "esewa" | "khalti";
   label: string;
   description: string;
   available: boolean;
@@ -42,7 +42,7 @@ const EMPTY_CARD_FORM: CardFormData = {
 
 // What gets persisted to localStorage for Checkout.tsx / ConfirmStep to read
 type SelectedPayment = {
-  method: "wallet" | "card" | "cash";
+  method: "wallet" | "card" | "cash" | "esewa" | "khalti";
   cardId?: string;
   brand?: string;
   last4?: string;
@@ -56,7 +56,7 @@ export function PaymentStep() {
     [],
   );
 
-  const [methodType, setMethodType] = useState<"wallet" | "card" | "cash">(
+  const [methodType, setMethodType] = useState<"wallet" | "card" | "cash" | "esewa" | "khalti">(
     "wallet",
   );
   const [selectedCardId, setSelectedCardId] = useState<string>("");
@@ -77,7 +77,7 @@ export function PaymentStep() {
   });
 
   const persistSelection = (
-    method: "wallet" | "card" | "cash",
+    method: "wallet" | "card" | "cash" | "esewa" | "khalti",
     card?: CardApi,
   ) => {
     let selection: SelectedPayment;
@@ -86,6 +86,10 @@ export function PaymentStep() {
       selection = { method: "wallet", display: "Wallet Balance" };
     } else if (method === "cash") {
       selection = { method: "cash", display: "Cash on Delivery" };
+    } else if (method === "esewa") {
+      selection = { method: "esewa", display: "eSewa" };
+    } else if (method === "khalti") {
+      selection = { method: "khalti", display: "Khalti" };
     } else {
       selection = {
         method: "card",
@@ -114,12 +118,31 @@ export function PaymentStep() {
         throw new Error(data?.message || "Failed to load payment methods.");
       }
 
-      const { walletBalance: balance, savedCards, availableMethods: methods } =
+      let { walletBalance: balance, savedCards, availableMethods: methods } =
         data.data;
+
+      // Ensure Khalti and eSewa are always present for testing/integration if missing from API
+      methods = methods || [];
+      if (!methods.find((m: any) => m.id === "khalti")) {
+        methods.push({
+          id: "khalti",
+          label: "Khalti",
+          description: "Pay securely via Khalti",
+          available: true,
+        });
+      }
+      if (!methods.find((m: any) => m.id === "esewa")) {
+        methods.push({
+          id: "esewa",
+          label: "eSewa",
+          description: "Pay securely via eSewa",
+          available: true,
+        });
+      }
 
       setWalletBalance(balance ?? 0);
       setCards(savedCards ?? []);
-      setAvailableMethods(methods ?? []);
+      setAvailableMethods(methods);
 
       // Default selection: default card if any, else wallet, else first
       // available method.
@@ -130,10 +153,10 @@ export function PaymentStep() {
         setSelectedCardId(defaultCard.cardId);
         persistSelection("card", defaultCard);
       } else {
-        const walletMethod = (methods ?? []).find(
+        const walletMethod = methods.find(
           (m: AvailableMethod) => m.id === "wallet" && m.available,
         );
-        const fallback = walletMethod?.id || methods?.[0]?.id || "wallet";
+        const fallback = walletMethod?.id || methods[0]?.id || "wallet";
         setMethodType(fallback);
         persistSelection(fallback);
       }
@@ -153,7 +176,7 @@ export function PaymentStep() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSelectMethodType = (method: "wallet" | "card" | "cash") => {
+  const handleSelectMethodType = (method: "wallet" | "card" | "cash" | "esewa" | "khalti") => {
     setMethodType(method);
 
     if (method === "card") {
@@ -240,6 +263,16 @@ const methodMeta: Record<
     icon: Banknote,
     iconBg: "bg-[#1E293B]",
     iconColor: "text-[#F59E0B]",
+  },
+  esewa: {
+    icon: Wallet,
+    iconBg: "bg-[#1E293B]",
+    iconColor: "text-[#60a917]", // eSewa green
+  },
+  khalti: {
+    icon: Wallet,
+    iconBg: "bg-[#1E293B]",
+    iconColor: "text-[#5C2D91]", // Khalti purple
   },
 };
 

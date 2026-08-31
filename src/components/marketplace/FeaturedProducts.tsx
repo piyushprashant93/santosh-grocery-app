@@ -16,13 +16,24 @@ import { useRole } from "../../layout/RoleProvider";
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const PAGE_LIMIT = 12;
 
-const categories = [
+// Default fallback categories in case the API fails
+const defaultCategories = [
   { name: "All Products", value: "", icon: Leaf },
   { name: "Organic Produce", value: "Organic Produce", icon: Leaf },
   { name: "Artisan Bakery", value: "Bakery", icon: Wheat },
   { name: "Dairy & Cheese", value: "Dairy & Cheese", icon: Milk },
   { name: "Gourmet Pantry", value: "Gourmet Pantry", icon: Wine },
 ];
+
+const iconMap: Record<string, React.ElementType> = {
+  "Organic Produce": Leaf,
+  "Bakery": Wheat,
+  "Dairy & Cheese": Milk,
+  "Gourmet Pantry": Wine,
+  "Beverages": Wine,
+  "Cooking Kits": Wheat,
+  "Pro Tools": Leaf,
+};
 
 interface Product {
   _id: string;
@@ -68,6 +79,8 @@ export default function FeaturedProducts({
 
   const [addingToCartId, setAddingToCartId] = useState<string | null>(null);
   const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [categories, setCategories] = useState(defaultCategories);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   useEffect(() => {
     const handleStorage = () => {
       setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -82,8 +95,14 @@ export default function FeaturedProducts({
     params.set("page", String(pageToFetch));
     params.set("limit", String(PAGE_LIMIT));
 
-    if (activeCategory) params.set("category", activeCategory);
     if (searchQuery.trim()) params.set("search", searchQuery.trim());
+
+    // If a category is selected and no search query, use the home/products/:category endpoint
+    if (activeCategory && !searchQuery.trim()) {
+      return `${API_BASE}/home/products/${encodeURIComponent(activeCategory)}?${params.toString()}`;
+    }
+
+    if (activeCategory) params.set("category", activeCategory);
 
     return `${API_BASE}/products?${params.toString()}`;
   };
@@ -125,6 +144,43 @@ export default function FeaturedProducts({
     fetchProducts(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCategory, searchQuery]);
+
+  // Fetch dynamic categories from the home endpoint
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setCategoriesLoading(true);
+      try {
+        const res = await fetch(`${API_BASE}/home/products`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          const apiCategories = data?.data?.categories || data?.data || [];
+          if (Array.isArray(apiCategories) && apiCategories.length > 0) {
+            const dynamicCats = [
+              { name: "All Products", value: "", icon: Leaf },
+              ...apiCategories.map((cat: string | { name: string; value?: string }) => {
+                const catName = typeof cat === "string" ? cat : cat.name;
+                const catValue = typeof cat === "string" ? cat : (cat.value || cat.name);
+                return {
+                  name: catName,
+                  value: catValue,
+                  icon: iconMap[catName] || Leaf,
+                };
+              }),
+            ];
+            setCategories(dynamicCats);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic categories", err);
+        // Keep fallback categories
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleLoadMore = () => {
     fetchProducts(page + 1, true);

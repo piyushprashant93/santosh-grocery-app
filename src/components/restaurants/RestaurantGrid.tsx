@@ -18,13 +18,26 @@ const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 // const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80";
 const restaurantTypes = ["Premium", "Luxury", "Signature", "Elite"];
 
-const cuisines = [
+const defaultCuisines = [
   { name: "All Cuisines", Icon: Utensils },
   { name: "Fine Dining", Icon: ChefHat },
   { name: "Japanese", Icon: Star },
   { name: "Italian", Icon: Wine },
   { name: "American", Icon: Flame },
 ];
+
+const cuisineIconMap: Record<string, React.ElementType> = {
+  "Fine Dining": ChefHat,
+  "Japanese": Star,
+  "Italian": Wine,
+  "American": Flame,
+  "Indian": Flame,
+  "Chinese": Star,
+  "Thai": Flame,
+  "Mexican": Flame,
+  "Mediterranean": Wine,
+  "Korean": Star,
+};
 
 interface RestaurantApi {
   _id: string;
@@ -134,6 +147,8 @@ export default function RestaurantGrid({
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cuisines, setCuisines] = useState(defaultCuisines);
+  const [cuisinesLoading, setCuisinesLoading] = useState(true);
 
   useEffect(() => {
     const handleStorage = () => {
@@ -184,6 +199,41 @@ export default function RestaurantGrid({
     fetchData();
     return () => controller.abort();
   }, [searchQuery, activeCuisine]);
+
+  // Fetch dynamic cuisine categories
+  useEffect(() => {
+    const fetchCuisines = async () => {
+      setCuisinesLoading(true);
+      try {
+        const res = await fetch(`${API_BASE}/home/food`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          const apiCuisines = data?.data?.categories || data?.data || [];
+          if (Array.isArray(apiCuisines) && apiCuisines.length > 0) {
+            const dynamicCuisines = [
+              { name: "All Cuisines", Icon: Utensils },
+              ...apiCuisines.map((c: string | { name: string }) => {
+                const name = typeof c === "string" ? c : c.name;
+                return {
+                  name,
+                  Icon: cuisineIconMap[name] || Utensils,
+                };
+              }),
+            ];
+            setCuisines(dynamicCuisines);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic cuisines", err);
+        // Keep fallback cuisines
+      } finally {
+        setCuisinesLoading(false);
+      }
+    };
+    fetchCuisines();
+  }, []);
 
   const handleCuisineClick = (name: string) => {
     if (searchQuery) onClearSearch?.(); // leaving search mode when a tab is picked

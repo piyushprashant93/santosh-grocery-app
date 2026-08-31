@@ -217,13 +217,18 @@ export default function Checkout() {
 
     try {
       // Step 1: initiate
+      const initiatePayload: any = {
+        paymentMethod: payment.method,
+        deliveryAddressId: address._id,
+      };
+      if (payment.method === "card" && payment.cardId) {
+        initiatePayload.cardId = payment.cardId;
+      }
+
       const initiateRes = await fetch(`${API_BASE}/payment/initiate`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({
-          paymentMethod: payment.method,
-          deliveryAddressId: address._id,
-        }),
+        body: JSON.stringify(initiatePayload),
       });
       const initiateData = await initiateRes.json();
 
@@ -234,16 +239,21 @@ export default function Checkout() {
       }
 
       // Step 2: confirm
+      const confirmPayload: any = {
+        paymentMethod: payment.method,
+        deliveryAddress: address._id,
+        notes: schedule?.title
+          ? `${schedule.title} (${schedule.time})`
+          : "",
+      };
+      if (payment.method === "card" && payment.cardId) {
+        confirmPayload.cardId = payment.cardId;
+      }
+
       const confirmRes = await fetch(`${API_BASE}/payment/confirm`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({
-          paymentMethod: payment.method,
-          deliveryAddress: address._id,
-          notes: schedule?.title
-            ? `${schedule.title} (${schedule.time})`
-            : "",
-        }),
+        body: JSON.stringify(confirmPayload),
       });
       const confirmData = await confirmRes.json();
 
@@ -251,11 +261,32 @@ export default function Checkout() {
         throw new Error(confirmData?.message || "Failed to place order.");
       }
 
-      localStorage.setItem(
-        ORDER_STORAGE_KEY,
-        JSON.stringify(confirmData.data.order),
-      );
+      const order = confirmData.data.order;
+      localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(order));
 
+      // Step 3: Handle Gateway Redirects (e.g., Khalti)
+      if (payment.method === "khalti") {
+        const khaltiRes = await fetch(`${API_BASE}/payment/khalti/initiate`, {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({ orderId: order._id }),
+        });
+        const khaltiData = await khaltiRes.json();
+
+        if (!khaltiRes.ok || !khaltiData.success) {
+          throw new Error(khaltiData?.message || "Failed to initiate Khalti payment.");
+        }
+
+        const paymentUrl = khaltiData.data?.payment_url || khaltiData.payment_url;
+        if (paymentUrl) {
+          window.location.href = paymentUrl;
+          return;
+        } else {
+          throw new Error("Payment URL not found in Khalti response.");
+        }
+      }
+
+      // If not a gateway that requires redirect (e.g., Cash, Wallet), proceed to success step
       setStep(5);
     } catch (err: unknown) {
       setPlaceOrderError(
