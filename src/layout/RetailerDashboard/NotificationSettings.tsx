@@ -1,18 +1,23 @@
 import { useState } from "react"
 
-export default function NotificationSettings() {
+export default function NotificationSettings({ prefs, onChange }: { prefs?: any, onChange?: (p: any) => void }) {
 
-  const [toggles, setToggles] = useState({
-    newOrder: true,
-    orderCancelled: true,
-    payoutProcessed: true
-  })
+  const toggles = prefs || {
+    newOrder: { email: true, sms: false },
+    orderCancelled: { email: true, sms: false },
+    payoutProcessed: { email: true, sms: true }
+  };
 
   const toggle = (key: string) => {
-    setToggles((prev: any) => ({
-      ...prev,
-      [key]: !prev[key]
-    }))
+    if (onChange) {
+      onChange({
+        ...toggles,
+        [key]: {
+          ...toggles[key],
+          email: !toggles[key]?.email
+        }
+      });
+    }
   }
 
   const Toggle = ({ active, onClick }: { active: boolean; onClick: () => void }) => (
@@ -62,7 +67,7 @@ export default function NotificationSettings() {
           </div>
 
           <Toggle
-            active={toggles.newOrder}
+            active={toggles.newOrder?.email}
             onClick={() => toggle("newOrder")}
           />
 
@@ -83,7 +88,7 @@ export default function NotificationSettings() {
           </div>
 
           <Toggle
-            active={toggles.orderCancelled}
+            active={toggles.orderCancelled?.email}
             onClick={() => toggle("orderCancelled")}
           />
 
@@ -111,10 +116,10 @@ export default function NotificationSettings() {
           </p>
         </div>
 
-        <Toggle
-          active={toggles.payoutProcessed}
-          onClick={() => toggle("payoutProcessed")}
-        />
+          <Toggle
+            active={toggles.payoutProcessed?.email}
+            onClick={() => toggle("payoutProcessed")}
+          />
 
       </div>
 

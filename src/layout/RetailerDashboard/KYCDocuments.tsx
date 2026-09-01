@@ -1,23 +1,31 @@
-import { FileText, Upload, CheckCircle } from "lucide-react"
+import { FileText, Upload, CheckCircle, Clock } from "lucide-react"
 
-export default function KYCDocuments() {
+export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
   const docs = [
     {
       title: "Business License",
-      file: "license_2023.pdf",
-      size: "2.4 MB",
-      date: "Oct 10",
-      status: "Approved"
+      file: kyc?.businessLicense?.fileName || "business_license.pdf",
+      size: "—",
+      date: kyc?.businessLicense?.updatedAt ? new Date(kyc.businessLicense.updatedAt).toLocaleDateString() : "—",
+      status: kyc?.businessLicense?.status || "Pending"
     },
     {
       title: "Tax Identification",
-      file: "tax_id_doc.pdf",
-      size: "1.8 MB",
-      date: "Oct 10",
-      status: "Approved"
+      file: kyc?.taxId?.fileName || "tax_id.pdf",
+      size: "—",
+      date: kyc?.taxId?.updatedAt ? new Date(kyc.taxId.updatedAt).toLocaleDateString() : "—",
+      status: kyc?.taxId?.status || "Pending"
     }
   ]
+
+  const statusStyles: any = {
+    Approved: "bg-green-100 text-green-700",
+    Pending: "bg-yellow-100 text-yellow-700",
+    approved: "bg-green-100 text-green-700",
+    pending: "bg-yellow-100 text-yellow-700",
+    rejected: "bg-red-100 text-red-700"
+  }
 
   return (
     <div className="space-y-6 border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
@@ -34,10 +42,17 @@ export default function KYCDocuments() {
           </p>
         </div>
 
-        <span className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm">
-          <CheckCircle size={16}/>
-          Verified Seller
-        </span>
+        {kyc?.isVerified ? (
+          <span className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm">
+            <CheckCircle size={16}/>
+            Verified Seller
+          </span>
+        ) : (
+          <span className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm">
+            <Clock size={16}/>
+            Pending Verification
+          </span>
+        )}
 
       </div>
 
@@ -58,7 +73,7 @@ export default function KYCDocuments() {
                 {d.title}
               </h4>
 
-              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-md text-sm">
+              <span className={`px-3 py-1 rounded-md text-sm capitalize ${statusStyles[d.status] || "bg-gray-100 text-gray-800"}`}>
                 {d.status}
               </span>
 

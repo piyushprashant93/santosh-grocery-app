@@ -24,14 +24,20 @@ import SecuritySettings from "./SecuritySettings"
 export default function RetailerSettings() {
   const [activeTab, setActiveTab] = useState("profile")
   const [settings, setSettings] = useState<any>({
-    storeName: "Organic Greens Market",
-    contactPerson: "Sarah Chen",
-    email: "sarah@example.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Market Street, San Francisco, CA 94103",
-    description: "We provide fresh, organic produce sourced directly from local farmers.",
-    logoUrl: "https://randomuser.me/api/portraits/women/44.jpg",
-    bannerUrl: ""
+    storeName: "",
+    contactPerson: "",
+    email: "",
+    phone: "",
+    address: "",
+    description: "",
+    logoUrl: "",
+    bannerUrl: "",
+    notificationPrefs: {
+      newOrder: { email: true, sms: false },
+      orderCancelled: { email: true, sms: false },
+      payoutProcessed: { email: true, sms: true }
+    },
+    kyc: {}
   });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
@@ -41,16 +47,21 @@ export default function RetailerSettings() {
       const res = await fetch(`${API_BASE}/retailer/settings`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        const s = data.data || data;
+        const payload = data.data || data;
+        const user = payload.user || {};
+        const profile = payload.profile || {};
+        
         setSettings({
-          storeName: s.storeName || settings.storeName,
-          contactPerson: s.contactPerson || settings.contactPerson,
-          email: s.email || settings.email,
-          phone: s.phone || settings.phone,
-          address: s.address || settings.address,
-          description: s.description || settings.description,
-          logoUrl: s.logoUrl || s.logo || settings.logoUrl,
-          bannerUrl: s.bannerUrl || s.banner || settings.bannerUrl
+          storeName: profile.storeName || user.storeName || "",
+          contactPerson: user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : (user.fullName || ""),
+          email: user.email || "",
+          phone: user.phone || "",
+          address: profile.address || user.address || "",
+          description: profile.description || user.description || "",
+          logoUrl: profile.storeLogo || user.avatar || "",
+          bannerUrl: profile.storeBanner || "",
+          notificationPrefs: profile.notificationPrefs || settings.notificationPrefs,
+          kyc: profile.kyc || {}
         });
       }
     } catch(err) { console.error(err); }
@@ -72,6 +83,7 @@ export default function RetailerSettings() {
         Object.keys(settings).forEach(key => formData.append(key, settings[key]));
         if (logoFile) formData.append("logo", logoFile);
         if (bannerFile) formData.append("banner", bannerFile);
+        formData.set("notificationPrefs", JSON.stringify(settings.notificationPrefs));
 
         res = await fetch(`${API_BASE}/retailer/settings`, {
           method: "PUT",
@@ -333,8 +345,13 @@ export default function RetailerSettings() {
         </div>
       )}
 
-      {activeTab === "kyc" && <KYCDocuments />}
-      {activeTab === "notifications" && <NotificationSettings />}
+      {activeTab === "kyc" && <KYCDocuments kyc={settings.kyc} />}
+      {activeTab === "notifications" && (
+        <NotificationSettings 
+          prefs={settings.notificationPrefs} 
+          onChange={(newPrefs: any) => setSettings({ ...settings, notificationPrefs: newPrefs })} 
+        />
+      )}
       {activeTab === "security" && <SecuritySettings />}
 
     </div>
