@@ -51,6 +51,16 @@ const solidStatusMap: any = {
   "Out of Stock": "bg-red-100 text-red-600",
 };
 
+const statusMap: any = {
+  "In Stock": "bg-green-100 text-[#009966]",
+  "Low": "bg-yellow-100 text-yellow-700",
+  "Low Stock": "bg-yellow-100 text-yellow-700",
+  "Out of Stock": "bg-red-100 text-red-600",
+  "Fresh": "bg-green-100 text-[#009966]",
+  "Expiring Soon": "bg-yellow-100 text-yellow-700",
+  "Expired": "bg-red-100 text-red-600"
+};
+
 export default function Inventory({
   setActiveTab,
 }: {
