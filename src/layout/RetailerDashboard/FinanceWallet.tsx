@@ -1,5 +1,6 @@
 import { Download, Wallet, Clock, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -32,8 +33,7 @@ export default function FinanceWallet() {
     try {
       const res = await fetch(`${API_BASE}/retailer/finance/withdraw`, {
         method: "POST",
-        headers: authHeaders(),
-        body: JSON.stringify({ amount: financeData?.availableBalance || 0 })
+        body: JSON.stringify({ amount: financeData?.totalRevenue || 0 })
       });
       if (res.ok) {
         alert("Withdrawal request submitted successfully!");
@@ -82,8 +82,8 @@ export default function FinanceWallet() {
           <div className="flex items-start justify-between">
 
             <div>
-              <p className="text-sm opacity-80">Available Balance</p>
-              <h2 className="text-[32px] font-playfair mt-2">${financeData?.availableBalance ? (typeof financeData.availableBalance === "number" ? financeData.availableBalance.toFixed(2) : financeData.availableBalance) : "3,450.25"}</h2>
+              <p className="text-sm opacity-80">Total Revenue</p>
+              <h2 className="text-[32px] font-playfair mt-2">${(financeData?.totalRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</h2>
             </div>
 
             <div className="w-12 h-12 min-w-12 mt-3 flex items-center justify-center rounded-xl bg-white/20">
@@ -105,8 +105,8 @@ export default function FinanceWallet() {
           <div className="flex items-start justify-between">
 
             <div>
-              <p className="text-[#6A7282] text-sm">Pending Clearance</p>
-              <h2 className="text-[32px] font-playfair mt-2">${financeData?.pendingClearance ? (typeof financeData.pendingClearance === "number" ? financeData.pendingClearance.toFixed(2) : financeData.pendingClearance) : "450.00"}</h2>
+              <p className="text-[#6A7282] text-sm">Pending Payouts</p>
+              <h2 className="text-[32px] font-playfair mt-2">${(financeData?.pendingPayouts || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</h2>
               <p className="text-[#6A7282] text-sm mt-6">
                 Funds usually clear within 24–48 hours after delivery.
               </p>
@@ -128,9 +128,9 @@ export default function FinanceWallet() {
 
             <div>
               <p className="text-[#6A7282] text-sm">Next Payout</p>
-              <h2 className="text-[32px] font-playfair mt-2">{financeData?.nextPayoutDate || "Oct 31"}</h2>
+              <h2 className="text-[32px] font-playfair mt-2">{financeData?.nextPayoutDate || "TBD"}</h2>
               <p className="text-[#6A7282] text-sm mt-6">
-                Estimated amount: ${financeData?.nextPayoutAmount ? (typeof financeData.nextPayoutAmount === "number" ? financeData.nextPayoutAmount.toFixed(2) : financeData.nextPayoutAmount) : "1,200.00"}
+                Estimated amount: ${(financeData?.nextPayoutAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </p>
             </div>
 
@@ -226,6 +226,10 @@ export default function FinanceWallet() {
                 </tr>
 
               ))}
+              
+              {resolvedTransactions.length === 0 && (
+                <EmptyTableState colSpan={5} message="No transactions found." />
+              )}
 
             </tbody>
 

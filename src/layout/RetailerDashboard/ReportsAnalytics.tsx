@@ -1,33 +1,34 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Calendar, Download } from "lucide-react"
+import { useState, useEffect, useMemo } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
 
 export default function ReportsAnalytics() {
 
-  const revenueData = [
-    { day: "Mon", value: 450 },
-    { day: "Tue", value: 320 },
-    { day: "Wed", value: 550 },
-    { day: "Thu", value: 480 },
-    { day: "Fri", value: 600 },
-    { day: "Sat", value: 860 },
-    { day: "Sun", value: 700 }
-  ]
+  const [reportsData, setReportsData] = useState<any>(null);
 
-  const categoryData = [
-    { name: "Dairy", value: 35, color: "#10B981" },
-    { name: "Bakery", value: 25, color: "#F97316" },
-    { name: "Produce", value: 20, color: "#3B82F6" },
-    { name: "Pantry", value: 15, color: "#8B5CF6" },
-    { name: "Others", value: 5, color: "#64748B" }
-  ]
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/reports", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setReportsData(data.data || data);
+        }
+      } catch (err) { console.error(err); }
+    };
+    fetchReports();
+  }, []);
 
-  const products = [
-    { rank: "#1", name: "Organic Whole Milk", units: 1240, revenue: "$6,200", performance: 90 },
-    { rank: "#2", name: "Artisan Sourdough Bread", units: 850, revenue: "$7,225", performance: 80 },
-    { rank: "#3", name: "Fresh Avocados", units: 600, revenue: "$4,194", performance: 70 },
-    { rank: "#4", name: "Premium Olive Oil", units: 420, revenue: "$10,495", performance: 60 },
-    { rank: "#5", name: "Truffle Cheese", units: 380, revenue: "$7,216", performance: 50 }
-  ]
+  const activeRevenueData = useMemo(() => reportsData?.dailyRevenue || [], [reportsData]);
+  const activeCategoryData = useMemo(() => reportsData?.categoryBreakdown || [], [reportsData]);
+  const activeProducts = useMemo(() => reportsData?.topProducts || [], [reportsData]);
 
   return (
     <div className="space-y-6">
@@ -75,7 +76,7 @@ export default function ReportsAnalytics() {
 
             <ResponsiveContainer width="100%" height="100%">
 
-              <BarChart data={revenueData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+              <BarChart data={activeRevenueData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
 
                 <XAxis dataKey="day"/>
                 <YAxis/>
@@ -111,13 +112,13 @@ export default function ReportsAnalytics() {
               <PieChart>
 
                 <Pie
-                  data={categoryData}
+                  data={activeCategoryData}
                   dataKey="value"
                   innerRadius={60}
                   outerRadius={80}
                   paddingAngle={4}
                 >
-                  {categoryData.map((c, i) => (
+                  {activeCategoryData.map((c: any, i: number) => (
                     <Cell key={i} fill={c.color}/>
                   ))}
                 </Pie>
@@ -132,7 +133,7 @@ export default function ReportsAnalytics() {
 
           <div className="space-y-2 mt-4">
 
-            {categoryData.map((c,i)=>(
+            {activeCategoryData.map((c: any, i: number) =>(
               <div key={i} className="flex items-center justify-between text-sm">
 
                 <div className="flex items-center gap-2">
@@ -197,7 +198,7 @@ export default function ReportsAnalytics() {
 
             <tbody>
 
-              {products.map((p,i)=>(
+              {activeProducts.map((p: any, i: number) =>(
                 <tr key={i} className="border-b last:border-none">
 
                   <td className="py-4">
@@ -237,6 +238,10 @@ export default function ReportsAnalytics() {
 
                 </tr>
               ))}
+              
+              {activeProducts.length === 0 && (
+                <EmptyTableState colSpan={4} message="No best selling products found." />
+              )}
 
             </tbody>
 

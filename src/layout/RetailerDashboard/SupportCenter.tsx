@@ -187,10 +187,10 @@ export default function SupportCenter() {
                 {ticketsData.length > 0 ? ticketsData.map((t, i) => (
                   <tr key={t._id || i} className="border-b last:border-none">
                     <td className="py-5 text-[#62748E]">
-                      {t.id || t.ticketId || t._id?.substring(0, 8)}
+                      {t.id ? `#${t.id}` : t.ticketId ? `#${t.ticketId}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"}
                     </td>
                     <td className="py-5 text-[#111827] font-medium">
-                      {t.subject}
+                      {t.subject || t.title || t.issue || "No Subject"}
                     </td>
                     <td className="py-5">
                       <span className={`px-3 py-1 rounded-md text-sm ${priorityStyles[t.priority || "Medium"] || "bg-gray-100"}`}>
