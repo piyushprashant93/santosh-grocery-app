@@ -1,17 +1,73 @@
 import { Upload, Box, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeadersForm = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
 export default function AddProduct({
   setActiveTab,
 }: {
   setActiveTab: (tab: string) => void;
 }) {
-  const [tiers, setTiers] = useState([{ qty: 10, price: 0 }]);
+  const [tiers, setTiers] = useState([{ minQuantity: 10, price: 0 }]);
+  const [form, setForm] = useState({
+    title: "",
+    category: "",
+    sku: "",
+    description: "",
+    unit: "",
+    basePrice: "",
+    stockQuantity: "",
+    lowStockAlert: "",
+    status: "Active",
+    isFeatured: false
+  });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const value = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
+    setForm({ ...form, [e.target.name]: value });
+  };
+
   const addTier = () => {
-    setTiers([...tiers, { qty: 0, price: 0 }]);
+    setTiers([...tiers, { minQuantity: 0, price: 0 }]);
   };
   const removeTier = (i: number) => {
     setTiers(tiers.filter((_, index) => index !== i));
+  };
+
+  const updateTier = (i: number, field: string, value: string) => {
+    const updated = [...tiers];
+    updated[i] = { ...updated[i], [field]: Number(value) };
+    setTiers(updated);
+  };
+
+  const handleSave = async () => {
+    try {
+      const formData = new FormData();
+      Object.keys(form).forEach(key => formData.append(key, (form as any)[key]));
+      formData.append("tiers", JSON.stringify(tiers));
+      if (imageFile) formData.append("image", imageFile);
+
+      const res = await fetch(`${API_BASE}/supplier/products`, {
+        method: "POST",
+        headers: authHeadersForm(),
+        body: formData
+      });
+      if (res.ok) {
+        alert("Product added successfully!");
+        setActiveTab("products");
+      } else {
+        alert("Failed to add product");
+      }
+    } catch(err) { console.error(err); }
   };
 
   return (
@@ -49,6 +105,9 @@ export default function AddProduct({
                   Product Name
                 </label>
                 <input
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="e.g. Organic Avocados (Hass)"
                 />
@@ -60,20 +119,23 @@ export default function AddProduct({
                   <label className="text-sm text-[#374151]">
                     Category
                   </label>
-                  <select className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
+                  <select name="category" value={form.category} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
                     
-                    <option>Select category</option>
-                    <option>Vegetables</option>
-                    <option>Fruits</option>
-                    <option>Dairy</option>
-                    <option>Meat</option>
-                    <option>Other</option>
+                    <option value="">Select category</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div>
                   
                   <label className="text-sm text-[#374151]">SKU</label>
                   <input
+                    name="sku"
+                    value={form.sku}
+                    onChange={handleChange}
                     className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                     placeholder="e.g. AVO-HASS-01"
                   />
@@ -85,6 +147,9 @@ export default function AddProduct({
                   Description
                 </label>
                 <textarea
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
                   rows={4}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
                 />
@@ -106,13 +171,13 @@ export default function AddProduct({
               <div>
                 
                 <label className="text-sm text-[#374151]">Unit Type</label>
-                <select className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
+                <select name="unit" value={form.unit} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
                   
-                  <option>Select unit</option>
-                  <option>kg</option>
-                  <option>g</option>
-                  <option>l</option>
-                  <option>ml</option>
+                  <option value="">Select unit</option>
+                  <option value="kg">kg</option>
+                  <option value="g">g</option>
+                  <option value="l">l</option>
+                  <option value="ml">ml</option>
                 </select>
               </div>
               <div>
@@ -122,6 +187,9 @@ export default function AddProduct({
                 </label>
                 <input
                   type="number"
+                  name="basePrice"
+                  value={form.basePrice}
+                  onChange={handleChange}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0.00"
                 />
@@ -133,6 +201,9 @@ export default function AddProduct({
                 </label>
                 <input
                   type="number"
+                  name="stockQuantity"
+                  value={form.stockQuantity}
+                  onChange={handleChange}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0"
                 />
@@ -144,6 +215,9 @@ export default function AddProduct({
                 </label>
                 <input
                   type="number"
+                  name="lowStockAlert"
+                  value={form.lowStockAlert}
+                  onChange={handleChange}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="10"
                 />
@@ -172,10 +246,16 @@ export default function AddProduct({
                   <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-3">
                     
                     <input
+                      type="number"
+                      value={t.minQuantity}
+                      onChange={(e) => updateTier(i, "minQuantity", e.target.value)}
                       className="border border-[#E5E7EB] rounded-lg px-3 h-12"
                       placeholder="Min Quantity"
                     />
                     <input
+                      type="number"
+                      value={t.price}
+                      onChange={(e) => updateTier(i, "price", e.target.value)}
                       className="border border-[#E5E7EB] rounded-lg px-3 h-12"
                       placeholder="Unit Price"
                     />
@@ -199,15 +279,25 @@ export default function AddProduct({
           <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl mb-4"> Product Image </h3>
-            <div className="border-2 border-dashed border-[#E5E7EB] rounded-xl p-10 text-center">
-              
-              <Upload size={28} className="mx-auto text-[#2563EB]" />
-              <p className="mt-3 font-medium"> Click to upload image </p>
-              <p className="text-sm text-[#64748B]">
-                
-                SVG, PNG, JPG or GIF (max 5MB)
-              </p>
-            </div>
+            <label className="border-2 border-dashed border-[#E5E7EB] rounded-xl p-10 text-center block cursor-pointer">
+              <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setImageFile(e.target.files[0]);
+                  setImagePreview(URL.createObjectURL(e.target.files[0]));
+                }
+              }} />
+              {imagePreview ? (
+                <img src={imagePreview} className="mx-auto h-32 object-contain" />
+              ) : (
+                <>
+                  <Upload size={28} className="mx-auto text-[#2563EB]" />
+                  <p className="mt-3 font-medium"> Click to upload image </p>
+                  <p className="text-sm text-[#64748B]">
+                    SVG, PNG, JPG or GIF (max 5MB)
+                  </p>
+                </>
+              )}
+            </label>
           </div>
           <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
             
@@ -217,22 +307,22 @@ export default function AddProduct({
               <div>
                 
                 <label className="text-sm text-[#374151]"> Status </label>
-                <select className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1">
+                <select name="status" value={form.status} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1">
                   
-                  <option>Active</option> 
-                  <option>Draft</option>
+                  <option value="Active">Active</option> 
+                  <option value="Draft">Draft</option>
 
                 </select>
               </div>
               <label className="flex items-center gap-2 text-sm">
                 
-                <input type="checkbox" /> Mark as Featured Product
+                <input name="isFeatured" type="checkbox" checked={form.isFeatured} onChange={handleChange} /> Mark as Featured Product
               </label>
             </div>
           </div>
           <div className="space-y-3">
             
-            <button onClick={() => setActiveTab("products")} className="flex items-center justify-center gap-2 bg-[#2563EB] text-white w-full py-3 rounded-lg shadow">
+            <button onClick={handleSave} className="flex items-center justify-center gap-2 bg-[#2563EB] text-white w-full py-3 rounded-lg shadow">
               
               <Save size={18} /> Publish Product
             </button>

@@ -12,7 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import ReportChartCard from "./ReportChartCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
 const monthlyData = [
@@ -164,6 +164,75 @@ export default function RestaurantBackendDashboard({
 }: {
   setActiveTab: (tab: string) => void;
 }) {
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setDashboardData(json.data || json);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  const activeStats = [
+    {
+      title: "Sales – This Month",
+      value: dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : stats[0].value,
+      change: dashboardData?.salesChange || stats[0].change,
+      icon: DollarSign,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: dashboardData?.salesTrend || stats[0].trend,
+    },
+    {
+      title: "Expenses – This Month",
+      value: dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : stats[1].value,
+      change: dashboardData?.expensesChange || stats[1].change,
+      icon: TrendingUp,
+      iconBg: "bg-blue-100",
+      iconColor: "text-[#2563EB]",
+      trend: dashboardData?.expensesTrend || stats[1].trend,
+    },
+    {
+      title: "Total Staff – This Month",
+      value: dashboardData?.totalStaff || stats[2].value,
+      change: dashboardData?.staffChange || stats[2].change,
+      icon: Users,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+      trend: dashboardData?.staffTrend || stats[2].trend,
+    },
+    {
+      title: "Salary – This Month",
+      value: dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : stats[3].value,
+      change: dashboardData?.salaryChange || stats[3].change,
+      icon: Wallet,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600",
+      trend: dashboardData?.salaryTrend || stats[3].trend,
+    },
+  ];
+
+  const activeOrders = dashboardData?.recentOrders || orders;
+  const activePopularItems = dashboardData?.popularItems || popularItems;
+  const activeMonthlyData = dashboardData?.monthlyData || monthlyData;
+  const activeExpensesData = dashboardData?.expensesData || expensesData;
+  const activeMaintenanceData = dashboardData?.maintenanceData || maintenanceData;
+  const activeSalaryData = dashboardData?.salaryData || salaryData;
+
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
   const branches = ["All Branches", "Branch 1", "Branch 2"];
   const [month, setMonth] = useState("Jun");
@@ -195,7 +264,7 @@ export default function RestaurantBackendDashboard({
 
       <div className="">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mb-5">
-          {stats.map((s, i) => {
+          {activeStats.map((s, i) => {
             const Icon = s.icon;
 
             return (
@@ -287,34 +356,34 @@ export default function RestaurantBackendDashboard({
         <div className="grid lg:grid-cols-2 gap-5 mb-5">
           <ReportChartCard
             title="Sales"
-            total="$270,250"
+            total={dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : "$270,250"}
             color="#10B981"
             type="bar"
-            data={monthlyData}
+            data={activeMonthlyData}
           />
 
           <ReportChartCard
             title="Expenses"
-            total="$167,650"
+            total={dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : "$167,650"}
             color="#3B82F6"
             type="line"
-            data={expensesData}
+            data={activeExpensesData}
           />
 
           <ReportChartCard
             title="Maintenance Cost"
-            total="$19,900"
+            total={dashboardData?.totalMaintenance ? `$${dashboardData.totalMaintenance.toLocaleString()}` : "$19,900"}
             color="#8B5CF6"
             type="bar"
-            data={maintenanceData}
+            data={activeMaintenanceData}
           />
 
           <ReportChartCard
             title="Salaries"
-            total="$110,500"
+            total={dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : "$110,500"}
             color="#F97316"
             type="line"
-            data={salaryData}
+            data={activeSalaryData}
           />
         </div>
 
@@ -428,8 +497,10 @@ export default function RestaurantBackendDashboard({
                 </thead>
 
                 <tbody>
-                  {orders.map((o, i) => {
-                    const [prefix, number] = o.id.split("-");
+                  {activeOrders.map((o: any, i: number) => {
+                    const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
+                    const prefix = idString.includes("-") ? idString.split("-")[0] : "#ORD";
+                    const number = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
 
                     return (
                       <tr key={i} className="border-b last:border-none">
@@ -479,7 +550,7 @@ export default function RestaurantBackendDashboard({
             </div>
 
             <div className="space-y-5">
-              {popularItems.map((p, i) => (
+              {activePopularItems.map((p: any, i: number) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img

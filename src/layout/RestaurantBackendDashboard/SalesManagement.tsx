@@ -1,7 +1,17 @@
 import {
   Download, Calendar, CheckCircle2, FileText, AlertCircle
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const fields = [
   { key: "dineIn", label: "In House Dine-In" },
@@ -57,6 +67,10 @@ const data = [
 ]
 
 export default function SalesManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
+  const [salesEntries, setSalesEntries] = useState<any[]>(entries);
+  const [missingDates, setMissingDates] = useState<string[]>([]);
+  const [dateStr, setDateStr] = useState<string>(new Date().toISOString().split('T')[0]);
+
   const [values, setValues] = useState<any>({
     dineIn: "",
     takeOut: "",
@@ -71,6 +85,55 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
     ezecater: "",
     other: ""
   })
+
+  const fetchSales = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setSalesEntries(data.data?.sales || data.sales || data.data || entries);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchMissing = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing/missing`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setMissingDates(data.data?.missingDates || data.missingDates || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchSales();
+    fetchMissing();
+  }, []);
+
+  const handleSave = async () => {
+    const total = Object.values(values).reduce((sum: number, v: any) => sum + (parseFloat(v) || 0), 0);
+    try {
+      const payload = {
+        date: dateStr,
+        ...values,
+        total
+      };
+      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        alert("Sales saved");
+        fetchSales();
+        fetchMissing();
+        setValues({
+          dineIn: "", takeOut: "", event: "", catering: "", uber: "", deliveroo: "", grubhub: "", justeat: "", instacart: "", doordash: "", ezecater: "", other: ""
+        });
+      }
+    } catch(err) { console.error(err); }
+  };
 
   const handleChange = (key: string, val: string) => {
     setValues((prev: any) => ({ ...prev, [key]: val }))
@@ -115,7 +178,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
             <div className="flex items-center gap-2 border rounded-lg px-3 py-2">
               <Calendar size={16} className="text-[#64748B]" />
-              <input type="date" className="outline-none text-sm" />
+              <input type="date" value={dateStr} onChange={(e) => setDateStr(e.target.value)} className="outline-none text-sm" />
             </div>
           </div>
 
@@ -142,7 +205,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
               <h3 className="text-2xl font-semibold">${total.toFixed(2)}</h3>
             </div>
 
-            <button className="bg-[#009966] text-white px-6 py-3 rounded-lg font-medium">
+            <button onClick={handleSave} className="bg-[#009966] text-white px-6 py-3 rounded-lg font-medium">
               Save Daily Report
             </button>
 
@@ -172,26 +235,30 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
           <tbody>
 
-            {entries.map((e, i) => (
-              <tr key={i} className="border-t">
+            {salesEntries.map((e, i) => {
+              const dateParts = e.date ? e.date.split("T")[0].split("-") : ["2024", "02", "12"];
+              const inhouse = parseFloat(e.inhouse || e.dineIn || "0") + parseFloat(e.takeOut || "0");
+              const delivery = (e.total || 0) - inhouse;
+              return (
+              <tr key={e._id || i} className="border-t">
 
                 <td className="py-5 px-6 text-[#0F172A] font-medium">
                   <div className="leading-5">
-                    <p>{e.date.split("-")[0] + "-" + e.date.split("-")[1]}</p>
-                    <p>{e.date.split("-")[2]}</p>
+                    <p>{dateParts[0] + "-" + dateParts[1]}</p>
+                    <p>{dateParts[2]}</p>
                   </div>
                 </td>
 
                 <td className="py-5 px-6 text-[#64748B]">
-                  {e.inhouse}
+                  ${inhouse.toFixed(2)}
                 </td>
 
                 <td className="py-5 px-6 text-[#64748B]">
-                  {e.delivery}
+                  ${delivery.toFixed(2)}
                 </td>
 
                 <td className="py-5 px-6 font-semibold text-[#0F172A]">
-                  {e.total}
+                  ${typeof e.total === "number" ? e.total.toFixed(2) : parseFloat(e.total || "0").toFixed(2)}
                 </td>
 
                 <td className="py-5 px-6">
@@ -206,7 +273,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
                 </td>
 
               </tr>
-            ))}
+            )})}
 
           </tbody>
 
@@ -287,29 +354,24 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
           </div>
 
+              {missingDates.length > 0 && (
               <div className="border border-[#FACC15] bg-[#FFFBEB] rounded-xl p-6 flex items-start gap-4">
-
-      <div className="w-10 h-10 min-w-10 flex items-center justify-center rounded-full bg-[#FEF3C7]">
-        <AlertCircle className="text-[#D97706]" size={20} />
-      </div>
-
-      <div>
-
-        <h3 className="text-[#92400E] font-semibold text-lg font-playfair">
-          Missing Data
-        </h3>
-
-        <p className="text-[#B45309] mt-1 max-w-md">
-          You haven't entered sales data for <span className="font-semibold">Feb 9</span>. Please update to ensure accurate weekly reports.
-        </p>
-
-        <button className="mt-4 text-[#92400E] font-medium flex items-center gap-1 hover:underline">
-          Fix Now →
-        </button>
-
-      </div>
-
-    </div>
+                <div className="w-10 h-10 min-w-10 flex items-center justify-center rounded-full bg-[#FEF3C7]">
+                  <AlertCircle className="text-[#D97706]" size={20} />
+                </div>
+                <div>
+                  <h3 className="text-[#92400E] font-semibold text-lg font-playfair">
+                    Missing Data
+                  </h3>
+                  <p className="text-[#B45309] mt-1 max-w-md">
+                    You haven't entered sales data for <span className="font-semibold">{missingDates.join(", ")}</span>. Please update to ensure accurate weekly reports.
+                  </p>
+                  <button onClick={() => setDateStr(missingDates[0])} className="mt-4 text-[#92400E] font-medium flex items-center gap-1 hover:underline">
+                    Fix Now →
+                  </button>
+                </div>
+              </div>
+              )}
 
         </div>
 

@@ -8,9 +8,7 @@ import { patchFetchForTokenExpiry } from './lib/fetchInterceptor'
 patchFetchForTokenExpiry()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <RoleProvider>
-      <App />
-    </RoleProvider>
-  </React.StrictMode>
+  <RoleProvider>
+    <App />
+  </RoleProvider>
 )

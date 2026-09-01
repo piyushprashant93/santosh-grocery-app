@@ -10,8 +10,17 @@ import {
   Trash2,
   View
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const cards = [
   {
@@ -177,11 +186,55 @@ const statusIssueStyles: any = {
 
 
 export default function FinanceWallet() {
-  const tabs = ["Transactions", "Invoices", "Finance Settings"];
+  const tabs = ["All Transactions", "Salaries & Payroll", "Maintenance Logs"];
   const [activeFinance, setActiveFinance] = useState(0);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayout, setOpenPayout] = useState(false);
-  const [openMenu, setOpenMenu] = useState<number | null>(null)
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
+  const [expensesState, setExpensesState] = useState<any[]>([]);
+  const [employeesState, setEmployeesState] = useState<any[]>([]);
+  const [issuesState, setIssuesState] = useState<any[]>([]);
+
+  const fetchExpenses = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setExpensesState(data.data?.expenses || data.expenses || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const fetchPayroll = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setEmployeesState(data.data?.payroll || data.payroll || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const fetchMaintenance = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setIssuesState(data.data?.maintenance || data.maintenance || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    if (activeFinance === 0) fetchExpenses();
+    else if (activeFinance === 1) fetchPayroll();
+    else if (activeFinance === 2) fetchMaintenance();
+  }, [activeFinance]);
+
+  const activeExpenses = expensesState.length > 0 ? expensesState : expenses;
+  const activeEmployees = employeesState.length > 0 ? employeesState : employees;
+  const activeIssues = issuesState.length > 0 ? issuesState : issues;
 
   return (
     <div className="space-y-6">
@@ -321,7 +374,7 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {expenses.map((e, i) => (
+                  {activeExpenses.map((e, i) => (
 
                     <tr key={i} className="border-b last:border-none">
 
@@ -365,12 +418,12 @@ export default function FinanceWallet() {
                       <td className="py-6 px-6 text-end relative">
 
                         <button
-                          onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                          onClick={() => setOpenMenu(openMenu === `${i}` ? null : `${i}`)}
                         >
                           <MoreHorizontal size={18} className="text-[#94A3B8]" />
                         </button>
 
-                        {openMenu === i && (
+                        {openMenu === `${i}` && (
                           <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
                             <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
@@ -469,7 +522,7 @@ export default function FinanceWallet() {
 
                   <tbody>
 
-                    {employees.map((e, i) => (
+                    {activeEmployees.map((e, i) => (
 
                       <tr key={i} className="border-b last:border-none">
 
@@ -526,12 +579,12 @@ export default function FinanceWallet() {
                             <div className="relative top-1">
 
                               <button
-                                onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                                onClick={() => setOpenMenu(openMenu === `${i}` ? null : `${i}`)}
                               >
                                 <MoreHorizontal size={18} className="text-[#94A3B8]" />
                               </button>
 
-                              {openMenu === i && (
+                              {openMenu === `${i}` && (
                                 <div className="absolute right-3 top-5 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
                                   <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
@@ -598,7 +651,7 @@ export default function FinanceWallet() {
 
             <div className="grid md:grid-cols-2 gap-6">
 
-              {issues.map((item, i) => (
+              {activeIssues.map((item, i) => (
 
                 <div
                   key={i}

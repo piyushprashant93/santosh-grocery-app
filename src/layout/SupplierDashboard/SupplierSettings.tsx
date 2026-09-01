@@ -1,4 +1,14 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 import {
   Building2,
   Shield,
@@ -87,6 +97,79 @@ export default function SupplierSettings() {
   }
 
   const [active, setActive] = useState("general")
+
+  const [profileForm, setProfileForm] = useState({
+    companyName: "",
+    taxId: "",
+    email: "",
+    phone: "",
+    address: ""
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/settings`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const profile = data.data || data;
+        setProfileForm({
+          companyName: profile.companyName || profile.name || "",
+          taxId: profile.taxId || profile.ein || "",
+          email: profile.email || profile.contactEmail || "",
+          phone: profile.phone || profile.phoneNumber || "",
+          address: profile.address || profile.businessAddress || ""
+        });
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify(profileForm)
+      });
+      if (res.ok) {
+        alert("Profile updated successfully");
+      } else {
+        alert("Failed to update profile");
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      alert("New passwords do not match!");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/users/change-password`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        })
+      });
+      if (res.ok) {
+        alert("Password updated successfully");
+        setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        alert("Failed to update password");
+      }
+    } catch (err) { console.error(err); }
+  };
 
   return (
 
@@ -185,70 +268,46 @@ export default function SupplierSettings() {
             <div className="grid md:grid-cols-2 gap-4">
 
               <div>
-
-                <label className="text-sm text-[#374151]">
-                  Company Name
-                </label>
-
+                <label className="text-sm text-[#374151]">Company Name</label>
                 <input
-                  defaultValue="Global Foods Supply Co."
+                  value={profileForm.companyName}
+                  onChange={(e) => setProfileForm({...profileForm, companyName: e.target.value})}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
                 />
-
               </div>
 
-
               <div>
-
-                <label className="text-sm text-[#374151]">
-                  Tax ID / EIN
-                </label>
-
+                <label className="text-sm text-[#374151]">Tax ID / EIN</label>
                 <input
                   placeholder="XX-XXXXXXX"
+                  value={profileForm.taxId}
+                  onChange={(e) => setProfileForm({...profileForm, taxId: e.target.value})}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
                 />
-
               </div>
 
-
               <div>
-
-                <label className="text-sm text-[#374151]">
-                  Contact Email
-                </label>
-
+                <label className="text-sm text-[#374151]">Contact Email</label>
                 <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 mt-1">
-
                   <Mail size={16} className="text-[#64748B]" />
-
                   <input
-                    defaultValue="contact@globalfoods.com"
+                    value={profileForm.email}
+                    onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
                     className="w-full px-2 py-2 outline-none"
                   />
-
                 </div>
-
               </div>
 
-
               <div>
-
-                <label className="text-sm text-[#374151]">
-                  Phone Number
-                </label>
-
+                <label className="text-sm text-[#374151]">Phone Number</label>
                 <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 mt-1">
-
                   <Phone size={16} className="text-[#64748B]" />
-
                   <input
-                    defaultValue="+1 (555) 123-4567"
+                    value={profileForm.phone}
+                    onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
                     className="w-full px-2 py-2 outline-none"
                   />
-
                 </div>
-
               </div>
 
             </div>
@@ -267,6 +326,8 @@ export default function SupplierSettings() {
 
                 <textarea
                   rows={3}
+                  value={profileForm.address}
+                  onChange={(e) => setProfileForm({...profileForm, address: e.target.value})}
                   className="w-full px-2 py-2 outline-none"
                   placeholder="Enter your business address"
                 />
@@ -279,7 +340,7 @@ export default function SupplierSettings() {
 
             <div className="flex justify-end mt-6">
 
-              <button className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2">
+              <button onClick={handleSaveProfile} className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2">
 
                 <Save size={16} />
 
@@ -316,6 +377,8 @@ export default function SupplierSettings() {
 
                   <input
                     type="password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
                     className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
                   />
                 </div>
@@ -332,6 +395,8 @@ export default function SupplierSettings() {
 
                     <input
                       type="password"
+                      value={passwordForm.newPassword}
+                      onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
                       className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
                     />
 
@@ -345,6 +410,8 @@ export default function SupplierSettings() {
 
                     <input
                       type="password"
+                      value={passwordForm.confirmPassword}
+                      onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
                       className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
                     />
 
@@ -356,7 +423,7 @@ export default function SupplierSettings() {
 
                 <div className="flex justify-end">
 
-                  <button className="border border-[#E5E7EB] bg-white px-5 py-2 rounded-lg shadow-sm">
+                  <button onClick={handleUpdatePassword} className="border border-[#E5E7EB] bg-white px-5 py-2 rounded-lg shadow-sm">
                     Update Password
                   </button>
 

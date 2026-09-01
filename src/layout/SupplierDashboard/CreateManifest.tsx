@@ -1,5 +1,15 @@
 import { FileText, MapPin, Package, Truck, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const orders = [
   {
@@ -45,14 +55,62 @@ export default function CreateManifest({
 }: {
   setActiveTab: (tab: string) => void;
 }) {
+  const [ordersData, setOrdersData] = useState<any[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [logistics, setLogistics] = useState({
+    carrier: "",
+    vehicleType: "",
+    dispatchDate: "",
+    driver: "",
+    notes: ""
+  });
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const allOrders = data.data?.orders || data.orders || data.data || [];
+        setOrdersData(allOrders);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
   const toggleOrder = (id: string) => {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((o) => o !== id) : [...prev, id],
     );
   };
-  const selectedOrders = orders.filter((o) => selected.includes(o.id));
-  const totalWeight = selectedOrders.reduce((a, b) => a + b.weight, 0);
+  const selectedOrders = ordersData.filter((o) => selected.includes(o._id));
+  const totalWeight = selectedOrders.reduce((a, b) => a + (b.weight || b.totalWeight || 0), 0);
+
+  const handleGenerate = async () => {
+    if (selected.length === 0) {
+      alert("Please select at least one order");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/supplier/logistics`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({
+          ...logistics,
+          orders: selected
+        })
+      });
+      if (res.ok) {
+        alert("Manifest generated successfully!");
+        setActiveTab("orders");
+      } else {
+        alert("Failed to generate manifest");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -95,9 +153,9 @@ export default function CreateManifest({
             </div>
             <div className="space-y-4">
               
-              {orders.map((order) => (
+              {ordersData.length > 0 ? ordersData.map((order) => (
                 <div
-                  key={order.id}
+                  key={order._id}
                   className="flex items-center justify-between border border-[#E5E7EB] rounded-lg p-4"
                 >
                   
@@ -105,47 +163,49 @@ export default function CreateManifest({
                     
                     <input
                       type="checkbox"
-                      checked={selected.includes(order.id)}
-                      onChange={() => toggleOrder(order.id)}
+                      checked={selected.includes(order._id)}
+                      onChange={() => toggleOrder(order._id)}
                       className="w-5 h-5"
                     />
                     <img
-                      src={order.image}
+                      src={order.img || order.client?.image || order.restaurant?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?w=200"}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
                       
                       <p className="font-medium text-[#111827]">
                         
-                        {order.name}
+                        {order.client || order.client?.name || order.restaurant?.name || "Unknown"}
                       </p>
                       <div className="flex gap-4 text-sm text-[#64748B] mt-1">
                         
                         <span className="flex items-center gap-1">
                           
-                          <MapPin size={14} /> {order.location}
+                          <MapPin size={14} /> {order.location || order.shippingAddress?.city || "Local"}
                         </span>
                         <span className="flex items-center gap-1">
                           
-                          <Package size={14} /> {order.items} Items
+                          <Package size={14} /> {order.items || order.totalItems || order.items?.length || 0} Items
                         </span>
                         <span className="flex items-center gap-1">
                           
-                          <Truck size={14} /> {order.shipping}
+                          <Truck size={14} /> {order.shipping || order.shippingMethod || "Standard"}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right">
                     
-                    <p className="text-sm text-[#64748B]"> {order.id} </p>
+                    <p className="text-sm text-[#64748B]"> {order.id || order.orderId || order._id?.substring(0,8)} </p>
                     <p className="font-semibold text-lg">
                       
-                      {order.weight} kg
+                      {order.weight || order.totalWeight || 0} kg
                     </p>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <div className="text-center text-gray-500 py-4">No pending orders found</div>
+              )}
             </div>
           </div>
           <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
@@ -158,23 +218,33 @@ export default function CreateManifest({
               
               <input
                 placeholder="Carrier"
+                value={logistics.carrier}
+                onChange={(e) => setLogistics({ ...logistics, carrier: e.target.value })}
                 className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
               />
               <input
                 placeholder="Vehicle Type"
+                value={logistics.vehicleType}
+                onChange={(e) => setLogistics({ ...logistics, vehicleType: e.target.value })}
                 className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
               />
               <input
                 type="date"
+                value={logistics.dispatchDate}
+                onChange={(e) => setLogistics({ ...logistics, dispatchDate: e.target.value })}
                 className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
               />
               <input
                 placeholder="Assign driver..."
+                value={logistics.driver}
+                onChange={(e) => setLogistics({ ...logistics, driver: e.target.value })}
                 className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
               />
             </div>
             <textarea
               rows={4}
+              value={logistics.notes}
+              onChange={(e) => setLogistics({ ...logistics, notes: e.target.value })}
               placeholder="Gate codes, handling instructions, loading dock info..."
               className="border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none w-full mt-4"
             />
@@ -204,7 +274,7 @@ export default function CreateManifest({
                 <span>Estimated Cost</span> <span>$--.--</span>
               </div>
             </div>
-            <button className="w-full mt-6 bg-[#2563EB] py-3 rounded-lg shadow">
+            <button onClick={handleGenerate} className="w-full mt-6 bg-[#2563EB] py-3 rounded-lg shadow">
               
               Generate Manifest
             </button>

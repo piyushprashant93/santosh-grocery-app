@@ -1,5 +1,8 @@
 import { Search, Filter, Calendar, Download, Mail, MapPin, MoreHorizontal, Users, Star, ThumbsUp } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const stats = [
     { value: "4.8", label: "Average Rating", stars: true },
@@ -37,58 +40,7 @@ const reviews = [
     }
 ]
 
-const customers = [
-    {
-        name: "Alex Morgan",
-        email: "alex.m@example.com",
-        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-        status: "Active",
-        location: "New York, NY",
-        orders: 12,
-        spent: "$1,240.50",
-        joined: "Jan 15, 2023"
-    },
-    {
-        name: "Sarah Smith",
-        email: "sarah.s@example.com",
-        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-        status: "Active",
-        location: "Brooklyn, NY",
-        orders: 5,
-        spent: "$450.00",
-        joined: "Mar 22, 2023"
-    },
-    {
-        name: "James Doe",
-        email: "james.d@example.com",
-        avatar: "https://randomuser.me/api/portraits/men/46.jpg",
-        status: "Inactive",
-        location: "Queens, NY",
-        orders: 2,
-        spent: "$120.00",
-        joined: "Aug 10, 2023"
-    },
-    {
-        name: "Emily Davis",
-        email: "emily.d@example.com",
-        avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-        status: "Active",
-        location: "Jersey City, NJ",
-        orders: 8,
-        spent: "$890.25",
-        joined: "Sep 05, 2023"
-    },
-    {
-        name: "Michael Brown",
-        email: "mike.b@example.com",
-        avatar: "https://randomuser.me/api/portraits/men/52.jpg",
-        status: "New",
-        location: "New York, NY",
-        orders: 1,
-        spent: "$45.00",
-        joined: "Yesterday"
-    }
-]
+
 
 const statusStyles: any = {
     Active: "bg-green-100 text-green-700",
@@ -98,8 +50,31 @@ const statusStyles: any = {
 
 export default function CustomersandReviews() {
 
-    const [tab, setTab] = useState("customers")
+    const [tab, setTab] = useState("customers");
+    const [customersData, setCustomersData] = useState<any[]>([]);
 
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const res = await fetch(`${API_BASE}/retailer/customers`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const payload = data.data || data;
+                    const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.customers) ? payload.customers : (payload.users || []));
+                    setCustomersData(Array.isArray(arr) ? arr : []);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchCustomers();
+    }, []);
 
     return (
         <div className="space-y-6">
@@ -241,9 +216,9 @@ export default function CustomersandReviews() {
 
                             <tbody>
 
-                                {customers.map((c, i) => (
+                                {customersData.map((c, i) => (
 
-                                    <tr key={i} className="border-b last:border-none">
+                                    <tr key={c._id || i} className="border-b last:border-none">
 
                                         <td className="py-4">
                                             <input type="checkbox" className="accent-[#F54900] cursor-pointer" />
@@ -254,18 +229,18 @@ export default function CustomersandReviews() {
                                             <div className="flex items-center gap-3">
 
                                                 <img
-                                                    src={c.avatar}
+                                                    src={c.avatar || c.profilePicture || "https://images.unsplash.com/photo-151136746198b-98f534080980"}
                                                     className="w-10 h-10 rounded-full object-cover"
                                                 />
 
                                                 <div>
 
                                                     <p className="font-medium text-[#111827]">
-                                                        {c.name}
+                                                        {c.name || "Unknown Customer"}
                                                     </p>
 
                                                     <p className="text-sm text-[#6A7282]">
-                                                        {c.email}
+                                                        {c.email || "No email"}
                                                     </p>
 
                                                 </div>
@@ -275,8 +250,8 @@ export default function CustomersandReviews() {
                                         </td>
 
                                         <td className="py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status]}`}>
-                                                {c.status}
+                                            <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status || "Active"] || statusStyles.Active}`}>
+                                                {c.status || "Active"}
                                             </span>
                                         </td>
 
@@ -284,21 +259,21 @@ export default function CustomersandReviews() {
 
                                             <div className="flex items-center gap-2">
                                                 <MapPin size={14} className="text-[#6A7282]" />
-                                                {c.location}
+                                                {c.location || "Online"}
                                             </div>
 
                                         </td>
 
                                         <td className="py-4 text-[#111827]">
-                                            {c.orders}
+                                            {c.orders || c.totalOrders || 0}
                                         </td>
 
                                         <td className="py-4 font-medium text-[#111827]">
-                                            {c.spent}
+                                            ${typeof c.spent === 'number' ? c.spent.toFixed(2) : (c.totalSpent || "0.00")}
                                         </td>
 
                                         <td className="py-4 text-[#6A7282]">
-                                            {c.joined}
+                                            {c.joined || (c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "Recently")}
                                         </td>
 
                                         <td className="py-4 text-center">
@@ -310,6 +285,10 @@ export default function CustomersandReviews() {
                                     </tr>
 
                                 ))}
+                                
+                                {customersData.length === 0 && (
+                                    <EmptyTableState colSpan={8} message="No customers found." />
+                                )}
 
                             </tbody>
 

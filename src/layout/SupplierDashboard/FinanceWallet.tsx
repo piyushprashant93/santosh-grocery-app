@@ -8,10 +8,20 @@ import {
   MoreHorizontal,
   Filter, Info
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import CreateInvoiceModal from "./CreateInvoiceModal";
 import RequestPayoutModal from "./RequestPayoutModal";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const data = [
   { month: "Jan", revenue: 45000, profit: 12000 },
@@ -157,6 +167,27 @@ export default function FinanceWallet() {
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayout, setOpenPayout] = useState(false);
 
+  const [financeData, setFinanceData] = useState<any>(null);
+
+  const fetchFinance = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/finance`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setFinanceData(data.data || data);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchFinance();
+  }, []);
+
+  const revenueData = financeData?.revenue || data;
+  const invoicesData = financeData?.invoices || invoices;
+  const transactionsData = financeData?.transactions || transactions;
+  const cardsData = financeData?.cards || cards;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -187,20 +218,20 @@ export default function FinanceWallet() {
       </div>
 
       <div className="grid lg:grid-cols-4 gap-6">
-        {cards.map((c, i) => (
+        {cardsData.map((c: any, i: number) => (
           <div
             key={i}
             className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
           >
             <div className="flex items-center justify-between mb-6">
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-lg ${c.iconBg}`}
+                className={`w-10 h-10 flex items-center justify-center rounded-lg ${c.iconBg || 'bg-gray-100'}`}
               >
-                {c.icon}
+                {c.icon || <DollarSign size={20} />}
               </div>
 
               <span
-                className={`px-3 py-1 text-xs rounded-full ${c.badgeColor}`}
+                className={`px-3 py-1 text-xs rounded-full ${c.badgeColor || 'text-gray-700 bg-gray-100'}`}
               >
                 {c.badge}
               </span>
@@ -208,7 +239,7 @@ export default function FinanceWallet() {
 
             <p className="text-[#62748E]">{c.title}</p>
 
-            <h3 className="text-[28px] font-playfair mt-2">{c.value}</h3>
+            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `$${c.value.toFixed(2)}` : c.value}</h3>
 
             <p className="text-[#94A3B8] mt-2 text-sm">{c.desc}</p>
           </div>
@@ -235,7 +266,7 @@ export default function FinanceWallet() {
 
             <ResponsiveContainer width="100%" height="100%">
 
-              <AreaChart data={data}>
+              <AreaChart data={revenueData}>
 
                 <XAxis dataKey="month" axisLine={false} tickLine={false} />
 
@@ -414,25 +445,25 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {transactions.map((t, i) => (
-                    <tr key={i} className="border-b last:border-none">
+                  {transactionsData.map((t: any, i: number) => (
+                    <tr key={t.id || t._id || i} className="border-b last:border-none">
 
                       <td className="py-4 text-[#64748B]">
-                        {t.id}
+                        {t.id || t._id?.substring(0,8)}
                       </td>
 
                       <td className="py-4 text-[#64748B]">
-                        {t.date}
+                        {t.date || new Date(t.createdAt).toLocaleDateString()}
                       </td>
 
                       <td className="py-4 text-[#0F172A] font-medium">
-                        {t.desc}
+                        {t.desc || t.description}
                       </td>
 
                       <td className="py-4">
 
-                        <span className={`px-3 py-1 rounded-full text-xs ${statusTransStyles[t.status]}`}>
-                          {t.status}
+                        <span className={`px-3 py-1 rounded-full text-xs ${statusTransStyles[t.status || "Completed"] || "bg-gray-100"}`}>
+                          {t.status || "Completed"}
                         </span>
 
                       </td>
@@ -443,7 +474,7 @@ export default function FinanceWallet() {
                           : "text-[#0F172A]"
                           }`}
                       >
-                        {t.amount}
+                        {typeof t.amount === "number" ? `$${t.amount.toFixed(2)}` : t.amount}
                       </td>
 
                     </tr>
@@ -500,35 +531,35 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {invoices.map((inv, i) => (
-                    <tr key={i} className="border-b last:border-none">
+                  {invoicesData.map((inv: any, i: number) => (
+                    <tr key={inv.id || inv._id || i} className="border-b last:border-none">
 
                       <td className="py-4 text-[#64748B]">
-                        {inv.id}
+                        {inv.id || inv._id?.substring(0,8) || inv.invoiceNumber}
                       </td>
 
                       <td className="py-4 font-medium text-[#0F172A]">
-                        {inv.client}
+                        {inv.client || inv.clientName || "Unknown Client"}
                       </td>
 
                       <td className="py-4 text-[#64748B]">
-                        {inv.issued}
+                        {inv.issued || inv.issuedDate || new Date(inv.createdAt).toLocaleDateString()}
                       </td>
 
                       <td className="py-4 text-[#64748B]">
-                        {inv.due}
+                        {inv.due || inv.dueDate || "N/A"}
                       </td>
 
                       <td className="py-4">
 
-                        <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[inv.status]}`}>
-                          {inv.status}
+                        <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[inv.status || "Unpaid"] || "bg-gray-100"}`}>
+                          {inv.status || "Unpaid"}
                         </span>
 
                       </td>
 
                       <td className="py-4 text-end font-medium text-[#0F172A]">
-                        {inv.amount}
+                        {typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : (inv.total ? `$${inv.total.toFixed(2)}` : inv.amount)}
                       </td>
 
                       <td className="py-4 text-end">

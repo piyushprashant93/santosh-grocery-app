@@ -1,22 +1,84 @@
 import { useState } from "react"
 import { ArrowLeft, Save } from "lucide-react"
 
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+const authHeadersForm = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
 export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 
     const [activeProductTab, setActiveProductTab] = useState("general")
+    const [images, setImages] = useState<File[]>([]);
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<any>({
         name: "",
         description: "",
         category: "",
-        sku: ""
+        sku: "",
+        basePrice: "",
+        discountPrice: "",
+        stock: "",
+        lowStock: "",
+        weight: "",
+        shippingClass: "",
+        length: "",
+        width: "",
+        height: "",
+        freeShipping: false
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target as HTMLInputElement;
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value
         })
+    }
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImages(Array.from(e.target.files));
+        }
+    }
+
+    const handleSave = async () => {
+        try {
+            const formData = new FormData();
+            Object.keys(form).forEach(key => {
+                formData.append(key, form[key]);
+            });
+            images.forEach(img => {
+                formData.append("images", img);
+            });
+
+            const res = await fetch(`${API_BASE}/retailer/products`, {
+                method: "POST",
+                headers: authHeadersForm(),
+                body: formData
+            });
+
+            if (res.ok) {
+                alert("Product saved successfully!");
+                setActiveTab("products");
+            } else {
+                alert("Failed to save product.");
+            }
+        } catch(err) {
+            console.error(err);
+        }
     }
 
     const tabs = [
@@ -56,7 +118,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                         Cancel
                     </button>
 
-                    <button className="flex items-center gap-2 px-5 py-2 bg-[#F54900] text-white rounded-lg">
+                    <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2 bg-[#F54900] text-white rounded-lg">
                         <Save size={18} />
                         Save Product
                     </button>
@@ -281,6 +343,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                             type="file"
                             multiple
                             accept="image/*"
+                            onChange={handleImageUpload}
                             className="hidden"
                         />
 
@@ -406,6 +469,8 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
         <input
           type="checkbox"
           name="freeShipping"
+          checked={form.freeShipping}
+          onChange={handleChange}
           className="mt-1 accent-[#F54900]"
         />
 

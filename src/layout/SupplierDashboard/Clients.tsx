@@ -1,92 +1,40 @@
 import { Search, Filter, Mail, Phone, MapPin, MoreHorizontal, Building2 } from "lucide-react"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BroadcastMessageModal from "./BroadcastMessageModal";
 
-const clients = [
-  {
-    name: "Urban Bistro Group",
-    type: "Restaurant Chain",
-    email: "marco@urbanbistro.com",
-    phone: "+1 (555) 123-4567",
-    location: "Downtown, NY",
-    spend: "$45,200",
-    orders: 12,
-    status: "Active",
-    initial: "U",
-    color: "bg-orange-100 text-orange-600"
-  },
-  {
-    name: "Whole Foods Local",
-    type: "Retailer",
-    email: "purchasing@wholefoods.loc",
-    phone: "+1 (555) 987-6543",
-    location: "Westside, NY",
-    spend: "$32,150",
-    orders: 8,
-    status: "Active",
-    initial: "W",
-    color: "bg-green-100 text-green-700"
-  },
-  {
-    name: "Fresh Eats Chain",
-    type: "Restaurant Chain",
-    email: "david@fresheats.com",
-    phone: "+1 (555) 234-5678",
-    location: "Brooklyn, NY",
-    spend: "$28,900",
-    orders: 15,
-    status: "Review",
-    initial: "F",
-    color: "bg-orange-100 text-orange-600"
-  },
-  {
-    name: "Green Grocers",
-    type: "Retailer",
-    email: "lisa@greengrocers.com",
-    phone: "+1 (555) 876-5432",
-    location: "Queens, NY",
-    spend: "$15,400",
-    orders: 6,
-    status: "Active",
-    initial: "G",
-    color: "bg-green-100 text-green-700"
-  },
-  {
-    name: "Sushi Zen",
-    type: "Restaurant",
-    email: "kenji@sushizen.com",
-    phone: "+1 (555) 345-6789",
-    location: "SoHo, NY",
-    spend: "$12,400",
-    orders: 4,
-    status: "Active",
-    initial: "S",
-    color: "bg-orange-100 text-orange-600"
-  },
-  {
-    name: "Daily Mart",
-    type: "Retailer",
-    email: "tom@dailymart.com",
-    phone: "+1 (555) 654-3210",
-    location: "Bronx, NY",
-    spend: "$8,200",
-    orders: 3,
-    status: "Inactive",
-    initial: "D",
-    color: "bg-green-100 text-green-700"
-  }
-]
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const [clientsData, setClientsData] = useState<any[]>([]);
+  const [openBroadcast, setOpenBroadcast] = useState(false);
+
+  const fetchClients = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setClientsData(data.data?.clients || data.clients || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
 const statusStyles: any = {
   Active: "bg-green-100 text-green-700",
   Review: "bg-yellow-100 text-yellow-700",
   Inactive: "bg-gray-200 text-gray-600"
 }
-
-export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
-
-
-  const [openBroadcast, setOpenBroadcast] = useState(false);
 
   return (
 
@@ -148,10 +96,10 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
 
       <div className="grid lg:grid-cols-3 gap-6">
 
-        {clients.map((c, i) => (
+        {clientsData.length > 0 ? clientsData.map((c, i) => (
 
           <div
-            key={i}
+            key={c._id || i}
             className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
           >
 
@@ -159,19 +107,19 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
 
               <div className="flex gap-3">
 
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-semibold text-lg ${c.color}`}>
-                  {c.initial}
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-semibold text-lg ${c.type === "Restaurant" ? "bg-orange-100 text-orange-600" : "bg-green-100 text-green-700"}`}>
+                  {c.name ? c.name.charAt(0).toUpperCase() : "C"}
                 </div>
 
                 <div>
 
                   <p className="font-semibold text-[#111827]">
-                    {c.name}
+                    {c.name || "Unknown Client"}
                   </p>
 
                   <div className="flex items-center gap-2 text-sm text-[#64748B] mt-1">
                     <Building2 size={14} />
-                    {c.type}
+                    {c.type || "Client"}
                   </div>
 
                 </div>
@@ -190,17 +138,17 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
 
               <div className="flex items-center gap-2">
                 <Mail size={16} className="text-[#64748B]" />
-                {c.email}
+                {c.email || "N/A"}
               </div>
 
               <div className="flex items-center gap-2">
                 <Phone size={16} className="text-[#64748B]" />
-                {c.phone}
+                {c.phone || "N/A"}
               </div>
 
               <div className="flex items-center gap-2">
                 <MapPin size={16} className="text-[#64748B]" />
-                {c.location}
+                {c.location || c.address?.city || "N/A"}
               </div>
 
             </div>
@@ -216,7 +164,7 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
                 </p>
 
                 <p className="font-semibold">
-                  {c.spend}
+                  ${typeof c.spend === "number" ? c.spend.toFixed(2) : (c.totalSpend || 0)}
                 </p>
 
               </div>
@@ -228,20 +176,22 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
                 </p>
 
                 <p className="font-semibold">
-                  {c.orders}
+                  {c.orders || c.activeOrders || 0}
                 </p>
 
               </div>
 
-              <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status]}`}>
-                {c.status}
+              <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status || "Active"] || "bg-gray-100"}`}>
+                {c.status || "Active"}
               </span>
 
             </div>
 
           </div>
 
-        ))}
+        )) : (
+          <div className="col-span-3 text-center py-10 text-gray-500">No clients found</div>
+        )}
 
       </div>
 

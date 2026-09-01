@@ -157,89 +157,75 @@ const [pendingUser, setPendingUser] = useState<any>(null);
   const handleLogin = async () => {
     setError("");
 
-    if (role === "customer") {
-      if (!email || !password) {
-        setError("Please enter email and password.");
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const response = await fetch(
-          "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-          },
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data?.message || "Login failed. Please try again.");
-        }
-
-const user = data.data.user;
-
-if (user.twoFactorEnabled) {
-  setPendingUser({
-    user,
-    accessToken: data.data.accessToken,
-    refreshToken: data.data.refreshToken,
-  });
-
-  setOtpCode("");
-  setShow2FAModal(true);
-} else {
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("role", role);
-
-  localStorage.setItem("authToken", data.data.accessToken);
-  localStorage.setItem("refreshToken", data.data.refreshToken);
-
-  localStorage.setItem("user", JSON.stringify(user));
-
-  setIsLoggedIn(true);
-
-  navigate("/customer/dashboard");
-}
-      } catch (loginError) {
-        setError(
-          loginError instanceof Error
-            ? loginError.message
-            : "Something went wrong. Please try again.",
-        );
-      } finally {
-        setLoading(false);
-      }
-
+    if (!email || !password) {
+      setError("Please enter email and password.");
       return;
     }
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", role);
-    setIsLoggedIn(true);
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        },
+      );
 
-    if (role === "retailer") {
-      navigate("/retailer/dashboard");
-    }
+      const data = await response.json();
 
-    if (role === "supplier") {
-      navigate("/supplier/dashboard");
-    }
+      if (!response.ok) {
+        throw new Error(data?.message || "Login failed. Please try again.");
+      }
 
-    if (role === "restaurant") {
-      navigate("/restaurant/dashboard");
-    }
+      const user = data.data.user;
 
-    if (role === "restaurantbackend") {
-      navigate("/restaurantbackend/dashboard");
+      if (user.twoFactorEnabled) {
+        setPendingUser({
+          user,
+          accessToken: data.data.accessToken,
+          refreshToken: data.data.refreshToken,
+        });
+
+        setOtpCode("");
+        setShow2FAModal(true);
+      } else {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", role);
+
+        localStorage.setItem("authToken", data.data.accessToken);
+        localStorage.setItem("refreshToken", data.data.refreshToken);
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setIsLoggedIn(true);
+
+        if (role === "customer") {
+          navigate("/customer/dashboard");
+        } else if (role === "retailer") {
+          navigate("/retailer/dashboard");
+        } else if (role === "supplier") {
+          navigate("/supplier/dashboard");
+        } else if (role === "restaurant") {
+          navigate("/restaurant/dashboard");
+        } else if (role === "restaurantbackend") {
+          navigate("/restaurantbackend/dashboard");
+        }
+      }
+    } catch (loginError) {
+      setError(
+        loginError instanceof Error
+          ? loginError.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -291,7 +277,17 @@ if (user.twoFactorEnabled) {
 
     setShow2FAModal(false);
 
-    navigate("/customer/dashboard");
+    if (role === "customer") {
+      navigate("/customer/dashboard");
+    } else if (role === "retailer") {
+      navigate("/retailer/dashboard");
+    } else if (role === "supplier") {
+      navigate("/supplier/dashboard");
+    } else if (role === "restaurant") {
+      navigate("/restaurant/dashboard");
+    } else if (role === "restaurantbackend") {
+      navigate("/restaurantbackend/dashboard");
+    }
   } catch (err) {
     setError(
       err instanceof Error ? err.message : "Something went wrong.",

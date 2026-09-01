@@ -1,5 +1,16 @@
 import { Search, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const coupons = [
   {
@@ -42,7 +53,37 @@ const statusStyles: any = {
 }
 
 export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<string | null>(null)
+  const [offersData, setOffersData] = useState<any[]>([]);
+
+  const fetchOffers = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/offers`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.offers || []));
+        setOffersData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const deleteOffer = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/offers/${id}`, {
+        method: "DELETE",
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        fetchOffers();
+        setOpenIndex(null);
+      }
+    } catch(err) { console.error(err); }
+  };
   return (
     <div className="space-y-6">
 
@@ -130,9 +171,8 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
             <tbody>
 
-              {coupons.map((c, i) => (
-
-                <tr key={i} className="border-b last:border-none">
+              {offersData.length > 0 ? offersData.map((c, i) => (
+                <tr key={c._id || i} className="border-b last:border-none">
 
                   <td className="py-5">
 
@@ -149,25 +189,22 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                   </td>
 
                   <td className="py-5 font-semibold text-[#111827]">
-                    {c.discount}
+                    {c.discount || c.discountValue || c.value}
                   </td>
-
                   <td className="py-5 text-[#374151]">
-                    {c.type}
+                    {c.type || c.discountType}
                   </td>
-
                   <td className="py-5 text-[#374151]">
-                    {c.valid}
+                    {c.valid || (c.validUntil ? new Date(c.validUntil).toLocaleDateString() : "") || (c.expiryDate ? new Date(c.expiryDate).toLocaleDateString() : "")}
                   </td>
-
                   <td className="py-5 text-[#111827]">
-                    {c.usage}
+                    {c.usage || c.usageCount || 0}
                   </td>
 
                   <td className="py-5">
 
-                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status]}`}>
-                      {c.status}
+                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[c.status || "Active"] || "bg-gray-100"}`}>
+                      {c.status || "Active"}
                     </span>
 
                   </td>
@@ -175,11 +212,11 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                   <td className="py-5 text-center relative">
 
                     <button onClick={() =>
-                      setOpenIndex(openIndex === i ? null : i)
+                      setOpenIndex(openIndex === (c._id || i) ? null : (c._id || i))
                     } className="p-2 hover:bg-gray-100 rounded-lg">
                       <MoreHorizontal size={18} />
                     </button>
-                    {openIndex === i && (
+                    {openIndex === (c._id || i) && (
                       <div className="absolute bottom-12 right-10 mt-2 w-[180px] bg-white rounded-xl shadow-lg border border-[#E5E7EB] overflow-hidden z-50">
 
                         <button
@@ -191,7 +228,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                         </button>
 
                         <button
-                          onClick={() => setOpenIndex(null)}
+                          onClick={() => deleteOffer(c._id)}
                           className="flex items-center gap-3 w-full px-4 py-3 text-left hover:bg-red-50 text-red-600"
                         >
                           <Trash2 size={18} />
@@ -205,7 +242,11 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
                 </tr>
 
-              ))}
+              )) : null}
+
+              {offersData.length === 0 && (
+                <EmptyTableState colSpan={7} message="No offers found." />
+              )}
 
             </tbody>
 

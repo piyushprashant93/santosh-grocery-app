@@ -14,7 +14,17 @@ import {
   Key,
   CheckCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const tabs = [
   { key: "directory", label: "Staff Directory", icon: Users },
@@ -195,6 +205,69 @@ export default function TeamManagement({
 }) {
   const [tab, setTab] = useState("directory");
 
+  const [staff, setStaff] = useState<any[]>([]);
+  const [schedule, setSchedule] = useState<any[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
+  const [payroll, setPayroll] = useState<any[]>([]);
+
+  const fetchStaff = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setStaff(data.data?.staff || data.staff || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchSchedule = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setSchedule(data.data?.schedule || data.schedule || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchRequests = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setRequests(data.data?.requests || data.requests || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchPayroll = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setPayroll(data.data?.payroll || data.payroll || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    if (tab === "directory") fetchStaff();
+    else if (tab === "schedule") fetchSchedule();
+    else if (tab === "requests") fetchRequests();
+    else if (tab === "payroll") fetchPayroll();
+  }, [tab]);
+
+  const updateRequestStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) fetchRequests();
+    } catch(err) { console.error(err); }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -275,49 +348,43 @@ export default function TeamManagement({
 
                 <tbody>
                   {staff.map((s, i) => (
-                    <tr key={i} className="border-t">
+                    <tr key={s._id || i} className="border-t">
                       <td className="py-5 px-6">
                         <div className="flex items-center gap-3">
                           <img
-                            src={s.image}
+                            src={s.imageUrl || s.image || "https://randomuser.me/api/portraits/men/32.jpg"}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                           <div>
                             <p className="font-medium text-[#0F172A]">
                               {s.name}
                             </p>
-                            <p className="text-sm text-[#64748B]">{s.type}</p>
+                            <p className="text-sm text-[#64748B]">{s.employmentType || s.type || "Full-time"}</p>
                           </div>
                         </div>
                       </td>
-
                       <td>
                         <span className="px-3 py-1 rounded-full bg-[#F1F5F9] text-sm">
                           {s.role}
                         </span>
                       </td>
-
                       <td>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm ${statusMap[s.status]}`}
+                          className={`px-3 py-1 rounded-full text-sm ${statusMap[s.status || "Active"] || "bg-green-100"}`}
                         >
-                          {s.status}
+                          {s.status || "Active"}
                         </span>
                       </td>
-
-                      <td className="text-[#64748B]">{s.branch}</td>
-
-                      <td className="text-[#64748B]">{s.date}</td>
-
+                      <td className="text-[#64748B]">{s.branch || "Downtown HQ"}</td>
+                      <td className="text-[#64748B]">{s.hiredDate ? new Date(s.hiredDate).toLocaleDateString() : (s.date || "-")}</td>
                       <td>
                         <div className="flex gap-2 items-center">
                           <span className="bg-[#F1F5F9] px-3 py-1 rounded-md">
-                            {s.code}
+                            {s.loginCode || s.code || "****"}
                           </span>
                           <Key size={14} className="text-[#64748B]" />
                         </div>
                       </td>
-
                       <td className="text-center">
                         <MoreHorizontal
                           size={18}
@@ -367,21 +434,21 @@ export default function TeamManagement({
                   </div>
 
                   <div className="p-5 space-y-4">
-                    {day.shifts.map((shift, idx) => (
-                      <div key={idx} className="border rounded-xl p-4">
+                    {(day.shifts || []).map((shift: any, idx: number) => (
+                      <div key={shift._id || idx} className="border rounded-xl p-4">
                         <div className="flex items-center gap-2 text-[#009966] font-medium">
                           <Clock size={16} />
-                          {shift.time}
+                          {shift.startTime} - {shift.endTime} {shift.time}
                         </div>
 
                         <div className="mt-3 space-y-2">
-                          {shift.staff.map((s, j) => (
+                          {(shift.staff || []).map((s: any, j: number) => (
                             <p
                               key={j}
                               className="flex items-center gap-2 text-[#334155]"
                             >
                               <span className="w-2 h-2 bg-green-500 rounded-full" />
-                              {s}
+                              {s.name || s}
                             </p>
                           ))}
                         </div>
@@ -412,54 +479,48 @@ export default function TeamManagement({
               <div className="divide-y">
 
                 {requests.map((r, i) => (
-                  <div key={i} className="p-6 flex items-center justify-between">
-
+                  <div key={r._id || i} className="p-6 flex items-center justify-between">
                     <div className="flex items-start gap-4">
-
-                      <div className={`w-12 h-12 flex items-center justify-center rounded-full ${r.iconBg}`}>
-                        <r.icon size={20} className={r.iconColor} />
+                      <div className={`w-12 h-12 flex items-center justify-center rounded-full ${r.iconBg || 'bg-gray-100'}`}>
+                        <Calendar size={20} className={r.iconColor || 'text-gray-600'} />
                       </div>
-
                       <div>
                         <p className="font-semibold text-[#0F172A]">
-                          {r.name} • {r.type}
+                          {(r.staffId?.name || r.name)} • {r.requestType || r.type}
                         </p>
-
                         <p className="text-[#64748B] mt-1">
-                          {r.subtitle}
+                          {r.dateRange || r.subtitle || "-"}
                         </p>
-
-                        {r.note && (
+                        {(r.reason || r.note) && (
                           <p className="text-[#94A3B8] italic mt-1">
-                            "{r.note}"
+                            "{r.reason || r.note}"
                           </p>
                         )}
                       </div>
-
                     </div>
-
                     <div className="flex items-center gap-3">
-
-                      {r.status === "pending" && (
+                      {(r.status === "pending" || r.status === "Pending") && (
                         <>
-                          <button className="px-4 py-2 rounded-lg border border-red-300 text-red-600">
+                          <button onClick={() => updateRequestStatus(r._id, "Rejected")} className="px-4 py-2 rounded-lg border border-red-300 text-red-600">
                             Reject
                           </button>
-                          <button className="px-4 py-2 rounded-lg bg-[#009966] text-white">
+                          <button onClick={() => updateRequestStatus(r._id, "Approved")} className="px-4 py-2 rounded-lg bg-[#009966] text-white">
                             Approve
                           </button>
                         </>
                       )}
-
-                      {r.status === "approved" && (
+                      {(r.status === "approved" || r.status === "Approved") && (
                         <span className="flex items-center gap-2 bg-green-100 text-[#009966] px-3 py-1 rounded-full text-sm">
                           <CheckCircle size={16} />
                           Approved
                         </span>
                       )}
-
+                      {(r.status === "rejected" || r.status === "Rejected") && (
+                        <span className="flex items-center gap-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
+                          Rejected
+                        </span>
+                      )}
                     </div>
-
                   </div>
                 ))}
 
@@ -502,31 +563,27 @@ export default function TeamManagement({
 
           <tbody>
 
-            {payroll.map((p, i) => (
-              <tr key={i} className="border-t">
-
+            {payroll.map((p, i) => {
+              const staff = p.staffId || p;
+              return (
+              <tr key={p._id || i} className="border-t">
                 <td className="py-5 px-6 font-medium text-[#0F172A]">
-                  {p.name}
+                  {staff.name || p.name}
                 </td>
-
                 <td className="text-[#64748B]">
-                  {p.role}
+                  {staff.role || p.role}
                 </td>
-
                 <td className="text-[#0F172A]">
-                  {p.hours}
+                  {p.hoursWorked || p.hours} hrs
                 </td>
-
                 <td className="text-[#64748B]">
-                  {p.rate}
+                  ${p.hourlyRate || p.rate || "0.00"}/hr
                 </td>
-
                 <td className="py-5 px-6 text-end font-semibold text-[#009966]">
-                  {p.total}
+                  ${typeof p.totalPay === "number" ? p.totalPay.toFixed(2) : p.total || "0.00"}
                 </td>
-
               </tr>
-            ))}
+            )})}
 
           </tbody>
 

@@ -9,7 +9,17 @@ import {
   BarChart3
 } from "lucide-react"
 import AssignDriverModal from "./AssignDriverModal"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function Logistics() {
 
@@ -125,7 +135,26 @@ export default function Logistics() {
     Pending: "bg-gray-200 text-gray-600"
   }
 
-    const [openAssignDriver, setOpenAssignDriver] = useState(false);
+  const [logisticsData, setLogisticsData] = useState<any>(null);
+
+  const fetchLogistics = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setLogisticsData(data.data || data);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchLogistics();
+  }, []);
+
+  const deliveriesData = logisticsData?.manifests || logisticsData?.deliveries || deliveries;
+  const fleetData = logisticsData?.fleet || fleet;
+
+  const [openAssignDriver, setOpenAssignDriver] = useState(false);
   
 
   return (
@@ -227,33 +256,33 @@ export default function Logistics() {
             </button>
           </div>
 
-          {fleet.map((f, i) => (
+          {fleetData.map((f: any, i: number) => (
 
-            <div key={i} className="border-b pb-4 last:border-none">
+            <div key={f._id || i} className="border-b pb-4 last:border-none">
 
               <p className="font-medium">
-                {f.vehicle}
+                {f.vehicle || f.name || "Vehicle"}
               </p>
 
               <p className="text-sm text-[#64748B]">
-                {f.driver}
+                {f.driver || "No Driver"}
               </p>
 
               <p className="text-sm text-[#64748B] mt-1">
-                {f.location}
+                {f.location || "Unknown"}
               </p>
 
               <div className="flex items-center gap-2 mt-2">
 
                 <div className="flex-1 bg-gray-200 h-2 rounded-full">
                   <div
-                    style={{ width: `${f.progress}%` }}
+                    style={{ width: `${f.progress || 0}%` }}
                     className="bg-[#155DFC] h-2 rounded-full"
                   />
                 </div>
 
                 <span className="text-sm text-[#64748B]">
-                  {f.progress}%
+                  {f.progress || 0}%
                 </span>
 
               </div>
@@ -298,38 +327,38 @@ export default function Logistics() {
 
           <div className="space-y-6">
 
-            {deliveries.map((d, i) => (
+            {deliveriesData.map((d: any, i: number) => (
 
-              <div key={i} className="grid grid-cols-4 gap-4 items-center border-b pb-5 last:border-none">
+              <div key={d._id || i} className="grid grid-cols-4 gap-4 items-center border-b pb-5 last:border-none">
 
                 <div>
 
                   <p className="font-medium">
-                    {d.id}
+                    {d.id || d.manifestId || d._id?.substring(0,8)}
                   </p>
 
                   <p className="text-sm text-[#64748B]">
-                    {d.client}
+                    {d.client || d.clientName || (d.orders?.length > 0 ? `${d.orders.length} Orders` : "Unknown")}
                   </p>
 
                   <p className="text-xs text-[#94A3B8]">
-                    {d.address}
+                    {d.address || d.destination || "Multiple Destinations"}
                   </p>
 
                 </div>
 
-                <span className={`px-3 py-1 rounded-full text-xs w-fit ${statusStyles[d.status]}`}>
-                  {d.status}
+                <span className={`px-3 py-1 rounded-full text-xs w-fit ${statusStyles[d.status || "Pending"] || "bg-gray-100"}`}>
+                  {d.status || "Pending"}
                 </span>
 
                 <div>
 
                   <p className="font-medium">
-                    {d.driver}
+                    {d.driver || d.driverName || "Pending"}
                   </p>
 
                   <p className="text-sm text-[#64748B]">
-                    {d.vehicle}
+                    {d.vehicle || d.carrier || "-"}
                   </p>
 
                 </div>
@@ -337,13 +366,13 @@ export default function Logistics() {
                 <div>
 
                   <p className="text-sm text-[#64748B]">
-                    {d.progress}% ETA: {d.eta}
+                    {d.progress || 0}% ETA: {d.eta || "Unknown"}
                   </p>
 
                   <div className="bg-gray-200 h-2 rounded-full mt-1">
 
                     <div
-                      style={{ width: `${d.progress}%` }}
+                      style={{ width: `${d.progress || 0}%` }}
                       className="bg-[#155DFC] h-2 rounded-full"
                     />
 

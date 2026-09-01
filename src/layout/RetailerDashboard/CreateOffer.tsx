@@ -1,5 +1,15 @@
 import { useState } from "react"
 
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
 export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 
   const [form, setForm] = useState({
@@ -18,6 +28,22 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
       [e.target.name]: e.target.value
     })
   }
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/offers`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        alert("Offer created successfully!");
+        setActiveTab("offers");
+      } else {
+        alert("Failed to create offer");
+      }
+    } catch(err) { console.error(err); }
+  };
 
   return (
     <div>
@@ -180,7 +206,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
           </button>
 
           <button
-            onClick={() => setActiveTab("offers")}
+            onClick={handleSave}
             className="px-5 py-2 bg-[#F54900] text-white rounded-lg"
           >
             Create Offer

@@ -1,4 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 import {
   ChefHat,
   Scale,
@@ -35,158 +45,6 @@ const stats = [
   },
 ];
 
-const beverages = [
-  {
-    name: "Coca Cola",
-    category: "Soft Drink",
-    stock: 150,
-    min: 50,
-    unit: "Bottles",
-    supplier: "Beverages Co.",
-    status: "In Stock",
-  },
-  {
-    name: "Orange Juice",
-    category: "Juice",
-    stock: 530,
-    min: 40,
-    unit: "Liters",
-    supplier: "Fresh Drinks Ltd.",
-    status: "In Stock",
-  },
-  {
-    name: "Mineral Water",
-    category: "Water",
-    stock: 200,
-    min: 100,
-    unit: "Bottles",
-    supplier: "Pure Water Inc.",
-    status: "In Stock",
-  },
-  {
-    name: "Iced Tea",
-    category: "Tea",
-    stock: 10,
-    min: 30,
-    unit: "Bottles",
-    supplier: "Tea Masters",
-    status: "Low",
-  },
-  {
-    name: "Coffee Beans",
-    category: "Coffee",
-    stock: 0,
-    min: 20,
-    unit: "Kg",
-    supplier: "Coffee World",
-    status: "Out of Stock",
-  },
-];
-
-const cooked = [
-  {
-    name: "Chicken Alfredo",
-    by: "Chef Maria",
-    prepared: "18/02/2026 05:34",
-    expiry: "21/02/2026 05:34",
-    remaining: "2d 13h",
-    remainingColor: "text-[#009966]",
-    qty: "5 Portions",
-    status: "Fresh",
-  },
-  {
-    name: "Vegetable Soup",
-    by: "Chef John",
-    prepared: "16/02/2026 02:34",
-    expiry: "19/02/2026 02:34",
-    remaining: "10h 59m",
-    remainingColor: "text-orange-500",
-    qty: "3 Liters",
-    status: "Expiring Soon",
-  },
-  {
-    name: "Beef Stew",
-    by: "Chef Sarah",
-    prepared: "15/02/2026 14:34",
-    expiry: "18/02/2026 14:34",
-    remaining: "Expired",
-    remainingColor: "text-red-600",
-    qty: "2 Kg",
-    status: "Expired",
-  },
-];
-
-const statusMap: any = {
-  "In Stock": "bg-green-100 text-[#009966]",
-  Low: "bg-yellow-100 text-yellow-700",
-  "Out of Stock": "bg-red-100 text-red-600",
-  Fresh: "bg-green-100 text-[#009966]",
-  "Expiring Soon": "bg-yellow-100 text-yellow-700",
-  Expired: "bg-red-100 text-red-600",
-};
-
-const rawItems = [
-  {
-    name: "Tomatoes",
-    stock: 50,
-    min: 20,
-    price: "$3.50",
-    supplier: "Fresh Farm",
-    status: "In Stock",
-  },
-  {
-    name: "Chicken Breast",
-    stock: 15,
-    min: 25,
-    price: "$12.99",
-    supplier: "Meat Market",
-    status: "Low",
-  },
-  {
-    name: "Rice",
-    stock: 100,
-    min: 30,
-    price: "$2.50",
-    supplier: "Grain Co.",
-    status: "In Stock",
-  },
-  {
-    name: "Onions",
-    stock: 0,
-    min: 15,
-    price: "$2.00",
-    supplier: "Fresh Farm",
-    status: "Out of Stock",
-  },
-];
-
-const solidItems = [
-  {
-    name: "Cooking Pots",
-    stock: 12,
-    min: 5,
-    price: "$45.00",
-    supplier: "Kitchen Supply",
-    status: "In Stock",
-  },
-  {
-    name: "Chef Knives",
-    stock: 8,
-    min: 10,
-    price: "$89.99",
-    supplier: "Kitchen Supply",
-    status: "Low",
-  },
-  {
-    name: "Cutting Boards",
-    stock: 15,
-    min: 8,
-    price: "$25.00",
-    supplier: "Kitchen Supply",
-    status: "In Stock",
-  },
-];
-
 const solidStatusMap: any = {
   "In Stock": "bg-green-100 text-[#009966]",
   Low: "bg-yellow-100 text-yellow-700",
@@ -201,6 +59,58 @@ export default function Inventory({
   const [tab, setTab] = useState<"beverage" | "kitchen">("beverage");
   const [subTab, setSubTab] = useState<"cooked" | "items">("cooked");
   const [subTab2, setSubTab2] = useState<"raw" | "solid">("raw");
+
+  const [beverages, setBeverages] = useState<any[]>([]);
+  const [cooked, setCooked] = useState<any[]>([]);
+  const [rawItems, setRawItems] = useState<any[]>([]);
+  const [solidItems, setSolidItems] = useState<any[]>([]);
+
+  const fetchInventory = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/inventory`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.data?.inventory || data.inventory || data.data || [];
+        setCooked(items.filter((i: any) => i.type === "cooked"));
+        setRawItems(items.filter((i: any) => i.type === "raw"));
+        setSolidItems(items.filter((i: any) => i.type === "solid"));
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const fetchBeverages = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/beverages`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setBeverages(data.data?.beverages || data.beverages || data.data || []);
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  useEffect(() => {
+    if (tab === "kitchen") {
+      fetchInventory();
+    } else {
+      fetchBeverages();
+    }
+  }, [tab]);
+
+  const deleteBeverage = async (id: string) => {
+    if(!confirm("Delete this beverage?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/beverages/${id}`, { method: "DELETE", headers: authHeaders() });
+      if (res.ok) fetchBeverages();
+    } catch (e) { console.error(e); }
+  }
+
+  const deleteItem = async (id: string) => {
+    if(!confirm("Delete this item?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: authHeaders() });
+      if (res.ok) fetchInventory();
+    } catch (e) { console.error(e); }
+  }
 
   return (
     <div className="space-y-6">
@@ -284,7 +194,7 @@ export default function Inventory({
         {tab === "beverage" && (
           <>
             <div className="flex items-center justify-between mb-6">
-              <p className="text-[#64748B]">Total: 5 items</p>
+              <p className="text-[#64748B]">Total: {beverages.length} items</p>
 
               <div className="flex gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 border rounded-lg">
@@ -316,24 +226,25 @@ export default function Inventory({
 
                 <tbody>
                   {beverages.map((b, i) => (
-                    <tr key={i} className="border-b last:border-none">
+                    <tr key={b._id || i} className="border-b last:border-none">
                       <td className="py-4">{b.name}</td>
-                      <td>{b.category}</td>
-                      <td className="font-medium">{b.stock}</td>
-                      <td>{b.min}</td>
-                      <td>{b.unit}</td>
-                      <td>{b.supplier}</td>
+                      <td>{b.category || "Beverage"}</td>
+                      <td className="font-medium">{b.stockQuantity || b.stock || 0}</td>
+                      <td>{b.minThreshold || b.min || 0}</td>
+                      <td>{b.unitType || b.unit || "-"}</td>
+                      <td>{b.supplierName || b.supplier || "-"}</td>
                       <td>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm ${statusMap[b.status]}`}
+                          className={`px-3 py-1 rounded-full text-sm ${statusMap[b.status || "In Stock"] || "bg-gray-100"}`}
                         >
-                          {b.status}
+                          {b.status || "In Stock"}
                         </span>
                       </td>
-                      <td className="text-end">
-                        <MoreVertical
+                      <td className="text-end cursor-pointer text-red-600">
+                        <Trash2
+                          onClick={() => deleteBeverage(b._id)}
                           size={18}
-                          className="text-[#94A3B8] mx-auto"
+                          className="mx-auto"
                         />
                       </td>
                     </tr>
@@ -398,26 +309,26 @@ export default function Inventory({
                   <tbody>
                     {cooked.map((c, i) => (
                       <tr
-                        key={i}
+                        key={c._id || i}
                         className={`border-b ${c.status === "Expired" ? "bg-red-50" : ""}`}
                       >
                         <td className="py-4">{c.name}</td>
-                        <td>{c.by}</td>
-                        <td>{c.prepared}</td>
-                        <td>{c.expiry}</td>
-                        <td className={c.remainingColor}>{c.remaining}</td>
-                        <td>{c.qty}</td>
+                        <td>{c.preparedBy || c.by || "-"}</td>
+                        <td>{c.preparedDate ? new Date(c.preparedDate).toLocaleString() : (c.prepared || "-")}</td>
+                        <td>{c.expiryDate ? new Date(c.expiryDate).toLocaleString() : (c.expiry || "-")}</td>
+                        <td className={c.remainingColor || ""}>{c.remaining || "-"}</td>
+                        <td>{c.quantity || c.qty || 0}</td>
                         <td>
                           <span
-                            className={`px-3 py-1 rounded-full text-sm ${statusMap[c.status]}`}
+                            className={`px-3 py-1 rounded-full text-sm ${statusMap[c.status || "Fresh"] || "bg-gray-100"}`}
                           >
-                            {c.status}
+                            {c.status || "Fresh"}
                           </span>
                         </td>
                         <td className="">
                           <div className="flex gap-3 items-center justify-end">
-                            <Edit size={16} className="text-blue-600" />
-                            <Trash2 size={16} className="text-red-600" />
+                            <Edit size={16} className="text-blue-600 cursor-pointer" />
+                            <Trash2 size={16} onClick={() => deleteItem(c._id)} className="text-red-600 cursor-pointer" />
                           </div>
                         </td>
                       </tr>
@@ -490,39 +401,40 @@ export default function Inventory({
                           ? rawItems
                           : solidItems
                         ).map((item, i) => (
-                          <tr key={i} className="border-b last:border-none">
+                          <tr key={item._id || i} className="border-b last:border-none">
                             <td className="py-4 font-medium text-[#0F172A]">
                               {item.name}
                             </td>
-                            <td>{item.stock}</td>
-                            <td>{item.min}</td>
-                            <td>{item.price}</td>
-                            <td>{item.supplier}</td>
+                            <td>{item.stockQuantity || item.stock || 0}</td>
+                            <td>{item.minThreshold || item.min || 0}</td>
+                            <td>{item.unitPrice || item.price || "$0.00"}</td>
+                            <td>{item.supplierName || item.supplier || "-"}</td>
                             <td>
                               <span
                                 className={`px-3 py-1 rounded-full text-sm ${
                                   subTab2 === "raw"
-                                    ? statusMap[item.status]
-                                    : solidStatusMap[item.status]
+                                    ? (statusMap[item.status || "In Stock"] || "bg-gray-100")
+                                    : (solidStatusMap[item.status || "In Stock"] || "bg-gray-100")
                                 }`}
                               >
-                                {item.status}
+                                {item.status || "In Stock"}
                               </span>
                             </td>
                             <td>
                               <div className="flex justify-center gap-3">
                                 <RefreshCcw
-                                size={16}
-                                className="text-[#009966] cursor-pointer"
-                              />
-                              <Pencil
-                                size={16}
-                                className="text-blue-600 cursor-pointer"
-                              />
-                              <Trash2
-                                size={16}
-                                className="text-red-600 cursor-pointer"
-                              />
+                                  size={16}
+                                  className="text-[#009966] cursor-pointer"
+                                />
+                                <Pencil
+                                  size={16}
+                                  className="text-blue-600 cursor-pointer"
+                                />
+                                <Trash2
+                                  onClick={() => deleteItem(item._id)}
+                                  size={16}
+                                  className="text-red-600 cursor-pointer"
+                                />
                               </div>
                             </td>
                           </tr>

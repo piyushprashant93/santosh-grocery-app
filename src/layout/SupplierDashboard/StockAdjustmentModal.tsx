@@ -1,6 +1,63 @@
 import { AlertCircle, Plus, TriangleAlertIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export default function StockAdjustmentModal({open, onClose}: {open: boolean; onClose: () => void}) {
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {open: boolean; onClose: () => void; onAdjustSuccess?: () => void}) {
+
+    const [products, setProducts] = useState<any[]>([]);
+    const [form, setForm] = useState({
+        productId: "",
+        type: "Stock In",
+        quantity: "",
+        binLocation: "",
+        reason: ""
+    });
+
+    useEffect(() => {
+        if (open) {
+            fetchProducts();
+        }
+    }, [open]);
+
+    const fetchProducts = async () => {
+        try {
+            const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
+            if (res.ok) {
+                const data = await res.json();
+                setProducts(data.data?.products || data.products || data.data || []);
+            }
+        } catch(err) { console.error(err); }
+    };
+
+    const handleConfirm = async () => {
+        if (!form.productId || !form.quantity) {
+            alert("Please select a product and enter a quantity.");
+            return;
+        }
+        try {
+            const res = await fetch(`${API_BASE}/supplier/warehouse/adjust`, {
+                method: "POST",
+                headers: authHeaders(),
+                body: JSON.stringify(form)
+            });
+            if (res.ok) {
+                alert("Stock adjusted successfully!");
+                if (onAdjustSuccess) onAdjustSuccess();
+                onClose();
+            } else {
+                alert("Failed to adjust stock.");
+            }
+        } catch(err) { console.error(err); }
+    };
 
     if (!open) return null
 
@@ -49,12 +106,11 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
                             Product
                         </label>
 
-                        <select className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none">
-                            <option>Select product</option>
-                            <option value="">Product 1</option>
-                            <option value="">Product 2</option>
-                            <option value="">Product 3</option>
-                            <option value="">Product 4</option>
+                        <select value={form.productId} onChange={(e) => setForm({...form, productId: e.target.value})} className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none">
+                            <option value="">Select product</option>
+                            {products.map(p => (
+                                <option key={p._id} value={p._id}>{p.name || p.title}</option>
+                            ))}
                         </select>
 
                     </div>
@@ -69,17 +125,17 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
 
                         <div className="grid grid-cols-3 gap-3">
 
-                            <button className="border border-[#3B82F6] bg-blue-50 text-[#155DFC] rounded-lg py-4 flex flex-col items-center gap-1">
+                            <button onClick={() => setForm({...form, type: "Stock In"})} className={`border ${form.type === "Stock In" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-1`}>
                                 <Plus size={20} />
                                 Stock In
                             </button>
 
-                            <button className="border border-[#E5E7EB] rounded-lg py-4 flex flex-col items-center gap-1">
+                            <button onClick={() => setForm({...form, type: "Correction"})} className={`border ${form.type === "Correction" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-1`}>
                                 <AlertCircle size={20} />
                                 Correction
                             </button>
 
-                            <button className="border border-[#E5E7EB] rounded-lg py-4 flex flex-col items-center gap-1">
+                            <button onClick={() => setForm({...form, type: "Loss/Damage"})} className={`border ${form.type === "Loss/Damage" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-1`}>
                                 <TriangleAlertIcon size={20} />
                                 Loss/Damage
                             </button>
@@ -101,6 +157,8 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
                             <input
                                 type="number"
                                 placeholder="0"
+                                value={form.quantity}
+                                onChange={(e) => setForm({...form, quantity: e.target.value})}
                                 className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
                             />
 
@@ -114,6 +172,8 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
 
                             <input
                                 placeholder="e.g. A-12-05"
+                                value={form.binLocation}
+                                onChange={(e) => setForm({...form, binLocation: e.target.value})}
                                 className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
                             />
 
@@ -132,6 +192,8 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
                         <textarea
                             rows={4}
                             placeholder="Explain the reason for this adjustment..."
+                            value={form.reason}
+                            onChange={(e) => setForm({...form, reason: e.target.value})}
                             className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
                         />
 
@@ -150,7 +212,7 @@ export default function StockAdjustmentModal({open, onClose}: {open: boolean; on
                         Cancel
                     </button>
 
-                    <button className="bg-[#2563EB] text-white px-6 py-2 rounded-lg shadow">
+                    <button onClick={handleConfirm} className="bg-[#2563EB] text-white px-6 py-2 rounded-lg shadow">
                         Confirm
                     </button>
 

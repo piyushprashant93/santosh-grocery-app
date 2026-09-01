@@ -1,6 +1,46 @@
 import { Users, Store, Building2, CheckCircle2, Send } from "lucide-react";
+import { useState } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function BroadcastMessageModal({open, onClose}: {open: boolean; onClose: () => void}) {
+  const [form, setForm] = useState({
+    audience: "All Clients",
+    subject: "",
+    message: ""
+  });
+
+  const handleSend = async () => {
+    if (!form.subject || !form.message) {
+      alert("Please enter a subject and message.");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/supplier/clients/broadcast`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        alert("Message broadcasted successfully!");
+        onClose();
+        setForm({ audience: "All Clients", subject: "", message: "" });
+      } else {
+        alert("Failed to broadcast message");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (!open) return null;
 
   return (
@@ -31,17 +71,17 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
             <label className="text-[#374151] mb-3 block">Target Audience</label>
 
             <div className="grid grid-cols-3 gap-3">
-              <button className="border border-[#3B82F6] bg-blue-50 text-[#155DFC] rounded-lg py-4 flex flex-col items-center gap-2">
+              <button onClick={() => setForm({...form, audience: "All Clients"})} className={`border ${form.audience === "All Clients" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-2`}>
                 <Users size={22} />
                 All Clients
               </button>
 
-              <button className="border border-[#E5E7EB] rounded-lg py-4 flex flex-col items-center gap-2">
+              <button onClick={() => setForm({...form, audience: "Restaurants"})} className={`border ${form.audience === "Restaurants" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-2`}>
                 <Store size={22} />
                 Restaurants
               </button>
 
-              <button className="border border-[#E5E7EB] rounded-lg py-4 flex flex-col items-center gap-2">
+              <button onClick={() => setForm({...form, audience: "Retailers"})} className={`border ${form.audience === "Retailers" ? "border-[#3B82F6] bg-blue-50 text-[#155DFC]" : "border-[#E5E7EB]"} rounded-lg py-4 flex flex-col items-center gap-2`}>
                 <Building2 size={22} />
                 Retailers
               </button>
@@ -53,6 +93,8 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
 
             <input
               placeholder="e.g. New Product Arrival: Organic Avocados"
+              value={form.subject}
+              onChange={(e) => setForm({...form, subject: e.target.value})}
               className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
             />
           </div>
@@ -63,6 +105,8 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
             <textarea
               rows={5}
               placeholder="Type your message here..."
+              value={form.message}
+              onChange={(e) => setForm({...form, message: e.target.value})}
               className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
             />
           </div>
@@ -82,7 +126,7 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
             Cancel
           </button>
 
-          <button className="bg-[#2563EB] text-white px-6 py-2 rounded-lg flex items-center gap-2 shadow">
+          <button onClick={handleSend} className="bg-[#2563EB] text-white px-6 py-2 rounded-lg flex items-center gap-2 shadow">
             <Send size={16} />
             Send Message
           </button>

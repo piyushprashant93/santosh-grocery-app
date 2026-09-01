@@ -1,52 +1,51 @@
-import { Search, Filter, Download, Eye } from "lucide-react"
+import { Search, Filter, Download, Eye, ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function Orders() {
 
-  const orders = [
-    {
-      id: "ORD-7352",
-      name: "Alex Morgan",
-      email: "alex.m@example.com",
-      date: "Oct 24, 2023",
-      time: "10:30 AM",
-      total: "$124.50",
-      payment: "Paid",
-      paymentmethod: "(Credit Card)",
-      status: "Pending"
-    },
-    {
-      id: "ORD-7351",
-      name: "Sarah Smith",
-      email: "sarah.s@example.com",
-      date: "Oct 24, 2023",
-      time: "09:15 AM",
-      total: "$45.00",
-      payment: "Paid",
-      paymentmethod: "(PayPal)",
-      status: "Processing"
-    },
-    {
-      id: "ORD-7350",
-      name: "James Doe",
-      email: "james.d@example.com",
-      date: "Oct 23, 2023",
-      time: "04:45 PM",
-      total: "$289.90",
-      payment: "Paid",
-      paymentmethod: "(Apple Pay)",
-      status: "Delivered"
-    },
-    {
-      id: "ORD-7349",
-      name: "Emily Davis",
-      email: "emily.d@example.com",
-      date: "Oct 23, 2023",
-      time: "02:20 PM",
-      total: "$67.25",
-      payment: "Refunded",
-      status: "Cancelled"
-    }
-  ]
+  const [ordersData, setOrdersData] = useState<any[]>([]);
+  const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/orders`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.orders || []));
+        setOrdersData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/orders/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        fetchOrders();
+        setOpenStatusMenu(null);
+      }
+    } catch(err) { console.error(err); }
+  };
 
   const statusStyles: any = {
     Pending: "bg-yellow-100 text-yellow-700",
@@ -144,47 +143,46 @@ export default function Orders() {
 
             <tbody>
 
-              {orders.map((o, i) => (
-
-                <tr key={i} className="border-b last:border-none">
+              {ordersData.map((o, i) => (
+                <tr key={o._id || i} className="border-b last:border-none">
 
                   <td className="py-6 font-medium text-[#111827]">
-                    {o.id}
+                    {o.id || o.orderId || o._id?.substring(0, 8)}
                   </td>
-
                   <td className="py-6">
-
                     <div>
                       <p className="text-[#111827] font-medium">
-                        {o.name}
+                        {o.name || o.customer?.name || "Unknown"}
                       </p>
-
                       <p className="text-sm text-[#6A7282]">
-                        {o.email}
+                        {o.email || o.customer?.email || "Unknown"}
                       </p>
                     </div>
-
                   </td>
 
                   <td className="py-6 text-[#374151]">
-
-                    <p>{o.date}</p>
-                    <p className="text-sm text-[#6A7282]">at {o.time}</p>
-
+                    <p>{o.date ? new Date(o.date).toLocaleDateString() : o.date}</p>
+                    <p className="text-sm text-[#6A7282]">at {o.time || (o.date ? new Date(o.date).toLocaleTimeString() : "")}</p>
                   </td>
-
                   <td className="py-6 font-medium text-[#111827]">
-                    {o.total}
+                    ${typeof o.total === "number" ? o.total.toFixed(2) : o.total}
                   </td>
-
                   <td className="py-6 text-[#374151]">
-                    {o.payment} <br /> {o.paymentmethod}
+                    {o.payment || o.paymentStatus || "Paid"} <br /> {o.paymentmethod || o.paymentMethod || ""}
                   </td>
 
-                  <td className="py-6">
-                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[o.status]}`}>
-                      {o.status}
-                    </span>
+                  <td className="py-6 relative">
+                    <button onClick={() => setOpenStatusMenu(openStatusMenu === (o._id || i) ? null : (o._id || i))} className={`px-3 py-1 rounded-full text-xs flex items-center gap-1 ${statusStyles[o.status || "Pending"] || "bg-gray-100"}`}>
+                      {o.status || "Pending"}
+                      <ChevronDown size={14} />
+                    </button>
+                    {openStatusMenu === (o._id || i) && (
+                      <div className="absolute top-12 left-6 bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32 py-1">
+                        {["Pending", "Processing", "Delivered", "Cancelled"].map(s => (
+                          <button key={s} onClick={() => updateOrderStatus(o._id, s)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{s}</button>
+                        ))}
+                      </div>
+                    )}
                   </td>
 
                   <td className="py-6 text-center">
@@ -196,6 +194,10 @@ export default function Orders() {
                 </tr>
 
               ))}
+              
+              {ordersData.length === 0 && (
+                <EmptyTableState colSpan={7} message="No orders found." />
+              )}
 
             </tbody>
 

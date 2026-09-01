@@ -1,54 +1,43 @@
 import { Search, Filter, Download, MoreHorizontal } from "lucide-react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 
-  const products = [
-    {
-      name: "Organic Whole Milk",
-      sku: "DY-001",
-      category: "Dairy",
-      price: "$5.99",
-      stock: 45,
-      status: "Active",
-      img: "https://images.unsplash.com/photo-1580910051074-3eb694886505"
-    },
-    {
-      name: "Artisan Sourdough Bread",
-      sku: "BK-023",
-      category: "Bakery",
-      price: "$8.50",
-      stock: 12,
-      status: "Active",
-      img: "https://images.unsplash.com/photo-1608198093002-ad4e005484ec"
-    },
-    {
-      name: "Extra Virgin Olive Oil",
-      sku: "PN-104",
-      category: "Pantry",
-      price: "$24.99",
-      stock: 8,
-      status: "Low Stock",
-      img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5"
-    },
-    {
-      name: "Fresh Avocados (Pack of 4)",
-      sku: "PR-552",
-      category: "Produce",
-      price: "$6.99",
-      stock: 0,
-      status: "Out of Stock",
-      img: "https://images.unsplash.com/photo-1601039641847-7857b994d704"
-    },
-    {
-      name: "Truffle Cheese",
-      sku: "DY-009",
-      category: "Dairy",
-      price: "$18.99",
-      stock: 25,
-      status: "Inactive",
-      img: "https://images.unsplash.com/photo-1552767059-ce182ead6c1b"
-    }
-  ]
+  const [productsData, setProductsData] = useState<any[]>([]);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/products`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.products || []));
+        setProductsData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const deleteProduct = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/products/${id}`, { method: "DELETE", headers: authHeaders() });
+      if (res.ok) fetchProducts();
+    } catch(err) { console.error(err); }
+  };
 
   const statusStyles: any = {
     Active: "bg-green-100 text-green-700",
@@ -132,9 +121,8 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
             <tbody>
 
-              {products.map((p, i) => (
-
-                <tr key={i} className="border-b last:border-none">
+              {productsData.map((p, i) => (
+                <tr key={p._id || i} className="border-b last:border-none">
 
                   <td className="py-4">
                     <input type="checkbox" className="accent-[#F54900] cursor-pointer" />
@@ -145,10 +133,9 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                     <div className="flex items-center gap-3">
 
                       <img
-                        src={p.img}
+                        src={p.img || p.imageUrl || p.image || "https://images.unsplash.com/photo-1580910051074-3eb694886505"}
                         className="w-12 h-12 min-w-12 rounded-lg object-cover"
                       />
-
                       <span className="text-[#111827] font-medium">
                         {p.name}
                       </span>
@@ -166,38 +153,37 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                   </td>
 
                   <td className="py-4 font-medium">
-                    {p.price}
+                    ${typeof p.price === "number" ? p.price.toFixed(2) : p.price || p.basePrice || "0.00"}
                   </td>
 
                   <td className="py-4">
-                   <span
-  className={`px-2 py-1 rounded-md text-sm ${
-    p.status === "Out of Stock"
-      ? "bg-red-100 text-red-600"
-      : p.status === "Low Stock"
-      ? "bg-yellow-100 text-yellow-700"
-      : "bg-gray-100 text-[#374151]"
-  }`}
->
-  {p.stock}
-</span>
-                  </td>
-
-                  <td className="py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[p.status]}`}>
-                      {p.status}
+                    <span className={`px-2 py-1 rounded-md text-sm ${(p.stock === 0 || p.status === "Out of Stock") ? "bg-red-100 text-red-600" : (p.stock < (p.lowStock || 5) || p.status === "Low Stock") ? "bg-yellow-100 text-yellow-700" : "bg-gray-100 text-[#374151]"}`}>
+                      {p.stock}
                     </span>
                   </td>
 
-                  <td className="py-4 text-center">
+                  <td className="py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[p.status || "Active"] || "bg-gray-100 text-gray-700"}`}>
+                      {p.status || "Active"}
+                    </span>
+                  </td>
+
+                  <td className="py-4 text-center relative group">
                     <button className="p-2 hover:bg-gray-100 rounded-lg">
                       <MoreHorizontal size={18} />
                     </button>
+                    <div className="absolute right-0 mt-2 hidden group-hover:block bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32">
+                      <button onClick={() => deleteProduct(p._id)} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Delete</button>
+                    </div>
                   </td>
 
                 </tr>
 
               ))}
+
+              {productsData.length === 0 && (
+                <EmptyTableState colSpan={8} message="No products found." />
+              )}
 
             </tbody>
 
@@ -209,7 +195,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
         <div className="flex items-center justify-between mt-6 text-sm text-[#6A7282]">
 
           <p>
-            Showing 5 of 84 products
+            Showing {productsData.length} product{productsData.length !== 1 ? 's' : ''}
           </p>
 
           <div className="flex gap-3">

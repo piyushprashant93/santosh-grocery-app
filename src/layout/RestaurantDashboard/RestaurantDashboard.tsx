@@ -1,4 +1,5 @@
 import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const stats = [
   {
@@ -109,6 +110,70 @@ const statusStyles: any = {
 }
 
 export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurants/my/dashboard", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setDashboardData(json.data || json);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  const activeStats = [
+    {
+      title: "Total Orders",
+      value: dashboardData?.totalOrders ? dashboardData.totalOrders.toLocaleString() : stats[0].value,
+      change: dashboardData?.ordersChange || stats[0].change,
+      icon: Package,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: dashboardData?.ordersTrend || stats[0].trend
+    },
+    {
+      title: "Total Revenue",
+      value: dashboardData?.totalRevenue ? `$${dashboardData.totalRevenue.toLocaleString()}` : stats[1].value,
+      change: dashboardData?.revenueChange || stats[1].change,
+      icon: DollarSign,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: dashboardData?.revenueTrend || stats[1].trend
+    },
+    {
+      title: "Active Customers",
+      value: dashboardData?.activeCustomers ? dashboardData.activeCustomers.toLocaleString() : stats[2].value,
+      change: dashboardData?.customersChange || stats[2].change,
+      icon: Users,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: dashboardData?.customersTrend || stats[2].trend
+    },
+    {
+      title: "Avg Prep Time",
+      value: dashboardData?.avgPrepTime || stats[3].value,
+      change: dashboardData?.prepTimeChange || stats[3].change,
+      icon: Clock,
+      iconBg: "bg-blue-100",
+      iconColor: "text-[#2563EB]",
+      trend: dashboardData?.prepTimeTrend || stats[3].trend
+    }
+  ];
+
+  const activeOrders = dashboardData?.recentOrders || orders;
+  const activePopularItems = dashboardData?.popularItems || popularItems;
 
   return (
 
@@ -130,7 +195,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
       <div className="">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mb-5">
 
-          {stats.map((s, i) => {
+          {activeStats.map((s, i) => {
 
             const Icon = s.icon
 
@@ -219,10 +284,11 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                   <tbody>
 
-                    {orders.map((o, i) => {
+                    {activeOrders.map((o: any, i: number) => {
 
-                      const orderPrefix = o.id.split("-")[0] + "-"
-                      const orderNumber = o.id.split("-")[1]
+                      const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
+                      const orderPrefix = idString.includes("-") ? idString.split("-")[0] + "-" : "#ORD-";
+                      const orderNumber = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
 
                       return (
 
@@ -312,7 +378,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
               <div className="space-y-5">
 
-                {popularItems.map((p, i) => (
+                {activePopularItems.map((p: any, i: number) => (
 
                   <div key={i} className="flex items-center justify-between">
 

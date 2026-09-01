@@ -1,4 +1,15 @@
-import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filter, Package } from "lucide-react"
+import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filter, Package, ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const stats = [
   { label: "Pending", value: 12, color: "bg-blue-100 text-blue-600", icon: Clock },
@@ -7,87 +18,49 @@ const stats = [
   { label: "Completed", value: 156, color: "bg-green-100 text-green-600", icon: PackageCheck }
 ]
 
-const orders = [
-  {
-    id: "ORD-7782",
-    date: "Feb 5, 2026",
-    client: "Fresh Market NYC",
-    type: "Retailer",
-    img: "https://picsum.photos/40?1",
-    items: "4 Items",
-    weight: "250 kg",
-    amount: "$4,250.00",
-    payment: "Paid",
-    shipping: "Express",
-    status: "Processing"
-  },
-  {
-    id: "ORD-7781",
-    date: "Feb 4, 2026",
-    client: "Bistro 55",
-    type: "Restaurant",
-    img: "https://picsum.photos/40?2",
-    items: "12 Items",
-    weight: "800 kg",
-    amount: "$8,900.50",
-    payment: "Net 30",
-    shipping: "Standard",
-    status: "In Transit"
-  },
-  {
-    id: "ORD-7780",
-    date: "Feb 4, 2026",
-    client: "Green Grocers",
-    type: "Retailer",
-    img: "https://picsum.photos/40?3",
-    items: "2 Items",
-    weight: "45 kg",
-    amount: "$1,200.00",
-    payment: "Paid",
-    shipping: "Local",
-    status: "Delivered"
-  },
-  {
-    id: "ORD-7779",
-    date: "Feb 3, 2026",
-    client: "Sushi Zen",
-    type: "Restaurant",
-    img: "https://picsum.photos/40?4",
-    items: "1 Item",
-    weight: "500 kg",
-    amount: "$12,400.00",
-    payment: "Unpaid",
-    shipping: "Refrigerated",
-    status: "New"
-  },
-  {
-    id: "ORD-7778",
-    date: "Feb 3, 2026",
-    client: "Daily Mart",
-    type: "Retailer",
-    img: "https://picsum.photos/40?5",
-    items: "8 Items",
-    weight: "180 kg",
-    amount: "$3,150.00",
-    payment: "Paid",
-    shipping: "Standard",
-    status: "Pending"
-  }
-]
-
-const statusStyles: any = {
-  Processing: "bg-yellow-100 text-yellow-700",
-  "In Transit": "bg-blue-100 text-blue-700",
-  Delivered: "bg-green-100 text-green-700",
-  New: "bg-purple-100 text-purple-700",
-  Pending: "bg-gray-100 text-gray-600"
-}
-
 export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const [ordersData, setOrdersData] = useState<any[]>([]);
+  const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
 
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setOrdersData(data.data?.orders || data.orders || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/orders/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        fetchOrders();
+        setOpenStatusMenu(null);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+
+  const statusStyles: any = {
+    Processing: "bg-yellow-100 text-yellow-700",
+    "In Transit": "bg-blue-100 text-blue-700",
+    Delivered: "bg-green-100 text-green-700",
+    New: "bg-purple-100 text-purple-700",
+    Pending: "bg-gray-100 text-gray-600",
+    Cancelled: "bg-red-100 text-red-600"
+  };
 
   return (
-
     <div className="space-y-6">
 
       <div className="flex justify-between items-center">
@@ -184,15 +157,13 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
             <tbody>
 
-              {orders.map((o, i) => (
-
-                <tr key={i} className="border-b last:border-none">
-
+              {ordersData.length > 0 ? ordersData.map((o, i) => (
+                <tr key={o._id || i} className="border-b last:border-none">
                   <td className="py-5">
 
                     <div>
-                      <p className="font-medium">{o.id}</p>
-                      <p className="text-sm text-[#64748B]">{o.date}</p>
+                      <p className="font-medium">{o.id || o.orderId || o._id?.substring(0,8)}</p>
+                      <p className="text-sm text-[#64748B]">{o.date ? new Date(o.date).toLocaleDateString() : (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : "")}</p>
                     </div>
 
                   </td>
@@ -202,11 +173,11 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                     <div className="flex items-center gap-3">
 
-                      <img src={o.img} className="w-10 h-10 rounded-full" />
+                      <img src={o.img || o.client?.image || o.restaurant?.image || "https://picsum.photos/40?1"} className="w-10 h-10 rounded-full object-cover" />
 
                       <div>
-                        <p className="font-medium">{o.client}</p>
-                        <p className="text-sm text-[#64748B]">{o.type}</p>
+                        <p className="font-medium">{o.client || o.client?.name || o.restaurant?.name || "Unknown Client"}</p>
+                        <p className="text-sm text-[#64748B]">{o.type || o.client?.type || "Retailer/Restaurant"}</p>
                       </div>
 
                     </div>
@@ -217,8 +188,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   <td className="py-5">
 
                     <div>
-                      <p>{o.items}</p>
-                      <p className="text-sm text-[#64748B]">{o.weight}</p>
+                      <p>{o.items || o.totalItems || o.items?.length || 0} Items</p>
+                      <p className="text-sm text-[#64748B]">{o.weight || o.totalWeight || ""}</p>
                     </div>
 
                   </td>
@@ -227,9 +198,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   <td className="py-5">
 
                     <div>
-                      <p className="font-medium">{o.amount}</p>
-                      <p className={`text-sm ${o.payment === "Paid" ? "text-green-600" : "text-orange-500"}`}>
-                        {o.payment}
+                      <p className="font-medium">${typeof o.amount === "number" ? o.amount.toFixed(2) : (o.total ? o.total.toFixed(2) : o.amount)}</p>
+                      <p className={`text-sm ${o.payment === "Paid" || o.paymentStatus === "Paid" ? "text-green-600" : "text-orange-500"}`}>
+                        {o.payment || o.paymentStatus || "Unpaid"}
                       </p>
                     </div>
 
@@ -239,27 +210,37 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   <td className="py-5">
 
                     <span className="px-3 py-1 bg-gray-100 rounded-lg text-sm">
-                      {o.shipping}
+                      {o.shipping || o.shippingMethod || "Standard"}
                     </span>
 
                   </td>
 
 
-                  <td className="py-5">
-
-                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[o.status]}`}>
-                      {o.status}
-                    </span>
-
+                  <td className="py-5 relative">
+                    <button onClick={() => setOpenStatusMenu(openStatusMenu === (o._id || i) ? null : (o._id || i))} className={`px-3 py-1 rounded-full text-xs flex items-center gap-1 ${statusStyles[o.status || "New"] || "bg-gray-100"}`}>
+                      {o.status || "New"}
+                      <ChevronDown size={14} />
+                    </button>
+                    {openStatusMenu === (o._id || i) && (
+                      <div className="absolute top-12 left-6 bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32 py-1">
+                        {["New", "Pending", "Processing", "In Transit", "Delivered", "Cancelled"].map(s => (
+                          <button key={s} onClick={() => updateOrderStatus(o._id, s)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{s}</button>
+                        ))}
+                      </div>
+                    )}
                   </td>
 
                   <td className="text-center">
-                    <MoreHorizontal size={20} className="mx-auto"/>
+                    <MoreHorizontal size={20} className="mx-auto cursor-pointer"/>
                   </td>
 
                 </tr>
 
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={7} className="py-6 text-center text-gray-500">No orders found</td>
+                </tr>
+              )}
 
             </tbody>
 

@@ -1,12 +1,99 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Store, FileText, Bell, Shield, Save } from "lucide-react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+const authHeadersForm = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 import KYCDocuments from "./KYCDocuments"
 import NotificationSettings from "./NotificationSettings"
 import SecuritySettings from "./SecuritySettings"
 
 export default function RetailerSettings() {
-
   const [activeTab, setActiveTab] = useState("profile")
+  const [settings, setSettings] = useState<any>({
+    storeName: "Organic Greens Market",
+    contactPerson: "Sarah Chen",
+    email: "sarah@example.com",
+    phone: "+1 (555) 123-4567",
+    address: "123 Market Street, San Francisco, CA 94103",
+    description: "We provide fresh, organic produce sourced directly from local farmers.",
+    logoUrl: "https://randomuser.me/api/portraits/women/44.jpg",
+    bannerUrl: ""
+  });
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/settings`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const s = data.data || data;
+        setSettings({
+          storeName: s.storeName || settings.storeName,
+          contactPerson: s.contactPerson || settings.contactPerson,
+          email: s.email || settings.email,
+          phone: s.phone || settings.phone,
+          address: s.address || settings.address,
+          description: s.description || settings.description,
+          logoUrl: s.logoUrl || s.logo || settings.logoUrl,
+          bannerUrl: s.bannerUrl || s.banner || settings.bannerUrl
+        });
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSettings({ ...settings, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    try {
+      let res;
+      if (logoFile || bannerFile) {
+        const formData = new FormData();
+        Object.keys(settings).forEach(key => formData.append(key, settings[key]));
+        if (logoFile) formData.append("logo", logoFile);
+        if (bannerFile) formData.append("banner", bannerFile);
+
+        res = await fetch(`${API_BASE}/retailer/settings`, {
+          method: "PUT",
+          headers: authHeadersForm(),
+          body: formData
+        });
+      } else {
+        res = await fetch(`${API_BASE}/retailer/settings`, {
+          method: "PUT",
+          headers: authHeaders(),
+          body: JSON.stringify(settings)
+        });
+      }
+
+      if (res.ok) {
+        alert("Settings saved successfully!");
+        fetchSettings();
+      } else {
+        alert("Failed to save settings");
+      }
+    } catch(err) { console.error(err); }
+  };
 
   return (
     <div className="space-y-6">
@@ -23,7 +110,7 @@ export default function RetailerSettings() {
           </p>
         </div>
 
-        <button className="flex items-center gap-2 bg-[#F54900] text-white px-5 py-2.5 rounded-lg shadow">
+        <button onClick={handleSave} className="flex items-center gap-2 bg-[#F54900] text-white px-5 py-2.5 rounded-lg shadow">
           <Save size={18}/>
           Save Changes
         </button>
@@ -97,10 +184,18 @@ export default function RetailerSettings() {
                 Store Logo
               </h3>
 
-              <img
-                src="https://randomuser.me/api/portraits/women/44.jpg"
-                className="w-36 h-36 rounded-full mx-auto object-cover"
-              />
+              <label className="cursor-pointer block relative w-36 h-36 mx-auto">
+                <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setLogoFile(e.target.files[0]);
+                    setSettings({ ...settings, logoUrl: URL.createObjectURL(e.target.files[0]) });
+                  }
+                }} />
+                <img
+                  src={settings.logoUrl}
+                  className="w-36 h-36 rounded-full mx-auto object-cover"
+                />
+              </label>
 
               <p className="text-[#6A7282] text-sm mt-4">
                 Recommended size: 500×500px. <br/> Formats: JPG, PNG.
@@ -116,13 +211,25 @@ export default function RetailerSettings() {
                 Store Banner
               </h3>
 
-              <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center text-[#6A7282] text-sm">
-                No banner uploaded
-              </div>
+              {settings.bannerUrl ? (
+                <div className="h-32 rounded-lg flex items-center justify-center overflow-hidden">
+                  <img src={settings.bannerUrl} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center text-[#6A7282] text-sm">
+                  No banner uploaded
+                </div>
+              )}
 
-              <button className="mt-4 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white">
+              <label className="mt-4 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white inline-block cursor-pointer">
                 Upload Banner
-              </button>
+                <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setBannerFile(e.target.files[0]);
+                    setSettings({ ...settings, bannerUrl: URL.createObjectURL(e.target.files[0]) });
+                  }
+                }} />
+              </label>
 
             </div>
 
@@ -147,32 +254,40 @@ export default function RetailerSettings() {
               <div>
                 <label className="text-sm text-[#374151]">Store Name</label>
                 <input
+                  name="storeName"
                   className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                  defaultValue="Organic Greens Market"
+                  value={settings.storeName}
+                  onChange={handleChange}
                 />
               </div>
 
               <div>
                 <label className="text-sm text-[#374151]">Contact Person</label>
                 <input
+                  name="contactPerson"
                   className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                  defaultValue="Sarah Chen"
+                  value={settings.contactPerson}
+                  onChange={handleChange}
                 />
               </div>
 
               <div>
                 <label className="text-sm text-[#374151]">Email Address</label>
                 <input
+                  name="email"
                   className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                  defaultValue="sarah@example.com"
+                  value={settings.email}
+                  onChange={handleChange}
                 />
               </div>
 
               <div>
                 <label className="text-sm text-[#374151]">Phone Number</label>
                 <input
+                  name="phone"
                   className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                  defaultValue="+1 (555) 123-4567"
+                  value={settings.phone}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -187,8 +302,10 @@ export default function RetailerSettings() {
               </label>
 
               <input
+                name="address"
                 className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                defaultValue="123 Market Street, San Francisco, CA 94103"
+                value={settings.address}
+                onChange={handleChange}
               />
 
             </div>
@@ -202,9 +319,11 @@ export default function RetailerSettings() {
               </label>
 
               <textarea
+                name="description"
                 rows={4}
                 className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
-                defaultValue="We provide fresh, organic produce sourced directly from local farmers."
+                value={settings.description}
+                onChange={handleChange}
               />
 
             </div>

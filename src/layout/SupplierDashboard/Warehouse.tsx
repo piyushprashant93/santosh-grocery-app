@@ -10,8 +10,18 @@ import {
   Move,
   MoreHorizontal,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StockAdjustmentModal from "./StockAdjustmentModal";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const stats = [
   {
@@ -117,7 +127,23 @@ const statusStyles: any = {
 };
 
 export default function Warehouse() {
-const [openAdjust,setOpenAdjust] = useState(false);
+  const [openAdjust, setOpenAdjust] = useState(false);
+  const [itemsData, setItemsData] = useState<any[]>([]);
+
+  const fetchWarehouse = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/warehouse`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setItemsData(data.data?.items || data.items || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchWarehouse();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -149,7 +175,8 @@ const [openAdjust,setOpenAdjust] = useState(false);
           <StockAdjustmentModal
             open={openAdjust}
             onClose={()=>setOpenAdjust(false)}
-            />
+            onAdjustSuccess={fetchWarehouse}
+          />
         </div>
       </div>
 
@@ -255,55 +282,59 @@ const [openAdjust,setOpenAdjust] = useState(false);
             </thead>
 
             <tbody>
-              {items.map((i, index) => (
-                <tr key={index} className="border-b last:border-none">
+              {itemsData.length > 0 ? itemsData.map((i, index) => (
+                <tr key={i._id || index} className="border-b last:border-none">
                   <td className="py-5">
                     <div className="flex items-center gap-3">
-                      <img src={i.img} className="w-10 h-10 rounded-lg" />
+                      <img src={i.img || i.image || i.imageUrl || i.product?.image || "https://picsum.photos/50?1"} className="w-10 h-10 rounded-lg object-cover" />
 
                       <div>
-                        <p className="font-medium">{i.name}</p>
+                        <p className="font-medium">{i.name || i.product?.name || i.product?.title || "Unknown"}</p>
 
-                        <p className="text-sm text-[#64748B]">{i.sku}</p>
+                        <p className="text-sm text-[#64748B]">{i.sku || i.product?.sku || i._id?.substring(0,8)}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-5">
                     <div>
-                      <p className="font-medium">{i.location}</p>
+                      <p className="font-medium">{i.location || i.bin || "Unassigned"}</p>
 
-                      <p className="text-sm text-[#64748B]">{i.zone}</p>
+                      <p className="text-sm text-[#64748B]">{i.zone || i.zone?.name || "No Zone"}</p>
                     </div>
                   </td>
 
                   <td className="py-5">
-                    <p className="font-medium">{i.onhand}</p>
+                    <p className="font-medium">{i.onhand || i.stockQuantity || i.quantity || 0}</p>
 
-                    <p className="text-sm text-[#64748B]">{i.unit}</p>
+                    <p className="text-sm text-[#64748B]">{i.unit || i.product?.unit || "Units"}</p>
                   </td>
 
                   <td className="py-5 text-orange-600 font-medium">
-                    {i.allocated}
+                    {i.allocated || 0}
                   </td>
 
                   <td className="py-5 text-green-600 font-semibold">
-                    {i.available}
+                    {i.available || i.stockQuantity || i.quantity || 0}
                   </td>
 
                   <td className="py-5">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[i.status]}`}
+                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[i.status || "In Stock"] || "bg-gray-100"}`}
                     >
-                      {i.status}
+                      {i.status || ((i.stockQuantity || i.quantity) > 0 ? "In Stock" : "Low Stock")}
                     </span>
                   </td>
 
                   <td className="">
-                    <MoreHorizontal className="" />
+                    <MoreHorizontal className="cursor-pointer" />
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={7} className="py-6 text-center text-gray-500">No items found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

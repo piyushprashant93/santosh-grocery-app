@@ -1,5 +1,16 @@
-import { Search } from "lucide-react"
-import { useState } from "react"
+import { Search, X } from "lucide-react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 import SupportLiveChat from "./SupportLiveChat"
 import SupportFAQ from "./SupportFAQ"
 
@@ -7,29 +18,43 @@ export default function SupportCenter() {
 
   const [activeTab, setActiveTab] = useState("tickets")
 
-  const tickets = [
-    {
-      id: "#TCK-9921",
-      subject: "Payment Issue - Order #ORD-7350",
-      priority: "High",
-      status: "Open",
-      updated: "2 hours ago"
-    },
-    {
-      id: "#TCK-9920",
-      subject: "Request to update product category",
-      priority: "Low",
-      status: "Closed",
-      updated: "2 days ago"
-    },
-    {
-      id: "#TCK-9919",
-      subject: "Commission fee clarification",
-      priority: "Medium",
-      status: "Resolved",
-      updated: "1 week ago"
-    }
-  ]
+  const [ticketsData, setTicketsData] = useState<any[]>([]);
+  const [showNewTicketModal, setShowNewTicketModal] = useState(false);
+  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", description: "" });
+
+  const fetchTickets = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/support/tickets`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.tickets || []));
+        setTicketsData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const createTicket = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/support/tickets`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(newTicket)
+      });
+      if (res.ok) {
+        alert("Ticket created successfully!");
+        setShowNewTicketModal(false);
+        setNewTicket({ subject: "", priority: "Medium", description: "" });
+        fetchTickets();
+      } else {
+        alert("Failed to create ticket");
+      }
+    } catch(err) { console.error(err); }
+  };
 
   const priorityStyles: any = {
     High: "bg-red-100 text-red-600",
@@ -58,7 +83,7 @@ export default function SupportCenter() {
           </p>
         </div>
 
-        <button className="bg-[#F54900] text-white px-5 py-2.5 rounded-lg shadow-sm">
+        <button onClick={() => setShowNewTicketModal(true)} className="bg-[#F54900] text-white px-5 py-2.5 rounded-lg shadow-sm">
           + New Ticket
         </button>
 
@@ -159,41 +184,36 @@ export default function SupportCenter() {
 
               <tbody>
 
-                {tickets.map((t, i) => (
-
-                  <tr key={i} className="border-b last:border-none">
-
+                {ticketsData.length > 0 ? ticketsData.map((t, i) => (
+                  <tr key={t._id || i} className="border-b last:border-none">
                     <td className="py-5 text-[#62748E]">
-                      {t.id}
+                      {t.id || t.ticketId || t._id?.substring(0, 8)}
                     </td>
-
                     <td className="py-5 text-[#111827] font-medium">
                       {t.subject}
                     </td>
-
                     <td className="py-5">
-                      <span className={`px-3 py-1 rounded-md text-sm ${priorityStyles[t.priority]}`}>
-                        {t.priority}
+                      <span className={`px-3 py-1 rounded-md text-sm ${priorityStyles[t.priority || "Medium"] || "bg-gray-100"}`}>
+                        {t.priority || "Medium"}
                       </span>
                     </td>
-
                     <td className="py-5">
-                      <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status]}`}>
-                        {t.status}
+                      <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Open"] || "bg-gray-100"}`}>
+                        {t.status || "Open"}
                       </span>
                     </td>
-
                     <td className="py-5 text-[#6A7282]">
-                      {t.updated}
+                      {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                     </td>
-
                     <td className="py-5 text-center text-[#F54900] font-medium cursor-pointer">
                       View
                     </td>
-
                   </tr>
-
-                ))}
+                )) : null}
+                
+                {ticketsData.length === 0 && (
+                  <EmptyTableState colSpan={6} message="No support tickets found." />
+                )}
 
               </tbody>
 
@@ -211,6 +231,36 @@ export default function SupportCenter() {
 
       {activeTab === "faq" && (
         <SupportFAQ />
+      )}
+
+      {showNewTicketModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+              <X size={20} />
+            </button>
+            <h3 className="font-playfair text-xl mb-4">Create New Ticket</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Subject</label>
+                <input value={newTicket.subject} onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Priority</label>
+                <select value={newTicket.priority} onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Description</label>
+                <textarea value={newTicket.description} onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
+              </div>
+              <button onClick={createTicket} className="w-full bg-[#F54900] text-white py-2.5 rounded-lg font-medium">Submit Ticket</button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

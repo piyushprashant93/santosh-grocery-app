@@ -10,7 +10,26 @@ import {
   Edit,
   Trash2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+const authHeadersForm = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+// Dummy categories as fallback or could be dynamic
 const categories = [
   { name: "All Items", count: 42 },
   { name: "Starters", count: 8 },
@@ -169,17 +188,90 @@ const items = [
 export default function MenuManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
   const [tab, setTab] = useState("live");
   const [active, setActive] = useState("All Items");
-  const [openMenu, setOpenMenu] = useState<number | null>(null)
-  const [menuItems, setMenuItems] = useState(items)
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
 
-  const toggleStock = (index: number) => {
-    setMenuItems(prev =>
-      prev.map((item, i) =>
-        i === index ? { ...item, stock: !item.stock } : item
-      )
-    )
+  const fetchMenu = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/menu`, {
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMenuItems(data.data?.menu || data.menu || data.data || []);
+      } else {
+        const err = await res.json();
+        setError(err.message || "Failed to fetch menu");
+      }
+    } catch (err) {
+      setError("Network error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
+  const toggleStock = async (id: string, currentAvail: boolean) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}/availability`, {
+        method: "PUT",
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        setMenuItems(prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item));
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
+  const deleteItem = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this item?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+      });
+      if (res.ok) {
+        setMenuItems(prev => prev.filter(item => item._id !== id));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setOpenMenu(null);
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingId(id);
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}/image`, {
+        method: "POST",
+        headers: authHeadersForm(),
+        body: formData
+      });
+      if (res.ok) {
+        fetchMenu();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUploadingId(null);
+      setOpenMenu(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -282,15 +374,26 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
         <div className="space-y-4">
 
-          {menuItems.map((item, i) => (
+          {isLoading ? (
+            <div className="text-center py-10 text-gray-500">Loading menu...</div>
+          ) : error ? (
+            <div className="text-center py-10 text-red-500">{error}</div>
+          ) : menuItems.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">No menu items found. Click 'Add Item' to create one.</div>
+          ) : (
+            menuItems.map((item, i) => {
+              const isAvailable = item.isAvailable !== false && item.stock !== false;
+              const imgUrl = item.imageUrl || item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
+              const id = item._id || item.id || i.toString();
+              return (
 
             <div
-              key={i}
+              key={id}
               className="border border-[#E5E7EB] bg-white rounded-xl p-4 flex items-center gap-4"
             >
 
               <img
-                src={item.image}
+                src={imgUrl}
                 className="w-24 h-24 rounded-lg object-cover"
               />
 
@@ -298,8 +401,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
                 <div className="flex items-center gap-3">
 
-                  <span className={`w-5 h-5 border-2 flex justify-center items-center rounded-lg ${item.stock ? "border-green-500" : "border-red-500"}`} >
-                    <span  className={`w-3 h-3 inline-block rounded-full ${item.stock ? "bg-green-500" : "bg-red-500"}`}></span>
+                  <span className={`w-5 h-5 border-2 flex justify-center items-center rounded-lg ${isAvailable ? "border-green-500" : "border-red-500"}`} >
+                    <span  className={`w-3 h-3 inline-block rounded-full ${isAvailable ? "bg-green-500" : "bg-red-500"}`}></span>
                   </span>
 
                   <h3 className="font-playfair text-lg">
@@ -319,16 +422,16 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                     <div className="flex items-center gap-4 mt-2">
 
                       <span className="bg-[#EFF6FF] text-[#2563EB] px-3 py-1 rounded-full text-sm">
-                        Cost: {item.cost}
+                        Cost: {item.cost || item.productionCost || "$0.00"}
                       </span>
 
                       <span className="text-[#64748B] text-sm">
-                        Margin: {item.margin}
+                        Margin: {item.margin || "0%"}
                       </span>
 
                     </div> :
                     <p className="text-[#64748B] text-sm mt-1 line-clamp-1">
-                      {item.desc}
+                      {item.description || item.desc}
                     </p>
 
                   }
@@ -338,7 +441,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                 <div className="flex items-center gap-4 text-sm text-[#94A3B8] mt-2">
 
                   <span className="flex items-center gap-1">
-                    <Clock size={14} /> {item.time}
+                    <Clock size={14} /> {item.preparationTime || item.time || "15 min"}
                   </span>
 
                   <span className="flex items-center gap-1">
@@ -351,24 +454,24 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
 
 
-              <div className="flex items-center gap-6 border-l pl-6">
+                <div className="flex items-center gap-6 border-l pl-6">
 
-                <p className="text-xl font-semibold">
-                  {item.price}
-                </p>
-
-
-                <div key={i} className="flex items-center gap-3">
-
-                  <p className={`text-sm ${item.stock ? "text-green-600" : "text-[#64748B]"}`}>
-                    {item.stock ? "In Stock" : "Out"}
+                  <p className="text-xl font-semibold">
+                    ${typeof item.price === "number" ? item.price.toFixed(2) : (item.price || "0.00")}
                   </p>
 
-                  <button
-                    onClick={() => toggleStock(i)}
-                    className={`w-10 h-6 rounded-full flex items-center transition ${item.stock ? "bg-green-500 justify-end" : "bg-gray-300 justify-start"
-                      }`}
-                  >
+
+                  <div className="flex items-center gap-3">
+
+                    <p className={`text-sm ${isAvailable ? "text-green-600" : "text-[#64748B]"}`}>
+                      {isAvailable ? "In Stock" : "Out"}
+                    </p>
+
+                    <button
+                      onClick={() => toggleStock(id, isAvailable)}
+                      className={`w-10 h-6 rounded-full flex items-center transition ${isAvailable ? "bg-green-500 justify-end" : "bg-gray-300 justify-start"
+                        }`}
+                    >
 
                     <div className="w-4 h-4 bg-white rounded-full mx-1" />
 
@@ -379,60 +482,44 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                 <div className="relative">
 
                   <button
-                    onClick={() => setOpenMenu(openMenu === i ? null : i)}
+                    onClick={() => setOpenMenu(openMenu === id ? null : id)}
                   >
                     <MoreHorizontal size={18} className="text-[#94A3B8]" />
                   </button>
 
 
-                  {openMenu === i && (
+                  {openMenu === id && (
                     <>
                     <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setOpenMenu(null)}></div>
                     <div className="absolute right-0 top-7 w-52 bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
                       <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[#F8FAFC]">
-
                         <Edit size={16} className="text-[#64748B]" />
-
                         Edit Item
-
                       </button>
 
-
-                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[#F8FAFC]">
-
+                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[#F8FAFC] relative">
+                        <input type="file" ref={fileInputRef} className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={(e) => handleImageUpload(e, id)} />
                         <ImageIcon size={16} className="text-[#64748B]" />
-
-                        Change Photo
-
+                        {uploadingId === id ? "Uploading..." : "Change Photo"}
                       </button>
-
 
                       <div className="border-t border-[#E5E7EB]" />
 
-
-                      <button className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50">
-
+                      <button onClick={() => deleteItem(id)} className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50">
                         <Trash2 size={16} />
-
                         Delete Item
-
                       </button>
 
                     </div>
                     </>
-
-
                   )}
-
                 </div>
-
               </div>
-
             </div>
-
-          ))}
-
+            );
+          })
+          )}
         </div>
 
       </div>

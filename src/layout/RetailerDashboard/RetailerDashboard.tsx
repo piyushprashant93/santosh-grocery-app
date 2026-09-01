@@ -1,52 +1,7 @@
 import { DollarSign, Package, ShoppingBag, Clock, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { useState, useEffect, useMemo } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
 import ChartsSection from "./ChartsSection"
-
-const stats = [
-  {
-    title: "Total Revenue",
-    value: "$12,345.00",
-    change: "+12.5%",
-    icon: DollarSign,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Total Orders",
-    value: "1,245",
-    change: "+5.2%",
-    icon: ShoppingBag,
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
-    trend: "up"
-  },
-  {
-    title: "Total Products",
-    value: "84",
-    change: "-2.1%",
-    icon: Package,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
-    trend: "down"
-  },
-  {
-    title: "Pending Payments",
-    value: "$450.00",
-    change: "Due Today",
-    icon: Clock,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    trend: "up"
-  }
-]
-
-const orders = [
-  { id:"#ORD-7352", customer:"Alex Morgan", amount:"$124.50", status:"Pending", date:"2 mins ago" },
-  { id:"#ORD-7351", customer:"Sarah Smith", amount:"$45.00", status:"Processing", date:"15 mins ago" },
-  { id:"#ORD-7350", customer:"James Doe", amount:"$289.90", status:"Delivered", date:"1 hour ago" },
-  { id:"#ORD-7349", customer:"Emily Davis", amount:"$67.25", status:"Cancelled", date:"3 hours ago" },
-  { id:"#ORD-7348", customer:"Michael Brown", amount:"$15.00", status:"Delivered", date:"5 hours ago" }
-]
 
 const statusStyles:any = {
   Pending:"bg-yellow-100 text-yellow-700",
@@ -56,6 +11,79 @@ const statusStyles:any = {
 }
 
 export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/dashboard", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setDashboardData(json.data || json);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  const activeStats = useMemo(() => dashboardData ? [
+    {
+      title: "Total Revenue",
+      value: `$${(dashboardData.totalRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+      change: `Last mo: $${(dashboardData.lastMonthRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+      icon: DollarSign,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: (dashboardData.totalRevenue || 0) >= (dashboardData.lastMonthRevenue || 0) ? "up" : "down",
+      trendText: ""
+    },
+    {
+      title: "Total Orders",
+      value: (dashboardData.totalOrders || 0).toLocaleString(),
+      change: "Lifetime",
+      icon: ShoppingBag,
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+      trend: "up",
+      trendText: "orders"
+    },
+    {
+      title: "Total Products",
+      value: (dashboardData.totalProducts || 0).toLocaleString(),
+      change: "Active",
+      icon: Package,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600",
+      trend: "up",
+      trendText: "catalog"
+    },
+    {
+      title: "Pending Payments",
+      value: `$${(dashboardData.pendingPayments || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+      change: "Due",
+      icon: Clock,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+      trend: "up",
+      trendText: "today"
+    }
+  ] : [], [dashboardData]);
+
+  const activeOrders = useMemo(() => (dashboardData?.recentOrders || []).map((o: any) => ({
+    id: o._id ? `#${o._id.substring(o._id.length - 6).toUpperCase()}` : (o.id || "#---"),
+    customer: o.customer?.name || o.customer || "Unknown",
+    amount: typeof o.totalAmount === 'number' ? `$${o.totalAmount.toFixed(2)}` : (o.amount || "$0.00"),
+    status: o.status || "Pending",
+    date: o.createdAt ? new Date(o.createdAt).toLocaleDateString() : (o.date || "Just now")
+  })), [dashboardData]);
 
   return (
     <div className="space-y-6">
@@ -89,9 +117,9 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 
       <div className="grid lg:grid-cols-4 md:grid-cols-2 lg:gap-6 gap-3">
 
-        {stats.map((s,i)=>{
+        {activeStats.map((s: any, i: number) => {
 
-          const Icon = s.icon
+          const Icon = s.icon || DollarSign;
 
           return(
             <div
@@ -113,8 +141,8 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 
                 </div>
 
-                <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${s.iconBg}`}>
-                  <Icon className={s.iconColor} size={18}/>
+                <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${s.iconBg || "bg-gray-100"}`}>
+                  <Icon className={s.iconColor || "text-gray-600"} size={18}/>
                 </div>
 
               </div>
@@ -132,7 +160,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
                 </span>
 
                 <span className="text-[#6A7282]">
-                  vs last month
+                  {s.trendText !== undefined ? s.trendText : "vs last month"}
                 </span>
 
               </div>
@@ -186,7 +214,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 
             <tbody>
 
-              {orders.map((o,i)=>(
+              {activeOrders.map((o: any, i: number)=>(
                 <tr key={i} className="border-b last:border-none">
 
                   <td className="py-4">{o.id}</td>
@@ -205,6 +233,10 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 
                 </tr>
               ))}
+              
+              {activeOrders.length === 0 && (
+                <EmptyTableState colSpan={5} message="No recent orders found." />
+              )}
 
             </tbody>
 

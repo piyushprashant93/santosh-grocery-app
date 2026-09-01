@@ -1,20 +1,107 @@
-import { User, Truck, Package, Plus, MapPin, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { User, Truck, Package, Plus, MapPin, ArrowLeft, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function CreateShipment({
   setActiveTab,
 }: {
   setActiveTab: (tab: string) => void;
 }) {
-  const [items, setItems] = useState([{ product: "", qty: 1, price: 85 }]);
+  const [items, setItems] = useState([{ product: "", qty: 1, price: 0 }]);
+  const [clients, setClients] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [form, setForm] = useState({
+    clientId: "",
+    shippingMethod: "Standard Ground",
+    dispatchDate: "",
+    vehicle: "Auto-assign"
+  });
+
+  useEffect(() => {
+    fetchClients();
+    fetchProducts();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setClients(data.data?.clients || data.clients || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setProducts(data.data?.products || data.products || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
 
   const addItem = () => {
     setItems([...items, { product: "", qty: 1, price: 0 }]);
+  };
+  const removeItem = (index: number) => {
+    setItems(items.filter((_, i) => i !== index));
   };
 
   const subtotal = items.reduce((acc, i) => acc + i.qty * i.price, 0);
   const shipping = 150;
   const total = subtotal + shipping;
+
+  const handleProductChange = (index: number, productId: string) => {
+    const selectedProduct = products.find(p => p._id === productId);
+    const newItems = [...items];
+    newItems[index] = {
+      ...newItems[index],
+      product: productId,
+      price: selectedProduct ? (selectedProduct.price || selectedProduct.basePrice || 0) : 0
+    };
+    setItems(newItems);
+  };
+
+  const handleConfirm = async () => {
+    if (!form.clientId) {
+      alert("Please select a client");
+      return;
+    }
+    if (items.length === 0 || !items[0].product) {
+      alert("Please add at least one product");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/supplier/logistics`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({
+          ...form,
+          items,
+          subtotal,
+          shipping,
+          total
+        })
+      });
+      if (res.ok) {
+        alert("Shipment created successfully!");
+        setActiveTab("logistics");
+      } else {
+        alert("Failed to create shipment");
+      }
+    } catch(err) { console.error(err); }
+  };
 
   return (
     <div className="space-y-6">
@@ -41,11 +128,11 @@ export default function CreateShipment({
             <div>
               <label className="text-sm text-[#374151]">Select Client</label>
 
-              <select className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
-                <option>Choose a client...</option>
-                <option>Client 1</option>
-                <option>Client 2</option>
-                <option>Client 3</option>
+              <select value={form.clientId} onChange={(e) => setForm({...form, clientId: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+                <option value="">Choose a client...</option>
+                {clients.map(c => (
+                  <option key={c._id} value={c._id}>{c.name}</option>
+                ))}
               </select>
             </div>
 
@@ -56,13 +143,17 @@ export default function CreateShipment({
                 <MapPin size={18} className="text-[#64748B]" />
 
                 <div>
-                  <p className="font-medium">Main Distribution Center</p>
-
-                  <p className="text-sm text-[#64748B]">
-                    123 Supply Chain Blvd, Suite 400
+                  <p className="font-medium">
+                    {form.clientId ? clients.find(c => c._id === form.clientId)?.name : "Main Distribution Center"}
                   </p>
 
-                  <p className="text-sm text-[#64748B]">New York, NY 10001</p>
+                  <p className="text-sm text-[#64748B]">
+                    {form.clientId ? (clients.find(c => c._id === form.clientId)?.address?.street || "123 Supply Chain Blvd, Suite 400") : "123 Supply Chain Blvd, Suite 400"}
+                  </p>
+
+                  <p className="text-sm text-[#64748B]">
+                    {form.clientId ? (clients.find(c => c._id === form.clientId)?.address?.city || "New York, NY 10001") : "New York, NY 10001"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -80,10 +171,10 @@ export default function CreateShipment({
             <div>
               <label className="text-sm text-[#374151]">Shipping Method</label>
 
-              <select className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
-                <option>Standard Ground</option>
-                <option>Express</option>
-                <option>Overnight</option>
+              <select value={form.shippingMethod} onChange={(e) => setForm({...form, shippingMethod: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+                <option value="Standard Ground">Standard Ground</option>
+                <option value="Express">Express</option>
+                <option value="Overnight">Overnight</option>
               </select>
             </div>
 
@@ -92,6 +183,8 @@ export default function CreateShipment({
 
               <input
                 type="date"
+                value={form.dispatchDate}
+                onChange={(e) => setForm({...form, dispatchDate: e.target.value})}
                 className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
               />
             </div>
@@ -101,11 +194,11 @@ export default function CreateShipment({
                 Assign Vehicle (Optional)
               </label>
 
-              <select className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
-                <option>Auto-assign</option>
-                <option>Vehicle 1</option>
-                <option>Vehicle 2</option>
-                <option>Vehicle 3</option>
+              <select value={form.vehicle} onChange={(e) => setForm({...form, vehicle: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+                <option value="Auto-assign">Auto-assign</option>
+                <option value="Vehicle 1">Vehicle 1</option>
+                <option value="Vehicle 2">Vehicle 2</option>
+                <option value="Vehicle 3">Vehicle 3</option>
               </select>
             </div>
           </div>
@@ -131,25 +224,34 @@ export default function CreateShipment({
 
         <div className="space-y-4">
           {items.map((item, i) => (
-            <div key={i} className="grid lg:grid-cols-[2fr_1fr_1fr] gap-4">
-              <select className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none">
-                <option>Select product...</option>
-                <option>Product 1</option>
-                <option>Product 2</option>
-                <option>Product 3</option>
+            <div key={i} className="grid lg:grid-cols-[2fr_1fr_1fr_auto] gap-4 items-center">
+              <select value={item.product} onChange={(e) => handleProductChange(i, e.target.value)} className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none">
+                <option value="">Select product...</option>
+                {products.map(p => (
+                  <option key={p._id} value={p._id}>{p.name || p.title}</option>
+                ))}
               </select>
 
               <input
                 type="number"
                 value={item.qty}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[i].qty = Number(e.target.value);
+                  setItems(newItems);
+                }}
                 className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none"
               />
 
               <input
                 type="text"
-                value={`$ ${item.price}`}
-                className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none"
+                readOnly
+                value={`$ ${item.price.toFixed(2)}`}
+                className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none bg-gray-50 text-gray-500"
               />
+              <button onClick={() => removeItem(i)} className="p-3 text-red-500 bg-red-50 rounded-lg">
+                <Trash2 size={20} />
+              </button>
             </div>
           ))}
         </div>
@@ -178,9 +280,9 @@ export default function CreateShipment({
       </div>
 
       <div className="flex justify-end gap-4">
-        <button className="text-[#64748B]">Cancel</button>
+        <button onClick={() => setActiveTab("logistics")} className="text-[#64748B]">Cancel</button>
 
-        <button className="bg-[#2563EB] h-12 text-white px-6 py-2 rounded-lg shadow">
+        <button onClick={handleConfirm} className="bg-[#2563EB] h-12 text-white px-6 py-2 rounded-lg shadow">
           Confirm Shipment
         </button>
       </div>

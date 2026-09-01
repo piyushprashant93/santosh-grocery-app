@@ -1,49 +1,50 @@
 import { Download, Wallet, Clock, Calendar } from "lucide-react"
+import { useState, useEffect } from "react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function FinanceWallet() {
+  const [financeData, setFinanceData] = useState<any>(null);
 
-  const transactions = [
-    {
-      id: "TXN-9921",
-      desc: "Settlement",
-      date: "Oct 24, 2023",
-      amount: "+$1,245.00",
-      type: "credit",
-      status: "Completed"
-    },
-    {
-      id: "TXN-9920",
-      desc: "Order #ORD-7350",
-      date: "Oct 23, 2023",
-      amount: "+$289.90",
-      type: "credit",
-      status: "Pending"
-    },
-    {
-      id: "TXN-9919",
-      desc: "Commission Fee",
-      date: "Oct 23, 2023",
-      amount: "-$12.45",
-      type: "debit",
-      status: "Completed"
-    },
-    {
-      id: "TXN-9918",
-      desc: "Settlement",
-      date: "Oct 20, 2023",
-      amount: "+$850.00",
-      type: "credit",
-      status: "Completed"
-    },
-    {
-      id: "TXN-9917",
-      desc: "Refund #ORD-7349",
-      date: "Oct 20, 2023",
-      amount: "-$67.25",
-      type: "debit",
-      status: "Completed"
-    }
-  ]
+  const fetchFinance = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/finance`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setFinanceData(data.data || data);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchFinance();
+  }, []);
+
+  const handleWithdraw = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/finance/withdraw`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ amount: financeData?.availableBalance || 0 })
+      });
+      if (res.ok) {
+        alert("Withdrawal request submitted successfully!");
+        fetchFinance();
+      } else {
+        alert("Withdrawal failed");
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const resolvedTransactions = financeData?.transactions || [];
 
   const statusStyles: any = {
     Completed: "bg-green-100 text-green-700 border border-[#A4F4CF]",
@@ -82,7 +83,7 @@ export default function FinanceWallet() {
 
             <div>
               <p className="text-sm opacity-80">Available Balance</p>
-              <h2 className="text-[32px] font-playfair mt-2">$3,450.25</h2>
+              <h2 className="text-[32px] font-playfair mt-2">${financeData?.availableBalance ? (typeof financeData.availableBalance === "number" ? financeData.availableBalance.toFixed(2) : financeData.availableBalance) : "3,450.25"}</h2>
             </div>
 
             <div className="w-12 h-12 min-w-12 mt-3 flex items-center justify-center rounded-xl bg-white/20">
@@ -91,7 +92,7 @@ export default function FinanceWallet() {
 
           </div>
 
-          <button className="mt-6 bg-white text-[#0F8A5F] rounded-lg py-2.5 font-medium">
+          <button onClick={handleWithdraw} className="mt-6 bg-white text-[#0F8A5F] rounded-lg py-2.5 font-medium">
             Withdraw Funds
           </button>
 
@@ -105,7 +106,7 @@ export default function FinanceWallet() {
 
             <div>
               <p className="text-[#6A7282] text-sm">Pending Clearance</p>
-              <h2 className="text-[32px] font-playfair mt-2">$450.00</h2>
+              <h2 className="text-[32px] font-playfair mt-2">${financeData?.pendingClearance ? (typeof financeData.pendingClearance === "number" ? financeData.pendingClearance.toFixed(2) : financeData.pendingClearance) : "450.00"}</h2>
               <p className="text-[#6A7282] text-sm mt-6">
                 Funds usually clear within 24–48 hours after delivery.
               </p>
@@ -127,9 +128,9 @@ export default function FinanceWallet() {
 
             <div>
               <p className="text-[#6A7282] text-sm">Next Payout</p>
-              <h2 className="text-[32px] font-playfair mt-2">Oct 31</h2>
+              <h2 className="text-[32px] font-playfair mt-2">{financeData?.nextPayoutDate || "Oct 31"}</h2>
               <p className="text-[#6A7282] text-sm mt-6">
-                Estimated amount: $1,200.00
+                Estimated amount: ${financeData?.nextPayoutAmount ? (typeof financeData.nextPayoutAmount === "number" ? financeData.nextPayoutAmount.toFixed(2) : financeData.nextPayoutAmount) : "1,200.00"}
               </p>
             </div>
 
@@ -190,20 +191,16 @@ export default function FinanceWallet() {
 
             <tbody>
 
-              {transactions.map((t, i) => (
-
-                <tr key={i} className="border-b last:border-none">
-
+              {resolvedTransactions.map((t: any, i: number) => (
+                <tr key={t._id || i} className="border-b last:border-none">
                   <td className="py-4 text-[#6A7282]">
-                    {t.id}
+                    {t.id || t.transactionId || t._id?.substring(0, 8)}
                   </td>
-
                   <td className="py-4 text-[#111827] font-medium">
-                    {t.desc}
+                    {t.desc || t.description}
                   </td>
-
                   <td className="py-4 text-[#6A7282]">
-                    {t.date}
+                    {t.date ? new Date(t.date).toLocaleDateString() : (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                   </td>
 
                   <td
@@ -213,15 +210,15 @@ export default function FinanceWallet() {
                         : "text-[#111827]"
                     }`}
                   >
-                    {t.amount}
+                    {typeof t.amount === "number" ? (t.type === "credit" ? `+$${t.amount.toFixed(2)}` : `-$${t.amount.toFixed(2)}`) : t.amount}
                   </td>
 
                   <td className="py-4 text-end">
 
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status]}`}
+                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Completed"] || "bg-gray-100 text-gray-800"}`}
                     >
-                      {t.status}
+                      {t.status || "Completed"}
                     </span>
 
                   </td>

@@ -10,8 +10,18 @@ import {
   Trash2,
   View
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const cards = [
   {
@@ -181,7 +191,58 @@ export default function FinanceWallet() {
   const [activeFinance, setActiveFinance] = useState(0);
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayout, setOpenPayout] = useState(false);
-  const [openMenu, setOpenMenu] = useState<number | null>(null)
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
+  const [expenses, setExpenses] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [issues, setIssues] = useState<any[]>([]);
+
+  const fetchExpenses = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setExpenses(data.data?.expenses || data.expenses || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const fetchPayroll = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setEmployees(data.data?.payroll || data.payroll || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const fetchMaintenance = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setIssues(data.data?.maintenance || data.maintenance || data.data || []);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    if (activeFinance === 0) fetchExpenses();
+    else if (activeFinance === 1) fetchPayroll();
+    else if (activeFinance === 2) fetchMaintenance();
+  }, [activeFinance]);
+
+  const markMaintenanceResolved = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status: "Resolved" })
+      });
+      if (res.ok) fetchMaintenance();
+    } catch (err) { console.error(err); }
+  };
 
   return (
     <div className="space-y-6">
@@ -321,56 +382,35 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {expenses.map((e, i) => (
-
-                    <tr key={i} className="border-b last:border-none">
-
+                  {expenses.map((e, i) => {
+                    const id = e._id || i.toString();
+                    return (
+                    <tr key={id} className="border-b last:border-none">
                       <td className="py-6 px-6 text-[#0F172A] font-medium text-lg">
                         {e.title}
                       </td>
-
-
                       <td className="py-6 px-6">
-
                         <span className={`px-3 py-1 rounded-full text-sm bg-[#F1F5F9] text-[#475569]`}>
                           {e.category}
                         </span>
-
                       </td>
-
-
                       <td className="py-6 px-6 text-[#64748B]">
-                        {e.date}
+                        {e.date ? new Date(e.date).toLocaleDateString() : "-"}
                       </td>
-
-
                       <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
-                        {e.amount}
+                        ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.amount}
                       </td>
-
-
                       <td className="py-6 px-6">
-
-                        <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-2 w-fit ${statusStyles[e.status]}`}>
-
+                        <span className={`px-3 py-1 rounded-full text-sm flex items-center gap-2 w-fit ${statusStyles[e.status || "Paid"] || "bg-gray-100"}`}>
                           <span className="w-2 h-2 rounded-full bg-current" />
-
-                          {e.status}
-
+                          {e.status || "Paid"}
                         </span>
-
                       </td>
-
-
                       <td className="py-6 px-6 text-end relative">
-
-                        <button
-                          onClick={() => setOpenMenu(openMenu === i ? null : i)}
-                        >
+                        <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
                           <MoreHorizontal size={18} className="text-[#94A3B8]" />
                         </button>
-
-                        {openMenu === i && (
+                        {openMenu === id && (
                           <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
                             <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
@@ -395,10 +435,10 @@ export default function FinanceWallet() {
                       </td>
 
                     </tr>
+                  );
+                })}
 
-                  ))}
-
-                </tbody>
+              </tbody>
 
               </table>
 
@@ -469,99 +509,57 @@ export default function FinanceWallet() {
 
                   <tbody>
 
-                    {employees.map((e, i) => (
-
-                      <tr key={i} className="border-b last:border-none">
-
+                    {employees.map((e, i) => {
+                      const id = e._id || i.toString();
+                      const staff = e.staffId || e;
+                      return (
+                      <tr key={id} className="border-b last:border-none">
                         <td className="py-6 px-6">
-
                           <div className="flex items-center gap-3">
-
-                            <img
-                              src={e.image}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-
+                            <img src={staff.image || staff.imageUrl || "https://randomuser.me/api/portraits/men/32.jpg"} className="w-10 h-10 rounded-full object-cover" />
                             <p className="font-medium text-[#0F172A] text-lg">
-                              {e.name}
+                              {staff.name || "Unknown"}
                             </p>
-
                           </div>
-
                         </td>
-
-
                         <td className="py-6 px-6 text-[#475569]">
-                          {e.role}
+                          {staff.role || "Staff"}
                         </td>
-
-
                         <td className="py-6 px-6 text-[#64748B]">
-                          {e.month}
+                          {e.month || e.period || "-"}
                         </td>
-
-
                         <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
-                          {e.amount}
+                          ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.totalPay || e.amount || "0.00"}
                         </td>
-
-
                         <td className="py-6 px-6">
-
-                          <span className={`px-3 py-1 rounded-full text-sm ${statusEmployeeStyles[e.status]}`}>
-                            {e.status}
+                          <span className={`px-3 py-1 rounded-full text-sm ${statusEmployeeStyles[e.status || "Paid"] || "bg-gray-100"}`}>
+                            {e.status || "Paid"}
                           </span>
-
                         </td>
-
-
                         <td className="py-6 px-6">
-
                           <div className="flex items-center justify-end gap-6">
-
-                            <button className="text-[#059669] font-medium">
-                              Payslip
-                            </button>
-
+                            <button className="text-[#059669] font-medium">Payslip</button>
                             <div className="relative top-1">
-
-                              <button
-                                onClick={() => setOpenMenu(openMenu === i ? null : i)}
-                              >
+                              <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
                                 <MoreHorizontal size={18} className="text-[#94A3B8]" />
                               </button>
-
-                              {openMenu === i && (
+                              {openMenu === id && (
                                 <div className="absolute right-3 top-5 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
-
                                   <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-
                                     <Edit size={16} className="text-[#64748B]" />
-
                                     Edit Salary
-
                                   </button>
-
                                   <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-
                                     <View size={16} className="text-[#64748B]" />
-
                                     View Profile
-
                                   </button>
-
                                 </div>
                               )}
-
                             </div>
-
                           </div>
-
                         </td>
-
                       </tr>
-
-                    ))}
+                    )})}
 
                   </tbody>
 
@@ -599,84 +597,53 @@ export default function FinanceWallet() {
             <div className="grid md:grid-cols-2 gap-6">
 
               {issues.map((item, i) => (
-
-                <div
-                  key={i}
-                  className="border border-[#E5E7EB] bg-white rounded-xl p-6 shadow-sm"
-                >
-
+                <div key={item._id || i} className="border border-[#E5E7EB] bg-white rounded-xl p-6 shadow-sm">
                   <div className="flex items-start justify-between mb-4">
-
                     <div>
-
                       <h3 className="font-playfair text-xl">
                         {item.title}
                       </h3>
-
                       <p className="text-[#64748B] mt-1">
-                        {item.desc}
+                        {item.description || item.desc}
                       </p>
-
                     </div>
-
-                    <span className={`px-3 py-1 rounded-full text-sm ${priorityStyles[item.priority]}`}>
-                      {item.priority} Priority
+                    <span className={`px-3 py-1 rounded-full text-sm ${priorityStyles[item.priority || "Low"] || "bg-gray-100"}`}>
+                      {item.priority || "Low"} Priority
                     </span>
-
                   </div>
-
-
                   <div className="border-t pt-4 grid grid-cols-2 gap-y-4 text-sm">
-
                     <div>
                       <p className="text-[#64748B]">Vendor</p>
-                      <p className="font-medium text-[#0F172A]">{item.vendor}</p>
+                      <p className="font-medium text-[#0F172A]">{item.vendor || "-"}</p>
                     </div>
-
                     <div>
                       <p className="text-[#64748B]">Cost</p>
-                      <p className="font-medium text-[#0F172A]">{item.cost}</p>
+                      <p className="font-medium text-[#0F172A]">${typeof item.cost === "number" ? item.cost.toFixed(2) : item.cost || "0.00"}</p>
                     </div>
-
                     <div>
                       <p className="text-[#64748B]">Date Reported</p>
-                      <p className="font-medium text-[#0F172A]">{item.date}</p>
+                      <p className="font-medium text-[#0F172A]">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</p>
                     </div>
-
                     <div>
                       <p className="text-[#64748B]">Status</p>
-
-                      <div className={`flex items-center gap-1 font-medium ${statusIssueStyles[item.status]}`}>
-
-                        {item.status === "Resolved" && <CheckCircle2 size={16} />}
+                      <div className={`flex items-center gap-1 font-medium ${statusIssueStyles[item.status || "Scheduled"] || "text-gray-500"}`}>
+                        {(item.status === "Resolved" || item.status === "Paid") && <CheckCircle2 size={16} />}
                         {item.status === "In Progress" && <Clock size={16} />}
-
-                        {item.status}
-
+                        {item.status || "Scheduled"}
                       </div>
-
                     </div>
-
                   </div>
-
-
-
                   <div className="flex gap-4 mt-6">
-
                     <button className="flex-1 border border-[#E5E7EB] rounded-lg py-2 bg-[#F8FAFC] text-[#0F172A]">
                       View Details
                     </button>
-
-                    {item.status !== "Resolved" && (
-                      <button className="flex-1 bg-[#059669] text-white rounded-lg py-2">
+                    {(item.status !== "Resolved" && item.status !== "Paid") && (
+                      <button onClick={() => markMaintenanceResolved(item._id)} className="flex-1 bg-[#059669] text-white rounded-lg py-2">
                         Mark Resolved
                       </button>
                     )}
-
                   </div>
-
                 </div>
-
               ))}
 
             </div>

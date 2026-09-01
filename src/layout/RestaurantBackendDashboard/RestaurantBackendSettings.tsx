@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Shield,
@@ -18,6 +18,23 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
+
+const authHeadersForm = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const tabs = [
   { key: "general", label: "General", icon: Settings },
@@ -115,6 +132,69 @@ export default function RestaurantBackendSettings({
     setShow((prev) => ({ ...prev, [field]: !prev[field] }));
   };
   const [activeSettingTab, setActiveSettingTab] = useState("general");
+
+  const [settingsData, setSettingsData] = useState<any>({});
+  const [locationsData, setLocationsData] = useState<any[]>([]);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setSettingsData(data.data?.settings || data.settings || data.data || {});
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  const fetchLocations = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setLocationsData(data.data?.locations || data.locations || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    if (activeSettingTab === "general") fetchSettings();
+    else if (activeSettingTab === "locations") fetchLocations();
+  }, [activeSettingTab]);
+
+  const updateSettings = async () => {
+    try {
+      await fetch(`${API_BASE}/restaurant-panel/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify(settingsData)
+      });
+      alert("Settings updated!");
+    } catch(err) { console.error(err); }
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
+      if (res.ok) fetchSettings();
+    } catch(err) { console.error(err); }
+  };
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
+      if (res.ok) fetchSettings();
+    } catch(err) { console.error(err); }
+  };
   const [data, setData] = useState([
     {
       title: "New Orders",
@@ -189,7 +269,7 @@ export default function RestaurantBackendSettings({
           </p>
         </div>
 
-        <button className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+        <button onClick={updateSettings} className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
           <Save size={16} />
           Save Changes
         </button>
@@ -231,40 +311,39 @@ export default function RestaurantBackendSettings({
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-sm text-[#64748B]">
-                    Restaurant Name
-                  </label>
-
+                  <label className="text-sm text-[#64748B]">Restaurant Name</label>
                   <input
-                    defaultValue="The Golden Spoon"
+                    value={settingsData.restaurantName || ""}
+                    onChange={(e) => setSettingsData({...settingsData, restaurantName: e.target.value})}
+                    placeholder="The Golden Spoon"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
-
                 <div>
                   <label className="text-sm text-[#64748B]">Phone Number</label>
-
                   <input
-                    defaultValue="+1 (555) 123-4567"
+                    value={settingsData.phone || ""}
+                    onChange={(e) => setSettingsData({...settingsData, phone: e.target.value})}
+                    placeholder="+1 (555) 123-4567"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
               </div>
-
               <div className="mt-5">
                 <label className="text-sm text-[#64748B]">Email Address</label>
-
                 <input
-                  defaultValue="contact@goldenspoon.com"
+                  value={settingsData.email || ""}
+                  onChange={(e) => setSettingsData({...settingsData, email: e.target.value})}
+                  placeholder="contact@goldenspoon.com"
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
-
               <div className="mt-5">
                 <label className="text-sm text-[#64748B]">Description</label>
-
                 <textarea
                   rows={4}
+                  value={settingsData.description || ""}
+                  onChange={(e) => setSettingsData({...settingsData, description: e.target.value})}
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
@@ -281,45 +360,38 @@ export default function RestaurantBackendSettings({
               <div className="grid md:grid-cols-2 gap-5 items-start">
                 <div>
                   <label className="text-sm text-[#64748B]">Cuisine Type</label>
-
                   <input
-                    defaultValue="Italian, Continental, Seafood"
+                    value={settingsData.cuisineType || ""}
+                    onChange={(e) => setSettingsData({...settingsData, cuisineType: e.target.value})}
+                    placeholder="Italian, Continental, Seafood"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
-                  <span className="text-sm text-[#62748E80]">
-                    Separate cuisines with commas.
-                  </span>
+                  <span className="text-sm text-[#62748E80]">Separate cuisines with commas.</span>
                 </div>
-
                 <div>
-                  <label className="text-sm text-[#64748B]">
-                    Average Cost for Two
-                  </label>
-
+                  <label className="text-sm text-[#64748B]">Average Cost for Two</label>
                   <input
-                    defaultValue="65.00"
+                    value={settingsData.averageCost || ""}
+                    onChange={(e) => setSettingsData({...settingsData, averageCost: e.target.value})}
+                    placeholder="65.00"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
-
                 <div>
-                  <label className="text-sm text-[#64748B]">
-                    Preparation Time (Avg)
-                  </label>
-
+                  <label className="text-sm text-[#64748B]">Preparation Time (Avg)</label>
                   <input
-                    defaultValue="30-45 mins"
+                    value={settingsData.preparationTime || ""}
+                    onChange={(e) => setSettingsData({...settingsData, preparationTime: e.target.value})}
+                    placeholder="30-45 mins"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
-
                 <div>
-                  <label className="text-sm text-[#64748B]">
-                    Min. Order Value
-                  </label>
-
+                  <label className="text-sm text-[#64748B]">Min. Order Value</label>
                   <input
-                    defaultValue="20.00"
+                    value={settingsData.minOrderValue || ""}
+                    onChange={(e) => setSettingsData({...settingsData, minOrderValue: e.target.value})}
+                    placeholder="20.00"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
@@ -333,28 +405,25 @@ export default function RestaurantBackendSettings({
 
               <div className="flex flex-col items-center">
                 <img
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  src={settingsData.logoUrl || "https://randomuser.me/api/portraits/women/44.jpg"}
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
-
-                <button className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A]">
+                <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
+                <button onClick={() => logoInputRef.current?.click()} className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A]">
                   Change Logo
                 </button>
               </div>
-
               <div className="border-t my-6"></div>
-
               <div>
                 <p className="text-sm text-[#64748B] mb-2">Cover Image</p>
-
                 <div className="relative rounded-xl overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"
+                    src={settingsData.bannerUrl || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
                     className="w-full h-40 object-cover"
                   />
-
+                  <input type="file" ref={bannerInputRef} className="hidden" accept="image/*" onChange={handleBannerUpload} />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <button className="bg-white/80 px-4 py-2 rounded-lg text-sm">
+                    <button onClick={() => bannerInputRef.current?.click()} className="bg-white/80 px-4 py-2 rounded-lg text-sm">
                       Upload Cover
                     </button>
                   </div>
@@ -407,42 +476,33 @@ export default function RestaurantBackendSettings({
 
       {activeSettingTab == "locations" && (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-          {locations.map((loc, i) => (
+          {locationsData.map((loc, i) => (
             <div
-              key={i}
+              key={loc._id || i}
               className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
             >
               <div className="flex justify-between items-start mb-5">
                 <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
                   <Store size={20} className="text-[#64748B]" />
                 </div>
-
                 <MoreHorizontal size={18} className="text-[#94A3B8]" />
               </div>
-
               <h3 className="font-playfair text-xl mb-3">{loc.name}</h3>
-
               <div className="space-y-2 text-[#64748B] text-sm">
                 <p className="flex items-start gap-2">
                   <MapPin size={16} className="mt-0.5" />
                   {loc.address}
                 </p>
-
                 <p className="flex items-center gap-2">
                   <Phone size={16} />
                   {loc.phone}
                 </p>
               </div>
-
               <div className="border-t my-5"></div>
-
               <div className="flex items-center justify-between">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm ${statusStyles[loc.status]}`}
-                >
-                  {loc.status}
+                <span className={`px-3 py-1 rounded-full text-sm ${statusStyles[loc.status || "Active"] || "bg-green-100"}`}>
+                  {loc.status || "Active"}
                 </span>
-
                 <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg text-[#0F172A] shadow-sm">
                   View Dashboard
                 </button>

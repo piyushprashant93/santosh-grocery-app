@@ -1,5 +1,16 @@
 import { Search, Filter, MoreHorizontal, XCircle, CheckCircle2, Eye } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 const refunds = [
   {
     refundId: "REF-3321",
@@ -34,7 +45,38 @@ const statusStyles: any = {
 }
 
 export default function RefundRequests() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<string | null>(null)
+  const [refundsData, setRefundsData] = useState<any[]>([]);
+
+  const fetchRefunds = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/refunds`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.refunds || []));
+        setRefundsData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchRefunds();
+  }, []);
+
+  const updateRefundStatus = async (id: string, status: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/retailer/refunds/${id}`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        fetchRefunds();
+        setOpenIndex(null);
+      }
+    } catch(err) { console.error(err); }
+  };
 
   return (
     <div className="space-y-6">
@@ -116,34 +158,29 @@ export default function RefundRequests() {
 
             <tbody>
 
-              {refunds.map((r, i) => (
-
-                <tr key={i} className="border-b last:border-none">
+              {refundsData.length > 0 ? refundsData.map((r, i) => (
+                <tr key={r._id || i} className="border-b last:border-none">
 
                   <td className="py-5 font-medium text-[#111827]">
-                    {r.refundId}
+                    {r.refundId || r._id?.substring(0, 8)}
                   </td>
-
                   <td className="py-5 text-[#62748E]">
-                    {r.orderId}
+                    {r.orderId || r.order?.id || r.order?._id?.substring(0, 8)}
                   </td>
-
                   <td className="py-5 text-[#374151]">
-                    {r.customer}
+                    {r.customer || r.order?.customer?.name || "Unknown"}
                   </td>
-
                   <td className="py-5 text-[#374151]">
                     {r.reason}
                   </td>
-
                   <td className="py-5 font-medium">
-                    {r.amount}
+                    ${typeof r.amount === "number" ? r.amount.toFixed(2) : r.amount}
                   </td>
 
                   <td className="py-5">
 
-                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[r.status]}`}>
-                      {r.status}
+                    <span className={`px-3 py-1 rounded-full text-xs ${statusStyles[r.status || "Pending"] || "bg-gray-100"}`}>
+                      {r.status || "Pending"}
                     </span>
 
                   </td>
@@ -151,11 +188,11 @@ export default function RefundRequests() {
                   <td className="py-5 text-center relative">
 
                     <button onClick={() =>
-                      setOpenIndex(openIndex === i ? null : i)
+                      setOpenIndex(openIndex === (r._id || i) ? null : (r._id || i))
                     } className="p-2 hover:bg-gray-100 rounded-lg">
                       <MoreHorizontal size={18} />
                     </button>
-                    {openIndex === i && (
+                    {openIndex === (r._id || i) && (
                       <div className="absolute bottom-12 right-10 mt-2 w-[180px] bg-white rounded-xl shadow-lg border border-[#E5E7EB] overflow-hidden z-50">
 
                         <button
@@ -166,7 +203,7 @@ export default function RefundRequests() {
                           View Details
                         </button>
                         <button
-                          onClick={() => setOpenIndex(null)}
+                          onClick={() => updateRefundStatus(r._id, "Approved")}
                           className="flex items-center gap-3 text-sm w-full px-4 py-3 text-left hover:bg-green-50 text-green-600"
                         >
                           <CheckCircle2 size={18} />
@@ -174,7 +211,7 @@ export default function RefundRequests() {
                         </button>
 
                         <button
-                          onClick={() => setOpenIndex(null)}
+                          onClick={() => updateRefundStatus(r._id, "Rejected")}
                           className="flex items-center gap-3 text-sm w-full px-4 py-3 text-left hover:bg-red-50 text-red-600"
                         >
                           <XCircle size={18} />
@@ -187,7 +224,11 @@ export default function RefundRequests() {
 
                 </tr>
 
-              ))}
+              )) : null}
+              
+              {refundsData.length === 0 && (
+                <EmptyTableState colSpan={6} message="No refund requests found." />
+              )}
 
             </tbody>
 

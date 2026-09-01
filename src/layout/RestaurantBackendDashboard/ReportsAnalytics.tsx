@@ -23,7 +23,17 @@ import {
   Receipt,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const stats = [
   {
@@ -139,6 +149,62 @@ const peakData = [
 ]
 
 export default function ReportsAnalytics() {
+  const [days, setDays] = useState(7);
+  const [reportData, setReportData] = useState<any>(null);
+
+  const fetchReports = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/reports?days=${days}`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setReportData(data.data || data);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, [days]);
+
+  const resolvedStats = reportData?.stats || [
+    {
+      icon: DollarSign,
+      label: "Total Revenue",
+      value: reportData?.totalRevenue ? `$${reportData.totalRevenue}` : "$12,845.50",
+      change: "+12.5%",
+      color: "text-green-600",
+    },
+    {
+      icon: Package,
+      label: "Total Orders",
+      value: reportData?.totalOrders?.toString() || "854",
+      change: "+6.2%",
+      color: "text-blue-600",
+    },
+    {
+      icon: DollarSign,
+      label: "Avg. Order Value",
+      value: reportData?.avgOrderValue ? `$${reportData.avgOrderValue}` : "$32.40",
+      change: "-2.4%",
+      color: "text-orange-500",
+    },
+    {
+      icon: Users,
+      label: "New Customers",
+      value: reportData?.newCustomers?.toString() || "128",
+      change: "+16.3%",
+      color: "text-purple-600",
+    },
+  ];
+
+  const resolvedRevenueData = reportData?.revenueData || reportData?.revenueTrend || revenueData;
+  const resolvedCategoryData = reportData?.categoryData || reportData?.salesMix || categoryData;
+  const resolvedCategoryExpense = reportData?.categoryExpense || reportData?.expensesByCategory || categoryExpense;
+  const resolvedExpenseList = reportData?.expenseList || reportData?.expensesByTitle || expenseList;
+  const resolvedTopItems = reportData?.topItems || topItems;
+  const resolvedPeakData = reportData?.peakData || reportData?.peakHours || peakData;
+
+  const totalMonthlyExpense = reportData?.totalMonthlyExpense || "13,070.00";
   const change = "-3.2%";
   const isNegative = change.includes("-");
   return (
@@ -158,10 +224,10 @@ export default function ReportsAnalytics() {
           <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white">
             <Calendar size={18} />
 
-            <select name="" id="" className="outline-none">
-              <option value="">Last 7 Days</option>
-              <option value="">Last 30 Days</option>
-              <option value="">Last 90 Days</option>
+            <select value={days} onChange={(e) => setDays(Number(e.target.value))} className="outline-none bg-transparent">
+              <option value={7}>Last 7 Days</option>
+              <option value={30}>Last 30 Days</option>
+              <option value={90}>Last 90 Days</option>
             </select>
           </button>
 
@@ -173,7 +239,7 @@ export default function ReportsAnalytics() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((s, i) => {
+        {resolvedStats.map((s: any, i: number) => {
           const Icon = s.icon;
           const isNegative = s.change.includes("-");
 
@@ -217,7 +283,7 @@ export default function ReportsAnalytics() {
             </p>
           </div>
 
-          <p className="text-3xl font-semibold text-[#0F172A]">$13,070.00</p>
+          <p className="text-3xl font-semibold text-[#0F172A]">${typeof totalMonthlyExpense === "number" ? totalMonthlyExpense.toFixed(2) : totalMonthlyExpense}</p>
 
           <p
             className={`text-sm mt-2 flex items-center gap-1 ${isNegative ? "text-red-500" : "text-green-600"
@@ -243,7 +309,7 @@ export default function ReportsAnalytics() {
 
           <div className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={revenueData}>
+              <LineChart data={resolvedRevenueData}>
                 <XAxis
                   dataKey="day"
                   axisLine={true}
@@ -281,15 +347,15 @@ export default function ReportsAnalytics() {
             <ResponsiveContainer width={200} height={200}>
               <PieChart>
                 <Pie
-                  data={categoryData}
+                  data={resolvedCategoryData}
                   dataKey="value"
                   innerRadius={70}
                   outerRadius={90}
                   paddingAngle={2}
                   stroke="none"
                 >
-                  {categoryData.map((c, i) => (
-                    <Cell key={i} fill={c.color} />
+                  {resolvedCategoryData.map((c: any, i: number) => (
+                    <Cell key={i} fill={c.color || "#3B82F6"} />
                   ))}
                 </Pie>
               </PieChart>
@@ -297,7 +363,7 @@ export default function ReportsAnalytics() {
           </div>
 
           <div className="space-y-3 mt-6">
-            {categoryData.map((c, i) => (
+            {resolvedCategoryData.map((c: any, i: number) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span
@@ -339,20 +405,20 @@ export default function ReportsAnalytics() {
                 <p className="text-right">% OF TOTAL</p>
               </div>
 
-              {categoryExpense.map((item, i) => (
+              {resolvedCategoryExpense.map((item: any, i: number) => (
                 <div
                   key={i}
                   className="grid grid-cols-3 py-3 border-b last:border-2"
                 >
                   <p className="text-[#111827]">{item.name}</p>
-                  <p className="text-right">${item.amount}</p>
+                  <p className="text-right">${typeof item.amount === "number" ? item.amount.toFixed(2) : item.amount}</p>
                   <p className="text-right text-[#475569]">{item.percent}</p>
                 </div>
               ))}
 
               <div className="grid grid-cols-3 pt-4 mt-2 font-semibold">
                 <p>Total</p>
-                <p className="text-right">$13070.00</p>
+                <p className="text-right">${typeof totalMonthlyExpense === "number" ? totalMonthlyExpense.toFixed(2) : totalMonthlyExpense}</p>
                 <p className="text-right">100.0%</p>
               </div>
 
@@ -375,14 +441,14 @@ export default function ReportsAnalytics() {
                 <p className="text-right">ENTRIES</p>
               </div>
 
-              {expenseList.map((item, i) => (
+              {resolvedExpenseList.map((item: any, i: number) => (
                 <div
                   key={i}
                   className="grid grid-cols-4 py-3 border-b last:border-none"
                 >
                   <p className="text-[#111827] break-words">{item.title}</p>
                   <p className="text-[#475569]">{item.category}</p>
-                  <p className="text-right">${item.amount}</p>
+                  <p className="text-right">${typeof item.amount === "number" ? item.amount.toFixed(2) : item.amount}</p>
                   <p className="text-right">{item.entries}</p>
                 </div>
               ))}
@@ -411,14 +477,14 @@ export default function ReportsAnalytics() {
         <p className="text-right">REVENUE</p>
       </div>
 
-      {topItems.map((item, i) => (
+      {resolvedTopItems.map((item: any, i: number) => (
         <div
           key={i}
           className="grid grid-cols-3 py-3 border-b last:border-none"
         >
           <p className="text-[#111827]">{item.name}</p>
           <p className="text-right">{item.orders}</p>
-          <p className="text-right">${item.revenue}</p>
+          <p className="text-right">${typeof item.revenue === "number" ? item.revenue.toFixed(2) : item.revenue}</p>
         </div>
       ))}
 
@@ -442,7 +508,7 @@ export default function ReportsAnalytics() {
     <div className="h-[350px]">
 
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={peakData}>
+        <BarChart data={resolvedPeakData}>
 
           <XAxis
             dataKey="time"

@@ -1,5 +1,14 @@
 import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const orders = [
   {
@@ -183,9 +192,31 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     setReady(prev => [...prev, order])
   }
 
-  const completeOrder = (index: number) => {
+  const completeOrder = async (index: number) => {
+    // Ideally we'd hit /orders/:id/status here
     setReady(prev => prev.filter((_, i) => i !== index))
   }
+
+  const fetchLiveOrders = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/live`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const live = data.data?.orders || data.orders || data.data || [];
+        if (live.length > 0) {
+          setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New"));
+          setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking"));
+          setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveOrders();
+  }, []);
 
   const Card = ({ order, action, actionLabel, color }: { order: any, action?: () => void, actionLabel?: string, color?: string }) => (
     <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
