@@ -132,6 +132,12 @@ export default function AccountSettings() {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [deleteAddressLoading, setDeleteAddressLoading] = useState(false);
   const [deleteAddressError, setDeleteAddressError] = useState("");
+  
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+  const [showBackupCodesModal, setShowBackupCodesModal] = useState(false);
+  const [regenerateLoading, setRegenerateLoading] = useState(false);
+  const [regenerateError, setRegenerateError] = useState("");
+  
   const [showPasswordSuccessModal, setShowPasswordSuccessModal] =
     useState(false);
   const passwordRegex =
@@ -935,6 +941,39 @@ export default function AccountSettings() {
     }
   };
 
+  const handleRegenerateBackupCodes = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setRegenerateError("Authentication token not found.");
+      return;
+    }
+    setRegenerateLoading(true);
+    setRegenerateError("");
+    
+    try {
+      const response = await fetch(`${API_BASE}/auth/2fa/backup-codes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to regenerate backup codes.");
+      }
+      
+      setBackupCodes(data.data?.backupCodes || []);
+      setShowBackupCodesModal(true);
+    } catch (err) {
+      setRegenerateError(err instanceof Error ? err.message : "Something went wrong.");
+      alert(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setRegenerateLoading(false);
+    }
+  };
+
   const handleEnable2FAClick = async () => {
     const token = localStorage.getItem("authToken");
 
@@ -1309,16 +1348,25 @@ export default function AccountSettings() {
             </div>
           </div>
           {twoFactorEnabled ? (
-            <button
-              onClick={() => {
-                setDisable2FAError("");
-                setDisable2FACode("");
-                setShow2FADisableModal(true);
-              }}
-              className="border border-red-300 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50"
-            >
-              Disable 2FA
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleRegenerateBackupCodes}
+                disabled={regenerateLoading}
+                className="border border-[#E5E7EB] px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm md:text-base"
+              >
+                {regenerateLoading ? "Regenerating..." : "Regenerate Backup Codes"}
+              </button>
+              <button
+                onClick={() => {
+                  setDisable2FAError("");
+                  setDisable2FACode("");
+                  setShow2FADisableModal(true);
+                }}
+                className="border border-red-300 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 text-sm md:text-base"
+              >
+                Disable 2FA
+              </button>
+            </div>
           ) : (
             <button
               onClick={handleEnable2FAClick}
@@ -1613,6 +1661,42 @@ export default function AccountSettings() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {showBackupCodesModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowBackupCodesModal(false)}
+          />
+          <div className="relative bg-white rounded-xl w-full max-w-md p-6 overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-playfair text-xl">New Backup Codes</h3>
+              <button
+                onClick={() => setShowBackupCodesModal(false)}
+                className="text-[#6A7282] hover:text-[#0F172A] text-2xl leading-none"
+              >
+                &times;
+              </button>
+            </div>
+            <p className="text-sm text-[#6A7282] mb-4">
+              Please save these backup codes in a secure place. They can be used to recover your account if you lose access to your authenticator app.
+            </p>
+            <div className="bg-gray-100 p-4 rounded-lg grid grid-cols-2 gap-2 text-center mb-6">
+              {backupCodes.map((code, index) => (
+                <div key={index} className="font-mono text-sm tracking-wider font-semibold">
+                  {code}
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowBackupCodesModal(false)}
+              className="w-full bg-[#009966] text-white py-2 rounded-lg"
+            >
+              I have saved them
+            </button>
+          </div>
         </div>
       )}
 
