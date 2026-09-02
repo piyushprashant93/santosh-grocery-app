@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   ShoppingBag,
   Store,
+  Star,
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -19,6 +20,7 @@ const menu = [
   { id: "menu-management", label: "Menu Management", icon: Utensils },
   { id: "finance", label: "Expenses", icon: Wallet },
   { id: "reports", label: "Reports & Analytics", icon: BarChart3 },
+  { id: "reviews", label: "Reviews", icon: Star },
   { id: "support", label: "Support", icon: MessageSquare },
   { id: "settings", label: "Settings", icon: Settings },
 ]

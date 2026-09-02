@@ -1,107 +1,6 @@
 import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const stats = [
-  {
-    title: "Total Orders",
-    value: "156",
-    change: "+12%",
-    icon: Package,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Total Revenue",
-    value: "$4,250",
-    change: "+8%",
-    icon: DollarSign,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Active Customers",
-    value: "89",
-    change: "+5%",
-    icon: Users,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Avg Prep Time",
-    value: "18m",
-    change: "-2%",
-    icon: Clock,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#2563EB]",
-    trend: "down"
-  }
-]
-
-const orders = [
-  {
-    id: "#ORD-8821",
-    customer: "John Doe",
-    time: "2 min ago",
-    items: "2x Chicken Burger, 1x Coke",
-    status: "New",
-    total: "$24.50"
-  },
-  {
-    id: "#ORD-8820",
-    customer: "Alice Smith",
-    time: "15 min ago",
-    items: "1x Veg Pizza, 1x Garlic Bread",
-    status: "Cooking",
-    total: "$18.00"
-  },
-  {
-    id: "#ORD-8819",
-    customer: "Bob Wilson",
-    time: "25 min ago",
-    items: "3x Pasta Alfredo",
-    status: "Ready",
-    total: "$45.00"
-  },
-  {
-    id: "#ORD-8818",
-    customer: "Emma Davis",
-    time: "1 hour ago",
-    items: "1x Caesar Salad",
-    status: "Delivered",
-    total: "$12.50"
-  }
-]
-
-const popularItems = [
-  {
-    name: "Spicy Chicken Bowl",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200"
-  },
-  {
-    name: "Spicy Chicken Bowl",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200"
-  },
-  {
-    name: "Spicy Chicken Bowl",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200"
-  },
-  {
-    name: "Spicy Chicken Bowl",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200"
-  }
-]
-
 const statusStyles: any = {
   New: "bg-blue-100 text-blue-600",
   Cooking: "bg-orange-100 text-orange-600",
@@ -111,69 +10,90 @@ const statusStyles: any = {
 
 export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurants/my/dashboard", {
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
           }
         });
+        const json = await res.json();
         if (res.ok) {
-          const json = await res.json();
           setDashboardData(json.data || json);
+        } else {
+          setError(json.message || "Failed to load dashboard.");
         }
       } catch (err) {
         console.error(err);
+        setError("Network error occurred.");
       }
     };
     fetchDashboard();
   }, []);
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full pt-20 text-center">
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-[#E5E7EB] max-w-md w-full">
+          <h2 className="text-2xl font-playfair font-bold text-red-600 mb-2">Setup Required</h2>
+          <p className="text-[#64748B] mb-6">{error}</p>
+          <button 
+            onClick={() => setActiveTab("settings")}
+            className="bg-[#009966] text-white px-6 py-2.5 rounded-lg font-medium w-full"
+          >
+            Go to Settings
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const activeStats = [
     {
       title: "Total Orders",
-      value: dashboardData?.totalOrders ? dashboardData.totalOrders.toLocaleString() : stats[0].value,
-      change: dashboardData?.ordersChange || stats[0].change,
+      value: dashboardData?.totalOrders ? dashboardData.totalOrders.toLocaleString() : "0",
+      change: dashboardData?.ordersChange || "0%",
       icon: Package,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      trend: dashboardData?.ordersTrend || stats[0].trend
+      trend: dashboardData?.ordersTrend || "up"
     },
     {
       title: "Total Revenue",
-      value: dashboardData?.totalRevenue ? `$${dashboardData.totalRevenue.toLocaleString()}` : stats[1].value,
-      change: dashboardData?.revenueChange || stats[1].change,
+      value: dashboardData?.totalRevenue ? `$${dashboardData.totalRevenue.toLocaleString()}` : "$0",
+      change: dashboardData?.revenueChange || "0%",
       icon: DollarSign,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      trend: dashboardData?.revenueTrend || stats[1].trend
+      trend: dashboardData?.revenueTrend || "up"
     },
     {
       title: "Active Customers",
-      value: dashboardData?.activeCustomers ? dashboardData.activeCustomers.toLocaleString() : stats[2].value,
-      change: dashboardData?.customersChange || stats[2].change,
+      value: dashboardData?.activeCustomers ? dashboardData.activeCustomers.toLocaleString() : "0",
+      change: dashboardData?.customersChange || "0%",
       icon: Users,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      trend: dashboardData?.customersTrend || stats[2].trend
+      trend: dashboardData?.customersTrend || "up"
     },
     {
       title: "Avg Prep Time",
-      value: dashboardData?.avgPrepTime || stats[3].value,
-      change: dashboardData?.prepTimeChange || stats[3].change,
+      value: dashboardData?.avgPrepTime || "0m",
+      change: dashboardData?.prepTimeChange || "0%",
       icon: Clock,
       iconBg: "bg-blue-100",
       iconColor: "text-[#2563EB]",
-      trend: dashboardData?.prepTimeTrend || stats[3].trend
+      trend: dashboardData?.prepTimeTrend || "down"
     }
   ];
 
-  const activeOrders = dashboardData?.recentOrders || orders;
-  const activePopularItems = dashboardData?.popularItems || popularItems;
+  const activeOrders = dashboardData?.recentOrders || [];
+  const activePopularItems = dashboardData?.popularItems || [];
 
   return (
 

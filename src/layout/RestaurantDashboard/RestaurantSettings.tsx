@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Shield,
@@ -26,6 +26,16 @@ const tabs = [
   { key: "security", label: "Security", icon: Shield },
   { key: "team", label: "Team", icon: Users },
 ];
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const locations = [
   {
@@ -102,6 +112,69 @@ export default function RestaurantSettings({
   });
 
   const [members, setMembers] = useState(initialMembers);
+  const [profile, setProfile] = useState<any>({});
+  const [locs, setLocs] = useState<any[]>(locations);
+
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data.data?.restaurant || data.restaurant || data.data || {});
+        if (data.data?.restaurant?.locations) setLocs(data.data.restaurant.locations);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const saveProfile = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify(profile)
+      });
+      if (res.ok) alert("Settings saved!");
+    } catch (err) { console.error(err); }
+  };
+
+  const handleUpload = async (type: 'logo' | 'banner', file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/${type}`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        body: formData
+      });
+      if (res.ok) fetchProfile();
+    } catch (err) { console.error(err); }
+  };
+
+  const deleteLocation = async (id: string) => {
+    if (!id || !confirm("Delete location?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations/${id}`, {
+        method: "DELETE",
+        headers: authHeaders()
+      });
+      if (res.ok) fetchProfile();
+    } catch (err) { console.error(err); }
+  };
+
+  const saveNotifications = async () => {
+    try {
+      await fetch(`${API_BASE}/restaurant-panel/settings/notifications`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ notifications: data })
+      });
+      alert("Notifications saved!");
+    } catch (err) { console.error(err); }
+  };
 
   const toggleAccess = (index: number) => {
     setMembers((prev) =>
@@ -189,7 +262,7 @@ export default function RestaurantSettings({
           </p>
         </div>
 
-        <button className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+        <button onClick={activeSettingTab === 'notifications' ? saveNotifications : saveProfile} className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
           <Save size={16} />
           Save Changes
         </button>
@@ -236,7 +309,8 @@ export default function RestaurantSettings({
                   </label>
 
                   <input
-                    defaultValue="The Golden Spoon"
+                    value={profile.name || "The Golden Spoon"}
+                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
@@ -245,7 +319,8 @@ export default function RestaurantSettings({
                   <label className="text-sm text-[#64748B]">Phone Number</label>
 
                   <input
-                    defaultValue="+1 (555) 123-4567"
+                    value={profile.phone || "+1 (555) 123-4567"}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
@@ -255,7 +330,8 @@ export default function RestaurantSettings({
                 <label className="text-sm text-[#64748B]">Email Address</label>
 
                 <input
-                  defaultValue="contact@goldenspoon.com"
+                  value={profile.email || "contact@goldenspoon.com"}
+                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
@@ -265,6 +341,8 @@ export default function RestaurantSettings({
 
                 <textarea
                   rows={4}
+                  value={profile.description || ""}
+                  onChange={(e) => setProfile({ ...profile, description: e.target.value })}
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
@@ -333,13 +411,16 @@ export default function RestaurantSettings({
 
               <div className="flex flex-col items-center">
                 <img
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  src={profile.logo || "https://randomuser.me/api/portraits/women/44.jpg"}
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
 
-                <button className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A]">
+                <label className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A] text-center cursor-pointer block">
                   Change Logo
-                </button>
+                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) handleUpload('logo', e.target.files[0]);
+                  }} />
+                </label>
               </div>
 
               <div className="border-t my-6"></div>
@@ -347,16 +428,19 @@ export default function RestaurantSettings({
               <div>
                 <p className="text-sm text-[#64748B] mb-2">Cover Image</p>
 
-                <div className="relative rounded-xl overflow-hidden">
+                <div className="relative rounded-xl overflow-hidden group">
                   <img
-                    src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"
+                    src={profile.banner || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
                     className="w-full h-40 object-cover"
                   />
 
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <button className="bg-white/80 px-4 py-2 rounded-lg text-sm">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition">
+                    <label className="bg-white/80 px-4 py-2 rounded-lg text-sm cursor-pointer">
                       Upload Cover
-                    </button>
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) handleUpload('banner', e.target.files[0]);
+                      }} />
+                    </label>
                   </div>
                 </div>
               </div>
@@ -407,9 +491,9 @@ export default function RestaurantSettings({
 
       {activeSettingTab == "locations" && (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-          {locations.map((loc, i) => (
+          {locs.map((loc, i) => (
             <div
-              key={i}
+              key={loc._id || i}
               className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
             >
               <div className="flex justify-between items-start mb-5">
@@ -417,10 +501,13 @@ export default function RestaurantSettings({
                   <Store size={20} className="text-[#64748B]" />
                 </div>
 
-                <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                <div className="flex gap-2">
+                  {loc._id && <span onClick={() => deleteLocation(loc._id)} className="text-red-500 cursor-pointer text-sm font-medium">Delete</span>}
+                  <MoreHorizontal size={18} className="text-[#94A3B8] cursor-pointer" />
+                </div>
               </div>
 
-              <h3 className="font-playfair text-xl mb-3">{loc.name}</h3>
+              <h3 className="font-playfair text-xl mb-3">{loc.name || loc.address}</h3>
 
               <div className="space-y-2 text-[#64748B] text-sm">
                 <p className="flex items-start gap-2">
@@ -430,7 +517,7 @@ export default function RestaurantSettings({
 
                 <p className="flex items-center gap-2">
                   <Phone size={16} />
-                  {loc.phone}
+                  {loc.phone || profile.phone}
                 </p>
               </div>
 
@@ -438,9 +525,9 @@ export default function RestaurantSettings({
 
               <div className="flex items-center justify-between">
                 <span
-                  className={`px-3 py-1 rounded-full text-sm ${statusStyles[loc.status]}`}
+                  className={`px-3 py-1 rounded-full text-sm ${statusStyles[loc.status || "Active"] || "bg-green-100 text-green-700"}`}
                 >
-                  {loc.status}
+                  {loc.status || "Active"}
                 </span>
 
                 <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg text-[#0F172A] shadow-sm">

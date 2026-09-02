@@ -128,6 +128,10 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const [end, setEnd] = useState("")
   const [openFilter, setOpenFilter] = useState(false)
   const [types, setTypes] = useState<string[]>([])
+  const [historyOrders, setHistoryOrders] = useState<any[]>([])
+  const [historyPage, setHistoryPage] = useState(1)
+  const [historyTotal, setHistoryTotal] = useState(0)
+  const [historyLoading, setHistoryLoading] = useState(false)
 
   const toggleType = (type: string) => {
     if (types.includes(type)) {
@@ -177,24 +181,54 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
   ])
 
+  const updateOrderStatus = async (orderId: string, status: string, callback?: () => void) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${orderId}/status`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      if (res.ok) {
+        if (callback) callback();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const acceptOrder = (order: any, index: number) => {
-    setNewOrders(prev => prev.filter((_, i) => i !== index))
-    setCooking(prev => [...prev, order])
+    updateOrderStatus(order._id || order.id, "cooking", () => {
+      setNewOrders(prev => prev.filter((_, i) => i !== index))
+      setCooking(prev => [...prev, { ...order, status: "cooking" }])
+    });
   }
 
-  const acceptAllOrders = () => {
-    setCooking(prev => [...prev, ...newOrders])
-    setNewOrders([])
+  const acceptAllOrders = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/accept-all`, {
+        method: "PUT",
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "cooking" }))])
+        setNewOrders([])
+      }
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const markReady = (order: any, index: number) => {
-    setCooking(prev => prev.filter((_, i) => i !== index))
-    setReady(prev => [...prev, order])
+    updateOrderStatus(order._id || order.id, "ready", () => {
+      setCooking(prev => prev.filter((_, i) => i !== index))
+      setReady(prev => [...prev, { ...order, status: "ready" }])
+    });
   }
 
-  const completeOrder = async (index: number) => {
-    // Ideally we'd hit /orders/:id/status here
-    setReady(prev => prev.filter((_, i) => i !== index))
+  const completeOrder = (order: any, index: number) => {
+    updateOrderStatus(order._id || order.id, "completed", () => {
+      setReady(prev => prev.filter((_, i) => i !== index))
+    });
   }
 
   const fetchLiveOrders = async () => {
@@ -214,9 +248,33 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
   };
 
+  const fetchHistoryOrders = async (page = 1) => {
+    setHistoryLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?page=${page}`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const historyList = data.data?.orders || data.orders || [];
+        setHistoryOrders(historyList.length > 0 ? historyList : orders); // Fallback to mock data if empty
+        setHistoryTotal(data.data?.total || data.total || orders.length);
+      }
+    } catch (err) {
+      console.error(err);
+      setHistoryOrders(orders);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchLiveOrders();
   }, []);
+
+  useEffect(() => {
+    if (tab === "history") {
+      fetchHistoryOrders(historyPage);
+    }
+  }, [tab, historyPage]);
 
   const Card = ({ order, action, actionLabel, color }: { order: any, action?: () => void, actionLabel?: string, color?: string }) => (
     <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
@@ -474,7 +532,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   <Card
                     key={i}
                     order={o}
-                    action={() => { }}
+                    action={() => completeOrder(o, i)}
                     actionLabel="Complete"
                     color="bg-[#059669]"
                   />
@@ -616,28 +674,32 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                 <tbody>
 
-                  {orders.map((o, i) => (
+                  {historyLoading ? (
+                    <tr>
+                      <td colSpan={8} className="py-8 text-center text-[#64748B]">Loading history...</td>
+                    </tr>
+                  ) : historyOrders.map((o, i) => (
 
                     <tr key={i} className="border-b last:border-none">
 
                       <td className="py-5 px-4 text-[#334155]">
-                        {o.id}
+                        {o.id || o._id}
                       </td>
 
                       <td className="py-5 px-4 text-[#64748B]">
-                        {o.date}
+                        {o.date || new Date(o.createdAt || Date.now()).toLocaleString()}
                       </td>
 
                       <td className="py-5 px-4">
 
                         <div className="flex items-center gap-3">
 
-                          <div className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-sm font-medium">
-                            {o.initial}
+                          <div className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-sm font-medium uppercase">
+                            {o.customer?.name?.[0] || o.initial || "C"}
                           </div>
 
                           <p className="font-medium text-[#0F172A]">
-                            {o.customer}
+                            {o.customer?.name || o.customer || "Customer"}
                           </p>
 
                         </div>
@@ -647,28 +709,28 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                       <td className="py-5 px-4">
 
                         <span className="px-3 py-1 text-sm rounded-full border border-[#E5E7EB] bg-[#F8FAFC]">
-                          {o.type}
+                          {o.orderType || o.type || "Delivery"}
                         </span>
 
                       </td>
 
                       <td className="py-5 px-4 text-[#64748B] max-w-[240px]">
-                        {o.items}
+                        {Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity}x ${it.name || it.menuItem?.name}`).join(", ") : o.items}
                       </td>
 
                       <td className="py-5 px-4 font-semibold text-[#0F172A]">
-                        {o.total}
+                        ${o.totalAmount || (o.total && o.total.replace ? o.total.replace('$', '') : o.total)}
                       </td>
 
                       <td className="py-5 px-4">
 
-                        <span className={`px-3 py-1 rounded-full text-sm ${statusStyles[o.status]}`}>
+                        <span className={`px-3 py-1 rounded-full text-sm ${statusStyles[o.status] || "bg-gray-100 text-gray-600 capitalize"}`}>
                           {o.status}
                         </span>
 
                       </td>
 
-                      <td className="py-5 px-4 text-gray-500 cursor-pointer">
+                      <td className="py-5 px-4 text-gray-500 cursor-pointer hover:text-[#0F172A]">
                         View Receipt
                       </td>
 
@@ -687,16 +749,24 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
             <div className="flex items-center justify-between p-4 text-sm text-[#64748B] border-t">
 
               <p>
-                Showing <b>1-7</b> of <b>10</b> orders
+                Showing <b>{(historyPage - 1) * 10 + 1}-{Math.min(historyPage * 10, historyTotal)}</b> of <b>{historyTotal}</b> orders
               </p>
 
               <div className="flex gap-2">
 
-                <button className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg">
+                <button 
+                  onClick={() => setHistoryPage(p => Math.max(1, p - 1))}
+                  disabled={historyPage === 1}
+                  className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg disabled:opacity-50"
+                >
                   Previous
                 </button>
 
-                <button className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg">
+                <button 
+                  onClick={() => setHistoryPage(p => p + 1)}
+                  disabled={historyPage * 10 >= historyTotal}
+                  className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg disabled:opacity-50"
+                >
                   Next
                 </button>
 

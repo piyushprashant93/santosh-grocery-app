@@ -66,7 +66,7 @@ export default function Inventory({
 }: {
   setActiveTab: (tab: string) => void;
 }) {
-  const [tab, setTab] = useState<"beverage" | "kitchen">("beverage");
+  const [tab, setTab] = useState<"beverage" | "kitchen" | "recipes">("beverage");
   const [subTab, setSubTab] = useState<"cooked" | "items">("cooked");
   const [subTab2, setSubTab2] = useState<"raw" | "solid">("raw");
 
@@ -74,6 +74,7 @@ export default function Inventory({
   const [cooked, setCooked] = useState<any[]>([]);
   const [rawItems, setRawItems] = useState<any[]>([]);
   const [solidItems, setSolidItems] = useState<any[]>([]);
+  const [recipes, setRecipes] = useState<any[]>([]);
 
   const fetchInventory = async () => {
     try {
@@ -98,11 +99,23 @@ export default function Inventory({
     } catch (e) { console.error(e); }
   };
 
+  const fetchRecipes = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/recipes`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setRecipes(data.data?.recipes || data.recipes || data.data || []);
+      }
+    } catch (e) { console.error(e); }
+  };
+
   useEffect(() => {
     if (tab === "kitchen") {
       fetchInventory();
-    } else {
+    } else if (tab === "beverage") {
       fetchBeverages();
+    } else if (tab === "recipes") {
+      fetchRecipes();
     }
   }, [tab]);
 
@@ -119,6 +132,38 @@ export default function Inventory({
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: authHeaders() });
       if (res.ok) fetchInventory();
+    } catch (e) { console.error(e); }
+  }
+
+  const deleteRecipe = async (id: string) => {
+    if(!confirm("Delete this recipe?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/recipes/${id}`, { method: "DELETE", headers: authHeaders() });
+      if (res.ok) fetchRecipes();
+    } catch (e) { console.error(e); }
+  }
+
+  const adjustStock = async (id: string, type: 'beverage' | 'inventory') => {
+    const qty = window.prompt("Enter quantity to adjust (use negative for deduction):", "0");
+    if (!qty || isNaN(Number(qty))) return;
+    const notes = window.prompt("Enter reason/notes for adjustment:", "Manual adjustment");
+    
+    try {
+      const endpoint = type === 'beverage' 
+        ? `${API_BASE}/restaurant-panel/inventory/beverages/${id}/adjust` 
+        : `${API_BASE}/restaurant-panel/inventory/${id}/adjust`;
+        
+      const res = await fetch(endpoint, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ quantity: Number(qty), notes: notes || "" })
+      });
+      if (res.ok) {
+        if (type === 'beverage') fetchBeverages();
+        else fetchInventory();
+      } else {
+        alert("Failed to adjust stock.");
+      }
     } catch (e) { console.error(e); }
   }
 
@@ -199,6 +244,17 @@ export default function Inventory({
           >
             Kitchen Stock Management
           </button>
+
+          <button
+            onClick={() => setTab("recipes")}
+            className={`pb-3 text-sm font-medium ${
+              tab === "recipes"
+                ? "text-[#009966] border-b-2 border-[#009966]"
+                : "text-[#64748B]"
+            }`}
+          >
+            Recipes
+          </button>
         </div>
 
         {tab === "beverage" && (
@@ -251,11 +307,19 @@ export default function Inventory({
                         </span>
                       </td>
                       <td className="text-end cursor-pointer text-red-600">
-                        <Trash2
-                          onClick={() => deleteBeverage(b._id)}
-                          size={18}
-                          className="mx-auto"
-                        />
+                        <div className="flex gap-3 justify-end items-center">
+                          <RefreshCcw
+                            onClick={() => adjustStock(b._id, 'beverage')}
+                            size={16}
+                            className="text-[#009966] cursor-pointer"
+                          />
+                          <Pencil size={16} className="text-blue-600 cursor-pointer" />
+                          <Trash2
+                            onClick={() => deleteBeverage(b._id)}
+                            size={18}
+                            className="text-red-600 cursor-pointer"
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -433,6 +497,7 @@ export default function Inventory({
                             <td>
                               <div className="flex justify-center gap-3">
                                 <RefreshCcw
+                                  onClick={() => adjustStock(item._id, 'inventory')}
                                   size={16}
                                   className="text-[#009966] cursor-pointer"
                                 />
@@ -455,6 +520,65 @@ export default function Inventory({
                 </div>
               </div>
             )}
+          </>
+        )}
+
+        {tab === "recipes" && (
+          <>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-[#64748B]">Total: {recipes.length} recipes</p>
+
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#009966] text-white rounded-lg">
+                <Plus size={16} />
+                Create Recipe
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="border-b text-sm text-[#64748B]">
+                  <tr>
+                    <th className="py-3">Recipe Name</th>
+                    <th>Category</th>
+                    <th>Prep Time</th>
+                    <th>Cost</th>
+                    <th>Status</th>
+                    <th className="text-center">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {recipes.map((r, i) => (
+                    <tr key={r._id || i} className="border-b last:border-none">
+                      <td className="py-4 font-medium text-[#0F172A]">{r.name}</td>
+                      <td>{r.category || "-"}</td>
+                      <td>{r.prepTime || "-"}</td>
+                      <td>{r.cost ? `$${r.cost}` : "-"}</td>
+                      <td>
+                        <span className={`px-3 py-1 rounded-full text-sm ${r.status === 'Active' ? 'bg-green-100 text-[#009966]' : 'bg-gray-100 text-gray-700'}`}>
+                          {r.status || "Active"}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex justify-center gap-3">
+                          <Pencil size={16} className="text-blue-600 cursor-pointer" />
+                          <Trash2
+                            onClick={() => deleteRecipe(r._id)}
+                            size={16}
+                            className="text-red-600 cursor-pointer"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {recipes.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="py-8 text-center text-[#64748B]">No recipes found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>

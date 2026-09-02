@@ -13,6 +13,7 @@ import {
   MoreHorizontal,
   Key,
   CheckCircle,
+  Trash2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -268,6 +269,54 @@ export default function TeamManagement({
     } catch(err) { console.error(err); }
   };
 
+  const runPayroll = async () => {
+    if (!confirm("Run payroll for this period?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll/run`, {
+        method: "POST",
+        headers: authHeaders()
+      });
+      if (res.ok) fetchPayroll();
+    } catch(err) { console.error(err); }
+  }
+
+  const markPayrollPaid = async (id: string) => {
+    if (!confirm("Mark this payroll as paid?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll/${id}/pay`, {
+        method: "PUT",
+        headers: authHeaders()
+      });
+      if (res.ok) fetchPayroll();
+    } catch(err) { console.error(err); }
+  }
+
+  const updatePermissions = async (id: string) => {
+    if (!id) return;
+    const roles = window.prompt("Enter comma separated permissions (e.g., manager,chef):");
+    if (!roles) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff/${id}/permissions`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ permissions: roles.split(',') })
+      });
+      if (res.ok) fetchStaff();
+    } catch(err) { console.error(err); }
+  }
+
+  const deleteShift = async (id: string) => {
+    if (!id) return;
+    if (!confirm("Delete this shift?")) return;
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule/${id}`, {
+        method: "DELETE",
+        headers: authHeaders()
+      });
+      if (res.ok) fetchSchedule();
+    } catch(err) { console.error(err); }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -386,10 +435,13 @@ export default function TeamManagement({
                         </div>
                       </td>
                       <td className="text-center">
-                        <MoreHorizontal
-                          size={18}
-                          className="text-[#94A3B8] cursor-pointer mx-auto"
-                        />
+                        <div className="flex gap-2 justify-center items-center" title="Update Permissions">
+                          <MoreHorizontal
+                            onClick={() => updatePermissions(s._id)}
+                            size={18}
+                            className="text-[#94A3B8] cursor-pointer hover:text-[#0F172A]"
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -435,7 +487,10 @@ export default function TeamManagement({
 
                   <div className="p-5 space-y-4">
                     {(day.shifts || []).map((shift: any, idx: number) => (
-                      <div key={shift._id || idx} className="border rounded-xl p-4">
+                      <div key={shift._id || idx} className="border rounded-xl p-4 relative group">
+                        <div className="absolute top-4 right-4 hidden group-hover:flex gap-2">
+                          <Trash2 size={16} className="text-red-500 cursor-pointer" onClick={() => deleteShift(shift._id)} />
+                        </div>
                         <div className="flex items-center gap-2 text-[#009966] font-medium">
                           <Clock size={16} />
                           {shift.startTime} - {shift.endTime} {shift.time}
@@ -541,7 +596,7 @@ export default function TeamManagement({
           </p>
         </div>
 
-        <button className="bg-[#0F172A] text-white px-6 py-3 rounded-lg font-medium">
+        <button onClick={runPayroll} className="bg-[#0F172A] text-white px-6 py-3 rounded-lg font-medium">
           Run Payroll
         </button>
 
@@ -581,6 +636,11 @@ export default function TeamManagement({
                 </td>
                 <td className="py-5 px-6 text-end font-semibold text-[#009966]">
                   ${typeof p.totalPay === "number" ? p.totalPay.toFixed(2) : p.total || "0.00"}
+                  {p._id && p.status !== 'Paid' && (
+                    <button onClick={() => markPayrollPaid(p._id)} className="ml-4 text-xs bg-blue-100 text-blue-600 px-3 py-1.5 rounded">
+                      Mark Paid
+                    </button>
+                  )}
                 </td>
               </tr>
             )})}
