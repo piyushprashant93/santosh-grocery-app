@@ -11,6 +11,7 @@ import ReportsAnalytics from "./ReportsAnalytics"
 import RetailerDashboard from "./RetailerDashboard"
 import RetailerSettings from "./RetailerSettings"
 import SupportCenter from "./SupportCenter"
+import SupplierMarketplace from "../../components/SupplierMarketplace/SupplierMarketplace"
 
 
 export default function RetailerChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
@@ -62,6 +63,7 @@ export default function RetailerChild({ activeTab, setActiveTab }: { activeTab: 
   if (activeTab === "reports") {return (<ReportsAnalytics />)}
   if (activeTab === "support") {return (<SupportCenter />)}
   if (activeTab === "settings") {return (<RetailerSettings />)}
+  if (activeTab === "supplier-marketplace") {return (<SupplierMarketplace role="retailer" />)}
 
   return null
 }

@@ -7,6 +7,7 @@ import SalesManagement from "./SalesManagement"
 import RestaurantBackendDashboard from "./RestaurantBackendDashboard"
 import RestaurantBackendSettings from "./RestaurantBackendSettings"
 import TeamManagement from "./TeamManagement"
+import SupplierMarketplace from "../../components/SupplierMarketplace/SupplierMarketplace"
 
 
 export default function RestaurantBackendChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
@@ -44,6 +45,7 @@ export default function RestaurantBackendChild({ activeTab, setActiveTab }: { ac
   if (activeTab === "reports") { return (<ReportsAnalytics />) }
   if (activeTab === "support") { return (<SupportCenter />) }
   if (activeTab === "settings") { return (<RestaurantBackendSettings activeTab={activeTab} setActiveTab={setActiveTab} />) }
+  if (activeTab === "supplier-marketplace") { return (<SupplierMarketplace role="restaurant-panel" />) }
 
   return null
 }

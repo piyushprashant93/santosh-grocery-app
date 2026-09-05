@@ -12,9 +12,9 @@ import {
 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
 const menu = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "supplier-marketplace", label: "Supplier Marketplace", icon: Store },
   { id: "inventory", label: "Inventory & Recipes", icon: ChefHat },
   { id: "finance", label: "Expenses", icon: Wallet },
   { id: "reports", label: "Reports & Analytics", icon: BarChart3 },
