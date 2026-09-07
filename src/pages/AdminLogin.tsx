@@ -1,6 +1,53 @@
-import { ShieldCheck, ArrowRight } from "lucide-react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { ShieldCheck, ArrowRight, Loader2 } from "lucide-react"
 
 export default function AdminLogin() {
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleLogin = async () => {
+    setError("")
+    if (!email || !password) {
+      setError("Please enter both email and password")
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Login failed. Please try again.")
+      }
+
+      const user = data.data.user
+
+      localStorage.setItem("isLoggedIn", "true")
+      localStorage.setItem("role", "admin")
+      localStorage.setItem("authToken", data.data.accessToken)
+      localStorage.setItem("refreshToken", data.data.refreshToken)
+      localStorage.setItem("user", JSON.stringify(user))
+
+      navigate("/admin/dashboard")
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className="relative min-h-screen bg-[#020618] flex items-center justify-center px-3 lg:px-6 overflow-hidden">
       
@@ -27,6 +74,8 @@ export default function AdminLogin() {
             <label className="text-sm text-[#CAD5E2]">Email Address</label>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@hubnepa.com"
               className="mt-2 w-full bg-[#020618] border border-[#1D293D] rounded-lg px-4 h-[48px] text-white placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
             />
@@ -36,14 +85,31 @@ export default function AdminLogin() {
             <label className="text-sm text-[#CAD5E2]">Password</label>
             <input
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className="mt-2 w-full bg-[#020618] border border-[#1D293D] rounded-lg px-4 h-[48px] text-white placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
             />
           </div>
 
-          <button className="mt-8 w-full bg-[#E17100] rounded-lg h-[48px] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition">
-            Sign In
-            <ArrowRight size={18} />
+          {error && <p className="mt-3 text-sm text-red-500 text-center">{error}</p>}
+
+          <button 
+            onClick={handleLogin}
+            disabled={loading}
+            className="mt-8 w-full bg-[#E17100] rounded-lg h-[48px] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Signing In...
+              </>
+            ) : (
+              <>
+                Sign In
+                <ArrowRight size={18} />
+              </>
+            )}
           </button>
 
           <p className="mt-6 text-sm text-center text-[#62748E]">
