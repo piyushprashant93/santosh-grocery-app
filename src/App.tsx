@@ -26,6 +26,7 @@ import SupplierLayout from "./layout/SupplierDashboard/SupplierLayout";
 import RestaurantLayout from "./layout/RestaurantDashboard/RestaurantLayout";
 import RestaurantBackendLayout from "./layout/RestaurantBackendDashboard/RestaurantBackendLayout";
 import PaymentVerify from "./pages/PaymentVerify";
+import AdminLayout from "./layout/AdminDashboard/AdminLayout";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/supplier/dashboard/*" element={<SupplierLayout />} />
         <Route path="/restaurant/dashboard/*" element={<RestaurantLayout />} />
         <Route path="/restaurantbackend/dashboard/*" element={<RestaurantBackendLayout />} />
+        <Route path="/admin/dashboard/*" element={<AdminLayout />} />
 
       </Routes>
     </BrowserRouter>

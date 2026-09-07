@@ -8,6 +8,7 @@ import RestaurantDashboard from "./RestaurantDashboard"
 import RestaurantSettings from "./RestaurantSettings"
 import AddMenuItem from "./AddMenuItem"
 import Reviews from "./Reviews"
+import SupplierMarketplace from "../../components/SupplierMarketplace/SupplierMarketplace"
 
 
 export default function RestaurantChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
@@ -46,6 +47,7 @@ export default function RestaurantChild({ activeTab, setActiveTab }: { activeTab
   if (activeTab === "support") { return (<SupportCenter />) }
   if (activeTab === "reviews") { return (<Reviews />) }
   if (activeTab === "settings") { return (<RestaurantSettings activeTab={activeTab} setActiveTab={setActiveTab} />) }
+  if (activeTab === "supplier-marketplace") { return (<SupplierMarketplace role="restaurant-panel" />) }
 
   return null
 }
