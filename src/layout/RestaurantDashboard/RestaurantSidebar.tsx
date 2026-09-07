@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom"
 
 const menu = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "supplier-marketplace", label: "Supplier Marketplace", icon: Store },
   { id: "orders", label: "Orders", icon: NotepadText },
   { id: "menu-management", label: "Menu Management", icon: Utensils },
   { id: "finance", label: "Expenses", icon: Wallet },
