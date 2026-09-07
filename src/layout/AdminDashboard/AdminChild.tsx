@@ -1,5 +1,7 @@
 import AdminDashboard from "./AdminDashboard"
 import UserManagement from "./UserManagement"
+import Notifications from "./Notifications"
+import SystemHealth from "./SystemHealth"
 
 export default function AdminChild({
   activeTab,
@@ -14,6 +16,14 @@ export default function AdminChild({
 
   if (activeTab === "user-management") {
     return <UserManagement />
+  }
+
+  if (activeTab === "notifications") {
+    return <Notifications />
+  }
+
+  if (activeTab === "system-health") {
+    return <SystemHealth />
   }
 
   // Fallback for other tabs not yet implemented

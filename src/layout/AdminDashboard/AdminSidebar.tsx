@@ -13,6 +13,7 @@ import {
   Megaphone,
   Shield,
   Settings,
+  Activity,
   LogOut,
   X
 } from "lucide-react"
@@ -63,7 +64,7 @@ export default function AdminSidebar({
         <div className="space-y-1 pb-4">
           {menu.map((item) => {
             const Icon = item.icon
-            const active = activeTab === item.id
+            const active = activeTab === item.id || (activeTab === 'system-health' && item.id === 'dashboard') || (activeTab === 'notifications' && item.id === 'dashboard')
 
             return (
               <button

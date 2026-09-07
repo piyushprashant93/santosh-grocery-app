@@ -1,7 +1,8 @@
 import { Menu, Search, Bell } from "lucide-react"
 
 export default function AdminHeader({
-  openSidebar
+  openSidebar,
+  setActiveTab
 }: {
   activeTab: string
   setActiveTab: (tab: string) => void
@@ -28,7 +29,10 @@ export default function AdminHeader({
       </div>
 
       <div className="flex items-center gap-6">
-        <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-full transition">
+        <button 
+          onClick={() => setActiveTab('notifications')}
+          className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-full transition"
+        >
           <Bell size={22} />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
         </button>

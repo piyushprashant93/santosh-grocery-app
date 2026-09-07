@@ -163,7 +163,10 @@ export default function AdminDashboard({
             {downloading && <Loader2 size={16} className="animate-spin" />}
             {downloading ? "Downloading..." : "Download Report"}
           </button>
-          <button className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition">
+          <button 
+            onClick={() => setActiveTab('system-health')}
+            className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition"
+          >
             System Health
           </button>
         </div>

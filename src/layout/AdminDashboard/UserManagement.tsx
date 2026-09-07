@@ -1,5 +1,10 @@
 import { useState, useEffect, useRef } from "react"
 import { Download, Plus, Search, Filter, MoreHorizontal, History, CreditCard, Truck, Shield, Ban, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
+import AddAdminModal from "./AddAdminModal"
+import OrderHistory from "./UserSubpages/OrderHistory"
+import PaymentHistory from "./UserSubpages/PaymentHistory"
+import DeliveryLogs from "./UserSubpages/DeliveryLogs"
+import RouteDetailsModal from "./UserSubpages/RouteDetailsModal"
 
 interface User {
   _id: string;
@@ -26,6 +31,13 @@ export default function UserManagement() {
   
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Sub-view states
+  const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries'>('main');
+  const [activeUserForView, setActiveUserForView] = useState<User | null>(null);
+  const [routeModalDeliveryId, setRouteModalDeliveryId] = useState<string | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -121,9 +133,43 @@ export default function UserManagement() {
     return date.toISOString().split("T")[0];
   };
 
+  const getSubViewUser = () => ({
+    id: activeUserForView?._id || '',
+    fullName: activeUserForView?.fullName || `${activeUserForView?.firstName || ''} ${activeUserForView?.lastName || ''}`.trim() || 'Unknown'
+  });
+
+  if (activeView === 'orders') {
+    return <OrderHistory user={getSubViewUser()} onBack={() => setActiveView('main')} />
+  }
+  if (activeView === 'payments') {
+    return <PaymentHistory user={getSubViewUser()} onBack={() => setActiveView('main')} />
+  }
+  if (activeView === 'deliveries') {
+    return (
+      <>
+        <DeliveryLogs 
+          user={getSubViewUser()} 
+          onBack={() => setActiveView('main')}
+          onViewRoute={(deliveryId) => setRouteModalDeliveryId(deliveryId)}
+        />
+        <RouteDetailsModal 
+          isOpen={!!routeModalDeliveryId} 
+          onClose={() => setRouteModalDeliveryId(null)} 
+          deliveryId={routeModalDeliveryId || ''} 
+        />
+      </>
+    )
+  }
+
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto">
       
+      <AddAdminModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+        onSuccess={fetchUsers}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -135,7 +181,10 @@ export default function UserManagement() {
             <Download size={16} />
             Export Data
           </button>
-          <button className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2"
+          >
             <Plus size={16} />
             Add User
           </button>
@@ -263,15 +312,24 @@ export default function UserManagement() {
                         <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 w-full mb-1">
                           User Actions
                         </div>
-                        <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { setActiveView('orders'); setActiveUserForView(user); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <History size={16} className="text-gray-400" />
                           Order History
                         </button>
-                        <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { setActiveView('payments'); setActiveUserForView(user); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <CreditCard size={16} className="text-gray-400" />
                           Payment History
                         </button>
-                        <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { setActiveView('deliveries'); setActiveUserForView(user); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <Truck size={16} className="text-gray-400" />
                           Delivery Logs
                         </button>
