@@ -4,6 +4,7 @@ import authImg from "../../assets/images/signupbg.svg";
 import GoogleIcon from "../../assets/images/googleicon.svg";
 import RestIcon from "../../assets/images/restIcon.svg";
 import { useNavigate } from "react-router-dom";
+import { parseApiError } from "../../lib/apiErrorHandler";
 
 export default function AuthSection() {
   const [checked, setChecked] = useState(false);
@@ -62,7 +63,7 @@ export default function AuthSection() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || "Registration failed. Please try again.");
+        throw new Error(parseApiError(data, "Registration failed. Please try again."));
       }
 
       setSuccess("Account created successfully. Redirecting to sign in...");
@@ -74,11 +75,11 @@ export default function AuthSection() {
         navigate("/sign-in");
       }, 1200);
     } catch (fetchError) {
-      setError(
+      const errorMessage =
         fetchError instanceof Error
           ? fetchError.message
-          : "Something went wrong. Please try again."
-      );
+          : "Something went wrong. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

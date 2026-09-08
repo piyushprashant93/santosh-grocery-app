@@ -1,5 +1,6 @@
 import "leaflet/dist/leaflet.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { Landing } from "./pages/Landing";
 import { SignUp } from "./pages/SignUp";
 import { SignIn } from "./pages/SignIn";
@@ -31,6 +32,7 @@ import AdminLayout from "./layout/AdminDashboard/AdminLayout";
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" />
       <Routes>
         <Route index element={<Landing />} />
         <Route path="/admin" element={<AdminLogin />} />
