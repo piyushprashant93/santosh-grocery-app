@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Dialog from "../../components/common/Dialog"
 import { Loader2 } from "lucide-react"
+import api from "../../lib/api"
 
 interface AddAdminModalProps {
   isOpen: boolean;
@@ -46,9 +47,6 @@ export default function AddAdminModal({ isOpen, onClose, onSuccess }: AddAdminMo
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      
       const payload = {
         ...formData,
         // Optional splitting if backend requires firstName/lastName
@@ -58,24 +56,12 @@ export default function AddAdminModal({ isOpen, onClose, onSuccess }: AddAdminMo
       };
 
       // Ensure your backend supports this route!
-      const response = await fetch(`${baseUrl}/api/v1/admin/users`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || "Failed to create admin");
-      }
+      await api.post(`/api/v1/admin/users`, payload);
 
       if (onSuccess) onSuccess();
       onClose();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Error creating admin user.");
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || "Error creating admin user.");
     } finally {
       setLoading(false);
     }

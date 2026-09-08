@@ -11,8 +11,8 @@ const adminTabToPath = (tab: string) => {
 
 const adminPathToTab = (pathname: string) => {
   const parts = pathname.replace("/admin/dashboard", "").split("/").filter(Boolean)
-  const last = parts[parts.length - 1]
-  return last || "dashboard"
+  const first = parts[0]
+  return first || "dashboard"
 }
 
 export default function AdminLayout() {

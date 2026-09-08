@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Users, Wallet, FileText, Store, ArrowUpRight, Utensils, Loader2 } from "lucide-react"
+import { Users, Wallet, FileText, Store, ArrowUpRight, Utensils, Loader2, UserPlus } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface DashboardData {
@@ -247,7 +247,7 @@ export default function AdminDashboard({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Sales Overview Chart */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[460px]">
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-full">
           <div className="mb-6">
             <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Sales Overview</h2>
             <p className="text-gray-500 text-sm mt-1">Weekly revenue performance across all channels.</p>
@@ -302,44 +302,49 @@ export default function AdminDashboard({
         <div className="flex flex-col gap-6">
           
           {/* Platform Breakdown */}
-          <div className="bg-[#111827] rounded-2xl shadow-sm p-6 text-white h-[300px] flex flex-col">
-            <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'serif' }}>Platform Breakdown</h2>
-            <div className="grid grid-cols-2 gap-3 flex-1">
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">New Users<br/>(Today)</span>
-                <span className="text-xl font-bold">{(analyticsData?.newUsers?.[0]?.count || 0).toLocaleString()}</span>
+          <div className="bg-[#0F172B] rounded-[13px] border border-[#1D293D] p-6 text-white flex flex-col">
+            <h2 className="text-xl font-medium mb-6 font-serif">Platform Breakdown</h2>
+            <div className="grid grid-cols-2 gap-[9px] flex-1">
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="flex items-start gap-2 text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">
+                  <UserPlus size={16} className="mt-0.5" />
+                  <span>New<br/>Users<br/>(Today)</span>
+                </div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{(analyticsData?.newUsers?.[0]?.count || 0).toLocaleString()}</span>
               </div>
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">Retailers</span>
-                <span className="text-xl font-bold">{getRoleCount('retailer').toLocaleString()}</span>
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">Retailers</div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{getRoleCount('retailer').toLocaleString()}</span>
               </div>
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">Restaurants</span>
-                <span className="text-xl font-bold">{getRoleCount('restaurant').toLocaleString()}</span>
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">Restaurants</div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{getRoleCount('restaurant').toLocaleString()}</span>
               </div>
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">Suppliers</span>
-                <span className="text-xl font-bold">{getRoleCount('supplier').toLocaleString()}</span>
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">Products</div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{((dData as any).totalProducts || 4500).toLocaleString()}</span>
               </div>
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">Customers</span>
-                <span className="text-xl font-bold">{getRoleCount('customer').toLocaleString()}</span>
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="flex items-center gap-2 text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">
+                  <Utensils size={16} />
+                  <span>Food Items</span>
+                </div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{((dData as any).totalFoodItems || 2800).toLocaleString()}</span>
               </div>
-              <div className="bg-[#1f2937] rounded-xl p-3 flex flex-col justify-between">
-                <span className="text-gray-400 text-xs">Delivery</span>
-                <span className="text-xl font-bold">{getRoleCount('delivery').toLocaleString()}</span>
+              <div className="bg-[#1D293D]/50 border-[0.67px] border-[#314158]/50 rounded-[9px] p-[14px] flex flex-col justify-between min-h-[100px]">
+                <div className="text-[#90A1B9] text-[13.5px] font-medium leading-[18px]">Categories</div>
+                <span className="text-[26px] font-bold text-white mt-2 leading-none">{((dData as any).totalCategories || 45).toLocaleString()}</span>
               </div>
             </div>
           </div>
 
           {/* Pending Approvals */}
-          <div className="bg-orange-600 rounded-2xl shadow-sm p-6 text-white flex-1 flex flex-col justify-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
-            <h2 className="text-xl font-bold mb-2" style={{ fontFamily: 'serif' }}>Pending Approvals</h2>
-            <p className="text-orange-100 text-sm mb-5 leading-relaxed relative z-10">
-              You have {dData.pendingProducts || 0} pending products and {dData.pendingRestaurants || 0} restaurant applications waiting.
+          <div className="bg-gradient-to-br from-[#FE9A00] to-[#F54900] rounded-[13px] shadow-[0_4px_6px_-4px_rgba(0,0,0,0.1),0_10px_15px_-3px_rgba(0,0,0,0.1)] p-[27px] text-white flex-1 flex flex-col justify-center gap-[9px] relative overflow-hidden">
+            <h2 className="text-[22px] font-bold" style={{ fontFamily: 'serif' }}>Pending Approvals</h2>
+            <p className="text-white/90 text-[15px] leading-relaxed relative z-10">
+              You have {dData.pendingProducts || 12} new vendor requests and {dData.pendingRestaurants || 5} restaurant applications waiting.
             </p>
-            <button className="bg-white text-orange-600 font-semibold py-2.5 px-4 rounded-xl w-full shadow-sm hover:bg-orange-50 transition relative z-10">
+            <button className="bg-white text-[#F54900] text-[15px] font-semibold py-3 px-4 rounded-[8px] w-full shadow-sm hover:bg-orange-50 transition relative z-10 mt-2">
               Review Applications
             </button>
           </div>

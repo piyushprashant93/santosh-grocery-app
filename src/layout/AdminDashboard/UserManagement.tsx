@@ -5,6 +5,8 @@ import OrderHistory from "./UserSubpages/OrderHistory"
 import PaymentHistory from "./UserSubpages/PaymentHistory"
 import DeliveryLogs from "./UserSubpages/DeliveryLogs"
 import RouteDetailsModal from "./UserSubpages/RouteDetailsModal"
+import ManagePermissions from "./UserSubpages/ManagePermissions"
+import api from "../../lib/api"
 
 interface User {
   _id: string;
@@ -35,7 +37,7 @@ export default function UserManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Sub-view states
-  const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries'>('main');
+  const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries' | 'permissions'>('main');
   const [activeUserForView, setActiveUserForView] = useState<User | null>(null);
   const [routeModalDeliveryId, setRouteModalDeliveryId] = useState<string | null>(null);
 
@@ -59,32 +61,16 @@ export default function UserManagement() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      
       const params = new URLSearchParams({ page: page.toString() });
       if (roleFilter) params.append("role", roleFilter);
       if (search) params.append("search", search);
 
-      const response = await fetch(`${baseUrl}/api/v1/admin/users?${params.toString()}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const result = await response.json();
+      const response = await api.get(`/api/v1/admin/users?${params.toString()}`);
+      const result = response.data;
       
       if (result.data && Array.isArray(result.data.data)) {
         setUsers(result.data.data);
-        if (result.data.pagination && result.data.pagination.totalPages) {
-          setTotalPages(result.data.pagination.totalPages);
-        } else {
-          setTotalPages(1);
-        }
+        setTotalPages(result.data.pagination?.totalPages || 1);
       } else if (result.data && Array.isArray(result.data)) {
         setUsers(result.data);
         setTotalPages(1);
@@ -92,8 +78,8 @@ export default function UserManagement() {
         setUsers([]);
         setTotalPages(1);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -102,22 +88,8 @@ export default function UserManagement() {
   const handleBlockUser = async (userId: string, currentStatus: boolean) => {
     setActionLoading(userId);
     try {
-      const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      
       const newStatus = !currentStatus;
-
-      const response = await fetch(`${baseUrl}/api/v1/admin/users/${userId}/block`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ isActive: newStatus })
-      });
-
-      if (!response.ok) throw new Error("Failed to update status");
-
+      await api.patch(`/api/v1/admin/users/${userId}/block`, { isActive: newStatus });
       fetchUsers();
     } catch (err) {
       alert("Error updating user status. Please try again.");
@@ -159,6 +131,9 @@ export default function UserManagement() {
         />
       </>
     )
+  }
+  if (activeView === 'permissions') {
+    return <ManagePermissions user={getSubViewUser()} onBack={() => setActiveView('main')} />
   }
 
   return (
@@ -333,7 +308,10 @@ export default function UserManagement() {
                           <Truck size={16} className="text-gray-400" />
                           Delivery Logs
                         </button>
-                        <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { setActiveView('permissions'); setActiveUserForView(user); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <Shield size={16} className="text-gray-400" />
                           Manage Permissions
                         </button>
