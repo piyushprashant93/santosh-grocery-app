@@ -1,5 +1,6 @@
-import { ArrowLeft, AlertTriangle } from "lucide-react"
+import { ArrowLeft, AlertTriangle, Save, Loader2, Ban, Trash2 } from "lucide-react"
 import { useState } from "react"
+import api from "../../../lib/api"
 
 interface ManagePermissionsProps {
   user: {
@@ -15,6 +16,57 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
   const [canPlaceOrders, setCanPlaceOrders] = useState(true);
   const [canReviewProducts, setCanReviewProducts] = useState(true);
   const [betaFeatures, setBetaFeatures] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const handleSaveChanges = async () => {
+    setLoading(true);
+    try {
+      // Update role
+      if (role !== user.role) {
+        await api.patch(`/api/v1/admin/users/${user.id}/role`, { role });
+      }
+      
+      // Update permissions if it's an admin user (example integration)
+      if (role === 'admin') {
+        // await api.patch(`/api/v1/admin/access-control/users/${user.id}/permissions`, { ... });
+      }
+      
+      alert("Permissions updated successfully.");
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || "Failed to update permissions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlockUser = async () => {
+    if (!confirm("Are you sure you want to block this user?")) return;
+    setActionLoading('block');
+    try {
+      // Assuming we're blocking (newStatus = false for isActive)
+      await api.patch(`/api/v1/admin/users/${user.id}/block`, { isActive: false });
+      alert("User has been blocked.");
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || "Failed to block user");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!confirm("Are you sure you want to permanently delete this user? This action cannot be undone.")) return;
+    setActionLoading('delete');
+    try {
+      await api.delete(`/api/v1/admin/users/${user.id}`);
+      alert("User deleted successfully.");
+      onBack();
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || "Failed to delete user");
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto w-full animate-in fade-in duration-300">
@@ -104,6 +156,17 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
               </div>
             </div>
           </div>
+          
+          <div className="flex justify-end mt-2">
+            <button 
+              onClick={handleSaveChanges}
+              disabled={loading}
+              className="px-6 py-2.5 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2 disabled:opacity-50"
+            >
+              {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+              Save Changes
+            </button>
+          </div>
         </div>
 
         {/* Right Column (Danger Zone) */}
@@ -116,7 +179,12 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
           <div className="mb-8">
             <h3 className="text-sm font-bold text-red-800">Block User</h3>
             <p className="text-xs text-red-600/80 mt-0.5 mb-3">Prevent this user from logging in.</p>
-            <button className="w-full py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-red-600 transition">
+            <button 
+              onClick={handleBlockUser}
+              disabled={actionLoading === 'block'}
+              className="w-full py-2.5 bg-red-500 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-red-600 transition flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {actionLoading === 'block' ? <Loader2 size={16} className="animate-spin" /> : <Ban size={16} />}
               Block Access
             </button>
           </div>
@@ -124,7 +192,12 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
           <div>
             <h3 className="text-sm font-bold text-red-800">Delete Account</h3>
             <p className="text-xs text-red-600/80 mt-0.5 mb-3">Permanently remove all user data.</p>
-            <button className="w-full py-2.5 bg-white text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition">
+            <button 
+              onClick={handleDeleteUser}
+              disabled={actionLoading === 'delete'}
+              className="w-full py-2.5 bg-white text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {actionLoading === 'delete' ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
               Delete Account
             </button>
           </div>

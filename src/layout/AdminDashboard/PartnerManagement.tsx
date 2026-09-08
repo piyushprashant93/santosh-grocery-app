@@ -3,6 +3,8 @@ import { useNavigate, Routes, Route, useParams } from "react-router-dom"
 import { Search, Filter, MoreHorizontal, Eye, FileText, CheckCircle2, Ban, AlertTriangle, Store, ShoppingBag } from "lucide-react"
 import PartnerDetails from "./PartnerSubpages/PartnerDetails"
 import PartnerDocuments from "./PartnerSubpages/PartnerDocuments"
+import PartnerSettings from "./PartnerSubpages/PartnerSettings"
+import AddPartnerWizard from "./PartnerSubpages/AddPartnerWizard"
 
 interface Partner {
   id: string;
@@ -95,14 +97,22 @@ function PartnerManagementList() {
           <div className="relative w-full max-w-md">
             <input 
               type="text"
-              placeholder="Search restaurants..."
+              placeholder="Search partners..."
               className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition w-full sm:w-auto justify-center">
-            <Filter size={16} />
-            Filters
-          </button>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center">
+              <Filter size={16} />
+              Filters
+            </button>
+            <button 
+              onClick={() => navigate('/admin/dashboard/partner-management/new')}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition shadow-sm justify-center whitespace-nowrap"
+            >
+              + Add Partner
+            </button>
+          </div>
         </div>
 
         {/* Table Area */}
@@ -232,12 +242,20 @@ function PartnerDocumentsRoute() {
   return <PartnerDocuments partnerId={id || ''} onBack={() => navigate(`/admin/dashboard/partner-management/${id}`)} />
 }
 
+function PartnerSettingsRoute() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <PartnerSettings partnerId={id || ''} onBack={() => navigate(`/admin/dashboard/partner-management/${id}`)} />
+}
+
 export default function PartnerManagement() {
   return (
     <Routes>
       <Route path="partner-management" element={<PartnerManagementList />} />
+      <Route path="partner-management/new" element={<AddPartnerWizard />} />
       <Route path="partner-management/:id" element={<PartnerDetailsRoute />} />
       <Route path="partner-management/:id/documents" element={<PartnerDocumentsRoute />} />
+      <Route path="partner-management/:id/settings" element={<PartnerSettingsRoute />} />
     </Routes>
   )
 }

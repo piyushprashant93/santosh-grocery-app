@@ -31,7 +31,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
                   Spicy Kitchen
                 </h1>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100/50 text-emerald-700 border border-emerald-200/50">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600">
                   Active
                 </span>
               </div>
@@ -47,7 +47,10 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           >
             Verify Documents
           </button>
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition">
+          <button 
+            onClick={() => navigate(`/admin/dashboard/partner-management/${partner.id}/settings`)}
+            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+          >
             Settings
           </button>
         </div>
@@ -57,7 +60,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Stat 1 */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
             <ShoppingBag size={20} />
           </div>
           <div>
@@ -68,7 +71,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
         {/* Stat 2 */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
             <DollarSign size={20} />
           </div>
           <div>
@@ -79,7 +82,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
         {/* Stat 3 */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-400 flex items-center justify-center shrink-0">
             <Star size={20} />
           </div>
           <div>
@@ -90,7 +93,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
         {/* Stat 4 */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-fuchsia-50 text-fuchsia-600 flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center shrink-0">
             <Store size={20} />
           </div>
           <div>
@@ -162,7 +165,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-600 mb-1">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-500 mb-1">
                       Delivered
                     </span>
                     <span className="text-xs text-gray-400">Today, 12:30 PM</span>
@@ -221,46 +224,6 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                   Verified
                   <ExternalLink size={14} />
                 </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Store Performance Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Store Performance</h2>
-            
-            <div className="flex flex-col gap-6">
-              {/* Progress 1 */}
-              <div>
-                <div className="flex justify-between items-center text-sm mb-2">
-                  <span className="text-gray-500">Order Acceptance</span>
-                  <span className="font-bold text-gray-900">98%</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '98%' }}></div>
-                </div>
-              </div>
-
-              {/* Progress 2 */}
-              <div>
-                <div className="flex justify-between items-center text-sm mb-2">
-                  <span className="text-gray-500">On-Time Delivery</span>
-                  <span className="font-bold text-gray-900">92%</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: '92%' }}></div>
-                </div>
-              </div>
-
-              {/* Progress 3 */}
-              <div>
-                <div className="flex justify-between items-center text-sm mb-2">
-                  <span className="text-gray-500">Customer Satisfaction</span>
-                  <span className="font-bold text-gray-900">4.8/5.0</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className="bg-amber-500 h-2 rounded-full" style={{ width: '96%' }}></div>
-                </div>
               </div>
             </div>
           </div>
