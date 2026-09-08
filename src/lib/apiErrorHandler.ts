@@ -13,7 +13,7 @@ export const parseApiError = (
 
   // Handle flat array of errors (e.g. validation errors: ["Password must contain..."])
   if (Array.isArray(data)) {
-    const messages = data.filter((item) => typeof item === "string");
+    const messages = data.filter((item: any) => typeof item === "string");
     return messages.length > 0 ? messages.join("\n") : fallback;
   }
 
@@ -21,7 +21,7 @@ export const parseApiError = (
   if (typeof data === "object") {
     // e.g., { errors: ["Error 1", "Error 2"] }
     if (Array.isArray(data.errors)) {
-      const messages = data.errors.filter((item) => typeof item === "string");
+      const messages = data.errors.filter((item: any) => typeof item === "string");
       if (messages.length > 0) return messages.join("\n");
     }
 
