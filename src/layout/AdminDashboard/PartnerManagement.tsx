@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from "react"
+import { useNavigate, Routes, Route, useParams } from "react-router-dom"
 import { Search, Filter, MoreHorizontal, Eye, FileText, CheckCircle2, Ban, AlertTriangle, Store, ShoppingBag } from "lucide-react"
+import PartnerDetails from "./PartnerSubpages/PartnerDetails"
+import PartnerDocuments from "./PartnerSubpages/PartnerDocuments"
 
 interface Partner {
   id: string;
@@ -29,7 +32,9 @@ const mockPartners: Partner[] = [
   }
 ];
 
-export default function PartnerManagement() {
+function PartnerManagementList() {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<'restaurants' | 'retailers'>('restaurants');
   const [partners, setPartners] = useState<Partner[]>(mockPartners);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -171,11 +176,17 @@ export default function PartnerManagement() {
                         <div className="px-4 py-2 text-xs font-bold text-gray-900 w-full mb-1">
                           Manage
                         </div>
-                        <button className="w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { navigate(`/admin/dashboard/partner-management/${partner.id}`); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <Eye size={16} className="text-gray-400" />
                           View Details
                         </button>
-                        <button className="w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { navigate(`/admin/dashboard/partner-management/${partner.id}/documents`); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <FileText size={16} className="text-gray-400" />
                           Verify Documents
                         </button>
@@ -198,5 +209,35 @@ export default function PartnerManagement() {
       </div>
 
     </div>
+  )
+}
+
+function PartnerDetailsRoute() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
+  // Find the partner using the ID extracted natively by React Router
+  const selectedPartner = mockPartners.find(p => p.id === id);
+
+  if (!selectedPartner) {
+    return <div className="p-8 text-center text-gray-500">Partner not found</div>;
+  }
+
+  return <PartnerDetails partner={selectedPartner} onBack={() => navigate('/admin/dashboard/partner-management')} />
+}
+
+function PartnerDocumentsRoute() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <PartnerDocuments partnerId={id || ''} onBack={() => navigate(`/admin/dashboard/partner-management/${id}`)} />
+}
+
+export default function PartnerManagement() {
+  return (
+    <Routes>
+      <Route path="partner-management" element={<PartnerManagementList />} />
+      <Route path="partner-management/:id" element={<PartnerDetailsRoute />} />
+      <Route path="partner-management/:id/documents" element={<PartnerDocumentsRoute />} />
+    </Routes>
   )
 }
