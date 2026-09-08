@@ -1,77 +1,69 @@
-import { useState } from "react"
-import { Check, Trash2, Store, AlertTriangle, Info, AlertCircle, ShieldAlert } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Check, Trash2, Store, AlertTriangle, Info, AlertCircle, ShieldAlert, Loader2, Clock } from "lucide-react"
+import toast from "react-hot-toast"
+import { formatTimeAgo } from "../../lib/formatTimeAgo"
 
 interface NotificationItem {
   id: string;
-  type: 'partner' | 'alert' | 'info' | 'error' | 'security';
+  type: 'partner' | 'alert' | 'info' | 'error' | 'security' | 'system';
   title: string;
   description: string;
   timestamp: string;
   isRead: boolean;
 }
 
-const mockNotifications: NotificationItem[] = [
-  {
-    id: "notif-1",
-    type: "partner",
-    title: "New Partner Request",
-    description: "Spice Garden (Restaurant) has submitted verification documents.",
-    timestamp: "10 mins ago",
-    isRead: false
-  },
-  {
-    id: "notif-2",
-    type: "alert",
-    title: "High Value Order",
-    description: "Order #ORD-9921 placed for $450.00 requires verification.",
-    timestamp: "25 mins ago",
-    isRead: false
-  },
-  {
-    id: "notif-3",
-    type: "info",
-    title: "System Backup Completed",
-    description: "Daily database backup finished successfully (Size: 2.4GB).",
-    timestamp: "2 hours ago",
-    isRead: true
-  },
-  {
-    id: "notif-4",
-    type: "error",
-    title: "Payout Batch Failed",
-    description: "Weekly payout for Batch #BATCH-404 failed for 2 vendors.",
-    timestamp: "5 hours ago",
-    isRead: false
-  },
-  {
-    id: "notif-5",
-    type: "info",
-    title: "New User Milestone",
-    description: "Platform reached 15,000 active users today!",
-    timestamp: "1 day ago",
-    isRead: true
-  },
-  {
-    id: "notif-6",
-    type: "security",
-    title: "Suspicious Login Attempt",
-    description: "Failed login attempt detected from IP 192.168.1.1 (Russia).",
-    timestamp: "1 day ago",
-    isRead: true
-  },
-  {
-    id: "notif-7",
-    type: "alert",
-    title: "Content Reported",
-    description: "User flagged a review on 'Burger King' for inappropriate content.",
-    timestamp: "2 days ago",
-    isRead: true
-  }
-];
-
 export default function Notifications() {
-  const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'partner' | 'system'>('all');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      };
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      const res = await fetch(`${baseUrl}/api/v1/admin/notifications`, { headers });
+      
+      if (!res.ok) throw new Error("Failed to fetch notifications");
+      
+      const responseData = await res.json();
+      
+      let rawData = [];
+      if (Array.isArray(responseData?.data?.data)) {
+        rawData = responseData.data.data;
+      } else if (Array.isArray(responseData?.data)) {
+        rawData = responseData.data;
+      } else if (Array.isArray(responseData)) {
+        rawData = responseData;
+      }
+      
+      const formattedNotifications = rawData.map((n: any) => ({
+        id: n._id || n.id || Math.random().toString(),
+        type: n.type || 'info',
+        title: n.title || n.subject || 'Notification',
+        description: n.message || n.description || '',
+        timestamp: n.createdAt || n.timestamp ? formatTimeAgo(n.createdAt || n.timestamp) : "Just now",
+        isRead: n.isRead || false
+      }));
+      
+      setNotifications(formattedNotifications);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error fetching notifications");
+      toast.error("Failed to load notifications");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -82,8 +74,26 @@ export default function Notifications() {
     return true;
   });
 
-  const markAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+  const markAllRead = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      };
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      const res = await fetch(`${baseUrl}/api/v1/admin/notifications/read-all`, { 
+        method: "PUT",
+        headers 
+      });
+      
+      if (!res.ok) throw new Error("Failed to mark notifications as read");
+      
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+      toast.success("All notifications marked as read");
+    } catch (err) {
+      toast.error("Failed to mark all as read");
+    }
   };
 
   const clearAll = () => {
@@ -100,11 +110,30 @@ export default function Notifications() {
     switch (type) {
       case 'partner': return { icon: <Store size={20} />, bg: 'bg-emerald-100', color: 'text-emerald-600' };
       case 'alert': return { icon: <AlertTriangle size={20} />, bg: 'bg-amber-100', color: 'text-amber-600' };
-      case 'info': return { icon: <Info size={20} />, bg: 'bg-blue-100', color: 'text-blue-600' };
+      case 'info': 
+      case 'system': return { icon: <Info size={20} />, bg: 'bg-blue-100', color: 'text-blue-600' };
       case 'error': return { icon: <AlertCircle size={20} />, bg: 'bg-red-100', color: 'text-red-600' };
       case 'security': return { icon: <ShieldAlert size={20} />, bg: 'bg-purple-100', color: 'text-purple-600' };
+      default: return { icon: <Info size={20} />, bg: 'bg-gray-100', color: 'text-gray-600' };
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-full items-center justify-center min-h-[400px]">
+        <Loader2 className="animate-spin text-orange-500" size={40} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center min-h-[400px] text-center">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button onClick={fetchNotifications} className="px-5 py-2.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition">Retry</button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
@@ -210,7 +239,10 @@ export default function Notifications() {
                         {notification.title}
                         {!notification.isRead && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>}
                       </h3>
-                      <span className="text-xs font-medium text-gray-400 whitespace-nowrap shrink-0">{notification.timestamp}</span>
+                      <span className="text-xs font-medium text-gray-400 whitespace-nowrap shrink-0 flex items-center gap-1.5">
+                        <Clock size={12} />
+                        {notification.timestamp}
+                      </span>
                     </div>
                     <p className="text-gray-600 text-sm mt-1 mb-3">{notification.description}</p>
                     <div className="flex items-center gap-4 mt-auto">

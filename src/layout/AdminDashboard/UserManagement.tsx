@@ -5,6 +5,7 @@ import OrderHistory from "./UserSubpages/OrderHistory"
 import PaymentHistory from "./UserSubpages/PaymentHistory"
 import DeliveryLogs from "./UserSubpages/DeliveryLogs"
 import RouteDetailsModal from "./UserSubpages/RouteDetailsModal"
+import ManagePermissions from "./UserSubpages/ManagePermissions"
 
 interface User {
   _id: string;
@@ -35,7 +36,7 @@ export default function UserManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Sub-view states
-  const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries'>('main');
+  const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries' | 'permissions'>('main');
   const [activeUserForView, setActiveUserForView] = useState<User | null>(null);
   const [routeModalDeliveryId, setRouteModalDeliveryId] = useState<string | null>(null);
 
@@ -159,6 +160,9 @@ export default function UserManagement() {
         />
       </>
     )
+  }
+  if (activeView === 'permissions') {
+    return <ManagePermissions user={getSubViewUser()} onBack={() => setActiveView('main')} />
   }
 
   return (
@@ -333,7 +337,10 @@ export default function UserManagement() {
                           <Truck size={16} className="text-gray-400" />
                           Delivery Logs
                         </button>
-                        <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left">
+                        <button 
+                          onClick={() => { setActiveView('permissions'); setActiveUserForView(user); setActiveDropdown(null); }}
+                          className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 transition text-left"
+                        >
                           <Shield size={16} className="text-gray-400" />
                           Manage Permissions
                         </button>
