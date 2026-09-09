@@ -78,20 +78,27 @@ export default function RetailerSettings() {
   const handleSave = async () => {
     try {
       let res;
-      if (logoFile || bannerFile) {
+      const endpoint = `${API_BASE}/retailer/settings/${activeTab}`;
+
+      if (activeTab === "profile" && (logoFile || bannerFile)) {
         const formData = new FormData();
-        Object.keys(settings).forEach(key => formData.append(key, settings[key]));
+        Object.keys(settings).forEach(key => {
+          if (typeof settings[key] === 'object') {
+            formData.append(key, JSON.stringify(settings[key]));
+          } else {
+            formData.append(key, settings[key]);
+          }
+        });
         if (logoFile) formData.append("logo", logoFile);
         if (bannerFile) formData.append("banner", bannerFile);
-        formData.set("notificationPrefs", JSON.stringify(settings.notificationPrefs));
 
-        res = await fetch(`${API_BASE}/retailer/settings`, {
+        res = await fetch(endpoint, {
           method: "PUT",
           headers: authHeadersForm(),
           body: formData
         });
       } else {
-        res = await fetch(`${API_BASE}/retailer/settings`, {
+        res = await fetch(endpoint, {
           method: "PUT",
           headers: authHeaders(),
           body: JSON.stringify(settings)
@@ -102,9 +109,12 @@ export default function RetailerSettings() {
         alert("Settings saved successfully!");
         fetchSettings();
       } else {
-        alert("Failed to save settings");
+        alert("Failed to save settings. Please try again.");
       }
-    } catch(err) { console.error(err); }
+    } catch(err) { 
+        console.error(err); 
+        alert("An error occurred while saving settings.");
+    }
   };
 
   return (

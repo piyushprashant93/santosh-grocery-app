@@ -38,7 +38,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders/${id}`, {
+      const res = await fetch(`${API_BASE}/supplier/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -46,8 +46,13 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (res.ok) {
         fetchOrders();
         setOpenStatusMenu(null);
+      } else {
+        alert("Failed to update order status");
       }
-    } catch(err) { console.error(err); }
+    } catch(err) { 
+        console.error(err); 
+        alert("An error occurred while updating order status.");
+    }
   };
 
 
