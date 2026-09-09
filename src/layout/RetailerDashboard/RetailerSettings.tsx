@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Store, FileText, Bell, Shield, Save } from "lucide-react"
+import toast from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -78,7 +79,7 @@ export default function RetailerSettings() {
   const handleSave = async () => {
     try {
       let res;
-      const endpoint = `${API_BASE}/settings/${activeTab}`;
+      const endpoint = `${API_BASE}/retailer/settings/${activeTab}`;
 
       if (activeTab === "profile" && (logoFile || bannerFile)) {
         const formData = new FormData();
@@ -98,22 +99,36 @@ export default function RetailerSettings() {
           body: formData
         });
       } else {
+        let payload = settings;
+        if (activeTab === "notifications") payload = settings.notificationPrefs;
+        if (activeTab === "kyc") payload = settings.kyc;
+        if (activeTab === "profile") {
+          payload = {
+            storeName: settings.storeName,
+            contactPerson: settings.contactPerson,
+            email: settings.email,
+            phone: settings.phone,
+            address: settings.address,
+            description: settings.description
+          };
+        }
+
         res = await fetch(endpoint, {
           method: "PUT",
           headers: authHeaders(),
-          body: JSON.stringify(settings)
+          body: JSON.stringify(payload)
         });
       }
 
       if (res.ok) {
-        alert("Settings saved successfully!");
+        toast.success("Settings saved successfully!");
         fetchSettings();
       } else {
-        alert("Failed to save settings. Please try again.");
+        toast.error("Failed to save settings. Please try again.");
       }
     } catch(err) { 
         console.error(err); 
-        alert("An error occurred while saving settings.");
+        toast.error("An error occurred while saving settings.");
     }
   };
 
