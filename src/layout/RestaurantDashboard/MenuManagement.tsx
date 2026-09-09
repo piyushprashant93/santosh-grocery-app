@@ -45,9 +45,9 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
     return acc;
   }, {} as Record<string, number>);
 
-  const dynamicCategories = [
+  const dynamicCategories: { name: string, count: number }[] = [
     { name: "All Items", count: menuItems.length },
-    ...Object.entries(categoryCounts).map(([name, count]) => ({ name, count }))
+    ...Object.entries(categoryCounts).map(([name, count]) => ({ name, count: Number(count) }))
   ];
 
   const filteredItems = menuItems.filter(item => {
