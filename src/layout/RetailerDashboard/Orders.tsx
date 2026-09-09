@@ -35,7 +35,7 @@ export default function Orders() {
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/orders/${id}/status`, {
+      const res = await fetch(`${API_BASE}/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })

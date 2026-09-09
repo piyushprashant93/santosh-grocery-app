@@ -38,7 +38,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders/${id}/status`, {
+      const res = await fetch(`${API_BASE}/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })

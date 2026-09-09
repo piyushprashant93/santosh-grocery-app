@@ -78,7 +78,7 @@ export default function RetailerSettings() {
   const handleSave = async () => {
     try {
       let res;
-      const endpoint = `${API_BASE}/retailer/settings/${activeTab}`;
+      const endpoint = `${API_BASE}/settings/${activeTab}`;
 
       if (activeTab === "profile" && (logoFile || bannerFile)) {
         const formData = new FormData();
