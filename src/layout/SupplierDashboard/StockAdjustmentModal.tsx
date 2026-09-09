@@ -33,7 +33,8 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
             const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
-                setProducts(data.data?.products || data.products || data.data || []);
+                const fetched = data.data?.products || data.products || data.data || [];
+                setProducts(Array.isArray(fetched) ? fetched : []);
             }
         } catch(err) { console.error(err); }
     };
@@ -108,7 +109,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
                         <select value={form.productId} onChange={(e) => setForm({...form, productId: e.target.value})} className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none">
                             <option value="">Select product</option>
-                            {products.map(p => (
+                            {Array.isArray(products) && products.map(p => (
                                 <option key={p._id} value={p._id}>{p.name || p.title}</option>
                             ))}
                         </select>
