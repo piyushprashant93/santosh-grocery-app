@@ -20,6 +20,7 @@ import {
   RefreshCcw,
   Edit,
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 
 const stats = [
   {
@@ -81,7 +82,7 @@ export default function Inventory({
       const res = await fetch(`${API_BASE}/restaurant-panel/inventory`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        const items = data.data?.inventory || data.inventory || data.data || [];
+        const items = extractList(data);
         setCooked(items.filter((i: any) => i.type === "cooked"));
         setRawItems(items.filter((i: any) => i.type === "raw"));
         setSolidItems(items.filter((i: any) => i.type === "solid"));
@@ -94,7 +95,7 @@ export default function Inventory({
       const res = await fetch(`${API_BASE}/restaurant-panel/inventory/beverages`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setBeverages(data.data?.beverages || data.beverages || data.data || []);
+        setBeverages(extractList(data));
       }
     } catch (e) { console.error(e); }
   };
@@ -104,7 +105,7 @@ export default function Inventory({
       const res = await fetch(`${API_BASE}/restaurant-panel/recipes`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setRecipes(data.data?.recipes || data.recipes || data.data || []);
+        setRecipes(extractList(data));
       }
     } catch (e) { console.error(e); }
   };

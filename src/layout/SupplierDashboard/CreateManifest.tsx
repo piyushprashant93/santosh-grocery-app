@@ -1,5 +1,6 @@
-import { FileText, MapPin, Package, Truck, ArrowLeft } from "lucide-react";
+import { FileText, MapPin, Package, Truck, ArrowLeft, Calendar, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { extractList } from "../../utils/dataHelper";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -70,8 +71,7 @@ export default function CreateManifest({
       const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        const allOrders = data.data?.orders || data.orders || data.data || [];
-        setOrdersData(allOrders);
+        setOrdersData(extractList(data));
       }
     } catch(err) { console.error(err); }
   };

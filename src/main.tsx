@@ -5,10 +5,14 @@ import './index.css'
 import { RoleProvider } from './layout/RoleProvider'
 import { patchFetchForTokenExpiry } from './lib/fetchInterceptor'
 
+import { ErrorBoundary } from './components/ErrorBoundary'
+
 patchFetchForTokenExpiry()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RoleProvider>
-    <App />
-  </RoleProvider>
+  <ErrorBoundary>
+    <RoleProvider>
+      <App />
+    </RoleProvider>
+  </ErrorBoundary>
 )
