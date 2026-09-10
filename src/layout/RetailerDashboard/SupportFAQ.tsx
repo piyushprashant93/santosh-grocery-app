@@ -42,7 +42,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push({ q: faq.question, a: faq.answer });
     return acc;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, { q: string; a: string }[]>);
 
   const finalFaqs = Object.keys(groupedFaqs).map(cat => ({
     category: cat,
