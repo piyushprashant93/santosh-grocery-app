@@ -1,5 +1,6 @@
-import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar } from "lucide-react"
+import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const authHeaders = () => {
@@ -181,18 +182,28 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
   ])
 
+  const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
+
   const updateOrderStatus = async (orderId: string, status: string, callback?: () => void) => {
+    setLoadingOrderId(orderId);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${orderId}/status`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
       });
       if (res.ok) {
+        toast.success(`Order marked as ${status}`);
         if (callback) callback();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to update order status");
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setLoadingOrderId(null);
     }
   };
 
@@ -203,18 +214,27 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     });
   }
 
+  const [acceptingAll, setAcceptingAll] = useState(false);
+
   const acceptAllOrders = async () => {
+    setAcceptingAll(true);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/orders/accept-all`, {
         method: "PUT",
         headers: authHeaders()
       });
       if (res.ok) {
+        toast.success("All new orders accepted");
         setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "cooking" }))])
         setNewOrders([])
+      } else {
+        toast.error("Failed to accept all orders");
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setAcceptingAll(false);
     }
   }
 
@@ -251,7 +271,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const fetchHistoryOrders = async (page = 1) => {
     setHistoryLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?page=${page}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders?page=${page}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
@@ -276,12 +296,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
   }, [tab, historyPage]);
 
-  const Card = ({ order, action, actionLabel, color }: { order: any, action?: () => void, actionLabel?: string, color?: string }) => (
+  const Card = ({ order, action, actionLabel, color, isLoading }: { order: any, action?: () => void, actionLabel?: string, color?: string, isLoading?: boolean }) => (
     <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
 
       <div className="flex justify-between items-start">
 
-        <h3 className="font-playfair text-lg">{order.id}</h3>
+        <h3 className="font-playfair text-lg">{order.id || order._id || `#ORD-8800`}</h3>
 
         <MoreHorizontal size={18} className="text-[#94A3B8]" />
 
@@ -289,35 +309,42 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
       <p className="text-sm text-[#64748B] flex items-center gap-2 mt-1">
         <Clock size={14} />
-        {order.time} • {order.type}
+        {order.time || "Just now"} • {order.type || "Pickup"}
       </p>
 
       <p className="font-medium text-[#0F172A] mt-4">
-        {order.name}
+        {order.name || order.customer || "Walk-in Customer"}
       </p>
 
       <ul className="mt-3 space-y-1 text-[#64748B]">
 
-        {order.items.map((item: string, i: number) => (
+        {Array.isArray(order.items) ? order.items.map((item: string, i: number) => (
           <li key={i} className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full" />
             {item}
           </li>
-        ))}
+        )) : typeof order.items === 'string' ? order.items.split(',').map((item: string, i: number) => (
+          <li key={i} className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full" />
+            {item.trim()}
+          </li>
+        )) : null}
 
       </ul>
 
       <div className="flex justify-between items-center mt-5">
 
         <p className="font-semibold text-lg">
-          {order.price}
+          {order.price || order.total || "$0.00"}
         </p>
 
         {action && (
           <button
             onClick={action}
-            className={`px-4 py-2 rounded-lg text-white ${color}`}
+            disabled={isLoading}
+            className={`px-4 py-2 rounded-lg text-white flex items-center justify-center gap-2 ${color} ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
+            {isLoading && <Loader2 size={16} className="animate-spin" />}
             {actionLabel}
           </button>
         )}
@@ -423,7 +450,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                 )}
               </div>
 
-              <button onClick={acceptAllOrders} className="bg-[#009966] text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm ">
+              <button onClick={acceptAllOrders} disabled={acceptingAll} className={`bg-[#009966] text-white rounded-lg px-4 py-2 flex items-center justify-center gap-2 shadow-sm ${acceptingAll ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                {acceptingAll && <Loader2 size={16} className="animate-spin" />}
                 Accept All New
               </button>
 
@@ -487,6 +515,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     action={() => acceptOrder(o, i)}
                     actionLabel="Accept Order"
                     color="bg-[#2563EB]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
@@ -510,7 +539,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     order={o}
                     action={() => markReady(o, i)}
                     actionLabel="Mark Ready"
-                    color="bg-[#F54900]"
+                    color="bg-[#EA580C]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
@@ -520,9 +550,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
 
 
-            <div className="bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl p-4">
+            <div className="bg-[#F0FDF4] border border-[#BBF7D0] rounded-xl p-4">
 
-              <h3 className="font-playfair text-lg mb-4 text-[#065F46]">
+              <h3 className="font-playfair text-lg mb-4 text-[#15803D]">
                 ● Ready for Pickup ({ready.length})
               </h3>
 
@@ -534,7 +564,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     order={o}
                     action={() => completeOrder(o, i)}
                     actionLabel="Complete"
-                    color="bg-[#059669]"
+                    color="bg-[#16A34A]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
