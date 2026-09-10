@@ -19,52 +19,50 @@ export default function AddPartnerWizard() {
     <div className="flex flex-col max-w-4xl mx-auto w-full animate-in fade-in duration-300">
       
       {/* Header & Stepper */}
-      <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 mb-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div className="flex items-start gap-4">
-            <button 
-              onClick={() => navigate('/admin/dashboard/partner-management')}
-              className="mt-1 p-1.5 text-gray-500 hover:text-gray-900 transition"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
-                Add New Partner
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Onboard a new restaurant or retail vendor to the platform.
-              </p>
-            </div>
+      <div className="mb-8 flex flex-col gap-10">
+        <div className="flex items-start gap-4">
+          <button 
+            onClick={() => navigate('/admin/dashboard/partner-management')}
+            className="mt-1 p-1.5 text-gray-900 hover:text-gray-600 transition"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+              Add New Partner
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Onboard a new restaurant or retail vendor to the platform.
+            </p>
           </div>
+        </div>
 
-          {/* Progress Stepper */}
-          <div className="flex items-center self-center md:self-auto px-4">
-            {/* Step 1 */}
-            <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm transition-colors duration-300 ${
-                step > 1 ? "bg-gray-900 text-white" : step === 1 ? "bg-gray-900 text-white" : "bg-white border-2 border-gray-200 text-gray-400"
-              }`}>
-                {step > 1 ? <Check size={16} /> : 1}
-              </div>
-              <div className={`w-12 md:w-16 h-0.5 mx-2 transition-colors duration-300 ${step > 1 ? "bg-gray-900" : "bg-gray-200"}`}></div>
+        {/* Progress Stepper */}
+        <div className="flex items-center justify-center px-4">
+          {/* Step 1 */}
+          <div className="flex items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
+              step > 1 ? "bg-gray-900 text-white" : step === 1 ? "bg-gray-900 text-white" : "text-gray-500"
+            }`}>
+              {step > 1 ? <Check size={16} /> : 1}
             </div>
-            {/* Step 2 */}
-            <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm transition-colors duration-300 ${
-                step > 2 ? "bg-gray-900 text-white" : step === 2 ? "bg-gray-900 text-white" : "bg-white border-2 border-gray-200 text-gray-400"
-              }`}>
-                {step > 2 ? <Check size={16} /> : 2}
-              </div>
-              <div className={`w-12 md:w-16 h-0.5 mx-2 transition-colors duration-300 ${step > 2 ? "bg-gray-900" : "bg-gray-200"}`}></div>
+            <div className={`w-16 md:w-24 h-[1px] mx-2 transition-colors duration-300 ${step > 1 ? "bg-gray-900" : "bg-gray-200"}`}></div>
+          </div>
+          {/* Step 2 */}
+          <div className="flex items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
+              step > 2 ? "bg-gray-900 text-white" : step === 2 ? "bg-gray-900 text-white" : "text-gray-500"
+            }`}>
+              {step > 2 ? <Check size={16} /> : 2}
             </div>
-            {/* Step 3 */}
-            <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-sm transition-colors duration-300 ${
-                step === 3 ? "bg-gray-900 text-white" : "bg-white border-2 border-gray-200 text-gray-400"
-              }`}>
-                3
-              </div>
+            <div className={`w-16 md:w-24 h-[1px] mx-2 transition-colors duration-300 ${step > 2 ? "bg-gray-900" : "bg-gray-200"}`}></div>
+          </div>
+          {/* Step 3 */}
+          <div className="flex items-center">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
+              step === 3 ? "bg-gray-900 text-white" : "text-gray-500"
+            }`}>
+              3
             </div>
           </div>
         </div>
@@ -109,19 +107,19 @@ export default function AddPartnerWizard() {
             {/* Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Business Name</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Business Name</label>
                 <input type="text" placeholder="e.g. Tasty Bites" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Owner Name</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Owner Name</label>
                 <input type="text" placeholder="e.g. John Doe" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Email Address</label>
-                <input type="email" placeholder="partner@example.com" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+                <input type="email" placeholder="partner@hubnepa.com" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Phone Number</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number</label>
                 <input type="tel" placeholder="+1 (555) 000-0000" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
             </div>
@@ -136,7 +134,7 @@ export default function AddPartnerWizard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Category</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Category</label>
                 <select className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition">
                   <option value="">Select category</option>
                   <option value="asian">Asian Cuisine</option>
@@ -146,15 +144,15 @@ export default function AddPartnerWizard() {
                 </select>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Street Address</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
                 <input type="text" placeholder="123 Main St" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">City</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">City</label>
                 <input type="text" placeholder="Scranton" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-gray-900 mb-2 uppercase tracking-wide">Zip Code</label>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Zip Code</label>
                 <input type="text" placeholder="18503" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
               </div>
             </div>
@@ -188,33 +186,32 @@ export default function AddPartnerWizard() {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Footer Navigation */}
-        <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
+      {/* Footer Navigation */}
+      <div className="mt-6 flex items-center justify-between">
+        <button 
+          onClick={step === 1 ? () => navigate('/admin/dashboard/partner-management') : handleBack}
+          className="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+        >
+          Back
+        </button>
+        
+        {step < 3 ? (
           <button 
-            onClick={step === 1 ? () => navigate('/admin/dashboard/partner-management') : handleBack}
-            className="px-5 py-2.5 text-gray-600 text-sm font-bold hover:text-gray-900 transition"
+            onClick={handleNext}
+            className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition shadow-sm"
           >
-            Back
+            Next Step &gt;
           </button>
-          
-          {step < 3 ? (
-            <button 
-              onClick={handleNext}
-              className="px-6 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-lg hover:bg-gray-800 transition shadow-sm"
-            >
-              Next Step &gt;
-            </button>
-          ) : (
-            <button 
-              onClick={handleFinalSubmit}
-              className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-bold rounded-lg hover:bg-emerald-600 transition shadow-sm"
-            >
-              Create Partner Account
-            </button>
-          )}
-        </div>
-
+        ) : (
+          <button 
+            onClick={handleFinalSubmit}
+            className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm"
+          >
+            Create Partner Account
+          </button>
+        )}
       </div>
 
     </div>
