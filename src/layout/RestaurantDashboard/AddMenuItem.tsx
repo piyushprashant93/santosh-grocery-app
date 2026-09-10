@@ -13,6 +13,15 @@ export default function AddMenuItem({
   const [prepTime] = useState(0);
   const [sellingPrice, setSellingPrice] = useState(0);
 
+  const [menuItem, setMenuItem] = useState({
+    name: "",
+    category: "Main Course",
+    description: "",
+    dietaryType: "Vegetarian"
+  });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     type: "Solid",
@@ -47,6 +56,55 @@ export default function AddMenuItem({
     ? ((sellingPrice - totalCost) / sellingPrice) * 100
     : 0;
 
+  const handleSave = async () => {
+    setSaving(true);
+    setFieldErrors({});
+    try {
+      const token = localStorage.getItem("authToken");
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          name: menuItem.name,
+          category: menuItem.category,
+          description: menuItem.description,
+          dietaryType: menuItem.dietaryType,
+          prepTime,
+          price: sellingPrice,
+          ingredients,
+          chefRate
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.errors && Array.isArray(data.errors)) {
+          const newErrors: Record<string, string> = {};
+          data.errors.forEach((err: string) => {
+            const errLower = err.toLowerCase();
+            if (errLower.includes("name")) newErrors.name = err;
+            if (errLower.includes("category")) newErrors.category = err;
+            if (errLower.includes("price") || errLower.includes("baseprice")) newErrors.price = err;
+            if (errLower.includes("description")) newErrors.description = err;
+            if (errLower.includes("dietary")) newErrors.dietaryType = err;
+            if (errLower.includes("preptime")) newErrors.prepTime = err;
+          });
+          setFieldErrors(newErrors);
+        }
+        throw new Error("Validation failed");
+      }
+
+      setActiveTab("menu-management");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -70,11 +128,12 @@ export default function AddMenuItem({
           </button>
 
           <button
-            onClick={() => setActiveTab("menu-management")}
-            className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow"
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow disabled:opacity-50"
           >
             <Check size={16} />
-            Save Item
+            {saving ? "Saving..." : "Save Item"}
           </button>
         </div>
       </div>
@@ -122,19 +181,27 @@ export default function AddMenuItem({
                   <label className="text-sm text-[#64748B]">Item Name</label>
 
                   <input
+                    value={menuItem.name}
+                    onChange={(e) => setMenuItem({ ...menuItem, name: e.target.value })}
                     placeholder="e.g. Truffle Mushroom Burger"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                   />
+                  {fieldErrors.name && <p className="text-red-500 text-xs mt-1">{fieldErrors.name}</p>}
                 </div>
 
                 <div>
                   <label className="text-sm text-[#64748B]">Category</label>
 
-                  <select className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none">
+                  <select
+                    value={menuItem.category}
+                    onChange={(e) => setMenuItem({ ...menuItem, category: e.target.value })}
+                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  >
                     <option>Main Course</option>
                     <option>Starters</option>
                     <option>Desserts</option>
                   </select>
+                  {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                 </div>
               </div>
 
@@ -143,9 +210,12 @@ export default function AddMenuItem({
 
                 <textarea
                   rows={4}
+                  value={menuItem.description}
+                  onChange={(e) => setMenuItem({ ...menuItem, description: e.target.value })}
                   placeholder="Describe the dish..."
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
+                {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
               </div>
 
               <div className="grid md:grid-cols-3 gap-5">
@@ -160,10 +230,13 @@ export default function AddMenuItem({
                     </span>
 
                     <input
+                      value={sellingPrice}
+                      onChange={(e) => setSellingPrice(Number(e.target.value))}
                       placeholder="0.00"
                       className="w-full pl-8 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                     />
                   </div>
+                  {fieldErrors.price && <p className="text-red-500 text-xs mt-1">{fieldErrors.price}</p>}
                 </div>
 
                 <div>
@@ -176,19 +249,27 @@ export default function AddMenuItem({
                     />
 
                     <input
-                      placeholder="15 min"
+                      value={prepTime}
+                      onChange={(e) => setPrepTime(Number(e.target.value))}
+                      placeholder="15"
                       className="w-full pl-8 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                     />
                   </div>
+                  {fieldErrors.prepTime && <p className="text-red-500 text-xs mt-1">{fieldErrors.prepTime}</p>}
                 </div>
 
                 <div>
                   <label className="text-sm text-[#64748B]">Dietary Type</label>
 
-                  <select className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none">
+                  <select
+                    value={menuItem.dietaryType}
+                    onChange={(e) => setMenuItem({ ...menuItem, dietaryType: e.target.value })}
+                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  >
                     <option>Vegetarian</option>
                     <option>Non-Veg</option>
                   </select>
+                  {fieldErrors.dietaryType && <p className="text-red-500 text-xs mt-1">{fieldErrors.dietaryType}</p>}
                 </div>
               </div>
             </div>

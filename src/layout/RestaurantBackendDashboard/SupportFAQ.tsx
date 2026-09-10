@@ -17,7 +17,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
   const [faqs, setFaqs] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/retailer/support/faq/categories`, { headers: authHeaders() })
+    fetch(`${API_BASE}/restaurant-panel/support/faq/categories`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -25,7 +25,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
         }
       }).catch(console.error);
 
-    fetch(`${API_BASE}/retailer/support/faq`, { headers: authHeaders() })
+    fetch(`${API_BASE}/restaurant-panel/support/faq`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

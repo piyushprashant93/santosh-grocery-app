@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { ArrowLeft, Save } from "lucide-react"
+import toast from "react-hot-toast"
+import { parseApiError } from "../../lib/apiErrorHandler"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -22,6 +24,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
     const [activeProductTab, setActiveProductTab] = useState("general")
     const [images, setImages] = useState<File[]>([]);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const [form, setForm] = useState<any>({
         name: "",
@@ -55,6 +58,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
     }
 
     const handleSave = async () => {
+        setFieldErrors({});
         try {
             const formData = new FormData();
             Object.keys(form).forEach(key => {
@@ -70,14 +74,33 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                 body: formData
             });
 
+            const data = await res.json().catch(() => null);
+
             if (res.ok) {
-                alert("Product saved successfully!");
+                toast.success("Product saved successfully!");
                 setActiveTab("products");
             } else {
-                alert("Failed to save product.");
+                if (data && data.errors && Array.isArray(data.errors)) {
+                    const newErrors: Record<string, string> = {};
+                    data.errors.forEach((err: string) => {
+                        const errLower = err.toLowerCase();
+                        if (errLower.includes("name")) newErrors.name = err;
+                        if (errLower.includes("description")) newErrors.description = err;
+                        if (errLower.includes("category")) newErrors.category = err;
+                        if (errLower.includes("sku")) newErrors.sku = err;
+                        if (errLower.includes("baseprice") || errLower.includes("price")) newErrors.basePrice = err;
+                        if (errLower.includes("stock")) newErrors.stock = err;
+                        if (errLower.includes("weight")) newErrors.weight = err;
+                    });
+                    setFieldErrors(newErrors);
+                    toast.error("Please fix the validation errors.");
+                } else {
+                    toast.error(parseApiError(data, "Failed to save product."));
+                }
             }
         } catch(err) {
             console.error(err);
+            toast.error("An error occurred while saving the product.");
         }
     }
 
@@ -176,6 +199,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                 placeholder="e.g. Organic Whole Milk"
                                 className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
                             />
+                            {fieldErrors.name && <p className="text-red-500 text-xs mt-1">{fieldErrors.name}</p>}
                         </div>
 
 
@@ -193,6 +217,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                 rows={5}
                                 className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
                             />
+                            {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
                         </div>
 
 
@@ -216,6 +241,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     <option>Produce</option>
                                     <option>Pantry</option>
                                 </select>
+                                {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                             </div>
 
 
@@ -232,6 +258,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     placeholder="e.g. DY-001"
                                     className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.sku && <p className="text-red-500 text-xs mt-1">{fieldErrors.sku}</p>}
                             </div>
 
                         </div>
@@ -263,6 +290,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     placeholder="0.00"
                                     className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.basePrice && <p className="text-red-500 text-xs mt-1">{fieldErrors.basePrice}</p>}
                             </div>
 
 
@@ -305,6 +333,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     placeholder="0"
                                     className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.stock && <p className="text-red-500 text-xs mt-1">{fieldErrors.stock}</p>}
                             </div>
 
 
@@ -402,6 +431,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
           placeholder="0.00"
           className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
         />
+        {fieldErrors.weight && <p className="text-red-500 text-xs mt-1">{fieldErrors.weight}</p>}
       </div>
 
 

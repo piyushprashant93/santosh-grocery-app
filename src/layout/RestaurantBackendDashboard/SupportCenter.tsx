@@ -1,6 +1,17 @@
-import { Plus, Search, Filter, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { Plus, Search, Filter, X } from "lucide-react";
+import { useState, useEffect } from "react";
 import SupportLiveChat from "./SupportLiveChat";
+import SupportFAQ from "./SupportFAQ";
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 const tickets = [
   {
@@ -69,7 +80,44 @@ const faqs = [
 
 export default function HelpSupport() {
   const [activeTab, setActiveTab] = useState("tickets");
-  const [open, setOpen] = useState<number | null>(null)
+  
+  const [ticketsData, setTicketsData] = useState<any[]>([]);
+  const [showNewTicketModal, setShowNewTicketModal] = useState(false);
+  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", description: "" });
+
+  const fetchTickets = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/support/tickets`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        const payload = data.data || data;
+        const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : (payload.tickets || []));
+        setTicketsData(Array.isArray(arr) ? arr : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const createTicket = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/support/tickets`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(newTicket)
+      });
+      if (res.ok) {
+        alert("Ticket created successfully!");
+        setShowNewTicketModal(false);
+        setNewTicket({ subject: "", priority: "Medium", description: "" });
+        fetchTickets();
+      } else {
+        alert("Failed to create ticket");
+      }
+    } catch(err) { console.error(err); }
+  };
 
 
   return (
@@ -85,7 +133,7 @@ export default function HelpSupport() {
           </p>
         </div>
 
-        <button className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+        <button onClick={() => setShowNewTicketModal(true)} className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
           <Plus size={16} />
           New Ticket
         </button>
@@ -155,34 +203,36 @@ export default function HelpSupport() {
               </thead>
 
               <tbody>
-                {tickets.map((t, i) => (
+                {ticketsData.map((t, i) => (
                   <tr key={i} className="border-b last:border-none">
-                    <td className="py-6 px-2 text-[#64748B] text-sm">{t.id}</td>
+                    <td className="py-6 px-2 text-[#64748B] text-sm">
+                      {t.id ? `#${t.id}` : t.ticketId ? `#${t.ticketId}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"}
+                    </td>
 
                     <td className="py-6 px-2">
                       <p className="font-semibold text-[#0F172A] leading-6">
-                        {t.subject}
+                        {t.subject || t.title || t.issue || "No Subject"}
                       </p>
                     </td>
 
                     <td className="py-6 px-2">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${priorityStyles[t.priority]}`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${priorityStyles[t.priority || "Medium"] || "bg-gray-100"}`}
                       >
-                        {t.priority}
+                        {t.priority || "Medium"}
                       </span>
                     </td>
 
                     <td className="py-6 px-2">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyles[t.status]}`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyles[t.status || "Open"] || "bg-gray-100"}`}
                       >
-                        {t.status}
+                        {t.status || "Open"}
                       </span>
                     </td>
 
                     <td className="py-6 px-2 text-[#64748B] text-sm">
-                      {t.updated}
+                      {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                     </td>
 
                     <td className="py-6 px-2 text-right">
@@ -192,6 +242,13 @@ export default function HelpSupport() {
                     </td>
                   </tr>
                 ))}
+                {ticketsData.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-[#94A3B8]">
+                      No support tickets found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -203,53 +260,36 @@ export default function HelpSupport() {
       )}
 
       {activeTab === "faq" && (
-        <div className="space-y-8">
+        <SupportFAQ />
+      )}
 
-          {faqs.map((section, sIndex) => (
-
-            <div key={sIndex} className="space-y-4">
-
-              <h2 className="font-playfair text-2xl">{section.category}</h2>
-
-              {section.items.map((item, i) => {
-
-                const index = sIndex * 10 + i
-                const active = open === index
-
-                return (
-                  <div
-                    key={index}
-                    className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 shadow-sm cursor-pointer"
-                    onClick={() => setOpen(active ? null : index)}
-                  >
-
-                    <div className="flex items-center justify-between">
-
-                      <p className="font-medium text-[#111827]">
-                        {item.q}
-                      </p>
-
-                      <ChevronDown
-                        size={18}
-                        className={`transition ${active ? "rotate-180" : ""}`}
-                      />
-
-                    </div>
-
-                    {active && (
-                      <p className="text-[#6A7282] mt-3 text-sm">
-                        {item.a}
-                      </p>
-                    )}
-
-                  </div>
-                )
-              })}
-
+      {showNewTicketModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+              <X size={20} />
+            </button>
+            <h3 className="font-playfair text-xl mb-4">Create New Ticket</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Subject</label>
+                <input value={newTicket.subject} onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Priority</label>
+                <select value={newTicket.priority} onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Description</label>
+                <textarea value={newTicket.description} onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
+              </div>
+              <button onClick={createTicket} className="w-full bg-[#009966] text-white py-2.5 rounded-lg font-medium">Submit Ticket</button>
             </div>
-
-          ))}
-
+          </div>
         </div>
       )}
     </div>
