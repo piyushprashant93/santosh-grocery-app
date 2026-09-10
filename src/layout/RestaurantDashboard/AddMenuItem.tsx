@@ -10,7 +10,7 @@ export default function AddMenuItem({
 }) {
   const [tab, setTab] = useState("details");
   const [chefRate, setChefRate] = useState(16);
-  const [prepTime] = useState(0);
+  const [prepTime, setPrepTime] = useState(0);
   const [sellingPrice, setSellingPrice] = useState(0);
 
   const [menuItem, setMenuItem] = useState({

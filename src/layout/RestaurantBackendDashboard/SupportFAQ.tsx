@@ -87,7 +87,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
         {finalFaqs.map((section, sIndex) => (
           <div key={sIndex} className="space-y-4">
             <h2 className="font-playfair text-2xl">{section.category}</h2>
-            {section.items.map((item, i) => {
+            {section.items.map((item: { q: string; a: string }, i: number) => {
               const index = sIndex * 100 + i
               const active = open === index
               return (
