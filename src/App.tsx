@@ -20,13 +20,14 @@ import { DisputePage } from "./pages/DisputePage";
 import { OrderPlace } from "./pages/OrderPlace";
 import { RoleWiseSignIn } from "./pages/RoleWiseSignIn";
 import { CompleteOrderPage } from "./pages/CompleteOrderPage";
+import PaymentVerify from "./pages/PaymentVerify";
+import AuthCallback from "./pages/AuthCallback";
 import CustomerLayout from "./layout/CustomerDashboard/CustomerLayout";
 import Checkout from "./layout/CustomerDashboard/CheckoutStep/Checkout";
 import RetailerLayout from "./layout/RetailerDashboard/RetailerLayout";
 import SupplierLayout from "./layout/SupplierDashboard/SupplierLayout";
 import RestaurantLayout from "./layout/RestaurantDashboard/RestaurantLayout";
 import RestaurantBackendLayout from "./layout/RestaurantBackendDashboard/RestaurantBackendLayout";
-import PaymentVerify from "./pages/PaymentVerify";
 import AdminLayout from "./layout/AdminDashboard/AdminLayout";
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/dispute-resolution" element={<DisputePage />} />
 
         <Route path="/customer/payment-verify" element={<PaymentVerify />} />
+        <Route path="/auth/google/callback" element={<AuthCallback />} />
 
         <Route path="/customer/dashboard/*" element={<CustomerLayout />} />
         <Route path="/customer/dashboard/checkout" element={<Checkout />} />

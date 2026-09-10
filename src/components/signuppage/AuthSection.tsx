@@ -136,7 +136,13 @@ export default function AuthSection() {
               Create your account to unlock premium access.
             </p>
 
-            <button className="mt-8 w-full bg-white text-[#0F172B] font-bold py-3 rounded-[12px] hover:bg-gray-200 transition flex items-center gap-3 justify-center">
+            <button 
+              onClick={() => {
+                const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+                window.location.href = `${baseUrl}/api/v1/auth/google`;
+              }}
+              className="mt-8 w-full bg-white text-[#0F172B] font-bold py-3 rounded-[12px] hover:bg-gray-200 transition flex items-center gap-3 justify-center"
+            >
               <img src={GoogleIcon} alt="" />
               Continue with Google
             </button>

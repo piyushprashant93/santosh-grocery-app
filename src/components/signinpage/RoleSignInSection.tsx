@@ -565,7 +565,13 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                   <div className="flex-1 h-[1px] bg-[#1D293D]"></div>
                 </div>
 
-                <button className="w-full bg-white text-[#0F172B] py-3 rounded-lg flex items-center justify-center gap-3 font-medium hover:bg-gray-100 transition">
+                <button 
+                  onClick={() => {
+                    const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+                    window.location.href = `${baseUrl}/api/v1/auth/google`;
+                  }}
+                  className="w-full bg-white text-[#0F172B] py-3 rounded-lg flex items-center justify-center gap-3 font-medium hover:bg-gray-100 transition"
+                >
                   <img src={GoogleIcon} alt="google" className="w-5 h-5" />
                   Sign in with Google
                 </button>
