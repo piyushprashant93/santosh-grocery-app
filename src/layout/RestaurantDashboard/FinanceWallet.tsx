@@ -10,6 +10,7 @@ import {
   Trash2,
   View
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
 
@@ -201,7 +202,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setExpensesState(data.data?.expenses || data.expenses || data.data || []);
+        setExpensesState(extractList(data));
       }
     } catch (err) { console.error(err); }
   };
@@ -211,7 +212,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setEmployeesState(data.data?.payroll || data.payroll || data.data || []);
+        setEmployeesState(extractList(data));
       }
     } catch (err) { console.error(err); }
   };
@@ -221,7 +222,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setIssuesState(data.data?.maintenance || data.maintenance || data.data || []);
+        setIssuesState(extractList(data));
       }
     } catch (err) { console.error(err); }
   };

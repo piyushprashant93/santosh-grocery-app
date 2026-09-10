@@ -50,7 +50,7 @@ export default function SupplierProducts({
     try {
       setAddingToCart(product._id || product.id);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/add`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

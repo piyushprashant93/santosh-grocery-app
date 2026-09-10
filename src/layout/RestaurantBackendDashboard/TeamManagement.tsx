@@ -9,12 +9,15 @@ import {
   MessageSquare,
   DollarSign,
   Search,
+  Plus,
   Filter,
   MoreHorizontal,
   Key,
   CheckCircle,
+  XCircle,
   Trash2,
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -216,7 +219,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setStaff(data.data?.staff || data.staff || data.data || []);
+        setStaff(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -226,7 +229,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setSchedule(data.data?.schedule || data.schedule || data.data || []);
+        setSchedule(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -236,7 +239,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setRequests(data.data?.requests || data.requests || data.data || []);
+        setRequests(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -246,7 +249,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setPayroll(data.data?.payroll || data.payroll || data.data || []);
+        setPayroll(extractList(data));
       }
     } catch(err) { console.error(err); }
   };

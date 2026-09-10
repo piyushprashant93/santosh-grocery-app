@@ -29,161 +29,7 @@ const authHeadersForm = () => {
   };
 };
 
-// Dummy categories as fallback or could be dynamic
-const categories = [
-  { name: "All Items", count: 42 },
-  { name: "Starters", count: 8 },
-  { name: "Main Course", count: 18 },
-  { name: "Beverages", count: 10 },
-  { name: "Desserts", count: 6 }
-]
 
-const items = [
-  {
-    name: "Crispy Buffalo Wings",
-    category: "Starters",
-    desc: "Spicy fried chicken wings served with blue cheese dip and celery sticks.",
-    cost: "$4.50",
-    margin: "65.4%",
-    time: "20 min",
-    cal: "650",
-    price: "$12.99",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=200"
-  },
-  {
-    name: "Grilled Norwegian Salmon",
-    category: "Main Course",
-    desc: "Fresh Norwegian salmon grilled to perfection with lemon butter sauce and seasonal vegetables.",
-    cost: "$9.80",
-    margin: "60.0%",
-    time: "25 min",
-    cal: "580",
-    price: "$24.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=200"
-  },
-  {
-    name: "Classic Caesar Salad",
-    category: "Starters",
-    desc: "Crisp romaine lettuce with parmesan cheese, croutons, and our signature Caesar dressing.",
-    cost: "$2.50",
-    margin: "75.0%",
-    time: "10 min",
-    cal: "320",
-    price: "$9.99",
-    stock: false,
-    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=200"
-  },
-  {
-    name: "Double Cheeseburger",
-    category: "Main Course",
-    desc: "Two beef patties with melted cheese, lettuce, tomato, and our special sauce on a toasted bun.",
-    cost: "$6.20",
-    margin: "61.2%",
-    time: "20 min",
-    cal: "850",
-    price: "$15.99",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=200"
-  },
-  {
-    name: "Chocolate Lava Cake",
-    category: "Desserts",
-    desc: "Warm chocolate cake with a molten center, served with vanilla ice cream.",
-    cost: "$2.90",
-    margin: "65.8%",
-    time: "15 min",
-    cal: "450",
-    price: "$8.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=200"
-  },
-  {
-    name: "Iced Caramel Macchiato",
-    category: "Beverages",
-    desc: "Rich espresso with vanilla syrup, steamed milk, and caramel drizzle.",
-    cost: "$1.80",
-    margin: "67.3%",
-    time: "5 min",
-    cal: "220",
-    price: "$5.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=200"
-  },
-  {
-    name: "Garlic Butter Prawns",
-    category: "Starters",
-    desc: "Succulent prawns sautéed in garlic butter sauce with a hint of lemon.",
-    cost: "$5.20",
-    margin: "64.1%",
-    time: "15 min",
-    cal: "450",
-    price: "$14.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200"
-  },
-  {
-    name: "Mushroom Risotto",
-    category: "Main Course",
-    desc: "Creamy arborio rice cooked with wild mushrooms and parmesan cheese.",
-    cost: "$7.20",
-    margin: "60.0%",
-    time: "30 min",
-    cal: "620",
-    price: "$18.00",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200"
-  },
-  {
-    name: "Spicy Pepperoni Pizza",
-    category: "Main Course",
-    desc: "Classic pizza topped with spicy pepperoni, mozzarella cheese, and tomato sauce.",
-    cost: "$6.80",
-    margin: "58.8%",
-    time: "25 min",
-    cal: "900",
-    price: "$16.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=200"
-  },
-  {
-    name: "New York Cheesecake",
-    category: "Desserts",
-    desc: "Rich and creamy New York style cheesecake with berry compote.",
-    cost: "$2.60",
-    margin: "67.4%",
-    time: "0 min",
-    cal: "400",
-    price: "$7.99",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=200"
-  },
-  {
-    name: "Fresh Orange Juice",
-    category: "Beverages",
-    desc: "Freshly squeezed orange juice made daily.",
-    cost: "$1.20",
-    margin: "73.3%",
-    time: "5 min",
-    cal: "110",
-    price: "$4.50",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=200"
-  },
-  {
-    name: "Avocado Toast",
-    category: "Starters",
-    desc: "Smashed avocado on toasted sourdough with a poached egg and microgreens.",
-    cost: "$3.40",
-    margin: "69.0%",
-    time: "10 min",
-    cal: "350",
-    price: "$11.00",
-    stock: true,
-    image: "https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=200"
-  }
-]
 
 export default function MenuManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
   const [tab, setTab] = useState("live");
@@ -192,13 +38,29 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const categoryCounts = menuItems.reduce((acc, item) => {
+    const cat = item.category || "Uncategorized";
+    acc[cat] = (acc[cat] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const dynamicCategories: { name: string, count: number }[] = [
+    { name: "All Items", count: menuItems.length },
+    ...Object.entries(categoryCounts).map(([name, count]) => ({ name, count: Number(count) }))
+  ];
+
+  const filteredItems = menuItems.filter(item => {
+    if (active !== "All Items" && item.category !== active && (item.category || "Uncategorized") !== active) return false;
+    return true;
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   const fetchMenu = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/menu`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu`, {
         headers: authHeaders(),
       });
       if (res.ok) {
@@ -221,7 +83,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
   const toggleStock = async (id: string, currentAvail: boolean) => {
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}/availability`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}/availability`, {
         method: "PUT",
         headers: authHeaders(),
       });
@@ -236,7 +98,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const deleteItem = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}`, {
         method: "DELETE",
         headers: authHeaders(),
       });
@@ -256,7 +118,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
     const formData = new FormData();
     formData.append("image", file);
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/menu/${id}/image`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}/image`, {
         method: "POST",
         headers: authHeadersForm(),
         body: formData
@@ -339,7 +201,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
           </div>
 
           <span className="text-sm bg-[#F1F5F9] px-3 py-2 rounded-lg min-w-max">
-            12 results
+            {filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''}
           </span>
 
         </div>
@@ -348,7 +210,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
         <div className="flex flex-wrap gap-3">
 
-          {categories.map((c, i) => (
+          {dynamicCategories.map((c, i) => (
             <button
               key={i}
               onClick={() => setActive(c.name)}
@@ -380,8 +242,10 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             <div className="text-center py-10 text-red-500">{error}</div>
           ) : menuItems.length === 0 ? (
             <div className="text-center py-10 text-gray-500">No menu items found. Click 'Add Item' to create one.</div>
+          ) : filteredItems.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">No menu items match your filter.</div>
           ) : (
-            menuItems.map((item, i) => {
+            filteredItems.map((item, i) => {
               const isAvailable = item.isAvailable !== false && item.stock !== false;
               const imgUrl = item.imageUrl || item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
               const id = item._id || item.id || i.toString();

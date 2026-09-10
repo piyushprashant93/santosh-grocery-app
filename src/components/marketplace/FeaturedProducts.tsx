@@ -387,7 +387,7 @@ export default function FeaturedProducts({
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedProducts.map((product) => {
                 const img = product.images?.[0];
-                const hasDiscount = product.discountPrice < product.basePrice;
+                const hasDiscount = product.discountPrice != null && product.discountPrice < product.basePrice;
                 const isAdding = addingToCartId === product._id;
 
                 return (
@@ -441,11 +441,11 @@ export default function FeaturedProducts({
                         <div>
                           <div className="flex items-center gap-2">
                             <p className="font-bold text-lg">
-                              ${product.discountPrice.toFixed(2)}
+                              ${(product.discountPrice ?? product.basePrice)?.toFixed(2)}
                             </p>
                             {hasDiscount && (
                               <p className="text-sm text-[#62748E] line-through">
-                                ${product.basePrice.toFixed(2)}
+                                ${product.basePrice?.toFixed(2)}
                               </p>
                             )}
                           </div>

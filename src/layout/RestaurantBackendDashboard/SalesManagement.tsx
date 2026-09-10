@@ -1,6 +1,7 @@
 import {
-  Download, Calendar, CheckCircle2, FileText, AlertCircle
+  Download, Calendar, CheckCircle2, FileText, AlertCircle, Calendar as CalendarIcon, Search, Plus, X
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -91,7 +92,8 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
       const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setSalesEntries(data.data?.sales || data.sales || data.data || entries);
+        const list = extractList(data);
+        setSalesEntries(list.length > 0 ? list : entries);
       }
     } catch(err) { console.error(err); }
   };
@@ -101,7 +103,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
       const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing/missing`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setMissingDates(data.data?.missingDates || data.missingDates || data.data || []);
+        setMissingDates(extractList(data));
       }
     } catch(err) { console.error(err); }
   };

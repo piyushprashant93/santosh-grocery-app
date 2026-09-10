@@ -1,5 +1,7 @@
 import { Upload, Box, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { parseApiError } from "../../lib/apiErrorHandler";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -30,6 +32,7 @@ export default function AddProduct({
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
@@ -50,6 +53,7 @@ export default function AddProduct({
   };
 
   const handleSave = async () => {
+    setFieldErrors({});
     try {
       const formData = new FormData();
       Object.keys(form).forEach(key => formData.append(key, (form as any)[key]));
@@ -61,13 +65,35 @@ export default function AddProduct({
         headers: authHeadersForm(),
         body: formData
       });
+      const data = await res.json().catch(() => null);
+
       if (res.ok) {
-        alert("Product added successfully!");
+        toast.success("Product added successfully!");
         setActiveTab("products");
       } else {
-        alert("Failed to add product");
+        if (data && data.errors && Array.isArray(data.errors)) {
+          const newErrors: Record<string, string> = {};
+          data.errors.forEach((err: string) => {
+            const errLower = err.toLowerCase();
+            if (errLower.includes("title") || errLower.includes("name")) newErrors.title = err;
+            if (errLower.includes("category")) newErrors.category = err;
+            if (errLower.includes("sku")) newErrors.sku = err;
+            if (errLower.includes("description")) newErrors.description = err;
+            if (errLower.includes("unit")) newErrors.unit = err;
+            if (errLower.includes("baseprice") || errLower.includes("price")) newErrors.basePrice = err;
+            if (errLower.includes("stock")) newErrors.stockQuantity = err;
+            if (errLower.includes("lowstock")) newErrors.lowStockAlert = err;
+          });
+          setFieldErrors(newErrors);
+          toast.error("Please fix the validation errors.");
+        } else {
+          toast.error(parseApiError(data, "Failed to add product"));
+        }
       }
-    } catch(err) { console.error(err); }
+    } catch(err) {
+      console.error(err);
+      toast.error("An error occurred while adding the product.");
+    }
   };
 
   return (
@@ -111,6 +137,7 @@ export default function AddProduct({
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="e.g. Organic Avocados (Hass)"
                 />
+                {fieldErrors.title && <p className="text-red-500 text-xs mt-1">{fieldErrors.title}</p>}
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 
@@ -128,6 +155,7 @@ export default function AddProduct({
                     <option value="Meat">Meat</option>
                     <option value="Other">Other</option>
                   </select>
+                  {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                 </div>
                 <div>
                   
@@ -139,6 +167,7 @@ export default function AddProduct({
                     className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                     placeholder="e.g. AVO-HASS-01"
                   />
+                  {fieldErrors.sku && <p className="text-red-500 text-xs mt-1">{fieldErrors.sku}</p>}
                 </div>
               </div>
               <div>
@@ -153,6 +182,7 @@ export default function AddProduct({
                   rows={4}
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
                 />
+                {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
               </div>
             </div>
           </div>
@@ -179,6 +209,7 @@ export default function AddProduct({
                   <option value="l">l</option>
                   <option value="ml">ml</option>
                 </select>
+                {fieldErrors.unit && <p className="text-red-500 text-xs mt-1">{fieldErrors.unit}</p>}
               </div>
               <div>
                 
@@ -193,6 +224,7 @@ export default function AddProduct({
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0.00"
                 />
+                {fieldErrors.basePrice && <p className="text-red-500 text-xs mt-1">{fieldErrors.basePrice}</p>}
               </div>
               <div>
                 
@@ -207,6 +239,7 @@ export default function AddProduct({
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0"
                 />
+                {fieldErrors.stockQuantity && <p className="text-red-500 text-xs mt-1">{fieldErrors.stockQuantity}</p>}
               </div>
               <div>
                 
@@ -221,6 +254,7 @@ export default function AddProduct({
                   className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="10"
                 />
+                {fieldErrors.lowStockAlert && <p className="text-red-500 text-xs mt-1">{fieldErrors.lowStockAlert}</p>}
               </div>
             </div>
             <div className="mt-6">

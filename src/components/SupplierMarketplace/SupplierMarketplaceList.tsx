@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Search, ShoppingCart, Store, ChevronRight } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 
 export default function SupplierMarketplaceList({
   role,
@@ -23,11 +24,7 @@ export default function SupplierMarketplaceList({
         }
       });
       const data = await res.json();
-      if (data.success && data.data) {
-        setSuppliers(data.data);
-      } else if (Array.isArray(data)) {
-        setSuppliers(data);
-      }
+      setSuppliers(extractList(data));
     } catch (err) {
       console.error("Error fetching suppliers", err);
     } finally {

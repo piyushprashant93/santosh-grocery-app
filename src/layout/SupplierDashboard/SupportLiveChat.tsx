@@ -21,7 +21,7 @@ export default function SupportLiveChat() {
 
   const fetchChat = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE}/supplier/support/livechat`, { headers: authHeaders() });
       const data = await res.json();
       if (data.success && data.data) {
         setChatSessionId(data.data.id || data.data._id);
@@ -45,7 +45,7 @@ export default function SupportLiveChat() {
   const sendMessage = async () => {
     if (!message.trim() || !chatSessionId) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}`, {
+      const res = await fetch(`${API_BASE}/supplier/support/livechat/${chatSessionId}`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({ message })
@@ -65,7 +65,7 @@ export default function SupportLiveChat() {
   const closeChat = async () => {
     if(!chatSessionId) return;
     try {
-      await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}/close`, {
+      await fetch(`${API_BASE}/supplier/support/livechat/${chatSessionId}/close`, {
         method: "POST",
         headers: authHeaders()
       });

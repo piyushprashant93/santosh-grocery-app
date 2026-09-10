@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Star, MessageSquare } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -31,7 +32,7 @@ export default function Reviews() {
             const reviewsRes = await fetch(`${API_BASE}/reviews/restaurant/${rId}?page=1`, { headers: authHeaders() });
             if (reviewsRes.ok) {
               const reviewsData = await reviewsRes.json();
-              setReviews(reviewsData.data?.reviews || reviewsData.reviews || reviewsData.data || []);
+              setReviews(extractList(reviewsData));
             }
           }
         }

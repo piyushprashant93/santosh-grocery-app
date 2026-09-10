@@ -1,5 +1,6 @@
 import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filter, Package, ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
+import { toast } from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -38,7 +39,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders/${id}`, {
+      const res = await fetch(`${API_BASE}/supplier/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -46,8 +47,13 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (res.ok) {
         fetchOrders();
         setOpenStatusMenu(null);
+      } else {
+        toast.error("Failed to update order status");
       }
-    } catch(err) { console.error(err); }
+    } catch(err) { 
+        console.error(err); 
+        toast.error("An error occurred while updating order status.");
+    }
   };
 
 

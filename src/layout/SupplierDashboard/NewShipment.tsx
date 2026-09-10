@@ -1,4 +1,5 @@
 import { User, Truck, Package, Plus, MapPin, ArrowLeft, Trash2 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -36,7 +37,7 @@ export default function CreateShipment({
       const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setClients(data.data?.clients || data.clients || data.data || []);
+        setClients(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -46,7 +47,7 @@ export default function CreateShipment({
       const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setProducts(data.data?.products || data.products || data.data || []);
+        setProducts(extractList(data));
       }
     } catch(err) { console.error(err); }
   };

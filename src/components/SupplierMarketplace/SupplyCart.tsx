@@ -15,7 +15,7 @@ export default function SupplyCart({
   const fetchCart = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -44,7 +44,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/items/${itemId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/items/${itemId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -91,7 +91,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/clear`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -113,7 +113,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/checkout`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/checkout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
