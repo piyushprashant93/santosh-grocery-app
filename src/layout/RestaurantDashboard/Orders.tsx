@@ -11,108 +11,7 @@ const authHeaders = () => {
   };
 };
 
-const orders = [
-  {
-    id: "#ORD-8821",
-    date: "Today, 10:30 AM",
-    customer: "John Doe",
-    initial: "J",
-    type: "Delivery",
-    items: "2x Chicken Burger, 1x Coke",
-    total: "$24.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8820",
-    date: "Yesterday, 8:15 PM",
-    customer: "Alice Johnson",
-    initial: "A",
-    type: "Dine-in",
-    items: "1x Caesar Salad, 1x Water",
-    total: "$14.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8819",
-    date: "Yesterday, 7:45 PM",
-    customer: "Robert Smith",
-    initial: "R",
-    type: "Dine-in",
-    items: "2x Steak, 1x Red Wine",
-    total: "$85.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8818",
-    date: "Yesterday, 6:30 PM",
-    customer: "Emily Davis",
-    initial: "E",
-    type: "Pickup",
-    items: "1x Veggie Pizza",
-    total: "$16.00",
-    status: "Cancelled"
-  },
-  {
-    id: "#ORD-8817",
-    date: "Yesterday, 1:00 PM",
-    customer: "Michael Wilson",
-    initial: "M",
-    type: "Delivery",
-    items: "3x Tacos, 2x Soda",
-    total: "$22.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8816",
-    date: "Feb 10, 12:30 PM",
-    customer: "Sarah Brown",
-    initial: "S",
-    type: "Dine-in",
-    items: "1x Pasta Alfredo",
-    total: "$18.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8815",
-    date: "Feb 10, 11:45 AM",
-    customer: "David Miller",
-    initial: "D",
-    type: "Delivery",
-    items: "1x Burger Meal",
-    total: "$15.00",
-    status: "Refunded"
-  },
-  {
-    id: "#ORD-8814",
-    date: "Feb 09, 8:15 PM",
-    customer: "Jennifer Wu",
-    initial: "J",
-    type: "Delivery",
-    items: "1x Sushi Platter, 2x Miso Soup",
-    total: "$42.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8813",
-    date: "Feb 09, 7:30 PM",
-    customer: "Tom Harris",
-    initial: "T",
-    type: "Pickup",
-    items: "1x Pepperoni Pizza, 1x Coke",
-    total: "$21.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8812",
-    date: "Feb 09, 1:15 PM",
-    customer: "Emma Wilson",
-    initial: "E",
-    type: "Delivery",
-    items: "2x Vegan Wrap, 1x Smoothie",
-    total: "$28.50",
-    status: "Completed"
-  }
-]
+
 
 const statusStyles: any = {
   Completed: "bg-green-100 text-green-700",
@@ -129,6 +28,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const [end, setEnd] = useState("")
   const [openFilter, setOpenFilter] = useState(false)
   const [types, setTypes] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
   const [historyOrders, setHistoryOrders] = useState<any[]>([])
   const [historyPage, setHistoryPage] = useState(1)
   const [historyTotal, setHistoryTotal] = useState(0)
@@ -279,17 +179,18 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
       if (start) queryParams.append("startDate", start);
       if (end) queryParams.append("endDate", end);
+      if (searchQuery) queryParams.append("search", searchQuery);
 
       const res = await fetch(`${API_BASE}/restaurant-panel/orders?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
-        setHistoryOrders(historyList.length > 0 ? historyList : orders); // Fallback to mock data if empty
-        setHistoryTotal(data.data?.total || data.total || orders.length);
+        setHistoryOrders(historyList);
+        setHistoryTotal(data.data?.total || data.total || 0);
       }
     } catch (err) {
       console.error(err);
-      setHistoryOrders(orders);
+      setHistoryOrders([]);
     } finally {
       setHistoryLoading(false);
     }
@@ -301,9 +202,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   useEffect(() => {
     if (tab === "history") {
-      fetchHistoryOrders(historyPage);
+      const delayDebounceFn = setTimeout(() => {
+        fetchHistoryOrders(historyPage);
+      }, 500);
+      return () => clearTimeout(delayDebounceFn);
     }
-  }, [tab, historyPage, status, start, end]);
+  }, [tab, historyPage, status, start, end, searchQuery]);
 
   const Card = ({ order, action, actionLabel, color, isLoading }: { order: any, action?: () => void, actionLabel?: string, color?: string, isLoading?: boolean }) => (
     <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
@@ -621,7 +525,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                 <input
                   placeholder="Search by Order ID or Customer..."
-                  className="outline-none w-full"
+                  className="outline-none w-full bg-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
 
               </div>
@@ -667,10 +573,10 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                   <button
                     onClick={() => setOpenDate(v => !v)}
-                    className="flex items-center gap-2 border border-[#E5E7EB] px-4 h-11 rounded-lg bg-white"
+                    className="flex items-center gap-2 border border-[#E5E7EB] px-4 h-11 rounded-lg bg-white whitespace-nowrap"
                   >
                     <Calendar size={16} />
-                    Date Range
+                    {start && end ? `${start} to ${end}` : "Date Range"}
                   </button>
 
                   {openDate && (
@@ -742,6 +648,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   {historyLoading ? (
                     <tr>
                       <td colSpan={8} className="py-8 text-center text-[#64748B]">Loading history...</td>
+                    </tr>
+                  ) : historyOrders.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center text-[#64748B]">
+                        No order history found.
+                      </td>
                     </tr>
                   ) : historyOrders.map((o, i) => (
 

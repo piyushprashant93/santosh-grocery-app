@@ -29,13 +29,16 @@ export default function SupplierProducts({
         const data = await res.json();
         
         if (data.success && data.data) {
-           setProducts(data.data.products || data.data);
+           const p = data.data.products || data.data;
+           setProducts(Array.isArray(p) ? p : []);
            if (data.data.supplier) setSupplierName(data.data.supplier.name);
         } else if (Array.isArray(data)) {
            setProducts(data);
         } else if (data.products) {
-           setProducts(data.products);
+           setProducts(Array.isArray(data.products) ? data.products : []);
            if (data.supplier) setSupplierName(data.supplier.name);
+        } else {
+           setProducts([]);
         }
       } catch (err) {
         console.error("Error fetching products", err);

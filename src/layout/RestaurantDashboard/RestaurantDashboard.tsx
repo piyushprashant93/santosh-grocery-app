@@ -35,7 +35,8 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
             });
             if (ordersRes.ok) {
               const ordersJson = await ordersRes.json();
-              data.recentOrders = (ordersJson.data?.orders || ordersJson.data || []).slice(0, 5);
+              const arr = ordersJson.data?.orders || ordersJson.data;
+              data.recentOrders = (Array.isArray(arr) ? arr : []).slice(0, 5);
             }
           }
           setDashboardData(data);

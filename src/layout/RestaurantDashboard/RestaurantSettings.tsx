@@ -118,6 +118,10 @@ export default function RestaurantSettings({
   const [members, setMembers] = useState(initialMembers);
   const [profile, setProfile] = useState<any>({});
   const [locs, setLocs] = useState<any[]>(locations);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -151,6 +155,40 @@ export default function RestaurantSettings({
       });
       if (res.ok) alert("Settings saved!");
     } catch (err) { console.error(err); }
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("Please fill all password fields.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match.");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/users/change-password`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Password updated successfully!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        alert(data.message || data.errors?.join(", ") || "Failed to update password");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again later.");
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   const handleUpload = async (type: 'logo' | 'banner', file: File) => {
@@ -715,6 +753,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.current ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
                     />
 
                     <button
@@ -733,6 +773,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.new ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
                     />
 
                     <button
@@ -753,6 +795,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.confirm ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
                     <button
@@ -765,8 +809,12 @@ export default function RestaurantSettings({
                 </div>
               </div>
 
-              <button className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow">
-                Update Password
+              <button 
+                onClick={handleUpdatePassword}
+                disabled={passwordLoading}
+                className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {passwordLoading ? "Updating..." : "Update Password"}
               </button>
             </div>
 
