@@ -27,8 +27,11 @@ export default function ExpenseModal({ open, onClose, onSuccess }: { open: boole
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         },
         body: JSON.stringify({
-          ...form,
-          amount: Number(form.amount)
+          category: form.category,
+          type: form.type,
+          amount: Number(form.amount),
+          description: form.title,
+          date: form.date
         })
       })
       if (res.ok) {

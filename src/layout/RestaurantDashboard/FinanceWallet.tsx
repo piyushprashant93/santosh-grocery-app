@@ -130,7 +130,7 @@ export default function FinanceWallet() {
   const filterData = (data: any[]) => {
     return data.filter(item => {
       const q = searchQuery.toLowerCase();
-      const matchesSearch = item.title?.toLowerCase().includes(q) || item.name?.toLowerCase().includes(q) || item.category?.toLowerCase().includes(q);
+      const matchesSearch = item.title?.toLowerCase().includes(q) || item.description?.toLowerCase().includes(q) || item.name?.toLowerCase().includes(q) || item.category?.toLowerCase().includes(q);
       const matchesStatus = statusFilter === "All" || item.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -145,7 +145,7 @@ export default function FinanceWallet() {
     let headers = [];
     if (activeFinance === 0) {
       headers = ["Title", "Category", "Date", "Amount", "Status"];
-      dataToExport = activeExpenses.map(e => [e.title, e.category, e.date, e.amount, e.status]);
+      dataToExport = activeExpenses.map(e => [e.title || e.description, e.category, e.date, e.amount, e.status]);
     } else if (activeFinance === 1) {
       headers = ["Employee", "Role", "Month", "Amount", "Status"];
       dataToExport = activeEmployees.map(e => [e.name, e.role, e.month, e.amount, e.status]);
@@ -326,7 +326,7 @@ export default function FinanceWallet() {
                     <tr key={i} className="border-b last:border-none">
 
                       <td className="py-6 px-6 text-[#0F172A] font-medium text-lg">
-                        {e.title}
+                        {e.title || e.description}
                       </td>
 
 
@@ -374,7 +374,7 @@ export default function FinanceWallet() {
                           <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
                             <button onClick={() => {
-                              alert(`Invoice Details:\nTitle: ${e.title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`);
+                              alert(`Invoice Details:\nTitle: ${e.title || e.description}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`);
                             }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
 
                               <View size={16} className="text-[#64748B]" />
@@ -384,12 +384,13 @@ export default function FinanceWallet() {
                             </button>
 
                             <button onClick={() => {
-                              const content = `RECEIPT\n\nTitle: ${e.title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`;
+                              const title = e.title || e.description || 'expense';
+                              const content = `RECEIPT\n\nTitle: ${title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`;
                               const blob = new Blob([content], { type: 'text/plain' });
                               const url = window.URL.createObjectURL(blob);
                               const a = document.createElement('a');
                               a.href = url;
-                              a.download = `receipt-${e.title.replace(/\s+/g, '-')}-${e.date}.txt`;
+                              a.download = `receipt-${title.replace(/\s+/g, '-')}-${e.date}.txt`;
                               a.click();
                               window.URL.revokeObjectURL(url);
                             }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
