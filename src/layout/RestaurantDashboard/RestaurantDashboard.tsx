@@ -24,7 +24,21 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
         });
         const json = await res.json();
         if (res.ok) {
-          setDashboardData(json.data || json);
+          let data = json.data || json;
+          if (!data.recentOrders || data.recentOrders.length === 0) {
+            // Fallback to fetch pending orders
+            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/orders?status=pending", {
+              headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+              }
+            });
+            if (ordersRes.ok) {
+              const ordersJson = await ordersRes.json();
+              data.recentOrders = (ordersJson.data?.orders || ordersJson.data || []).slice(0, 5);
+            }
+          }
+          setDashboardData(data);
         } else {
           setError(json.message || "Failed to load dashboard.");
         }

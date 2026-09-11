@@ -185,6 +185,10 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
   const updateOrderStatus = async (orderId: string, status: string, callback?: () => void) => {
+    if (!orderId) {
+      toast.error("Invalid Order ID");
+      return;
+    }
     setLoadingOrderId(orderId);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
@@ -208,7 +212,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   };
 
   const acceptOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "cooking", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "cooking", () => {
       setNewOrders(prev => prev.filter((_, i) => i !== index))
       setCooking(prev => [...prev, { ...order, status: "cooking" }])
     });
@@ -239,14 +243,14 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   }
 
   const markReady = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "ready", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "ready", () => {
       setCooking(prev => prev.filter((_, i) => i !== index))
       setReady(prev => [...prev, { ...order, status: "ready" }])
     });
   }
 
   const completeOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "completed", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "completed", () => {
       setReady(prev => prev.filter((_, i) => i !== index))
     });
   }
@@ -271,7 +275,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const fetchHistoryOrders = async (page = 1) => {
     setHistoryLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders?page=${page}`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams({ page: page.toString() });
+      if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
+      if (start) queryParams.append("startDate", start);
+      if (end) queryParams.append("endDate", end);
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
@@ -294,7 +303,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     if (tab === "history") {
       fetchHistoryOrders(historyPage);
     }
-  }, [tab, historyPage]);
+  }, [tab, historyPage, status, start, end]);
 
   const Card = ({ order, action, actionLabel, color, isLoading }: { order: any, action?: () => void, actionLabel?: string, color?: string, isLoading?: boolean }) => (
     <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
@@ -353,6 +362,31 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
     </div>
   )
+
+  const handleExport = () => {
+    if (historyOrders.length === 0) return toast.error("No orders to export");
+    const headers = ["Order ID", "Date", "Customer", "Type", "Items", "Total", "Status"];
+    const csvRows = [];
+    csvRows.push(headers.join(","));
+    historyOrders.forEach(o => {
+      const id = o.id || o._id;
+      const date = o.date || new Date(o.createdAt || Date.now()).toLocaleDateString();
+      const customer = o.customer?.name || o.customer || "Customer";
+      const type = o.orderType || o.type || "Delivery";
+      const items = Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity}x ${it.name || it.menuItem?.name}`).join(" | ") : o.items;
+      const total = o.totalAmount || (o.total && o.total.replace ? o.total.replace('$', '') : o.total);
+      const status = o.status;
+      csvRows.push([id, date, customer, type, items, total, status].map(v => `"${String(v).replace(/"/g, '""')}"`).join(","));
+    });
+    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success("Export successful!");
+  };
 
   return (
 
@@ -456,7 +490,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
               </button>
 
             </> : <>
-              <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+              <button onClick={handleExport} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:bg-gray-50">
                 <Download size={16} />
                 Export History
               </button>

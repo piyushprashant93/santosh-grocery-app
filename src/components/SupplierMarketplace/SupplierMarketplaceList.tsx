@@ -71,10 +71,12 @@ export default function SupplierMarketplaceList({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredSuppliers.map((supplier) => (
+          {filteredSuppliers.map((supplier, idx) => {
+            const suppId = supplier._id || supplier.id || supplier.supplierId || supplier.userId || idx.toString();
+            return (
             <div
-              key={supplier._id || supplier.id}
-              onClick={() => onSelectSupplier(supplier._id || supplier.id)}
+              key={suppId}
+              onClick={() => onSelectSupplier(suppId)}
               className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg transition group"
             >
               <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600 group-hover:scale-110 transition">
@@ -88,7 +90,7 @@ export default function SupplierMarketplaceList({
                 <ChevronRight size={18} className="text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition" />
               </div>
             </div>
-          ))}
+          )})}
           {filteredSuppliers.length === 0 && (
             <div className="col-span-full py-10 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
               No suppliers found matching "{search}"

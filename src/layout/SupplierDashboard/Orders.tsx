@@ -66,6 +66,30 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     Cancelled: "bg-red-100 text-red-600"
   };
 
+  const handleExport = () => {
+    if (ordersData.length === 0) return toast.error("No orders to export");
+    const headers = ["Order ID", "Date", "Client", "Items", "Amount", "Status"];
+    const csvRows = [];
+    csvRows.push(headers.join(","));
+    ordersData.forEach(o => {
+      const id = o.id || o.orderId || o._id;
+      const date = o.date ? new Date(o.date).toLocaleDateString() : (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : "");
+      const client = o.client || o.client?.name || o.restaurant?.name || "Unknown Client";
+      const items = o.items || o.totalItems || o.items?.length || 0;
+      const amount = typeof o.amount === "number" ? o.amount.toFixed(2) : (o.total ? o.total.toFixed(2) : o.amount);
+      const status = o.status || "New";
+      csvRows.push([id, date, client, items, amount, status].map(v => `"${String(v).replace(/"/g, '""')}"`).join(","));
+    });
+    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `supplier-orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success("Export successful!");
+  };
+
   return (
     <div className="space-y-6">
 
@@ -83,7 +107,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
         <div className="flex gap-3">
 
-          <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+          <button onClick={handleExport} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:bg-gray-50">
             <Download size={16} />
             Export
           </button>

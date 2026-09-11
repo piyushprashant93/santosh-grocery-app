@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, Clock, Check, Calculator, Plus, ChartPie } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function AddMenuItem({
   activeTab,
@@ -11,7 +12,7 @@ export default function AddMenuItem({
   const [tab, setTab] = useState("details");
   const [chefRate, setChefRate] = useState(16);
   const [prepTime, setPrepTime] = useState(0);
-  const [sellingPrice, setSellingPrice] = useState(0);
+  const [sellingPrice, setSellingPrice] = useState("");
 
   const [menuItem, setMenuItem] = useState({
     name: "",
@@ -21,6 +22,25 @@ export default function AddMenuItem({
   });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [fetchedCategories, setFetchedCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/menu/categories", {
+          headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setFetchedCategories(data.data || data.categories || []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -33,7 +53,10 @@ export default function AddMenuItem({
   const [ingredients, setIngredients] = useState<any[]>([]);
 
   const addIngredient = () => {
-    if (!form.name || !form.price || !form.bulkQty || !form.usedQty) return;
+    if (!form.name || !form.price || !form.bulkQty || !form.usedQty) {
+      toast.error("Please fill all ingredient fields");
+      return;
+    }
 
     const unitCost = Number(form.price) / Number(form.bulkQty);
     const finalCost = unitCost * Number(form.usedQty);
@@ -52,8 +75,9 @@ export default function AddMenuItem({
   const totalIngredients = ingredients.reduce((a, b) => a + b.finalCost, 0);
   const laborCost = (chefRate / 60) * prepTime;
   const totalCost = totalIngredients + laborCost;
-  const margin = sellingPrice
-    ? ((sellingPrice - totalCost) / sellingPrice) * 100
+  const numericSellingPrice = Number(sellingPrice) || 0;
+  const margin = numericSellingPrice
+    ? ((numericSellingPrice - totalCost) / numericSellingPrice) * 100
     : 0;
 
   const handleSave = async () => {
@@ -73,7 +97,7 @@ export default function AddMenuItem({
           description: menuItem.description,
           dietaryType: menuItem.dietaryType,
           prepTime,
-          price: sellingPrice,
+          price: numericSellingPrice,
           ingredients,
           chefRate
         })
@@ -192,15 +216,16 @@ export default function AddMenuItem({
                 <div>
                   <label className="text-sm text-[#64748B]">Category</label>
 
-                  <select
+                  <input
+                    list="category-options"
                     value={menuItem.category}
                     onChange={(e) => setMenuItem({ ...menuItem, category: e.target.value })}
+                    placeholder="e.g. Main Course"
                     className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
-                  >
-                    <option>Main Course</option>
-                    <option>Starters</option>
-                    <option>Desserts</option>
-                  </select>
+                  />
+                  <datalist id="category-options">
+                    {fetchedCategories.map((c, i) => <option key={i} value={c} />)}
+                  </datalist>
                   {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                 </div>
               </div>
@@ -230,8 +255,11 @@ export default function AddMenuItem({
                     </span>
 
                     <input
+                      type="number"
+                      step="0.01"
+                      min="0"
                       value={sellingPrice}
-                      onChange={(e) => setSellingPrice(Number(e.target.value))}
+                      onChange={(e) => setSellingPrice(e.target.value)}
                       placeholder="0.00"
                       className="w-full pl-8 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                     />

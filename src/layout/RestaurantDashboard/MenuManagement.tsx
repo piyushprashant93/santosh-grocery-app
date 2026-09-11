@@ -38,20 +38,26 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
   const categoryCounts = menuItems.reduce((acc, item) => {
     const cat = item.category || "Uncategorized";
     acc[cat] = (acc[cat] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
+  const defaultCats = ["Main Course", "Starters", "Desserts"];
+  const allKnownCats = Array.from(new Set([...defaultCats, ...Object.keys(categoryCounts), ...customCategories]));
+
   const dynamicCategories: { name: string, count: number }[] = [
     { name: "All Items", count: menuItems.length },
-    ...Object.entries(categoryCounts).map(([name, count]) => ({ name, count: Number(count) }))
+    ...allKnownCats.map(name => ({ name, count: Number(categoryCounts[name] || 0) }))
   ];
 
   const filteredItems = menuItems.filter(item => {
     if (active !== "All Items" && item.category !== active && (item.category || "Uncategorized") !== active) return false;
+    if (search && !item.name?.toLowerCase().includes(search.toLowerCase()) && !item.description?.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -194,6 +200,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             <Search size={18} className="text-[#94A3B8]" />
 
             <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for items by name, ingredients, or tags..."
               className="outline-none w-full"
             />
@@ -226,7 +234,13 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             </button>
           ))}
 
-          <button className="w-10 h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center">
+          <button onClick={() => {
+            const newCat = window.prompt("Enter new category name:");
+            if (newCat && newCat.trim() !== "") {
+              setCustomCategories(prev => [...prev, newCat.trim()]);
+              setActive(newCat.trim());
+            }
+          }} className="w-10 h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center hover:bg-gray-50">
             <Plus size={18} />
           </button>
 

@@ -192,6 +192,8 @@ export default function FinanceWallet() {
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayout, setOpenPayout] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   const [expensesState, setExpensesState] = useState<any[]>([]);
   const [employeesState, setEmployeesState] = useState<any[]>([]);
@@ -233,9 +235,43 @@ export default function FinanceWallet() {
     else if (activeFinance === 2) fetchMaintenance();
   }, [activeFinance]);
 
-  const activeExpenses = expensesState.length > 0 ? expensesState : expenses;
-  const activeEmployees = employeesState.length > 0 ? employeesState : employees;
-  const activeIssues = issuesState.length > 0 ? issuesState : issues;
+  const filterData = (data: any[]) => {
+    return data.filter(item => {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = item.title?.toLowerCase().includes(q) || item.name?.toLowerCase().includes(q) || item.category?.toLowerCase().includes(q);
+      const matchesStatus = statusFilter === "All" || item.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  };
+
+  const activeExpenses = filterData(expensesState);
+  const activeEmployees = filterData(employeesState);
+  const activeIssues = filterData(issuesState);
+
+  const handleExport = () => {
+    let dataToExport = [];
+    let headers = [];
+    if (activeFinance === 0) {
+      headers = ["Title", "Category", "Date", "Amount", "Status"];
+      dataToExport = activeExpenses.map(e => [e.title, e.category, e.date, e.amount, e.status]);
+    } else if (activeFinance === 1) {
+      headers = ["Employee", "Role", "Month", "Amount", "Status"];
+      dataToExport = activeEmployees.map(e => [e.name, e.role, e.month, e.amount, e.status]);
+    } else {
+      headers = ["Title", "Vendor", "Priority", "Cost", "Date", "Status"];
+      dataToExport = activeIssues.map(e => [e.title, e.vendor, e.priority, e.cost, e.date, e.status]);
+    }
+    
+    if (dataToExport.length === 0) return alert("No data to export");
+    const csvRows = [headers.join(","), ...dataToExport.map(row => row.map(v => `"${v || ''}"`).join(","))];
+    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `finance-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6">
@@ -251,7 +287,7 @@ export default function FinanceWallet() {
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export Report
           </button>
@@ -263,6 +299,7 @@ export default function FinanceWallet() {
            <ExpenseModal
         open={openPayout}
         onClose={() => setOpenPayout(false)}
+        onSuccess={fetchExpenses}
       />
         </div>
       </div>
@@ -320,15 +357,32 @@ export default function FinanceWallet() {
             ))}
 
           </div>
-          <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
 
-            <Search size={16} className="text-[#94A3B8]" />
+              <Search size={16} className="text-[#94A3B8]" />
 
-            <input
-              placeholder="Filter records..."
-              className="outline-none w-full"
-            />
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Filter records..."
+                className="outline-none w-full"
+              />
 
+            </div>
+            
+            <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white">
+              <Filter size={16} className="text-[#94A3B8]" />
+              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="outline-none bg-transparent">
+                <option value="All">All Statuses</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Due Soon">Due Soon</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="In Progress">In Progress</option>
+              </select>
+            </div>
           </div>
         </div>
         {
@@ -427,7 +481,9 @@ export default function FinanceWallet() {
                         {openMenu === `${i}` && (
                           <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button onClick={() => {
+                              alert(`Invoice Details:\nTitle: ${e.title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`);
+                            }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
 
                               <View size={16} className="text-[#64748B]" />
 
@@ -435,7 +491,16 @@ export default function FinanceWallet() {
 
                             </button>
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button onClick={() => {
+                              const content = `RECEIPT\n\nTitle: ${e.title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`;
+                              const blob = new Blob([content], { type: 'text/plain' });
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `receipt-${e.title.replace(/\s+/g, '-')}-${e.date}.txt`;
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                            }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
 
                               <Download size={16} className="text-[#64748B]" />
 
