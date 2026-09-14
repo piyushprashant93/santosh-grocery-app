@@ -23,155 +23,16 @@ const authHeaders = () => {
   };
 };
 
-const cards = [
-  {
-    title: "Total Expenses (Feb)",
-    value: "$7,620.50",
-    icon: <TrendingDown size={20} className="text-[#E7000B]" />,
-    iconBg: "bg-[#FEE2E2]",
-    badge: "+4.5%",
-    badgeColor: "text-red-600 bg-[#FEE2E2]"
-  },
-  {
-    title: "Staff Payroll",
-    value: "$4,200.00",
-    icon: <Users size={20} className="text-[#155DFC]" />,
-    iconBg: "bg-[#E0E7FF]",
-    badge: "Fixed Cost",
-    badgeColor: "text-[#2563EB] bg-[#DBEAFE]"
-  },
-  {
-    title: "Maintenance & Misc",
-    value: "$570.50",
-    icon: <Wrench size={20} className="text-[#F54900]" />,
-    iconBg: "bg-[#FFF7ED]",
-    badge: "Variable",
-    badgeColor: "text-[#F54900] bg-[#FFEAD5]"
-  }
-]
-
-const expenses = [
-  {
-    title: "Monthly Rent",
-    category: "Rent",
-    date: "Feb 01, 2026",
-    amount: "$2,500.00",
-    status: "Paid"
-  },
-  {
-    title: "Staff Salaries",
-    category: "Salary",
-    date: "Feb 01, 2026",
-    amount: "$4,200.00",
-    status: "Paid"
-  },
-  {
-    title: "Vegetable Supply",
-    category: "Inventory",
-    date: "Feb 03, 2026",
-    amount: "$350.50",
-    status: "Pending"
-  },
-  {
-    title: "Kitchen Equipment Repair",
-    category: "Maintenance",
-    date: "Feb 02, 2026",
-    amount: "$150.00",
-    status: "Paid"
-  },
-  {
-    title: "Electricity Bill",
-    category: "Utilities",
-    date: "Feb 05, 2026",
-    amount: "$420.00",
-    status: "Due Soon"
-  }
-]
-
 const statusStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]",
   "Due Soon": "bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]"
 }
 
-const employees = [
-  {
-    name: "John Doe",
-    role: "Head Chef",
-    month: "January 2026",
-    amount: "$3,200.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/men/32.jpg"
-  },
-  {
-    name: "Sarah Smith",
-    role: "Restaurant Manager",
-    month: "January 2026",
-    amount: "$2,800.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    name: "Mike Johnson",
-    role: "Sous Chef",
-    month: "January 2026",
-    amount: "$2,100.00",
-    status: "Pending",
-    image: "https://randomuser.me/api/portraits/men/65.jpg"
-  },
-  {
-    name: "Emily Chen",
-    role: "Waitstaff",
-    month: "January 2026",
-    amount: "$1,500.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/68.jpg"
-  }
-]
-
 const statusEmployeeStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]"
 }
-
-const issues = [
-  {
-    title: "Walk-in Freezer",
-    desc: "Temperature fluctuation",
-    priority: "High",
-    vendor: "CoolTech Services",
-    cost: "$150.00",
-    date: "Feb 02, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "Espresso Machine",
-    desc: "Steam wand leak",
-    priority: "Medium",
-    vendor: "BaristaFix",
-    cost: "$85.00",
-    date: "Jan 28, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "HVAC System",
-    desc: "Filter replacement",
-    priority: "Low",
-    vendor: "AirMasters",
-    cost: "$200.00",
-    date: "Jan 15, 2026",
-    status: "Scheduled"
-  },
-  {
-    title: "Dishwasher",
-    desc: "Drainage blockage",
-    priority: "High",
-    vendor: "QuickPlumb",
-    cost: "$0.00",
-    date: "Feb 05, 2026",
-    status: "In Progress"
-  }
-]
 
 const priorityStyles: any = {
   High: "bg-[#FEE2E2] text-[#DC2626]",
@@ -192,10 +53,13 @@ export default function FinanceWallet() {
   const [openInvoice, setOpenInvoice] = useState(false);
   const [openPayout, setOpenPayout] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
   const [expensesState, setExpensesState] = useState<any[]>([]);
   const [employeesState, setEmployeesState] = useState<any[]>([]);
   const [issuesState, setIssuesState] = useState<any[]>([]);
+  const [totals, setTotals] = useState<any>({});
 
   const fetchExpenses = async () => {
     try {
@@ -203,6 +67,7 @@ export default function FinanceWallet() {
       if (res.ok) {
         const data = await res.json();
         setExpensesState(extractList(data));
+        setTotals(data.data?.totals || data.totals || {});
       }
     } catch (err) { console.error(err); }
   };
@@ -213,6 +78,7 @@ export default function FinanceWallet() {
       if (res.ok) {
         const data = await res.json();
         setEmployeesState(extractList(data));
+        setTotals(data.data?.totals || data.totals || {});
       }
     } catch (err) { console.error(err); }
   };
@@ -223,9 +89,37 @@ export default function FinanceWallet() {
       if (res.ok) {
         const data = await res.json();
         setIssuesState(extractList(data));
+        setTotals(data.data?.totals || data.totals || {});
       }
     } catch (err) { console.error(err); }
   };
+
+  const resolvedCards = [
+    {
+      title: "Total Expenses (Feb)",
+      value: totals?.totalExpenses ? `$${totals.totalExpenses}` : "$0.00",
+      icon: <TrendingDown size={20} className="text-[#E7000B]" />,
+      iconBg: "bg-[#FEE2E2]",
+      badge: totals?.expenseChange || "+0.0%",
+      badgeColor: "text-red-600 bg-[#FEE2E2]"
+    },
+    {
+      title: "Staff Payroll",
+      value: totals?.staffPayroll ? `$${totals.staffPayroll}` : "$0.00",
+      icon: <Users size={20} className="text-[#155DFC]" />,
+      iconBg: "bg-[#E0E7FF]",
+      badge: "Fixed Cost",
+      badgeColor: "text-[#2563EB] bg-[#DBEAFE]"
+    },
+    {
+      title: "Maintenance & Misc",
+      value: totals?.maintenance ? `$${totals.maintenance}` : "$0.00",
+      icon: <Wrench size={20} className="text-[#F54900]" />,
+      iconBg: "bg-[#FFF7ED]",
+      badge: "Variable",
+      badgeColor: "text-[#F54900] bg-[#FFEAD5]"
+    }
+  ];
 
   useEffect(() => {
     if (activeFinance === 0) fetchExpenses();
@@ -233,9 +127,57 @@ export default function FinanceWallet() {
     else if (activeFinance === 2) fetchMaintenance();
   }, [activeFinance]);
 
-  const activeExpenses = expensesState.length > 0 ? expensesState : expenses;
-  const activeEmployees = employeesState.length > 0 ? employeesState : employees;
-  const activeIssues = issuesState.length > 0 ? issuesState : issues;
+  const filterData = (data: any[]) => {
+    return data.filter(item => {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = item.title?.toLowerCase().includes(q) || item.description?.toLowerCase().includes(q) || item.name?.toLowerCase().includes(q) || item.category?.toLowerCase().includes(q);
+      const matchesStatus = statusFilter === "All" || item.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  };
+
+  const activeExpenses = filterData(expensesState);
+  const activeEmployees = filterData(employeesState);
+  const activeIssues = filterData(issuesState);
+
+  const handleExport = async () => {
+    try {
+      if (activeFinance === 0) {
+        const queryParams = new URLSearchParams();
+        if (searchQuery) queryParams.append("search", searchQuery);
+        if (statusFilter !== "All") queryParams.append("status", statusFilter);
+
+        const res = await fetch(`${API_BASE}/restaurant-panel/expenses/export?${queryParams.toString()}`, { headers: authHeaders() });
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `expenses-export-${new Date().toISOString().split('T')[0]}.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          alert("Failed to export expenses");
+        }
+      } else {
+        const res = await fetch(`${API_BASE}/restaurant-panel/reports/export?days=30`, { headers: authHeaders() });
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `finance-reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          alert("Failed to export report");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error exporting");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -251,7 +193,7 @@ export default function FinanceWallet() {
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export Report
           </button>
@@ -263,13 +205,14 @@ export default function FinanceWallet() {
            <ExpenseModal
         open={openPayout}
         onClose={() => setOpenPayout(false)}
+        onSuccess={fetchExpenses}
       />
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
 
-        {cards.map((c, i) => (
+        {resolvedCards.map((c, i) => (
           <div
             key={i}
             className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
@@ -320,15 +263,32 @@ export default function FinanceWallet() {
             ))}
 
           </div>
-          <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
 
-            <Search size={16} className="text-[#94A3B8]" />
+              <Search size={16} className="text-[#94A3B8]" />
 
-            <input
-              placeholder="Filter records..."
-              className="outline-none w-full"
-            />
+              <input
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Filter records..."
+                className="outline-none w-full"
+              />
 
+            </div>
+            
+            <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white">
+              <Filter size={16} className="text-[#94A3B8]" />
+              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="outline-none bg-transparent">
+                <option value="All">All Statuses</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Due Soon">Due Soon</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="In Progress">In Progress</option>
+              </select>
+            </div>
           </div>
         </div>
         {
@@ -380,7 +340,7 @@ export default function FinanceWallet() {
                     <tr key={i} className="border-b last:border-none">
 
                       <td className="py-6 px-6 text-[#0F172A] font-medium text-lg">
-                        {e.title}
+                        {e.title || e.description}
                       </td>
 
 
@@ -427,7 +387,9 @@ export default function FinanceWallet() {
                         {openMenu === `${i}` && (
                           <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button onClick={() => {
+                              alert(`Invoice Details:\nTitle: ${e.title || e.description}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`);
+                            }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
 
                               <View size={16} className="text-[#64748B]" />
 
@@ -435,7 +397,17 @@ export default function FinanceWallet() {
 
                             </button>
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button onClick={() => {
+                              const title = e.title || e.description || 'expense';
+                              const content = `RECEIPT\n\nTitle: ${title}\nCategory: ${e.category}\nDate: ${e.date}\nAmount: ${e.amount}\nStatus: ${e.status}`;
+                              const blob = new Blob([content], { type: 'text/plain' });
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `receipt-${title.replace(/\s+/g, '-')}-${e.date}.txt`;
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                            }} className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
 
                               <Download size={16} className="text-[#64748B]" />
 

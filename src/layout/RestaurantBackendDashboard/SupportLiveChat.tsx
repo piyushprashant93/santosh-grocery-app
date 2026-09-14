@@ -66,7 +66,7 @@ export default function SupportLiveChat() {
     if(!chatSessionId) return;
     try {
       await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}/close`, {
-        method: "POST",
+        method: "PUT",
         headers: authHeaders()
       });
       toast.success("Chat session closed.");

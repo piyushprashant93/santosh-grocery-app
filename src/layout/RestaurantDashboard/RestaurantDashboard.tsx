@@ -24,7 +24,22 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
         });
         const json = await res.json();
         if (res.ok) {
-          setDashboardData(json.data || json);
+          let data = json.data || json;
+          if (!data.recentOrders || data.recentOrders.length === 0) {
+            // Fallback to fetch pending orders
+            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/orders?status=pending", {
+              headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+              }
+            });
+            if (ordersRes.ok) {
+              const ordersJson = await ordersRes.json();
+              const arr = ordersJson.data?.orders || ordersJson.data;
+              data.recentOrders = (Array.isArray(arr) ? arr : []).slice(0, 5);
+            }
+          }
+          setDashboardData(data);
         } else {
           setError(json.message || "Failed to load dashboard.");
         }
@@ -204,75 +219,89 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                   <tbody>
 
-                    {activeOrders.map((o: any, i: number) => {
-
-                      const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
-                      const orderPrefix = idString.includes("-") ? idString.split("-")[0] + "-" : "#ORD-";
-                      const orderNumber = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
-
-                      return (
-
-                        <tr
-                          key={i}
-                          className="border-b border-[#F1F5F9] last:border-none"
-                        >
-
-                          <td className="py-5 font-medium text-[#0F172A]">
-
-                            <div className="leading-5">
-                              <p>{orderPrefix}</p>
-                              <p>{orderNumber}</p>
+                    {activeOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-12 text-center text-[#64748B]">
+                          <div className="flex flex-col items-center justify-center gap-2">
+                            <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-2">
+                              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
                             </div>
+                            <p className="font-medium text-gray-900">No recent orders found</p>
+                            <p className="text-sm">There are no orders to display at this time.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      activeOrders.map((o: any, i: number) => {
 
-                          </td>
+                        const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
+                        const orderPrefix = idString.includes("-") ? idString.split("-")[0] + "-" : "#ORD-";
+                        const orderNumber = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
 
+                        return (
 
+                          <tr
+                            key={i}
+                            className="border-b border-[#F1F5F9] last:border-none"
+                          >
 
-                          <td className="py-5">
+                            <td className="py-5 font-medium text-[#0F172A]">
 
-                            <div className="flex items-center gap-3">
-
-                              <div>
-                                <p className="font-medium text-[#334155]">
-                                  {o.customer}
-                                </p>
-
-                                <p className="text-sm text-[#64748B]">
-                                  {o.time}
-                                </p>
+                              <div className="leading-5">
+                                <p>{orderPrefix}</p>
+                                <p>{orderNumber}</p>
                               </div>
 
-                            </div>
-
-                          </td>
+                            </td>
 
 
 
-                          <td className="py-5 text-[#64748B] max-w-[240px]">
-                            {o.items}
-                          </td>
+                            <td className="py-5">
+
+                              <div className="flex items-center gap-3">
+
+                                <div>
+                                  <p className="font-medium text-[#334155]">
+                                    {o.customer}
+                                  </p>
+
+                                  <p className="text-sm text-[#64748B]">
+                                    {o.time}
+                                  </p>
+                                </div>
+
+                              </div>
+
+                            </td>
 
 
 
-                          <td className="py-5">
-
-                            <span className={`px-3 py-1 text-sm rounded-full ${statusStyles[o.status]}`}>
-                              {o.status}
-                            </span>
-
-                          </td>
+                            <td className="py-5 text-[#64748B] max-w-[240px]">
+                              {o.items}
+                            </td>
 
 
 
-                          <td className="py-5 font-semibold text-[#0F172A] text-end">
-                            {o.total}
-                          </td>
+                            <td className="py-5">
 
-                        </tr>
+                              <span className={`px-3 py-1 text-sm rounded-full ${statusStyles[o.status]}`}>
+                                {o.status}
+                              </span>
 
-                      )
+                            </td>
 
-                    })}
+
+
+                            <td className="py-5 font-semibold text-[#0F172A] text-end">
+                              {o.total}
+                            </td>
+
+                          </tr>
+
+                        )
+
+                      })
+                    )}
 
                   </tbody>
 

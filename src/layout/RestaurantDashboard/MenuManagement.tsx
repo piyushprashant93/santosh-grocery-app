@@ -38,29 +38,28 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const [menuItems, setMenuItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
-  const categoryCounts = menuItems.reduce((acc, item) => {
-    const cat = item.category || "Uncategorized";
-    acc[cat] = (acc[cat] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [serverCategories, setServerCategories] = useState<string[]>([]);
+  const defaultCats = ["Main Course", "Starters", "Desserts"];
+  const allKnownCats = Array.from(new Set([...defaultCats, ...serverCategories, ...customCategories]));
 
-  const dynamicCategories: { name: string, count: number }[] = [
-    { name: "All Items", count: menuItems.length },
-    ...Object.entries(categoryCounts).map(([name, count]) => ({ name, count: Number(count) }))
+  const dynamicCategories = [
+    { name: "All Items", count: "" },
+    ...allKnownCats.map(name => ({ name, count: "" }))
   ];
-
-  const filteredItems = menuItems.filter(item => {
-    if (active !== "All Items" && item.category !== active && (item.category || "Uncategorized") !== active) return false;
-    return true;
-  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   const fetchMenu = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu`, {
+      const queryParams = new URLSearchParams();
+      if (search) queryParams.append("search", search);
+      if (active && active !== "All Items") queryParams.append("category", active);
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu?${queryParams.toString()}`, {
         headers: authHeaders(),
       });
       if (res.ok) {
@@ -77,9 +76,28 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/menu/categories`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setServerCategories(data.data || data.categories || []);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    fetchMenu();
+    fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchMenu();
+    }, 300);
+    return () => clearTimeout(delay);
+  }, [search, active]);
 
   const toggleStock = async (id: string, currentAvail: boolean) => {
     try {
@@ -194,6 +212,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             <Search size={18} className="text-[#94A3B8]" />
 
             <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for items by name, ingredients, or tags..."
               className="outline-none w-full"
             />
@@ -201,7 +221,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
           </div>
 
           <span className="text-sm bg-[#F1F5F9] px-3 py-2 rounded-lg min-w-max">
-            {filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''}
+            {menuItems.length} result{menuItems.length !== 1 ? 's' : ''}
           </span>
 
         </div>
@@ -226,7 +246,13 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             </button>
           ))}
 
-          <button className="w-10 h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center">
+          <button onClick={() => {
+            const newCat = window.prompt("Enter new category name:");
+            if (newCat && newCat.trim() !== "") {
+              setCustomCategories(prev => [...prev, newCat.trim()]);
+              setActive(newCat.trim());
+            }
+          }} className="w-10 h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center hover:bg-gray-50">
             <Plus size={18} />
           </button>
 
@@ -241,11 +267,9 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
           ) : error ? (
             <div className="text-center py-10 text-red-500">{error}</div>
           ) : menuItems.length === 0 ? (
-            <div className="text-center py-10 text-gray-500">No menu items found. Click 'Add Item' to create one.</div>
-          ) : filteredItems.length === 0 ? (
             <div className="text-center py-10 text-gray-500">No menu items match your filter.</div>
           ) : (
-            filteredItems.map((item, i) => {
+            menuItems.map((item, i) => {
               const isAvailable = item.isAvailable !== false && item.stock !== false;
               const imgUrl = item.imageUrl || item.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200";
               const id = item._id || item.id || i.toString();

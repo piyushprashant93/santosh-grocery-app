@@ -78,7 +78,90 @@ const orders = [
   }
 ]
 
+import { useState, useEffect } from "react";
+
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/dashboard", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        const json = await res.json();
+        if (res.ok) {
+          let data = json.data || json;
+          if (!data.recentOrders || data.recentOrders.length === 0) {
+            // Fallback to fetch pending orders
+            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/orders?page=1", {
+              headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+              }
+            });
+            if (ordersRes.ok) {
+              const ordersJson = await ordersRes.json();
+              data.recentOrders = (ordersJson.data?.orders || ordersJson.data || []).slice(0, 5);
+            }
+          }
+          setDashboardData(data);
+        } else {
+          setError(json.message || "Failed to load dashboard.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Network error occurred.");
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  const activeStats = [
+    {
+      title: "Total Revenue",
+      value: dashboardData?.totalRevenue ? `$${dashboardData.totalRevenue.toLocaleString()}` : "$0",
+      change: dashboardData?.revenueChange || "+0%",
+      icon: DollarSign,
+      iconBg: "bg-blue-100",
+      iconColor: "text-[#155DFC]",
+      trend: dashboardData?.revenueTrend || "up"
+    },
+    {
+      title: "Active Orders",
+      value: dashboardData?.activeOrdersCount || "0",
+      change: dashboardData?.ordersChange || "+0",
+      icon: Package,
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
+      trend: dashboardData?.ordersTrend || "up"
+    },
+    {
+      title: "Low Stock Items",
+      value: dashboardData?.lowStockCount || "0",
+      change: dashboardData?.stockChange || "-0",
+      icon: AlertTriangle,
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600",
+      trend: dashboardData?.stockTrend || "down"
+    },
+    {
+      title: "Active Clients",
+      value: dashboardData?.activeClients || "0",
+      change: dashboardData?.clientsChange || "+0",
+      icon: Users,
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+      trend: dashboardData?.clientsTrend || "up"
+    }
+  ];
+
+  const activeOrders = dashboardData?.recentOrders || orders;
 
   return (
 
@@ -113,7 +196,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
       <div className="">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mb-5">
 
-          {stats.map((s, i) => {
+          {activeStats.map((s, i) => {
 
             const Icon = s.icon
 
@@ -195,12 +278,20 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
                   <tbody>
 
-                    {orders.map((o, i) => {
+                    {activeOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-12 text-center text-[#64748B]">
+                          No recent orders found.
+                        </td>
+                      </tr>
+                    ) : (
+                      activeOrders.map((o: any, i: number) => {
 
-                      const orderPrefix = o.id.split("-")[0] + "-"
-                      const orderNumber = o.id.split("-")[1]
+                        const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
+                        const orderPrefix = idString.includes("-") ? idString.split("-")[0] + "-" : "#ORD-";
+                        const orderNumber = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
 
-                      return (
+                        return (
 
                         <tr
                           key={i}
@@ -246,10 +337,9 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
                         </tr>
 
-                      )
-
-                    })}
-
+                      );
+                    })
+                    )}
                   </tbody>
 
                 </table>

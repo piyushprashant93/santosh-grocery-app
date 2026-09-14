@@ -17,6 +17,7 @@ import {
   Smartphone,
   Eye,
   EyeOff,
+  X,
 } from "lucide-react";
 
 const tabs = [
@@ -111,17 +112,32 @@ export default function RestaurantSettings({
     confirm: false,
   });
 
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<any>({ name: "", address: "", phone: "", status: "Active" });
+
   const [members, setMembers] = useState(initialMembers);
   const [profile, setProfile] = useState<any>({});
   const [locs, setLocs] = useState<any[]>(locations);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
 
   const fetchProfile = async () => {
     try {
       const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setProfile(data.data?.restaurant || data.restaurant || data.data || {});
-        if (data.data?.restaurant?.locations) setLocs(data.data.restaurant.locations);
+        const profileData = data.data?.restaurant || data.restaurant || data.data || {};
+        setProfile(profileData);
+        if (profileData.locations) setLocs(profileData.locations);
+        if (profileData.operatingHours && Array.isArray(profileData.operatingHours)) setDays(profileData.operatingHours);
+        if (profileData.notifications && Array.isArray(profileData.notifications)) {
+          setData(prev => prev.map(item => {
+            const found = profileData.notifications.find((n: any) => n.title === item.title);
+            return found ? { ...item, email: found.email, sms: found.sms } : item;
+          }));
+        }
       }
     } catch (err) { console.error(err); }
   };
@@ -135,15 +151,49 @@ export default function RestaurantSettings({
       const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
         method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify(profile)
+        body: JSON.stringify({ ...profile, operatingHours: days })
       });
       if (res.ok) alert("Settings saved!");
     } catch (err) { console.error(err); }
   };
 
+  const handleUpdatePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("Please fill all password fields.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match.");
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/users/change-password`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Password updated successfully!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        alert(data.message || data.errors?.join(", ") || "Failed to update password");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error. Please try again later.");
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
   const handleUpload = async (type: 'logo' | 'banner', file: File) => {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append(type, file);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/${type}`, {
         method: "POST",
@@ -163,6 +213,25 @@ export default function RestaurantSettings({
       });
       if (res.ok) fetchProfile();
     } catch (err) { console.error(err); }
+  };
+
+  const saveLocation = async () => {
+    if (!editingLocation.name || !editingLocation.address) return alert("Name and Address required");
+    try {
+      const url = editingLocation._id 
+        ? `${API_BASE}/restaurant-panel/settings/locations/${editingLocation._id}`
+        : `${API_BASE}/restaurant-panel/settings/locations`;
+      const method = editingLocation._id ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: authHeaders(),
+        body: JSON.stringify(editingLocation)
+      });
+      if (res.ok) {
+        setShowLocationModal(false);
+        fetchProfile();
+      }
+    } catch(err) { console.error(err); }
   };
 
   const saveNotifications = async () => {
@@ -503,7 +572,10 @@ export default function RestaurantSettings({
 
                 <div className="flex gap-2">
                   {loc._id && <span onClick={() => deleteLocation(loc._id)} className="text-red-500 cursor-pointer text-sm font-medium">Delete</span>}
-                  <MoreHorizontal size={18} className="text-[#94A3B8] cursor-pointer" />
+                  <MoreHorizontal onClick={() => {
+                    setEditingLocation(loc);
+                    setShowLocationModal(true);
+                  }} size={18} className="text-[#94A3B8] cursor-pointer hover:text-[#0F172A]" />
                 </div>
               </div>
 
@@ -537,7 +609,10 @@ export default function RestaurantSettings({
             </div>
           ))}
 
-          <div className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div onClick={() => {
+            setEditingLocation({ name: "", address: "", phone: "", status: "Active" });
+            setShowLocationModal(true);
+          }} className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px] cursor-pointer hover:bg-gray-50">
             <div className="w-16 h-16 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4 shadow-sm">
               <Plus size={28} className="text-[#64748B]" />
             </div>
@@ -547,6 +622,39 @@ export default function RestaurantSettings({
             </h3>
 
             <p className="text-[#64748B] text-sm mt-1">Expand your business</p>
+          </div>
+        </div>
+      )}
+
+      {showLocationModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+            <button onClick={() => setShowLocationModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+              <X size={20} />
+            </button>
+            <h3 className="font-playfair text-xl mb-4">{editingLocation._id ? "Edit Location" : "Add Location"}</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Name / Title</label>
+                <input value={editingLocation.name} onChange={(e) => setEditingLocation({ ...editingLocation, name: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none" placeholder="e.g. Downtown Branch" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Address</label>
+                <input value={editingLocation.address} onChange={(e) => setEditingLocation({ ...editingLocation, address: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none" placeholder="123 Main St" />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Phone</label>
+                <input value={editingLocation.phone} onChange={(e) => setEditingLocation({ ...editingLocation, phone: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none" placeholder="+1..." />
+              </div>
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">Status</label>
+                <select value={editingLocation.status} onChange={(e) => setEditingLocation({ ...editingLocation, status: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <button onClick={saveLocation} className="w-full bg-[#009966] text-white py-2.5 rounded-lg font-medium">Save Location</button>
+            </div>
           </div>
         </div>
       )}
@@ -645,6 +753,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.current ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
                     />
 
                     <button
@@ -663,6 +773,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.new ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
                     />
 
                     <button
@@ -683,6 +795,8 @@ export default function RestaurantSettings({
                     <input
                       type={show.confirm ? "text" : "password"}
                       className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
                     <button
@@ -695,8 +809,12 @@ export default function RestaurantSettings({
                 </div>
               </div>
 
-              <button className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow">
-                Update Password
+              <button 
+                onClick={handleUpdatePassword}
+                disabled={passwordLoading}
+                className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {passwordLoading ? "Updating..." : "Update Password"}
               </button>
             </div>
 
@@ -776,7 +894,10 @@ export default function RestaurantSettings({
               </p>
             </div>
 
-            <button className="flex items-center gap-2 bg-[#009966] text-white px-5 py-2.5 rounded-lg shadow">
+            <button onClick={() => {
+              const email = prompt("Enter email to invite:");
+              if (email) alert(`Invitation sent to ${email}`);
+            }} className="flex items-center gap-2 bg-[#009966] text-white px-5 py-2.5 rounded-lg shadow">
               <Users size={16} />
               Invite Member
             </button>

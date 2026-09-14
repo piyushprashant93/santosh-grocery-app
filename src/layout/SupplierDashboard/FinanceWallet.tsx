@@ -183,10 +183,10 @@ export default function FinanceWallet() {
     fetchFinance();
   }, []);
 
-  const revenueData = financeData?.revenue || data;
-  const invoicesData = financeData?.invoices || invoices;
-  const transactionsData = financeData?.transactions || transactions;
-  const cardsData = financeData?.cards || cards;
+  const revenueData = financeData?.revenue || [];
+  const invoicesData = financeData?.invoices || [];
+  const transactionsData = financeData?.transactions || [];
+  const cardsData = financeData?.cards || [];
 
   return (
     <div className="space-y-6">
