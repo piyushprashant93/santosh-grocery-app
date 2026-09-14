@@ -98,7 +98,12 @@ export default function AddMenuItem({
           dietaryType: menuItem.dietaryType,
           prepTime,
           price: numericSellingPrice,
-          ingredients,
+          ingredients: ingredients.map(i => ({
+            name: i.name,
+            unit: i.type === "Solid" ? "g" : "ml", // Just a guess for unit based on type, or we could just use type
+            unitCost: i.unitCost,
+            quantityUsed: Number(i.usedQty)
+          })),
           chefRate
         })
       });
@@ -464,7 +469,7 @@ export default function AddMenuItem({
                 <label className="text-sm text-[#64748B]">Selling Price</label>
                 <input
                   value={sellingPrice}
-                  onChange={(e) => setSellingPrice(Number(e.target.value))}
+                  onChange={(e) => setSellingPrice(e.target.value)}
                   className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
@@ -492,7 +497,7 @@ export default function AddMenuItem({
 
                 <button
                   onClick={() =>
-                    setSellingPrice(Number((totalCost * 3.5).toFixed(2)))
+                    setSellingPrice((totalCost * 3.5).toFixed(2))
                   }
                   className="w-full border border-[#2563EB] text-[#2563EB] py-2 rounded-lg"
                 >

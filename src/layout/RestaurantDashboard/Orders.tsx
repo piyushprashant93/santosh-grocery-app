@@ -41,46 +41,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       setTypes([...types, type])
     }
   }
-  const [newOrders, setNewOrders] = useState([
-    {
-      id: "#ORD-8825",
-      time: "Just now",
-      type: "Delivery",
-      name: "Michael Brown",
-      items: ["2x Beef Burger", "1x French Fries", "2x Coke"],
-      price: "$32.50"
-    },
-    {
-      id: "#ORD-8824",
-      time: "5 min ago",
-      type: "Pickup",
-      name: "Sarah Connor",
-      items: ["1x Margherita Pizza", "1x Garlic Bread"],
-      price: "$18.00"
-    }
-  ])
-
-  const [cooking, setCooking] = useState([
-    {
-      id: "#ORD-8823",
-      time: "15 min ago",
-      type: "Dine-in",
-      name: "James Wilson",
-      items: ["3x Chicken Wings", "2x Beer"],
-      price: "$45.00"
-    }
-  ])
-
-  const [ready, setReady] = useState([
-    {
-      id: "#ORD-8822",
-      time: "25 min ago",
-      type: "Delivery",
-      name: "Emily Clark",
-      items: ["1x Pasta Carbonara"],
-      price: "$16.50"
-    }
-  ])
+  const [newOrders, setNewOrders] = useState<any[]>([])
+  const [cooking, setCooking] = useState<any[]>([])
+  const [ready, setReady] = useState<any[]>([])
 
   const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
@@ -161,11 +124,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (res.ok) {
         const data = await res.json();
         const live = data.data?.orders || data.orders || data.data || [];
-        if (live.length > 0) {
-          setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New"));
-          setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking"));
-          setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
-        }
+        setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New"));
+        setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking"));
+        setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
       }
     } catch (err) {
       console.error(err);
@@ -177,11 +138,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     try {
       const queryParams = new URLSearchParams({ page: page.toString() });
       if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
-      if (start) queryParams.append("startDate", start);
-      if (end) queryParams.append("endDate", end);
+      if (start) queryParams.append("dateFrom", start);
+      if (end) queryParams.append("dateTo", end);
       if (searchQuery) queryParams.append("search", searchQuery);
+      if (types.length > 0) queryParams.append("type", types.join(","));
 
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
@@ -267,29 +229,56 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     </div>
   )
 
-  const handleExport = () => {
-    if (historyOrders.length === 0) return toast.error("No orders to export");
-    const headers = ["Order ID", "Date", "Customer", "Type", "Items", "Total", "Status"];
-    const csvRows = [];
-    csvRows.push(headers.join(","));
-    historyOrders.forEach(o => {
-      const id = o.id || o._id;
-      const date = o.date || new Date(o.createdAt || Date.now()).toLocaleDateString();
-      const customer = o.customer?.name || o.customer || "Customer";
-      const type = o.orderType || o.type || "Delivery";
-      const items = Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity}x ${it.name || it.menuItem?.name}`).join(" | ") : o.items;
-      const total = o.totalAmount || (o.total && o.total.replace ? o.total.replace('$', '') : o.total);
-      const status = o.status;
-      csvRows.push([id, date, customer, type, items, total, status].map(v => `"${String(v).replace(/"/g, '""')}"`).join(","));
-    });
-    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `orders-export-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    toast.success("Export successful!");
+  const handleExport = async () => {
+    try {
+      const queryParams = new URLSearchParams();
+      if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
+      if (start) queryParams.append("dateFrom", start);
+      if (end) queryParams.append("dateTo", end);
+      if (searchQuery) queryParams.append("search", searchQuery);
+      if (types.length > 0) queryParams.append("type", types.join(","));
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history/export?${queryParams.toString()}`, { 
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        toast.success("Export successful!");
+      } else {
+        toast.error("Failed to export orders");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error exporting orders");
+    }
+  };
+
+  const handleViewReceipt = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, {
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `invoice-${id}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        toast.error("Failed to download receipt");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error downloading receipt");
+    }
   };
 
   return (
@@ -707,7 +696,10 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                       </td>
 
-                      <td className="py-5 px-4 text-gray-500 cursor-pointer hover:text-[#0F172A]">
+                      <td 
+                        className="py-5 px-4 text-blue-500 cursor-pointer hover:text-blue-700 font-medium"
+                        onClick={() => handleViewReceipt(o.id || o._id)}
+                      >
                         View Receipt
                       </td>
 

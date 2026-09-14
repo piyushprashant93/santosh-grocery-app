@@ -140,29 +140,43 @@ export default function FinanceWallet() {
   const activeEmployees = filterData(employeesState);
   const activeIssues = filterData(issuesState);
 
-  const handleExport = () => {
-    let dataToExport = [];
-    let headers = [];
-    if (activeFinance === 0) {
-      headers = ["Title", "Category", "Date", "Amount", "Status"];
-      dataToExport = activeExpenses.map(e => [e.title || e.description, e.category, e.date, e.amount, e.status]);
-    } else if (activeFinance === 1) {
-      headers = ["Employee", "Role", "Month", "Amount", "Status"];
-      dataToExport = activeEmployees.map(e => [e.name, e.role, e.month, e.amount, e.status]);
-    } else {
-      headers = ["Title", "Vendor", "Priority", "Cost", "Date", "Status"];
-      dataToExport = activeIssues.map(e => [e.title, e.vendor, e.priority, e.cost, e.date, e.status]);
+  const handleExport = async () => {
+    try {
+      if (activeFinance === 0) {
+        const queryParams = new URLSearchParams();
+        if (searchQuery) queryParams.append("search", searchQuery);
+        if (statusFilter !== "All") queryParams.append("status", statusFilter);
+
+        const res = await fetch(`${API_BASE}/restaurant-panel/expenses/export?${queryParams.toString()}`, { headers: authHeaders() });
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `expenses-export-${new Date().toISOString().split('T')[0]}.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          alert("Failed to export expenses");
+        }
+      } else {
+        const res = await fetch(`${API_BASE}/restaurant-panel/reports/export?days=30`, { headers: authHeaders() });
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `finance-reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          alert("Failed to export report");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error exporting");
     }
-    
-    if (dataToExport.length === 0) return alert("No data to export");
-    const csvRows = [headers.join(","), ...dataToExport.map(row => row.map(v => `"${v || ''}"`).join(","))];
-    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `finance-export-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
   };
 
   return (

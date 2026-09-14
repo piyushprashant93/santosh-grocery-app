@@ -34,9 +34,24 @@ export default function SupportLiveChat() {
 
   useEffect(() => {
     fetchChat();
-    const interval = setInterval(fetchChat, 10000); // Polling every 10s
-    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (!chatSessionId) return;
+    const pollChat = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}`, { headers: authHeaders() });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setMessages(data.data.messages || []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    const interval = setInterval(pollChat, 4000); // Polling every 4s
+    return () => clearInterval(interval);
+  }, [chatSessionId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
