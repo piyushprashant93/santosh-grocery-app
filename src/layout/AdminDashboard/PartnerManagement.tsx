@@ -62,61 +62,57 @@ function PartnerManagementList() {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Partner Management</h1>
           <p className="text-gray-500 mt-1">Onboard, verify, and manage restaurants and retailers.</p>
         </div>
-        <button className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition">
+        <button 
+          onClick={() => navigate('/admin/dashboard/partner-management/new')}
+          className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition"
+        >
           Add New Partner
         </button>
       </div>
 
       {/* Tabs Container */}
-      <div className="flex gap-8 border-b border-gray-200">
-        <button 
-          onClick={() => setActiveTab('restaurants')}
-          className={`pb-4 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-            activeTab === 'restaurants' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          }`}
-        >
-          <Store size={18} />
-          Restaurants
-        </button>
-        <button 
-          onClick={() => setActiveTab('retailers')}
-          className={`pb-4 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-            activeTab === 'retailers' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          }`}
-        >
-          <ShoppingBag size={18} />
-          Retailers (Vendors)
-        </button>
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2">
+        <div className="flex gap-8">
+          <button 
+            onClick={() => setActiveTab('restaurants')}
+            className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
+              activeTab === 'restaurants' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <Store size={18} />
+            Restaurants
+          </button>
+          <button 
+            onClick={() => setActiveTab('retailers')}
+            className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
+              activeTab === 'retailers' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <ShoppingBag size={18} />
+            Retailers (Vendors)
+          </button>
+        </div>
       </div>
 
-      {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col mt-2">
-        
-        {/* Toolbar */}
-        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="relative w-full max-w-md">
-            <input 
-              type="text"
-              placeholder="Search partners..."
-              className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
-            />
-          </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center">
-              <Filter size={16} />
-              Filters
-            </button>
-            <button 
-              onClick={() => navigate('/admin/dashboard/partner-management/new')}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition shadow-sm justify-center whitespace-nowrap"
-            >
-              + Add Partner
-            </button>
-          </div>
+      {/* Filter Bar */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="relative w-full max-w-md">
+          <input 
+            type="text"
+            placeholder="Search partners..."
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+          />
         </div>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center">
+            <Filter size={16} />
+            Filters
+          </button>
+        </div>
+      </div>
 
-        {/* Table Area */}
-        <div className="overflow-x-auto min-h-[300px]">
+      {/* Table Area */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[300px]">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-gray-100">
@@ -216,7 +212,6 @@ function PartnerManagementList() {
             </tbody>
           </table>
         </div>
-      </div>
 
     </div>
   )
