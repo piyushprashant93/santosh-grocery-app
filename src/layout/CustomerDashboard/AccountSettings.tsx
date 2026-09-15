@@ -1062,7 +1062,7 @@ export default function AccountSettings() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A] dark:text-white">
           Account Settings
         </h1>
         <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
@@ -1070,13 +1070,13 @@ export default function AccountSettings() {
         </p>
       </div>
 
-      <div className="flex lg:gap-2 gap-1 bg-[#F1F5F9] p-1 rounded-lg lg:rounded-xl w-fit">
+      <div className="flex lg:gap-2 gap-1 bg-[#F1F5F9] dark:bg-[#020618] p-1 rounded-lg lg:rounded-xl w-fit">
         {["Profile", "Security", "Preferences", "Addresses"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`sm:px-4 px-2 py-2 rounded-lg text-sm ${
-              tab === t ? "bg-white shadow-sm" : "text-[#475569]"
+              tab === t ? "bg-white dark:bg-[#0F172A] shadow-sm" : "text-[#475569] dark:text-[#94A3B8]"
             }`}
           >
             {t}
@@ -1097,9 +1097,9 @@ export default function AccountSettings() {
       )}
 
       {tab === "Profile" && (
-        <div className="border border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-[#E5E7EB] dark:border-[#1E293B] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
-            <h2 className="font-playfair text-xl text-[#0F172A]">
+            <h2 className="font-playfair text-xl text-[#0F172A] dark:text-white">
               Personal Information
             </h2>
             <p className="text-[#6A7282]">Update your personal details here.</p>
@@ -1142,7 +1142,7 @@ export default function AccountSettings() {
             </div>
 
             <div>
-              <p className="font-playfair text-lg text-[#0F172A]">
+              <p className="font-playfair text-lg text-[#0F172A] dark:text-white">
                 Profile Picture
               </p>
 
@@ -1154,8 +1154,8 @@ export default function AccountSettings() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm text-[#475569]">First Name</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
+              <label className="text-sm text-[#475569] dark:text-[#94A3B8]">First Name</label>
+              <div className="mt-1 w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 flex items-center gap-1">
                 <User size={16} className="text-[#94A3B8]" />
                 <input
                   value={profile.firstName}
@@ -1168,16 +1168,16 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-gray-500 dark:text-[#94A3B8]"
                       : ""
-                  }`}
+                  } bg-transparent dark:text-white`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Last Name</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
+              <label className="text-sm text-[#475569] dark:text-[#94A3B8]">Last Name</label>
+              <div className="mt-1 w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 flex items-center gap-1">
                 <User size={16} className="text-[#94A3B8]" />
                 <input
                   value={profile.lastName}
@@ -1190,28 +1190,28 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-gray-500 dark:text-[#94A3B8]"
                       : ""
-                  }`}
+                  } bg-transparent dark:text-white`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Email Address</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1 bg-gray-50">
+              <label className="text-sm text-[#475569] dark:text-[#94A3B8]">Email Address</label>
+              <div className="mt-1 w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 flex items-center gap-1 bg-gray-50 dark:bg-[#020618]">
                 <Mail size={16} className="text-[#94A3B8]" />
                 <input
                   value={profile.email}
                   disabled
-                  className="ml-2 flex-1 outline-none bg-transparent cursor-not-allowed text-gray-500"
+                  className="ml-2 flex-1 outline-none bg-transparent cursor-not-allowed text-gray-500 dark:text-[#94A3B8] bg-transparent dark:text-white"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Phone Number</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
+              <label className="text-sm text-[#475569] dark:text-[#94A3B8]">Phone Number</label>
+              <div className="mt-1 w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 flex items-center gap-1">
                 <Phone size={16} className="text-[#94A3B8]" />
                 <input
                   value={profile.phone}
@@ -1224,9 +1224,9 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-gray-500 dark:text-[#94A3B8]"
                       : ""
-                  }`}
+                  } bg-transparent dark:text-white`}
                 />
               </div>
             </div>
@@ -1240,7 +1240,7 @@ export default function AccountSettings() {
                   setIsEditing(true);
                 }
               }}
-              className="border border-[#E5E7EB] px-5 py-2 rounded-lg bg-white shadow-sm w-fit"
+              className="border border-[#E5E7EB] dark:border-[#1E293B] px-5 py-2 rounded-lg bg-white dark:bg-[#0F172A] shadow-sm w-fit"
             >
               {isEditing ? "Save Changes" : "Edit Profile"}
             </button>
@@ -1249,7 +1249,7 @@ export default function AccountSettings() {
       )}
 
       {tab === "Security" && (
-        <div className="border border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-[#E5E7EB] dark:border-[#1E293B] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
             <h2 className="font-playfair text-xl">Password & Security</h2>
             <p className="text-[#6A7282]">
@@ -1266,13 +1266,13 @@ export default function AccountSettings() {
                 placeholder="Current Password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 pr-12 outline-none bg-transparent dark:text-white"
               />
 
               <button
                 type="button"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#94A3B8]"
               >
                 {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -1284,13 +1284,13 @@ export default function AccountSettings() {
                 placeholder="New Password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 pr-12 outline-none bg-transparent dark:text-white"
               />
 
               <button
                 type="button"
                 onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#94A3B8]"
               >
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -1302,13 +1302,13 @@ export default function AccountSettings() {
                 placeholder="Confirm New Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 pr-12 outline-none bg-transparent dark:text-white"
               />
 
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#94A3B8]"
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -1343,7 +1343,7 @@ export default function AccountSettings() {
 
             <div className="flex items-center gap-4">
               {loading2FA ? (
-                <span className="text-gray-500 text-sm">Loading...</span>
+                <span className="text-gray-500 dark:text-[#94A3B8] text-sm">Loading...</span>
               ) : (
                 <span
                   className={`text-sm border px-3 py-1 rounded-full ${
@@ -1362,7 +1362,7 @@ export default function AccountSettings() {
               <button
                 onClick={handleRegenerateBackupCodes}
                 disabled={regenerateLoading}
-                className="border border-[#E5E7EB] px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm md:text-base"
+                className="border border-[#E5E7EB] dark:border-[#1E293B] px-4 py-2 rounded-lg hover:bg-gray-50 dark:bg-[#020618] disabled:opacity-50 text-sm md:text-base"
               >
                 {regenerateLoading ? "Regenerating..." : "Regenerate Backup Codes"}
               </button>
@@ -1380,7 +1380,7 @@ export default function AccountSettings() {
           ) : (
             <button
               onClick={handleEnable2FAClick}
-              className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+              className="border border-[#E5E7EB] dark:border-[#1E293B] px-4 py-2 rounded-lg"
             >
               Enable 2FA
             </button>
@@ -1390,7 +1390,7 @@ export default function AccountSettings() {
 
       {tab === "Preferences" && (
         <div className="space-y-6">
-          <div className="border border-[#E5E7EB] rounded-lg lg:rounded-xl lg:p-8 p-3 bg-white space-y-6">
+          <div className="border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg lg:rounded-xl lg:p-8 p-3 bg-white dark:bg-[#0F172A] space-y-6">
             <div className="flex items-center gap-3">
               <Bell className="text-[#009966]" size={20} />
               <h3 className="font-playfair text-lg">Notifications</h3>
@@ -1399,7 +1399,7 @@ export default function AccountSettings() {
             {notificationItems.map((item) => (
               <div key={item.key} className="flex items-center justify-between">
                 <div>
-                  <p className="text-[#0F172A]">{item.title}</p>
+                  <p className="text-[#0F172A] dark:text-white">{item.title}</p>
                   <p className="text-sm text-[#6A7282]">{item.description}</p>
                 </div>
 
@@ -1416,12 +1416,12 @@ export default function AccountSettings() {
                       : "bg-[#CBD5E1] justify-start"
                   }`}
                 >
-                  <span className="w-5 h-5 bg-white rounded-full shadow" />
+                  <span className="w-5 h-5 bg-white dark:bg-[#0F172A] rounded-full shadow" />
                 </button>
               </div>
             ))}
 
-            <div className="border-t border-[#E5E7EB] my-6"></div>
+            <div className="border-t border-[#E5E7EB] dark:border-[#1E293B] my-6"></div>
 
             <div className="">
               <div className="flex items-center gap-3 mb-6">
@@ -1431,7 +1431,7 @@ export default function AccountSettings() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm text-[#475569]">Language</label>
+                  <label className="text-sm text-[#475569] dark:text-[#94A3B8]">Language</label>
 
                   <select
                     value={preferences.language}
@@ -1441,7 +1441,7 @@ export default function AccountSettings() {
                         language: e.target.value,
                       }))
                     }
-                    className="mt-2 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none"
+                    className="mt-2 w-full h-11 px-3 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg outline-none bg-transparent text-[#0F172A] dark:text-white"
                   >
                     <option value="en">English</option>
                     <option value="hi">Hindi</option>
@@ -1449,7 +1449,7 @@ export default function AccountSettings() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#475569]">Currency</label>
+                  <label className="text-sm text-[#475569] dark:text-[#94A3B8]">Currency</label>
 
                   <select
                     value={preferences.currency}
@@ -1459,7 +1459,7 @@ export default function AccountSettings() {
                         currency: e.target.value,
                       })
                     }
-                    className="w-full h-11 px-3 border border-[#E5E7EB] rounded-lg outline-none bg-white text-[#0F172A]"
+                    className="mt-2 w-full h-11 px-3 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg outline-none bg-transparent text-[#0F172A] dark:text-white"
                   >
                     <option value="NPR">NPR</option>
                     <option value="INR">INR</option>
@@ -1469,7 +1469,7 @@ export default function AccountSettings() {
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB] my-6"></div>
+              <div className="border-t border-[#E5E7EB] dark:border-[#1E293B] my-6"></div>
 
               <div className="flex items-center gap-3">
                 <Moon className="text-purple-500" />
@@ -1480,8 +1480,8 @@ export default function AccountSettings() {
                 <label
                   className={`border-2 rounded-lg lg:rounded-xl p-6 text-center cursor-pointer transition ${
                     preferences.darkMode
-                      ? "border-[#009966] bg-[#F0FDF4]"
-                      : "border-[#E5E7EB]"
+                      ? "border-[#009966] bg-[#F0FDF4] dark:bg-[#022c1e] dark:border-[#009966] text-[#009966]"
+                      : "border-[#E5E7EB] dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8]"
                   }`}
                 >
                   <input
@@ -1496,18 +1496,14 @@ export default function AccountSettings() {
                     }
                     className="hidden"
                   />
-                  <Moon
-                    className={`mx-auto mb-2 ${
-                      preferences.darkMode ? "text-[#009966]" : ""
-                    }`}
-                  />
-                  Dark Mode
+                  <Moon className="mx-auto mb-2" />
+                  <span className="block font-medium">Dark Mode</span>
                 </label>
                 <label
                   className={`border-2 rounded-lg lg:rounded-xl p-6 text-center cursor-pointer transition ${
                     !preferences.darkMode
-                      ? "border-[#009966] bg-[#F0FDF4]"
-                      : "border-[#E5E7EB]"
+                      ? "border-[#009966] bg-[#F0FDF4] dark:bg-[#022c1e] dark:border-[#009966] text-[#009966]"
+                      : "border-[#E5E7EB] dark:border-[#1E293B] text-[#64748B] dark:text-[#94A3B8]"
                   }`}
                 >
                   <input
@@ -1522,12 +1518,8 @@ export default function AccountSettings() {
                     }
                     className="hidden"
                   />
-                  <Smartphone
-                    className={`mx-auto mb-2 ${
-                      !preferences.darkMode ? "text-[#009966]" : ""
-                    }`}
-                  />
-                  Light Mode
+                  <Smartphone className="mx-auto mb-2" />
+                  <span className="block font-medium">Light Mode</span>
                 </label>
               </div>
 
@@ -1586,7 +1578,7 @@ export default function AccountSettings() {
         <div className="grid md:grid-cols-2 gap-6">
           <div
             onClick={handleAddAddress}
-            className="border cursor-pointer border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-6 p-3 flex flex-col items-center justify-center text-[#6A7282] bg-[#fff]"
+            className="border cursor-pointer border-[#E5E7EB] dark:border-[#1E293B] lg:rounded-xl rounded-lg lg:p-6 p-3 flex flex-col items-center justify-center text-[#6A7282] bg-[#fff]"
           >
             <span className="bg-[#F3F4F6] rounded-full w-[54px] h-[54px] flex justify-center items-center">
               <MapPin size={28} />
@@ -1597,7 +1589,7 @@ export default function AccountSettings() {
           {addresses.map((address, index) => (
             <div
               key={address._id || index}
-              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-white dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
@@ -1621,32 +1613,32 @@ export default function AccountSettings() {
 
               <div className="space-y-1 text-sm text-[#6A7282]">
                 <p>
-                  <span className="font-medium text-[#0F172A]">Phone:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">Phone:</span>{" "}
                   {address.phone}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Street:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">Street:</span>{" "}
                   {address.street}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">City:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">City:</span>{" "}
                   {address.city}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">State:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">State:</span>{" "}
                   {address.state}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Zip Code:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">Zip Code:</span>{" "}
                   {address.zipCode}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Country:</span>{" "}
+                  <span className="font-medium text-[#0F172A] dark:text-white">Country:</span>{" "}
                   {address.country}
                 </p>
               </div>
@@ -1681,12 +1673,12 @@ export default function AccountSettings() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowBackupCodesModal(false)}
           />
-          <div className="relative bg-white rounded-xl w-full max-w-md p-6 overflow-hidden">
+          <div className="relative bg-white dark:bg-[#0F172A] rounded-xl w-full max-w-md p-6 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-playfair text-xl">New Backup Codes</h3>
               <button
                 onClick={() => setShowBackupCodesModal(false)}
-                className="text-[#6A7282] hover:text-[#0F172A] text-2xl leading-none"
+                className="text-[#6A7282] hover:text-[#0F172A] dark:text-white text-2xl leading-none"
               >
                 &times;
               </button>
@@ -1713,8 +1705,8 @@ export default function AccountSettings() {
 
       {show2FADisableModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
-            <h2 className="text-xl font-semibold text-[#0F172A]">
+          <div className="bg-white dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-sm">
+            <h2 className="text-xl font-semibold text-[#0F172A] dark:text-white">
               Disable Two-Factor Authentication
             </h2>
 
@@ -1727,7 +1719,7 @@ export default function AccountSettings() {
               placeholder="Enter 6-digit code"
               value={disable2FACode}
               onChange={(e) => setDisable2FACode(e.target.value)}
-              className="w-full border border-[#E5E7EB] rounded-lg p-3 mt-4 outline-none"
+              className="w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg p-3 mt-4 outline-none bg-transparent dark:text-white"
             />
 
             {disable2FAError && (
@@ -1742,7 +1734,7 @@ export default function AccountSettings() {
                   setDisable2FACode("");
                 }}
                 disabled={disable2FALoading}
-                className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+                className="border border-[#E5E7EB] dark:border-[#1E293B] px-4 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -1761,12 +1753,12 @@ export default function AccountSettings() {
 
       {show2FAModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-white dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold">
               Enable Two-Factor Authentication
             </h2>
 
-            <p className="text-sm text-gray-700 mt-2">
+            <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
               Scan this QR code using Google Authenticator or Authy.{" "}
               <span className="text-xs text-[#6A7282] mt-2">
                 {`(After scanning, open your authenticator app and enter the 6-digit code displayed for this account)`}
@@ -1780,7 +1772,7 @@ export default function AccountSettings() {
             )}
 
             <div className="mt-5">
-              <p className="text-xs text-gray-500 mb-2">Secret Key</p>
+              <p className="text-xs text-gray-500 dark:text-[#94A3B8] mb-2">Secret Key</p>
 
               <div className="border rounded-lg p-3 break-all">
                 {qrData?.secret}
@@ -1837,7 +1829,7 @@ export default function AccountSettings() {
 
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
+          <div className="bg-white dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-xl font-semibold">Delete Address</h2>
 
             <p className="mt-3 text-[#6A7282]">
@@ -1874,7 +1866,7 @@ export default function AccountSettings() {
 
       {showPasswordSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 !mt-0">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+          <div className="w-full max-w-sm rounded-2xl bg-white dark:bg-[#0F172A] p-6 text-center shadow-xl">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <svg
                 className="h-8 w-8 text-green-600"
@@ -1891,7 +1883,7 @@ export default function AccountSettings() {
               </svg>
             </div>
 
-            <h2 className="mt-5 text-xl font-semibold text-[#0F172A]">
+            <h2 className="mt-5 text-xl font-semibold text-[#0F172A] dark:text-white">
               Password Updated
             </h2>
 
@@ -1917,14 +1909,14 @@ export default function AccountSettings() {
 
       {showDeleteAccountModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 !mt-0">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#0F172A] p-6 shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
                 <AlertTriangle className="text-red-600" size={24} />
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-[#0F172A]">
+                <h2 className="text-xl font-semibold text-[#0F172A] dark:text-white">
                   Delete Account
                 </h2>
 
@@ -1934,7 +1926,7 @@ export default function AccountSettings() {
               </div>
             </div>
 
-            <p className="mt-5 text-[#475569]">
+            <p className="mt-5 text-[#475569] dark:text-[#94A3B8]">
               Are you sure you want to permanently delete your account and all
               associated data?
             </p>
@@ -1947,7 +1939,7 @@ export default function AccountSettings() {
               <button
                 onClick={() => setShowDeleteAccountModal(false)}
                 disabled={deleteLoading}
-                className="border border-[#E5E7EB] rounded-lg px-5 py-2"
+                className="border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-5 py-2"
               >
                 Cancel
               </button>
