@@ -75,9 +75,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   };
 
   const acceptOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id || order.orderId, "cooking", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "preparing", () => {
       setNewOrders(prev => prev.filter((_, i) => i !== index))
-      setCooking(prev => [...prev, { ...order, status: "cooking" }])
+      setCooking(prev => [...prev, { ...order, status: "preparing" }])
     });
   }
 
@@ -92,7 +92,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       });
       if (res.ok) {
         toast.success("All new orders accepted");
-        setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "cooking" }))])
+        setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "preparing" }))])
         setNewOrders([])
       } else {
         toast.error("Failed to accept all orders");
@@ -113,7 +113,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   }
 
   const completeOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id || order.orderId, "completed", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "delivered", () => {
       setReady(prev => prev.filter((_, i) => i !== index))
     });
   }
@@ -124,8 +124,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (res.ok) {
         const data = await res.json();
         const live = data.data?.orders || data.orders || data.data || [];
-        setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New"));
-        setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking"));
+        setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New" || o.status === "confirmed"));
+        setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking" || o.status === "preparing"));
         setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
       }
     } catch (err) {

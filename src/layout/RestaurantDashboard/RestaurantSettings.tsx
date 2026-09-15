@@ -123,6 +123,23 @@ export default function RestaurantSettings({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
 
+
+  const getFullDayName = (shortDay: string) => {
+    const map: any = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday", Sun: "Sunday" };
+    return map[shortDay] || shortDay;
+  };
+
+  const mapTitleToKey = (title: string) => {
+    const map: any = {
+      "New Orders": "newOrders",
+      "Order Updates": "orderUpdates",
+      "Customer Reviews": "customerReviews",
+      "Payouts & Finance": "payoutsFinance",
+      "System Updates": "systemUpdates"
+    };
+    return map[title];
+  };
+
   const fetchProfile = async () => {
     try {
       const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, { headers: authHeaders() });
@@ -131,14 +148,35 @@ export default function RestaurantSettings({
         const profileData = data.data?.restaurant || data.restaurant || data.data || {};
         setProfile(profileData);
         if (profileData.locations) setLocs(profileData.locations);
-        if (profileData.operatingHours && Array.isArray(profileData.operatingHours)) setDays(profileData.operatingHours);
-        if (profileData.notifications && Array.isArray(profileData.notifications)) {
+        
+        // Handle new openingHours object
+        if (profileData.openingHours && typeof profileData.openingHours === 'object' && !Array.isArray(profileData.openingHours)) {
+          setDays(prev => prev.map(d => {
+            const fullDay = getFullDayName(d.day);
+            const h = profileData.openingHours[fullDay] || profileData.openingHours[fullDay.toLowerCase()];
+            if (h) {
+              return { ...d, open: !h.isClosed, time: `${h.open || "09:00"} - ${h.close || "22:00"}` };
+            }
+            return d;
+          }));
+        } else if (profileData.operatingHours && Array.isArray(profileData.operatingHours)) {
+          setDays(profileData.operatingHours); // fallback
+        }
+
+        // Handle new notificationPreferences object
+        if (profileData.notificationPreferences && typeof profileData.notificationPreferences === 'object') {
+          setData(prev => prev.map(item => {
+            const key = mapTitleToKey(item.title);
+            const found = profileData.notificationPreferences[key];
+            return found ? { ...item, email: found.email, sms: found.sms } : item;
+          }));
+        } else if (profileData.notifications && Array.isArray(profileData.notifications)) {
+          // fallback
           setData(prev => prev.map(item => {
             const found = profileData.notifications.find((n: any) => n.title === item.title);
             return found ? { ...item, email: found.email, sms: found.sms } : item;
           }));
         }
-      }
     } catch (err) { console.error(err); }
   };
 
@@ -148,12 +186,35 @@ export default function RestaurantSettings({
 
   const saveProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+      const openingHours: any = {};
+      days.forEach(d => {
+        const parts = d.time.split("-");
+        const openTime = parts[0]?.trim() || "09:00";
+        const closeTime = parts[1]?.trim() || "22:00";
+        openingHours[getFullDayName(d.day)] = {
+          open: openTime,
+          close: closeTime,
+          isClosed: !d.open
+        };
+      });
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify({ ...profile, operatingHours: days })
+        body: JSON.stringify({ openingHours })
       });
-      if (res.ok) alert("Settings saved!");
+      if (res.ok) {
+         // Also update the profile general fields using the old endpoint
+         const res2 = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+           method: "PUT",
+           headers: authHeaders(),
+           body: JSON.stringify(profile)
+         });
+         if (res2.ok) {
+           alert("Settings saved!");
+           fetchProfile();
+         }
+      }
     } catch (err) { console.error(err); }
   };
 
@@ -236,12 +297,22 @@ export default function RestaurantSettings({
 
   const saveNotifications = async () => {
     try {
-      await fetch(`${API_BASE}/restaurant-panel/settings/notifications`, {
+      const notificationPreferences: any = {};
+      data.forEach(item => {
+        const key = mapTitleToKey(item.title);
+        if (key) {
+           notificationPreferences[key] = { email: item.email, sms: item.sms };
+        }
+      });
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify({ notifications: data })
+        body: JSON.stringify({ notificationPreferences })
       });
-      alert("Notifications saved!");
+      if (res.ok) {
+        alert("Notifications saved!");
+        fetchProfile();
+      }
     } catch (err) { console.error(err); }
   };
 

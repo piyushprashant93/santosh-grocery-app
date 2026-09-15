@@ -100,11 +100,11 @@ export default function AddMenuItem({
           price: numericSellingPrice,
           ingredients: ingredients.map(i => ({
             name: i.name,
-            unit: i.type === "Solid" ? "g" : "ml", // Just a guess for unit based on type, or we could just use type
+            unit: i.type === "Solid" ? "g" : "ml",
             unitCost: i.unitCost,
             quantityUsed: Number(i.usedQty)
           })),
-          chefRate
+          chefHourlyRate: chefRate
         })
       });
 
