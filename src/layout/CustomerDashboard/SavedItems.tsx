@@ -179,11 +179,11 @@ export default function SavedItems() {
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A] dark:text-white">
             Saved Items
           </h1>
 
-          <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+          <p className="text-[#6A7282] dark:text-[#94A3B8] mt-1 lg:text-lg text-base">
             Keep track of products you love.
           </p>
         </div>
@@ -193,7 +193,7 @@ export default function SavedItems() {
             <button
               onClick={() => setShowClearConfirm(true)}
               disabled={clearing}
-              className="flex items-center gap-2 border border-red-200 text-red-600 rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white shadow-sm hover:bg-red-50 disabled:opacity-60"
+              className="flex items-center gap-2 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white dark:bg-[#020618] shadow-sm hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
             >
               {clearing ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -204,7 +204,7 @@ export default function SavedItems() {
             </button>
           )}
 
-          <button onClick={()=>navigate("/customer/dashboard")} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white shadow-sm">
+          <button onClick={()=>navigate("/customer/dashboard")} className="flex items-center gap-2 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white dark:bg-[#020618] dark:text-white shadow-sm">
             <ShoppingBag size={18} />
             Continue Shopping
           </button>
@@ -263,10 +263,10 @@ export default function SavedItems() {
       {!loading && items.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <PackageX size={40} className="text-[#99A1AF]" />
-          <h3 className="text-lg font-playfair text-[#0F172A]">
+          <h3 className="text-lg font-playfair text-[#0F172A] dark:text-white">
             No saved items yet
           </h3>
-          <p className="text-[#6A7282] text-sm">
+          <p className="text-[#6A7282] dark:text-[#94A3B8] text-sm">
             Items you save will show up here.
           </p>
         </div>
@@ -276,10 +276,10 @@ export default function SavedItems() {
       {!loading && items.length > 0 && validItems.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <PackageX size={40} className="text-[#99A1AF]" />
-          <h3 className="text-lg font-playfair text-[#0F172A]">
+          <h3 className="text-lg font-playfair text-[#0F172A] dark:text-white">
             These items are no longer available
           </h3>
-          <p className="text-[#6A7282] text-sm">
+          <p className="text-[#6A7282] dark:text-[#94A3B8] text-sm">
             Clear your saved list and start fresh.
           </p>
         </div>
@@ -314,13 +314,13 @@ export default function SavedItems() {
             return (
               <div
                 key={item._id}
-                className="border border-[#E5E7EB] rounded-lg lg:rounded-xl bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
+                className="border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg lg:rounded-xl bg-white dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
               >
                 <div className="relative">
                   {img ? (
                     <img src={img} className="w-full h-52 object-cover" />
                   ) : (
-                    <div className="w-full h-52 bg-[#F1F5F9] flex items-center text-xs justify-center text-[#99A1AF]">
+                    <div className="w-full h-52 bg-[#F1F5F9] dark:bg-[#020618] flex items-center text-xs justify-center text-[#99A1AF]">
                       No image available
                     </div>
                   )}
@@ -334,7 +334,7 @@ export default function SavedItems() {
                   <button
                     onClick={() => removeItem(item._id)}
                     disabled={isRemoving}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow disabled:opacity-60"
+                    className="absolute top-3 right-3 w-8 h-8 bg-white dark:bg-[#020618] dark:text-white rounded-full flex items-center justify-center shadow disabled:opacity-60"
                   >
                     {isRemoving ? (
                       <Loader2 size={14} className="animate-spin" />
@@ -346,7 +346,7 @@ export default function SavedItems() {
 
                 <div className="lg:p-5 p-2 flex flex-col gap-3 flex-1">
                   <div>
-                    <h3 className="font-playfair text-lg text-[#0F172A]">
+                    <h3 className="font-playfair text-lg text-[#0F172A] dark:text-white">
                       {product.name}
                     </h3>
                     {product.category && (
@@ -372,10 +372,10 @@ export default function SavedItems() {
                     <span
                       className={`px-3 py-1 font-semibold text-sm rounded-full ${
                         isOutOfStock
-                          ? "bg-[#FEF2F2] text-[#DC2626]"
+                          ? "bg-[#FEF2F2] dark:bg-red-900/30 text-[#DC2626] dark:text-red-400"
                           : isLowStock
-                            ? "bg-[#FFF7ED] text-[#F54900]"
-                            : "bg-[#ECFDF5] text-[#009966]"
+                            ? "bg-[#FFF7ED] dark:bg-orange-900/30 text-[#F54900] dark:text-orange-400"
+                            : "bg-[#ECFDF5] dark:bg-green-900/30 text-[#009966] dark:text-[#00b377]"
                       }`}
                     >
                       {stockLabel}

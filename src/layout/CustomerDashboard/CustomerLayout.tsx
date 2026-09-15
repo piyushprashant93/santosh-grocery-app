@@ -147,7 +147,7 @@ const { setRole } = useRole();
   return (
     <ThemeProvider>
       <CurrencyProvider>
-      <div className="flex h-screen bg-white dark:bg-[#F8FAFC] text-gray-900 dark:text-white relative">
+      <div className="flex h-screen bg-white dark:bg-[#0B1120] text-gray-900 dark:text-white relative">
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
