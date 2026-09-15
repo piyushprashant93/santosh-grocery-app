@@ -44,58 +44,14 @@ const tabs = [
   { key: "team", label: "Team", icon: Users },
 ];
 
-const locations = [
-  {
-    name: "Downtown HQ",
-    address: "123 Main St, New York, NY",
-    phone: "+1 (555) 123-4567",
-    status: "Active",
-  },
-  {
-    name: "Westside Branch",
-    address: "456 West Ave, New York, NY",
-    phone: "+1 (555) 987-6543",
-    status: "Active",
-  },
-  {
-    name: "Brooklyn Hub",
-    address: "789 Park Slope, Brooklyn, NY",
-    phone: "+1 (555) 456-7890",
-    status: "Maintenance",
-  },
-];
+
 
 const statusStyles: any = {
   Active: "bg-[#ECFDF5] text-[#059669]",
   Maintenance: "bg-[#FFF7ED] text-[#EA580C]",
 };
 
-const initialMembers = [
-  {
-    name: "John Doe",
-    role: "Owner",
-    email: "john@goldenspoon.com",
-    access: "Full Access",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    name: "Sarah Smith",
-    role: "Manager",
-    email: "sarah@goldenspoon.com",
-    access: "Orders, Menu, Reports",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    name: "Mike Johnson",
-    role: "Staff",
-    email: "mike@goldenspoon.com",
-    access: "Orders Only",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-];
+
 
 const roleStyles: any = {
   Owner: "bg-[#EEF2FF] text-[#4F46E5]",
@@ -118,7 +74,7 @@ export default function RestaurantBackendSettings({
     confirm: false,
   });
 
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<any[]>([]);
 
   const toggleAccess = (index: number) => {
     setMembers((prev) =>
@@ -158,9 +114,20 @@ export default function RestaurantBackendSettings({
     } catch(err) { console.error(err); }
   };
 
+  const fetchTeam = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setMembers(data.data?.staff || data.staff || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
   useEffect(() => {
     if (activeSettingTab === "general") fetchSettings();
     else if (activeSettingTab === "locations") fetchLocations();
+    else if (activeSettingTab === "team") fetchTeam();
   }, [activeSettingTab]);
 
   const updateSettings = async () => {

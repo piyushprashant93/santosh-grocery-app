@@ -22,29 +22,6 @@ import {
 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 
-const stats = [
-  {
-    title: "Total Recipes",
-    value: "48",
-    icon: ChefHat,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#2563EB]",
-  },
-  {
-    title: "Inventory Value",
-    value: "$12,450",
-    icon: Scale,
-    iconBg: "bg-green-100",
-    iconColor: "text-[#009966]",
-  },
-  {
-    title: "Low Stock Alerts",
-    value: "3 Items",
-    icon: AlertTriangle,
-    iconBg: "bg-red-100",
-    iconColor: "text-red-600",
-  },
-];
 
 const solidStatusMap: any = {
   "In Stock": "bg-green-100 text-[#009966]",
@@ -168,6 +145,35 @@ export default function Inventory({
     } catch (e) { console.error(e); }
   }
 
+  const lowStockCount = 
+    beverages.filter((b: any) => b.status === "Low Stock" || b.status === "Low").length +
+    rawItems.filter((r: any) => r.status === "Low Stock" || r.status === "Low").length +
+    solidItems.filter((s: any) => s.status === "Low Stock" || s.status === "Low").length;
+
+  const dynamicStats = [
+    {
+      title: "Total Recipes",
+      value: recipes.length.toString(),
+      icon: ChefHat,
+      iconBg: "bg-blue-100",
+      iconColor: "text-[#2563EB]",
+    },
+    {
+      title: "Total Items",
+      value: (beverages.length + rawItems.length + solidItems.length + cooked.length).toString(),
+      icon: Scale,
+      iconBg: "bg-green-100",
+      iconColor: "text-[#009966]",
+    },
+    {
+      title: "Low Stock Alerts",
+      value: `${lowStockCount} Items`,
+      icon: AlertTriangle,
+      iconBg: "bg-red-100",
+      iconColor: "text-red-600",
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -196,7 +202,7 @@ export default function Inventory({
       </div>
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-        {stats.map((s, i) => {
+        {dynamicStats.map((s, i) => {
           const Icon = s.icon;
 
           return (

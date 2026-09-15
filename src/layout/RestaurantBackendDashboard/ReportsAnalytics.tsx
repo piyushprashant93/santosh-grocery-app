@@ -35,119 +35,6 @@ const authHeaders = () => {
   };
 };
 
-const stats = [
-  {
-    icon: DollarSign,
-    label: "Total Revenue",
-    value: "$12,845.50",
-    change: "+12.5%",
-    color: "text-green-600",
-  },
-  {
-    icon: Package,
-    label: "Total Orders",
-    value: "854",
-    change: "+6.2%",
-    color: "text-blue-600",
-  },
-  {
-    icon: DollarSign,
-    label: "Avg. Order Value",
-    value: "$32.40",
-    change: "-2.4%",
-    color: "text-orange-500",
-  },
-  {
-    icon: Users,
-    label: "New Customers",
-    value: "128",
-    change: "+16.3%",
-    color: "text-purple-600",
-  },
-];
-
-const revenueData = [
-  { day: "Mon", value: 4000 },
-  { day: "Tue", value: 2900 },
-  { day: "Wed", value: 2000 },
-  { day: "Thu", value: 2800 },
-  { day: "Fri", value: 1900 },
-  { day: "Sat", value: 2500 },
-  { day: "Sun", value: 3500 },
-];
-
-const categoryData = [
-  {
-    name: "Starters",
-    amount: "$8,500",
-    percent: "25%",
-    value: 43,
-    color: "#10B981",
-  },
-  {
-    name: "Mains",
-    amount: "$6,200",
-    percent: "45%",
-    value: 32,
-    color: "#3B82F6",
-  },
-  {
-    name: "Drinks",
-    amount: "$3,400",
-    percent: "20%",
-    value: 17,
-    color: "#F59E0B",
-  },
-  {
-    name: "Desserts",
-    amount: "$1,450",
-    percent: "10%",
-    value: 7,
-    color: "#EF4444",
-  },
-];
-
-const categoryExpense = [
-  { name: "Food Supplies", amount: "4250.00", percent: "32.5%" },
-  { name: "Staff Salary", amount: "3800.00", percent: "29.1%" },
-  { name: "Kitchen Supplies", amount: "1200.00", percent: "9.2%" },
-  { name: "Cleaning Supplies", amount: "650.00", percent: "5.0%" },
-  { name: "Laundry Supplies", amount: "420.00", percent: "3.2%" },
-  { name: "Maintenance", amount: "950.00", percent: "7.3%" },
-  { name: "Emergency Maintenance", amount: "300.00", percent: "2.3%" },
-  { name: "Office Supplies", amount: "280.00", percent: "2.1%" },
-  { name: "Catering Supplies", amount: "450.00", percent: "3.4%" },
-  { name: "Beverage", amount: "520.00", percent: "4.0%" },
-  { name: "Other", amount: "250.00", percent: "1.9%" }
-]
-
-const expenseList = [
-  { title: "Vegetable Supply", category: "Food Supplies", amount: "1850.00", entries: 12 },
-  { title: "Meat & Poultry", category: "Food Supplies", amount: "2400.00", entries: 8 },
-  { title: "Staff Wages", category: "Staff Salary", amount: "3800.00", entries: 15 },
-  { title: "Kitchen Equipment", category: "Kitchen Supplies", amount: "800.00", entries: 3 },
-  { title: "Utensils & Cookware", category: "Kitchen Supplies", amount: "400.00", entries: 5 },
-  { title: "Cleaning Products", category: "Cleaning Supplies", amount: "450.00", entries: 6 }
-]
-
-const topItems = [
-  { name: "Grilled Norwegian Salmon", orders: 145, revenue: "3552.50" },
-  { name: "Crispy Buffalo Wings", orders: 128, revenue: "1662.72" },
-  { name: "Double Cheeseburger", orders: 98, revenue: "1567.02" },
-  { name: "Mushroom Risotto", orders: 85, revenue: "1530.00" },
-  { name: "Spicy Pepperoni Pizza", orders: 76, revenue: "1254.00" }
-]
-
-const peakData = [
-  { time: "11am", value: 25 },
-  { time: "1pm", value: 45 },
-  { time: "3pm", value: 32 },
-  { time: "5pm", value: 38 },
-  { time: "7pm", value: 68 },
-  { time: "9pm", value: 82 },
-  { time: "11pm", value: 58 }
-]
-
 export default function ReportsAnalytics() {
   const [days, setDays] = useState(7);
   const [reportData, setReportData] = useState<any>(null);
@@ -170,39 +57,39 @@ export default function ReportsAnalytics() {
     {
       icon: DollarSign,
       label: "Total Revenue",
-      value: reportData?.totalRevenue ? `$${reportData.totalRevenue}` : "$12,845.50",
-      change: "+12.5%",
+      value: reportData?.totalRevenue ? `$${reportData.totalRevenue}` : "$0.00",
+      change: "+0%",
       color: "text-green-600",
     },
     {
       icon: Package,
       label: "Total Orders",
-      value: reportData?.totalOrders?.toString() || "854",
-      change: "+6.2%",
+      value: reportData?.totalOrders?.toString() || "0",
+      change: "+0%",
       color: "text-blue-600",
     },
     {
-      icon: DollarSign,
-      label: "Avg. Order Value",
-      value: reportData?.avgOrderValue ? `$${reportData.avgOrderValue}` : "$32.40",
-      change: "-2.4%",
-      color: "text-orange-500",
+      icon: Users,
+      label: "Active Customers",
+      value: reportData?.activeCustomers?.toString() || "0",
+      change: "+0%",
+      color: "text-orange-600",
     },
     {
-      icon: Users,
-      label: "New Customers",
-      value: reportData?.newCustomers?.toString() || "128",
-      change: "+16.3%",
-      color: "text-purple-600",
+      icon: TrendingDown,
+      label: "Total Expenses",
+      value: reportData?.totalExpenses ? `$${reportData.totalExpenses}` : "$0.00",
+      change: "0%",
+      color: "text-red-600",
     },
   ];
 
-  const resolvedRevenueData = reportData?.revenueData || reportData?.revenueTrend || revenueData;
-  const resolvedCategoryData = reportData?.categoryData || reportData?.salesMix || categoryData;
-  const resolvedCategoryExpense = reportData?.categoryExpense || reportData?.expensesByCategory || categoryExpense;
-  const resolvedExpenseList = reportData?.expenseList || reportData?.expensesByTitle || expenseList;
-  const resolvedTopItems = reportData?.topItems || topItems;
-  const resolvedPeakData = reportData?.peakData || reportData?.peakHours || peakData;
+  const resolvedRevenueData = reportData?.revenueData || reportData?.revenueTrend || reportData?.dailyRevenue || [];
+  const resolvedCategoryData = reportData?.categoryData || reportData?.salesMix || [];
+  const resolvedCategoryExpense = reportData?.categoryExpense || reportData?.expensesByCategory || [];
+  const resolvedExpenseList = reportData?.expenseList || reportData?.expenseBreakdown || reportData?.expensesByTitle || [];
+  const resolvedTopItems = reportData?.topItems || reportData?.popularItems || [];
+  const resolvedPeakData = reportData?.peakData || reportData?.peakHours || [];
 
   const totalMonthlyExpense = reportData?.totalMonthlyExpense || "13,070.00";
   const change = "-3.2%";

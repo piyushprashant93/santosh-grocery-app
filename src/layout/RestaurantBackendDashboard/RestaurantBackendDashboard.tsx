@@ -15,142 +15,19 @@ import ReportChartCard from "./ReportChartCard";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
-const monthlyData = [
-  { name: "Jan", value: 40000 },
-  { name: "Feb", value: 35000 },
-  { name: "Mar", value: 45000 },
-  { name: "Apr", value: 48000 },
-  { name: "May", value: 52000 },
-  { name: "Jun", value: 45000 },
-];
 
-const expensesData = [
-  { name: "Jan", value: 28000 },
-  { name: "Feb", value: 25000 },
-  { name: "Mar", value: 31000 },
-  { name: "Apr", value: 27000 },
-  { name: "May", value: 29500 },
-  { name: "Jun", value: 28000 },
-];
 
-const maintenanceData = [
-  { name: "Jan", value: 3200 },
-  { name: "Feb", value: 2800 },
-  { name: "Mar", value: 4000 },
-  { name: "Apr", value: 3400 },
-  { name: "May", value: 2900 },
-  { name: "Jun", value: 3300 },
-];
 
-const salaryData = [
-  { name: "Jan", value: 18000 },
-  { name: "Feb", value: 18000 },
-  { name: "Mar", value: 18500 },
-  { name: "Apr", value: 18500 },
-  { name: "May", value: 19200 },
-  { name: "Jun", value: 18700 },
-];
 
-const stats = [
-  {
-    title: "Sales – This Month",
-    value: "$45,250",
-    change: "+12.5%",
-    icon: DollarSign,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up",
-  },
-  {
-    title: "Expenses – This Month",
-    value: "$28,150",
-    change: "+8.2%",
-    icon: TrendingUp,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#2563EB]",
-    trend: "up",
-  },
-  {
-    title: "Total Staff – This Month",
-    value: "24",
-    change: "+2",
-    icon: Users,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    trend: "up",
-  },
-  {
-    title: "Salary – This Month",
-    value: "$18,500",
-    change: "+5.7%",
-    icon: Wallet,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
-    trend: "up",
-  },
-];
 
-const orders = [
-  {
-    id: "#ORD-8821",
-    customer: "John Doe",
-    time: "2 min ago",
-    items: "2x Chicken Burger, 1x Coke",
-    amount: "$28.50",
-    status: "New",
-  },
-  {
-    id: "#ORD-8820",
-    customer: "Alice Smith",
-    time: "15 min ago",
-    items: "1x Veg Pizza, 1x Garlic Bread",
-    amount: "$32.00",
-    status: "Cooking",
-  },
-  {
-    id: "#ORD-8819",
-    customer: "Bob Wilson",
-    time: "25 min ago",
-    items: "3x Pasta Alfredo",
-    amount: "$45.00",
-    status: "Ready",
-  },
-  {
-    id: "#ORD-8818",
-    customer: "Emma Davis",
-    time: "1 hour ago",
-    items: "1x Caesar Salad",
-    amount: "$15.50",
-    status: "Delivered",
-  },
-];
 
-const popularItems = [
-  {
-    name: "Spicy Chicken Burger",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=200",
-  },
-  {
-    name: "Margherita Pizza",
-    orders: 18,
-    price: "$15.99",
-    image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=200",
-  },
-  {
-    name: "Caesar Salad",
-    orders: 16,
-    price: "$9.99",
-    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=200",
-  },
-  {
-    name: "Pasta Alfredo",
-    orders: 14,
-    price: "$13.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200",
-  },
-];
+
+
+
+
+
+
+
 
 const statusStyles: any = {
   New: "bg-blue-100 text-blue-600",
@@ -166,72 +43,81 @@ export default function RestaurantBackendDashboard({
 }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
 
+  
   useEffect(() => {
-    const fetchDashboard = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", {
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          }
+        const headers = {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        };
+
+        const [dashRes, reportsRes] = await Promise.all([
+          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", { headers }),
+          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/reports?days=7", { headers })
+        ]);
+
+        const dashData = dashRes.ok ? await dashRes.json() : {};
+        const reportsData = reportsRes.ok ? await reportsRes.json() : {};
+
+        setDashboardData({
+          ...dashData.data,
+          reports: reportsData.data
         });
-        if (res.ok) {
-          const json = await res.json();
-          setDashboardData(json.data || json);
-        }
       } catch (err) {
         console.error(err);
       }
     };
-    fetchDashboard();
+    fetchData();
   }, []);
+
 
   const activeStats = [
     {
       title: "Sales – This Month",
-      value: dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : stats[0].value,
-      change: dashboardData?.salesChange || stats[0].change,
+      value: dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : "$0",
+      change: dashboardData?.salesChange || "0%",
       icon: DollarSign,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      trend: dashboardData?.salesTrend || stats[0].trend,
+      trend: dashboardData?.salesTrend || "up",
     },
     {
       title: "Expenses – This Month",
-      value: dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : stats[1].value,
-      change: dashboardData?.expensesChange || stats[1].change,
+      value: dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : "$0",
+      change: dashboardData?.expensesChange || "0%",
       icon: TrendingUp,
       iconBg: "bg-blue-100",
       iconColor: "text-[#2563EB]",
-      trend: dashboardData?.expensesTrend || stats[1].trend,
+      trend: dashboardData?.expensesTrend || "up",
     },
     {
       title: "Total Staff – This Month",
-      value: dashboardData?.totalStaff || stats[2].value,
-      change: dashboardData?.staffChange || stats[2].change,
+      value: dashboardData?.totalStaff || "0",
+      change: dashboardData?.staffChange || "0",
       icon: Users,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
-      trend: dashboardData?.staffTrend || stats[2].trend,
+      trend: dashboardData?.staffTrend || "up",
     },
     {
       title: "Salary – This Month",
-      value: dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : stats[3].value,
-      change: dashboardData?.salaryChange || stats[3].change,
+      value: dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : "$0",
+      change: dashboardData?.salaryChange || "0%",
       icon: Wallet,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-600",
-      trend: dashboardData?.salaryTrend || stats[3].trend,
+      trend: dashboardData?.salaryTrend || "up",
     },
   ];
 
-  const activeOrders = dashboardData?.recentOrders || orders;
-  const activePopularItems = dashboardData?.popularItems || popularItems;
-  const activeMonthlyData = dashboardData?.monthlyData || monthlyData;
-  const activeExpensesData = dashboardData?.expensesData || expensesData;
-  const activeMaintenanceData = dashboardData?.maintenanceData || maintenanceData;
-  const activeSalaryData = dashboardData?.salaryData || salaryData;
+  const activeOrders = dashboardData?.recentOrders || [];
+  const activePopularItems = dashboardData?.popularItems || [];
+  const activeMonthlyData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: d.revenue })) || [];
+  const activeExpensesData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: d.expenses || 0 })) || [];
+  const activeMaintenanceData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: 0 })) || [];
+  const activeSalaryData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: dashboardData?.expenses?.salary || 0 })) || [];
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
   const branches = ["All Branches", "Branch 1", "Branch 2"];

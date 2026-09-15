@@ -72,7 +72,7 @@ export default function SupplierMarketplaceList({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredSuppliers.map((supplier, idx) => {
-            const suppId = supplier._id || supplier.id || supplier.supplierId || supplier.userId || idx.toString();
+            const suppId = supplier.supplierId || supplier._id || supplier.id || supplier.userId || idx.toString();
             return (
             <div
               key={suppId}
