@@ -41,8 +41,9 @@ export default function PaymentVerify() {
 
         if (res.ok && data.success) {
           setStatus("success");
-          // Optionally clear checkout cart here if backend doesn't do it automatically
           localStorage.removeItem("checkout_cart");
+          // Do NOT remove checkout_order here because OrderSuccess needs it, 
+          // but if there's any caching issue, we can clear it elsewhere.
         } else {
           throw new Error(data?.message || "Payment verification failed.");
         }

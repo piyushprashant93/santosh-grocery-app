@@ -262,11 +262,11 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                                 <div>
                                   <p className="font-medium text-[#334155]">
-                                    {o.customer}
+                                    {o.customer?.name || (typeof o.customer === 'string' ? o.customer : "Customer")}
                                   </p>
 
                                   <p className="text-sm text-[#64748B]">
-                                    {o.time}
+                                    {o.time || (o.createdAt ? new Date(o.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "")}
                                   </p>
                                 </div>
 
@@ -277,7 +277,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
                             <td className="py-5 text-[#64748B] max-w-[240px]">
-                              {o.items}
+                              {Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity || 1}x ${it.name || it.menuItem?.name || "Item"}`).join(", ") : o.items}
                             </td>
 
 
@@ -293,7 +293,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
                             <td className="py-5 font-semibold text-[#0F172A] text-end">
-                              {o.total}
+                              {typeof o.totalAmount === 'number' ? `$${o.totalAmount.toFixed(2)}` : (typeof o.total === 'number' ? `$${o.total.toFixed(2)}` : (o.total || `$${o.totalAmount || 0}`))}
                             </td>
 
                           </tr>

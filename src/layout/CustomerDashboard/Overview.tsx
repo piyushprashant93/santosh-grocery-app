@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import { Wallet, Package, TrendingUp, Clock, AlertCircle, Loader2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -87,6 +88,7 @@ const FALLBACK_PRODUCT_IMG = "https://images.unsplash.com/photo-1542838132-92c53
 
 export default function Overview({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
@@ -138,7 +140,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
     return "Good Night";
   };
 
-  const formatMoney = (n: number) => `$${n.toFixed(2)}`;
+  const formatMoney = (n: number) => `${formatPrice(n)}`;
 
   const formatEta = (dateStr?: string) => {
     if (!dateStr) return null;
@@ -391,7 +393,8 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
               >
                 {img ? (
                   <img
-                    src={img}
+                    src={img || "https://placehold.co/64x64?text=No+Image"}
+                    onError={(e) => { e.currentTarget.src = "https://placehold.co/64x64?text=No+Image"; }}
                     className="w-16 h-16 rounded-lg object-cover"
                     alt={order.items?.[0]?.name || "Order item"}
                   />
@@ -472,11 +475,11 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
 
                 <div className="flex items-center gap-2 mt-3">
                   <span className="text-[#009966] font-bold text-lg">
-                    ${deal.discountPrice.toFixed(2)}
+                    {formatPrice(deal.discountPrice)}
                   </span>
                   {hasDiscount && (
                     <span className="text-[#99A1AF] line-through text-sm">
-                      ${deal.basePrice.toFixed(2)}
+                      {formatPrice(deal.basePrice)}
                     </span>
                   )}
                 </div>

@@ -7,6 +7,7 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+import { useCurrency } from "./CurrencyContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -156,6 +157,7 @@ function saveRecentSearch(term: string) {
 }
 
 export default function SearchTab() {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
@@ -427,7 +429,8 @@ export default function SearchTab() {
                 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] cursor-pointer hover:border-[#00A63E] transition"
               >
                 <img
-                  src={item.img}
+                  src={item.img || "https://placehold.co/64x64?text=No+Image"}
+                  onError={(e) => { e.currentTarget.src = "https://placehold.co/64x64?text=No+Image"; }}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
 

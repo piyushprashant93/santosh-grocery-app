@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
 
@@ -62,6 +63,7 @@ export default function ProductDetails({
   setActiveTab: (tab: string) => void;
 }) {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("id");
   const [showQuestionModal, setShowQuestionModal] = useState(false);
@@ -405,7 +407,8 @@ const isOutOfStock = !product.inStock;
         <div>
           <div className="relative">
             <img
-              src={activeImg}
+              src={activeImg || "https://placehold.co/400x400?text=No+Image"}
+              onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400?text=No+Image"; }}
               className="w-full aspect-square rounded-2xl object-cover"
             />
 
@@ -431,7 +434,8 @@ const isOutOfStock = !product.inStock;
             {images.map((img, i) => (
               <img
                 key={i}
-                src={img}
+                src={img || "https://placehold.co/400x400?text=No+Image"}
+                onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400?text=No+Image"; }}
                 onClick={() => setActiveImg(img)}
                 className={`aspect-square rounded-lg object-cover cursor-pointer border ${
                   activeImg === img ? "border-[#009966]" : "border-[#E5E7EB]"
@@ -468,11 +472,11 @@ const isOutOfStock = !product.inStock;
           </h1>
 
           <p className="lg:text-[32px] text-xl text-[#101828] mb-4">
-           ${product.salePrice.toFixed(2)}
+           {formatPrice(product.salePrice)}
 
 {hasDiscount && (
   <span className="text-[#99A1AF] line-through text-lg ml-3">
-    ${product.originalPrice.toFixed(2)}
+    {formatPrice(product.originalPrice)}
   </span>
 )}
 

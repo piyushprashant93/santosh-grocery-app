@@ -4,6 +4,7 @@ import { Gift, Loader2 } from "lucide-react";
 interface VoucherSectionProps {
   orderTotal?: number;
   authToken?: string;
+  orderType?: string;
   onVoucherApplied?: (data: any) => void;
 }
 
@@ -18,6 +19,7 @@ const API_URL =
 export default function VoucherSection({
   orderTotal,
   authToken,
+  orderType,
   onVoucherApplied,
 }: VoucherSectionProps) {
   const [code, setCode] = useState("");
@@ -46,6 +48,7 @@ export default function VoucherSection({
         body: JSON.stringify({
           code: voucherCode,
           orderTotal,
+          orderType: orderType || "delivery",
         }),
       });
 

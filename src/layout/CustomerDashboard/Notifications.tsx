@@ -189,6 +189,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to mark as read.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       // Revert optimistic update on failure
@@ -225,6 +227,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to mark all as read.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);
@@ -258,6 +262,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to delete notification.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);
@@ -298,6 +304,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
 
       setHasMore(false);
       setPage(1);
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);

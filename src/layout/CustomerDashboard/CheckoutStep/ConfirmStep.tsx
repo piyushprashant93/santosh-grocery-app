@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "../CurrencyContext";
 import { PackageX } from "lucide-react";
 
 const CART_STORAGE_KEY = "checkout_cart";
@@ -52,6 +53,7 @@ function readFromStorage<T>(key: string): T | null {
 }
 
 export function ConfirmStep() {
+  const { formatPrice } = useCurrency();
   const [cart, setCart] = useState<CartData | null>(null);
   const [payment, setPayment] = useState<PaymentData | null>(null);
   const [schedule, setSchedule] = useState<ScheduleData | null>(null);
@@ -112,7 +114,7 @@ export function ConfirmStep() {
             </div>
 
             <span className="text-white text-xl">
-              ${item.subtotal.toFixed(2)}
+              {formatPrice(item.subtotal)}
             </span>
           </div>
         ))}
