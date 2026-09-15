@@ -1464,6 +1464,7 @@ export default function AccountSettings() {
                     <option value="NPR">NPR</option>
                     <option value="INR">INR</option>
                     <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
                   </select>
                 </div>
               </div>
