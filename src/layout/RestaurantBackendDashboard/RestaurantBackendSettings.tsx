@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   Shield,
   Bell,
@@ -91,6 +92,40 @@ export default function RestaurantBackendSettings({
 
   const [settingsData, setSettingsData] = useState<any>({});
   const [locationsData, setLocationsData] = useState<any[]>([]);
+  const [isAddLocationOpen, setIsAddLocationOpen] = useState(false);
+  const [isAddingLocation, setIsAddingLocation] = useState(false);
+  const [locationForm, setLocationForm] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    status: "Active"
+  });
+
+  const handleAddLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddingLocation(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(locationForm)
+      });
+      if (res.ok) {
+        toast.success("Location added successfully");
+        setIsAddLocationOpen(false);
+        setLocationForm({ name: "", address: "", phone: "", status: "Active" });
+        fetchLocations();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to add location");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setIsAddingLocation(false);
+    }
+  };
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -145,7 +180,7 @@ export default function RestaurantBackendSettings({
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("logo", file);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
@@ -156,7 +191,7 @@ export default function RestaurantBackendSettings({
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("banner", file);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
@@ -477,7 +512,7 @@ export default function RestaurantBackendSettings({
             </div>
           ))}
 
-          <div className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div onClick={() => setIsAddLocationOpen(true)} className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px] cursor-pointer hover:bg-gray-50 transition">
             <div className="w-16 h-16 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4 shadow-sm">
               <Plus size={28} className="text-[#64748B]" />
             </div>
@@ -771,6 +806,40 @@ export default function RestaurantBackendSettings({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+      {isAddLocationOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-playfair mb-4">Add New Location</h2>
+            <form onSubmit={handleAddLocation} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Location Name</label>
+                <input required type="text" value={locationForm.name} onChange={e => setLocationForm({...locationForm, name: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <input required type="text" value={locationForm.address} onChange={e => setLocationForm({...locationForm, address: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <input required type="text" value={locationForm.phone} onChange={e => setLocationForm({...locationForm, phone: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select value={locationForm.status} onChange={e => setLocationForm({...locationForm, status: e.target.value})} className="w-full border rounded-lg p-2 bg-white outline-none focus:border-[#2563EB]">
+                  <option value="Active">Active</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+              <div className="flex gap-3 justify-end mt-6">
+                <button type="button" onClick={() => setIsAddLocationOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
+                <button type="submit" disabled={isAddingLocation} className="px-4 py-2 rounded-lg bg-[#2563EB] text-white disabled:opacity-50">
+                  {isAddingLocation ? "Adding..." : "Add Location"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

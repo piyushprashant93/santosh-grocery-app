@@ -117,7 +117,7 @@ export default function RestaurantSettings({
       const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setLocs(data.data || data || []);
+        setLocs(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
       }
     } catch (err) {
       console.error(err);

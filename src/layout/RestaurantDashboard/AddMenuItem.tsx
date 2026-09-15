@@ -123,12 +123,13 @@ export default function AddMenuItem({
           });
           setFieldErrors(newErrors);
         }
-        throw new Error("Validation failed");
+        throw new Error(data.message || "Validation failed");
       }
 
       setActiveTab("menu-management");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.message || "Failed to save menu item");
     } finally {
       setSaving(false);
     }
