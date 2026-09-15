@@ -1441,7 +1441,7 @@ export default function AccountSettings() {
                         language: e.target.value,
                       }))
                     }
-                    className="mt-2 w-full border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg px-4 py-3 outline-none bg-transparent dark:text-white"
+                    className="mt-2 w-full h-11 px-3 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg outline-none bg-transparent text-[#0F172A] dark:text-white"
                   >
                     <option value="en">English</option>
                     <option value="hi">Hindi</option>
@@ -1459,7 +1459,7 @@ export default function AccountSettings() {
                         currency: e.target.value,
                       })
                     }
-                    className="w-full h-11 px-3 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg outline-none bg-white dark:bg-[#0F172A] text-[#0F172A] dark:text-white"
+                    className="mt-2 w-full h-11 px-3 border border-[#E5E7EB] dark:border-[#1E293B] rounded-lg outline-none bg-transparent text-[#0F172A] dark:text-white"
                   >
                     <option value="NPR">NPR</option>
                     <option value="INR">INR</option>
