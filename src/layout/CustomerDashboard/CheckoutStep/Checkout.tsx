@@ -17,6 +17,7 @@ import { ConfirmStep } from "./ConfirmStep";
 import AddressStep from "./AddressStep";
 import OrderSuccess from "./OrderSuccess";
 import { useNavigate } from "react-router-dom";
+import { useCurrency } from "../CurrencyContext";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -37,6 +38,7 @@ interface PricingData {
 export default function Checkout() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const { formatPrice } = useCurrency();
 
   const [pricing, setPricing] = useState<PricingData>({
     subtotal: 0,
@@ -137,6 +139,7 @@ export default function Checkout() {
         body: JSON.stringify({
           code: promoCode.trim(),
           orderTotal: pricing.subtotal,
+          orderType: "delivery",
         }),
       });
       const data = await res.json();
@@ -269,7 +272,10 @@ export default function Checkout() {
         const khaltiRes = await fetch(`${API_BASE}/payment/khalti/initiate`, {
           method: "POST",
           headers: authHeaders(),
-          body: JSON.stringify({ orderId: order._id }),
+          body: JSON.stringify({ 
+            orderId: order._id,
+            return_url: `${window.location.origin}/customer/dashboard`
+          }),
         });
         const khaltiData = await khaltiRes.json();
 
@@ -405,23 +411,23 @@ export default function Checkout() {
                 <div className="space-y-3 text-[#94A3B8]">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
 
                   <div className="flex justify-between">
                     <span>Delivery Fee</span>
-                    <span>${deliveryFee.toFixed(2)}</span>
+                    <span>{formatPrice(deliveryFee)}</span>
                   </div>
 
                   <div className="flex justify-between">
                     <span>Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>{formatPrice(tax)}</span>
                   </div>
 
                   {discount > 0 && (
                     <div className="flex justify-between text-[#00BC7D]">
                       <span>Promo Discount</span>
-                      <span>-${discount.toFixed(2)}</span>
+                      <span>-{formatPrice(discount)}</span>
                     </div>
                   )}
                 </div>
@@ -479,7 +485,7 @@ export default function Checkout() {
                   <span>Total</span>
 
                   <span className="text-[#00BC7D] text-[24px] font-playfair">
-                    ${total.toFixed(2)}
+                    {formatPrice(total)}
                   </span>
                 </div>
 

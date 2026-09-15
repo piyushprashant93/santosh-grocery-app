@@ -19,6 +19,7 @@ import {
   Twitter,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
 
@@ -108,6 +109,7 @@ interface Review {
 
 // ---------- Component ----------
 export default function RestaurantMenuDetails() {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const restaurantId = searchParams.get("id");
@@ -451,7 +453,8 @@ export default function RestaurantMenuDetails() {
       {/* Hero */}
       <div className="relative h-[420px] w-full">
         <img
-          src={heroImage}
+          src={heroImage || "https://placehold.co/1200x420?text=No+Image"}
+          onError={(e) => { e.currentTarget.src = "https://placehold.co/1200x420?text=No+Image"; }}
           alt={restaurant.name}
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -608,7 +611,8 @@ export default function RestaurantMenuDetails() {
                 >
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={item.image || "https://placehold.co/112x112?text=No+Image"}
+                      onError={(e) => { e.currentTarget.src = "https://placehold.co/112x112?text=No+Image"; }}
                       alt={item.name}
                       className="w-28 h-28 object-cover rounded-xl shrink-0"
                     />
@@ -631,15 +635,15 @@ export default function RestaurantMenuDetails() {
                         {item.discountPrice != null ? (
                           <>
                             <span className="text-[#00A63E] font-semibold">
-                              ${item.discountPrice.toFixed(2)}
+                              {formatPrice(item.discountPrice)}
                             </span>
                             <span className="text-[#94A3B8] text-xs line-through ml-1">
-                              ${item.price.toFixed(2)}
+                              {formatPrice(item.price)}
                             </span>
                           </>
                         ) : (
                           <span className="text-[#00A63E] font-semibold">
-                            ${item.price.toFixed(2)}
+                            {formatPrice(item.price)}
                           </span>
                         )}
                       </div>
@@ -841,10 +845,10 @@ export default function RestaurantMenuDetails() {
                     Delivery details
                   </p>
                   <p className="text-sm text-[#6A7282]">
-                    Delivery fee: ${restaurant.deliveryFee.toFixed(2)}
+                    Delivery fee: {formatPrice(restaurant.deliveryFee)}
                   </p>
                   <p className="text-sm text-[#6A7282]">
-                    Minimum order: ${restaurant.minimumOrder.toFixed(2)}
+                    Minimum order: {formatPrice(restaurant.minimumOrder)}
                   </p>
                   {restaurant.freeDeliveryAbove != null && (
                     <p className="text-sm text-[#6A7282]">

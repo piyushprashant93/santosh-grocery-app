@@ -15,6 +15,7 @@ import {
   Check,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import VoucherSection from "./VoucherSection";
 import AddCardModal from "./AddCardModal";
 
@@ -67,6 +68,7 @@ const PAYMENT_METHODS = [
 const BRANDS = ["Visa", "Mastercard", "Amex", "RuPay"];
 
 export default function WalletPayments() {
+  const { formatPrice } = useCurrency();
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [walletLoading, setWalletLoading] = useState(true);
   const [walletError, setWalletError] = useState("");
@@ -298,7 +300,7 @@ export default function WalletPayments() {
 
   const formattedBalance = walletLoading
     ? "—"
-    : `$${(wallet?.balance ?? 0).toFixed(2)}`;
+    : `${formatPrice((wallet?.balance ?? 0))}`;
 
   // "top_up" and "refund" style types read as credits (money in);
   // everything else (withdrawal, payment, etc.) reads as a debit (money out).
@@ -306,7 +308,7 @@ export default function WalletPayments() {
 
   const formatAmount = (t: Transaction) => {
     const sign = t.amount > 0 ? "+" : "-";
-    return `${sign}$${Math.abs(t.amount).toFixed(2)}`;
+    return `${sign}${formatPrice(Math.abs(t.amount))}`;
   };
 
   const formatDate = (iso: string) =>
@@ -938,7 +940,7 @@ export default function WalletPayments() {
         </div>
 
         <span className="font-semibold text-[#0F172A]">
-          ${payment.total.toFixed(2)}
+          {formatPrice(payment.total)}
         </span>
       </div>
     ))}

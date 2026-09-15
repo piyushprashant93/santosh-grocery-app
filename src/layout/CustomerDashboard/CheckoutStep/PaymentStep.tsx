@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "../CurrencyContext";
 import { Plus, Loader2, Wallet, Banknote, CreditCard as CardIcon } from "lucide-react";
 import AddCardModal from "../AddCardModal";
 
@@ -50,6 +51,7 @@ type SelectedPayment = {
 };
 
 export function PaymentStep() {
+  const { formatPrice } = useCurrency();
   const [walletBalance, setWalletBalance] = useState(0);
   const [cards, setCards] = useState<CardApi[]>([]);
   const [availableMethods, setAvailableMethods] = useState<AvailableMethod[]>(
@@ -298,7 +300,7 @@ const methodMeta: Record<
 
             const description =
               method.id === "wallet"
-                ? `Available: $${walletBalance.toFixed(2)}`
+                ? `Available: ${formatPrice(walletBalance)}`
                 : method.description;
 
             return (

@@ -10,6 +10,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -173,6 +174,7 @@ const getPartnerName = (party: OrderParty) =>
   "Unknown";
 
 export default function OrderHistory() {
+  const { formatPrice } = useCurrency();
   const [orders, setOrders] = useState<Order[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [ordersLoading, setOrdersLoading] = useState(true);
@@ -512,8 +514,8 @@ const submitCancelOrder = async () => {
         body: invoice.items.map((item: any) => [
           item.name,
           item.quantity,
-          `$${item.unitPrice.toFixed(2)}`,
-          `$${item.subtotal.toFixed(2)}`,
+          `${formatPrice(item.unitPrice)}`,
+          `${formatPrice(item.subtotal)}`,
         ]),
         theme: "grid",
         headStyles: {
@@ -528,22 +530,22 @@ const submitCancelOrder = async () => {
       pdf.setFont("helvetica", "normal");
 
       pdf.text(`Subtotal`, 130, finalY);
-      pdf.text(`$${invoice.subtotal.toFixed(2)}`, 185, finalY, {
+      pdf.text(`${formatPrice(invoice.subtotal)}`, 185, finalY, {
         align: "right",
       });
 
       pdf.text(`Delivery Fee`, 130, finalY + 8);
-      pdf.text(`$${invoice.deliveryFee.toFixed(2)}`, 185, finalY + 8, {
+      pdf.text(`${formatPrice(invoice.deliveryFee)}`, 185, finalY + 8, {
         align: "right",
       });
 
       pdf.text(`Tax`, 130, finalY + 16);
-      pdf.text(`$${invoice.tax.toFixed(2)}`, 185, finalY + 16, {
+      pdf.text(`${formatPrice(invoice.tax)}`, 185, finalY + 16, {
         align: "right",
       });
 
       pdf.text(`Discount`, 130, finalY + 24);
-      pdf.text(`-$${invoice.discount.toFixed(2)}`, 185, finalY + 24, {
+      pdf.text(`-${formatPrice(invoice.discount)}`, 185, finalY + 24, {
         align: "right",
       });
 
@@ -554,7 +556,7 @@ const submitCancelOrder = async () => {
       pdf.setFontSize(14);
 
       pdf.text("Grand Total", 130, finalY + 38);
-      pdf.text(`$${invoice.total.toFixed(2)}`, 185, finalY + 38, {
+      pdf.text(`${formatPrice(invoice.total)}`, 185, finalY + 38, {
         align: "right",
       });
 
@@ -910,7 +912,7 @@ const submitCancelOrder = async () => {
                           {item.name} × {item.quantity}
                         </span>
 
-                        <span>${item.subtotal.toFixed(2)}</span>
+                        <span>{formatPrice(item.subtotal)}</span>
                       </div>
                     ))}
 
@@ -933,7 +935,7 @@ const submitCancelOrder = async () => {
 
                     <div className="text-right">
                       <p className="font-bold text-[#009966]">
-                        ${o.total.toFixed(2)}
+                        {formatPrice(o.total)}
                       </p>
 
                       <p className="text-xs text-[#94A3B8]">
@@ -1118,14 +1120,14 @@ const submitCancelOrder = async () => {
                           </p>
 
                           <p className="text-sm text-[#6A7282]">
-                            ${item.price.toFixed(2)} × {item.quantity}
+                            {formatPrice(item.price)} × {item.quantity}
                           </p>
                         </div>
                       </div>
 
                       <div className="text-right">
                         <p className="font-semibold text-[#009966]">
-                          ${item.subtotal.toFixed(2)}
+                          {formatPrice(item.subtotal)}
                         </p>
                       </div>
                     </div>
@@ -1138,17 +1140,17 @@ const submitCancelOrder = async () => {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-[#6A7282]">
                   <span>Subtotal</span>
-                  <span>${selectedOrder.subtotal.toFixed(2)}</span>
+                  <span>{formatPrice(selectedOrder.subtotal)}</span>
                 </div>
 
                 <div className="flex justify-between text-[#6A7282]">
                   <span>Delivery Fee</span>
-                  <span>${selectedOrder.deliveryFee.toFixed(2)}</span>
+                  <span>{formatPrice(selectedOrder.deliveryFee)}</span>
                 </div>
 
                 <div className="flex justify-between text-[#6A7282]">
                   <span>Tax</span>
-                  <span>${selectedOrder.tax.toFixed(2)}</span>
+                  <span>{formatPrice(selectedOrder.tax)}</span>
                 </div>
               </div>
 
@@ -1160,7 +1162,7 @@ const submitCancelOrder = async () => {
                 </span>
 
                 <span className="text-xl font-semibold text-[#009966]">
-                  ${selectedOrder.total.toFixed(2)}
+                  {formatPrice(selectedOrder.total)}
                 </span>
               </div>
 
@@ -1628,11 +1630,11 @@ const submitCancelOrder = async () => {
                             <td className="p-4 text-center">{item.quantity}</td>
 
                             <td className="p-4 text-center">
-                              ${item.unitPrice.toFixed(2)}
+                              {formatPrice(item.unitPrice)}
                             </td>
 
                             <td className="p-4 text-right font-medium">
-                              ${item.subtotal.toFixed(2)}
+                              {formatPrice(item.subtotal)}
                             </td>
                           </tr>
                         ))}
@@ -1645,27 +1647,27 @@ const submitCancelOrder = async () => {
                   <div className="mt-8 ml-auto w-full max-w-sm space-y-3">
                     <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>${invoice.subtotal.toFixed(2)}</span>
+                      <span>{formatPrice(invoice.subtotal)}</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Delivery Fee</span>
-                      <span>${invoice.deliveryFee.toFixed(2)}</span>
+                      <span>{formatPrice(invoice.deliveryFee)}</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Tax</span>
-                      <span>${invoice.tax.toFixed(2)}</span>
+                      <span>{formatPrice(invoice.tax)}</span>
                     </div>
 
                     <div className="flex justify-between">
                       <span>Discount</span>
-                      <span>${invoice.discount.toFixed(2)}</span>
+                      <span>{formatPrice(invoice.discount)}</span>
                     </div>
 
                     <div className="flex justify-between border-t border-[#E5E7EB] pt-3 text-xl font-bold text-[#009966]">
                       <span>Grand Total</span>
-                      <span>${invoice.total.toFixed(2)}</span>
+                      <span>{formatPrice(invoice.total)}</span>
                     </div>
                   </div>
 

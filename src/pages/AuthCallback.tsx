@@ -18,8 +18,9 @@ export default function AuthCallback() {
     if (finalAccessToken) {
       // Store authentication data
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("role", "customer");
       localStorage.setItem("authToken", finalAccessToken);
+      
+      let userRole = "customer";
       
       if (refreshToken) {
         localStorage.setItem("refreshToken", refreshToken);
@@ -30,15 +31,31 @@ export default function AuthCallback() {
           // It might be a URL encoded JSON string
           const decodedUser = decodeURIComponent(userParam);
           // Just verify it's valid JSON (though we'll store it as a string)
-          JSON.parse(decodedUser);
+          const userObj = JSON.parse(decodedUser);
           localStorage.setItem("user", decodedUser);
+          
+          if (userObj.role) {
+            userRole = userObj.role;
+          }
         } catch (e) {
           console.error("Failed to parse user data from URL", e);
         }
       }
+      
+      localStorage.setItem("role", userRole);
 
-      // Redirect to customer dashboard
-      navigate("/customer/dashboard");
+      // Redirect to correct dashboard based on role
+      if (userRole === "restaurant") {
+        navigate("/restaurant/dashboard");
+      } else if (userRole === "supplier") {
+        navigate("/supplier/dashboard");
+      } else if (userRole === "admin") {
+        navigate("/admin/dashboard");
+      } else if (userRole === "retailer") {
+        navigate("/retailer/dashboard");
+      } else {
+        navigate("/customer/dashboard");
+      }
     } else {
       console.error("No access token found in URL parameters");
       // Redirect back to login if authentication fails or token is missing

@@ -47,6 +47,11 @@ export default function CustomerHeader({
     };
 
     void fetchUnreadCount();
+
+    window.addEventListener("notifications-updated", fetchUnreadCount);
+    return () => {
+      window.removeEventListener("notifications-updated", fetchUnreadCount);
+    };
   }, []);
 
   // Fetch cart item count
@@ -78,15 +83,15 @@ export default function CustomerHeader({
   }, [openCart]); // Re-fetch when cart modal closes
 
   return (
-    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white border-b border-[#E5E7EB]">
-      <div className="cursor-pointer lg:hidden" onClick={openSidebar}>
+    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white dark:bg-[#020618] border-b border-[#E5E7EB] dark:border-[#1E293B]">
+      <div className="cursor-pointer lg:hidden dark:text-white" onClick={openSidebar}>
         <Menu />
       </div>
 
       <div className="sm:flex items-center gap-3 text-sm ml-3 hidden">
         <span className="text-[#64748B]">HubNepa</span>
         <span className="text-[#94A3B8]">›</span>
-       <span className="font-semibold text-[#0F172A]">
+       <span className="font-semibold text-[#0F172A] dark:text-white">
   {activeTab
     .replace(/-/g, " ")
     .split(" ")
@@ -108,15 +113,16 @@ export default function CustomerHeader({
           <input
             placeholder="Search orders..."
             readOnly
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] text-sm outline-none cursor-pointer"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] dark:bg-[#0F172B] dark:text-white dark:border dark:border-[#1E293B] text-sm outline-none cursor-pointer"
           />
         </div>
 
+
         <button
           onClick={() => setOpenCart(true)}
-          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]"
+          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] dark:text-white"
         >
-          <ShoppingBag size={18} className="text-[#64748B]" />
+          <ShoppingBag size={18} className="text-[#64748B] dark:text-[#94A3B8]" />
 
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#00A63E] rounded-full text-[10px] text-white font-bold flex items-center justify-center">
@@ -129,9 +135,9 @@ export default function CustomerHeader({
 
         <button
           onClick={() => setActiveTab("notifications")}
-          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]"
+          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] dark:text-white"
         >
-          <Bell size={18} className="text-[#64748B]" />
+          <Bell size={18} className="text-[#64748B] dark:text-[#94A3B8]" />
 
           {unreadCount > 0 && (
             <span className="absolute top-1 right-1 min-w-[14px] h-3.5 px-1.5 bg-red-500 rounded-full text-[9px] text-white flex items-center justify-center">

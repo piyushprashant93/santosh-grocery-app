@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import {
   Gift,
   Copy,
@@ -56,6 +57,7 @@ const steps = [
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 export default function InviteFriends() {
+  const { formatPrice } = useCurrency();
   const [referralInfo, setReferralInfo] = useState<ReferralInfo | null>(null);
   const [referredUsers, setReferredUsers] = useState<ReferredUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -301,7 +303,7 @@ export default function InviteFriends() {
             <p className="text-2xl font-playfair">
               {loading
                 ? "—"
-                : `$${(referralInfo?.walletBalance ?? 0).toFixed(2)}`}
+                : `${formatPrice((referralInfo?.walletBalance ?? 0))}`}
             </p>
             <p className="text-xs text-[#94A3B8] tracking-wide">
               Wallet Balance

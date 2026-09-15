@@ -8,6 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "./CurrencyContext";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -33,6 +34,7 @@ interface Cart {
 }
 
 export default function CartModal({
+
   open,
   onClose,
   selectedProduct,
@@ -43,6 +45,7 @@ export default function CartModal({
   selectedProduct?: string;
   setActiveTab?: (tab: string) => void;
 }) {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   const [cart, setCart] = useState<Cart | null>(null);
@@ -340,7 +343,7 @@ export default function CartModal({
                         </h3>
 
                         <p className="text-[#94A3B8] text-sm mt-1">
-                          ${item.price.toFixed(2)} each
+                          {formatPrice(item.price)} each
                         </p>
                       </div>
 
@@ -359,7 +362,7 @@ export default function CartModal({
 
                     <div className="flex justify-between items-center mt-4">
                       <p className="text-[#00BC7D] font-medium">
-                        ${item.subtotal.toFixed(2)}
+                        {formatPrice(item.subtotal)}
                       </p>
 
                       <div className="flex items-center border border-[#1E293B] rounded-lg overflow-hidden">
@@ -406,17 +409,17 @@ export default function CartModal({
               <div className="space-y-3 text-[#94A3B8]">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Delivery Fee</span>
-                  <span>${delivery.toFixed(2)}</span>
+                  <span>{formatPrice(delivery)}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Tax (8%)</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>{formatPrice(tax)}</span>
                 </div>
               </div>
 
@@ -424,7 +427,7 @@ export default function CartModal({
                 <span className="text-white text-lg">Total</span>
 
                 <span className="text-[#00BC7D] text-xl font-playfair font-semibold">
-                  ${total.toFixed(2)}
+                  {formatPrice(total)}
                 </span>
               </div>
 

@@ -23,6 +23,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import AddressModal from "./AddressModal";
 import { QRCodeSVG } from "qrcode.react";
+import { useTheme } from "./ThemeContext";
+import { useCurrency } from "./CurrencyContext";
 
 type UserProfile = {
   firstName: string;
@@ -68,6 +70,8 @@ type TwoFASetupData = {
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 export default function AccountSettings() {
+  const { setTheme } = useTheme();
+  const { setCurrency } = useCurrency();
   const [tab, setTab] = useState("Profile");
   const navigate = useNavigate();
   const [toggles, setToggles] = useState<Record<number, boolean>>({
@@ -727,6 +731,9 @@ export default function AccountSettings() {
         darkMode: prefs.darkMode,
       });
 
+      setTheme(prefs.darkMode ? "dark" : "light");
+      if (prefs.currency) setCurrency(prefs.currency);
+
       setToggles({
         0: prefs.notifications.orderUpdates,
         1: prefs.notifications.promotions,
@@ -807,6 +814,9 @@ export default function AccountSettings() {
       setPreferencesSuccess(
         data.message || "Preferences updated successfully.",
       );
+
+      setTheme(preferences.darkMode ? "dark" : "light");
+      if (preferences.currency) setCurrency(preferences.currency);
     } catch (err) {
       setPreferencesError(
         err instanceof Error ? err.message : "Something went wrong.",
@@ -1444,14 +1454,14 @@ export default function AccountSettings() {
                   <select
                     value={preferences.currency}
                     onChange={(e) =>
-                      setPreferences((prev) => ({
-                        ...prev,
+                      setPreferences({
+                        ...preferences,
                         currency: e.target.value,
-                      }))
+                      })
                     }
-                    className="mt-2 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none"
+                    className="w-full h-11 px-3 border border-[#E5E7EB] rounded-lg outline-none bg-white text-[#0F172A]"
                   >
-                    <option value="USD">USD</option>
+                    <option value="NPR">NPR</option>
                     <option value="INR">INR</option>
                     <option value="EUR">EUR</option>
                   </select>

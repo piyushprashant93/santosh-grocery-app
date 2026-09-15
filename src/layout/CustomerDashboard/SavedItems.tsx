@@ -8,6 +8,7 @@ import {
   PackageX,
   AlertTriangle,
 } from "lucide-react";
+import { useCurrency } from "./CurrencyContext";
 import CartModal from "./CartModal";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +44,7 @@ interface WishlistItem {
 }
 
 export default function SavedItems() {
+  const { formatPrice } = useCurrency();
   const [openCart, setOpenCart] = useState(false);
   const navigate = useNavigate();
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -356,12 +358,12 @@ export default function SavedItems() {
 
                   <div className="flex items-center gap-3">
                     <span className="text-[#009966] text-xl font-bold">
-                      ${discountPrice.toFixed(2)}
+                      {formatPrice(discountPrice)}
                     </span>
 
                     {hasDiscount && (
                       <span className="text-[#99A1AF] line-through">
-                        ${basePrice.toFixed(2)}
+                        {formatPrice(basePrice)}
                       </span>
                     )}
                   </div>
