@@ -1,18 +1,45 @@
 import { useState } from "react"
-import { ArrowLeft, Check, Store, ShoppingBag, UploadCloud } from "lucide-react"
+import { ArrowLeft, Check, Store, ShoppingBag, UploadCloud, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import api from "../../../lib/api"
 
 export default function AddPartnerWizard() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [partnerType, setPartnerType] = useState<'restaurant' | 'retailer'>('restaurant');
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    businessName: '',
+    ownerName: '',
+    email: '',
+    phone: '',
+    category: '',
+    address: '',
+    city: '',
+    zipCode: ''
+  });
 
   const handleNext = () => setStep(prev => Math.min(prev + 1, 3));
   const handleBack = () => setStep(prev => Math.max(prev - 1, 1));
   
-  const handleFinalSubmit = () => {
-    // In reality, this would submit the form data to an API
-    navigate('/admin/dashboard/partner-management');
+  const handleFinalSubmit = async () => {
+    try {
+      setLoading(true);
+      
+      const payload = {
+        type: partnerType,
+        ...formData
+      };
+
+      await api.post('/api/v1/admin/partners', payload);
+      
+      alert('Partner created successfully!');
+      navigate('/admin/dashboard/partner-management');
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || 'Failed to create partner');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -108,19 +135,43 @@ export default function AddPartnerWizard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Business Name</label>
-                <input type="text" placeholder="e.g. Tasty Bites" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="text" 
+                  placeholder="e.g. Tasty Bites" 
+                  value={formData.businessName}
+                  onChange={(e) => setFormData({...formData, businessName: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Owner Name</label>
-                <input type="text" placeholder="e.g. John Doe" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="text" 
+                  placeholder="e.g. John Doe" 
+                  value={formData.ownerName}
+                  onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
-                <input type="email" placeholder="partner@hubnepa.com" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="email" 
+                  placeholder="partner@hubnepa.com" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number</label>
-                <input type="tel" placeholder="+1 (555) 000-0000" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="tel" 
+                  placeholder="+1 (555) 000-0000" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
             </div>
           </div>
@@ -135,7 +186,11 @@ export default function AddPartnerWizard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Category</label>
-                <select className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition">
+                <select 
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                >
                   <option value="">Select category</option>
                   <option value="asian">Asian Cuisine</option>
                   <option value="italian">Italian Cuisine</option>
@@ -145,15 +200,33 @@ export default function AddPartnerWizard() {
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
-                <input type="text" placeholder="123 Main St" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="text" 
+                  placeholder="123 Main St" 
+                  value={formData.address}
+                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">City</label>
-                <input type="text" placeholder="Scranton" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="text" 
+                  placeholder="Scranton" 
+                  value={formData.city}
+                  onChange={(e) => setFormData({...formData, city: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">Zip Code</label>
-                <input type="text" placeholder="18503" className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" />
+                <input 
+                  type="text" 
+                  placeholder="18503" 
+                  value={formData.zipCode}
+                  onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
+                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                />
               </div>
             </div>
           </div>
@@ -207,8 +280,10 @@ export default function AddPartnerWizard() {
         ) : (
           <button 
             onClick={handleFinalSubmit}
-            className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm"
+            disabled={loading}
+            className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50 flex items-center gap-2"
           >
+            {loading && <Loader2 size={16} className="animate-spin" />}
             Create Partner Account
           </button>
         )}
