@@ -136,7 +136,8 @@ export default function RestaurantSettings({
         if (profileData.openingHours && typeof profileData.openingHours === 'object' && !Array.isArray(profileData.openingHours)) {
           setDays(prev => prev.map(d => {
             const fullDay = getFullDayName(d.day);
-            const h = profileData.openingHours[fullDay] || profileData.openingHours[fullDay.toLowerCase()];
+            const shortDayLower = d.day.toLowerCase();
+            const h = profileData.openingHours[fullDay] || profileData.openingHours[fullDay.toLowerCase()] || profileData.openingHours[shortDayLower];
             if (h) {
               return { ...d, open: !h.isClosed, time: `${h.open || "09:00"} - ${h.close || "22:00"}` };
             }

@@ -714,10 +714,6 @@ export default function TeamManagement({
                   <option>Staff</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Branch</label>
-                <input required type="text" value={staffForm.branch} onChange={e => setStaffForm({...staffForm, branch: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#009966]" />
-              </div>
               <div className="flex gap-3 justify-end mt-6">
                 <button type="button" onClick={() => setIsAddStaffOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
                 <button type="submit" disabled={isAddingStaff} className="px-4 py-2 rounded-lg bg-[#009966] text-white disabled:opacity-50">
