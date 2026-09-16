@@ -24,155 +24,18 @@ const authHeaders = () => {
   };
 };
 
-const cards = [
-  {
-    title: "Total Expenses (Feb)",
-    value: "$7,620.50",
-    icon: <TrendingDown size={20} className="text-[#E7000B]" />,
-    iconBg: "bg-[#FEE2E2]",
-    badge: "+4.5%",
-    badgeColor: "text-red-600 bg-[#FEE2E2]"
-  },
-  {
-    title: "Staff Payroll",
-    value: "$4,200.00",
-    icon: <Users size={20} className="text-[#155DFC]" />,
-    iconBg: "bg-[#E0E7FF]",
-    badge: "Fixed Cost",
-    badgeColor: "text-[#2563EB] bg-[#DBEAFE]"
-  },
-  {
-    title: "Maintenance & Misc",
-    value: "$570.50",
-    icon: <Wrench size={20} className="text-[#F54900]" />,
-    iconBg: "bg-[#FFF7ED]",
-    badge: "Variable",
-    badgeColor: "text-[#F54900] bg-[#FFEAD5]"
-  }
-]
-
-const expenses = [
-  {
-    title: "Monthly Rent",
-    category: "Rent",
-    date: "Feb 01, 2026",
-    amount: "$2,500.00",
-    status: "Paid"
-  },
-  {
-    title: "Staff Salaries",
-    category: "Salary",
-    date: "Feb 01, 2026",
-    amount: "$4,200.00",
-    status: "Paid"
-  },
-  {
-    title: "Vegetable Supply",
-    category: "Inventory",
-    date: "Feb 03, 2026",
-    amount: "$350.50",
-    status: "Pending"
-  },
-  {
-    title: "Kitchen Equipment Repair",
-    category: "Maintenance",
-    date: "Feb 02, 2026",
-    amount: "$150.00",
-    status: "Paid"
-  },
-  {
-    title: "Electricity Bill",
-    category: "Utilities",
-    date: "Feb 05, 2026",
-    amount: "$420.00",
-    status: "Due Soon"
-  }
-]
-
 const statusStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]",
   "Due Soon": "bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]"
 }
 
-const employees = [
-  {
-    name: "John Doe",
-    role: "Head Chef",
-    month: "January 2026",
-    amount: "$3,200.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/men/32.jpg"
-  },
-  {
-    name: "Sarah Smith",
-    role: "Restaurant Manager",
-    month: "January 2026",
-    amount: "$2,800.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    name: "Mike Johnson",
-    role: "Sous Chef",
-    month: "January 2026",
-    amount: "$2,100.00",
-    status: "Pending",
-    image: "https://randomuser.me/api/portraits/men/65.jpg"
-  },
-  {
-    name: "Emily Chen",
-    role: "Waitstaff",
-    month: "January 2026",
-    amount: "$1,500.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/68.jpg"
-  }
-]
-
 const statusEmployeeStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]"
 }
 
-const issues = [
-  {
-    title: "Walk-in Freezer",
-    desc: "Temperature fluctuation",
-    priority: "High",
-    vendor: "CoolTech Services",
-    cost: "$150.00",
-    date: "Feb 02, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "Espresso Machine",
-    desc: "Steam wand leak",
-    priority: "Medium",
-    vendor: "BaristaFix",
-    cost: "$85.00",
-    date: "Jan 28, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "HVAC System",
-    desc: "Filter replacement",
-    priority: "Low",
-    vendor: "AirMasters",
-    cost: "$200.00",
-    date: "Jan 15, 2026",
-    status: "Scheduled"
-  },
-  {
-    title: "Dishwasher",
-    desc: "Drainage blockage",
-    priority: "High",
-    vendor: "QuickPlumb",
-    cost: "$0.00",
-    date: "Feb 05, 2026",
-    status: "In Progress"
-  }
-]
+
 
 const priorityStyles: any = {
   High: "bg-[#FEE2E2] text-[#DC2626]",
@@ -244,6 +107,33 @@ export default function FinanceWallet() {
       if (res.ok) fetchMaintenance();
     } catch (err) { console.error(err); }
   };
+
+  const cards = [
+    {
+      title: "Total Expenses",
+      value: "$14,250.00",
+      icon: <TrendingDown size={24} />,
+      iconBg: "bg-[#FEE2E2] text-[#DC2626]",
+      badge: "+2.4%",
+      badgeColor: "bg-[#FEE2E2] text-[#DC2626]"
+    },
+    {
+      title: "Monthly Payroll",
+      value: "$8,500.00",
+      icon: <Users size={24} />,
+      iconBg: "bg-[#EFF6FF] text-[#2563EB]",
+      badge: "Fixed",
+      badgeColor: "bg-[#F1F5F9] text-[#64748B]"
+    },
+    {
+      title: "Maintenance",
+      value: "$1,200.00",
+      icon: <Wrench size={24} />,
+      iconBg: "bg-[#FFF7ED] text-[#EA580C]",
+      badge: "-5.0%",
+      badgeColor: "bg-[#ECFDF5] text-[#059669]"
+    }
+  ];
 
   return (
     <div className="space-y-6">

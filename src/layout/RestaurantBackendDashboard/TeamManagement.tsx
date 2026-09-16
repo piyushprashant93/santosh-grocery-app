@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -208,6 +209,39 @@ export default function TeamManagement({
   setActiveTab: (tab: string) => void;
 }) {
   const [tab, setTab] = useState("directory");
+  const [isAddStaffOpen, setIsAddStaffOpen] = useState(false);
+  const [isAddingStaff, setIsAddingStaff] = useState(false);
+  const [staffForm, setStaffForm] = useState({
+    name: "",
+    email: "",
+    role: "Staff"
+  });
+
+  const handleAddStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddingStaff(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(staffForm)
+      });
+      if (res.ok) {
+        toast.success("Staff member added! Login code sent via email.");
+        setIsAddStaffOpen(false);
+        setStaffForm({ name: "", email: "", role: "Staff" });
+        fetchStaff();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to add staff member");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setIsAddingStaff(false);
+    }
+  };
 
   const [staff, setStaff] = useState<any[]>([]);
   const [schedule, setSchedule] = useState<any[]>([]);
@@ -339,7 +373,7 @@ export default function TeamManagement({
             <FileText size={16} />
             Export Payroll
           </button>
-          <button className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+          <button onClick={() => setIsAddStaffOpen(true)} className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
             <UserPlus size={16} />
             Add Staff Member
           </button>
@@ -657,6 +691,39 @@ export default function TeamManagement({
     </div>
         )}
       </div>
+      {isAddStaffOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-playfair mb-4">Add Staff Member</h2>
+            <form onSubmit={handleAddStaff} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input required type="text" value={staffForm.name} onChange={e => setStaffForm({...staffForm, name: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#009966]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email (for login code)</label>
+                <input required type="email" value={staffForm.email} onChange={e => setStaffForm({...staffForm, email: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#009966]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select value={staffForm.role} onChange={e => setStaffForm({...staffForm, role: e.target.value})} className="w-full border rounded-lg p-2 bg-white outline-none focus:border-[#009966]">
+                  <option>Manager</option>
+                  <option>Head Chef</option>
+                  <option>Chef</option>
+                  <option>Front Staff</option>
+                  <option>Staff</option>
+                </select>
+              </div>
+              <div className="flex gap-3 justify-end mt-6">
+                <button type="button" onClick={() => setIsAddStaffOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
+                <button type="submit" disabled={isAddingStaff} className="px-4 py-2 rounded-lg bg-[#009966] text-white disabled:opacity-50">
+                  {isAddingStaff ? "Adding..." : "Add Staff"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

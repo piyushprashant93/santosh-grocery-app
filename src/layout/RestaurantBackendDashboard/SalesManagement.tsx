@@ -29,26 +29,7 @@ const fields = [
   { key: "other", label: "Other" }
 ]
 
-const entries = [
-  {
-    date: "2024-02-12",
-    inhouse: "$1200.00",
-    delivery: "$3050.00",
-    total: "$4250.00"
-  },
-  {
-    date: "2024-02-11",
-    inhouse: "$1100.00",
-    delivery: "$2790.50",
-    total: "$3890.50"
-  },
-  {
-    date: "2024-02-10",
-    inhouse: "$1800.00",
-    delivery: "$3300.00",
-    total: "$5100.00"
-  }
-]
+
 
 import {
   BarChart,
@@ -61,14 +42,10 @@ import {
   Legend
 } from "recharts"
 
-const data = [
-  { day: "Sat", inhouse: 1800, delivery: 3000 },
-  { day: "Sun", inhouse: 1200, delivery: 2600 },
-  { day: "Mon", inhouse: 1400, delivery: 2900 }
-]
+
 
 export default function SalesManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
-  const [salesEntries, setSalesEntries] = useState<any[]>(entries);
+  const [salesEntries, setSalesEntries] = useState<any[]>([]);
   const [missingDates, setMissingDates] = useState<string[]>([]);
   const [dateStr, setDateStr] = useState<string>(new Date().toISOString().split('T')[0]);
 
@@ -93,7 +70,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
       if (res.ok) {
         const data = await res.json();
         const list = extractList(data);
-        setSalesEntries(list.length > 0 ? list : entries);
+        setSalesEntries(list);
       }
     } catch(err) { console.error(err); }
   };
@@ -296,7 +273,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
             <div className="h-[260px] mt-6 -ml-5">
 
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data} barGap={6}>
+                <BarChart data={salesEntries.length ? salesEntries.map((e: any) => ({ day: new Date(e.date || Date.now()).toLocaleDateString('en-US', {weekday: 'short'}), inhouse: parseFloat(String(e.inhouse || e.dineIn || 0).replace(/[^0-9.]/g, '')), delivery: parseFloat(String(e.delivery || e.uber || 0).replace(/[^0-9.]/g, '')) })).slice(0, 7) : []} barGap={6}>
 
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
 

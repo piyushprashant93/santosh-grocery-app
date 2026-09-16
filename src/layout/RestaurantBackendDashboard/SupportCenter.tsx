@@ -13,29 +13,7 @@ const authHeaders = () => {
   };
 };
 
-const tickets = [
-  {
-    id: "#TCK-9921",
-    subject: "Printer connectivity issue",
-    priority: "High",
-    status: "Open",
-    updated: "2 hours ago",
-  },
-  {
-    id: "#TCK-9920",
-    subject: "Request to add new menu category",
-    priority: "Low",
-    status: "Closed",
-    updated: "2 days ago",
-  },
-  {
-    id: "#TCK-9919",
-    subject: "Payout discrepancy inquiry",
-    priority: "Medium",
-    status: "Resolved",
-    updated: "1 week ago",
-  },
-];
+
 
 const priorityStyles: any = {
   High: "bg-red-100 text-red-600",
@@ -49,34 +27,7 @@ const statusStyles: any = {
   Resolved: "bg-blue-100 text-blue-700 border border-[#BFDBFE]",
 };
 
-const faqs = [
-  {
-    category: "Menu & Orders",
-    items: [
-      {
-        q: "How do I mark an item as sold out?",
-        a: "Go to Menu Management, find the item card, and toggle the switch labeled 'Available'. This updates in real-time."
-      },
-      {
-        q: "Can I cancel an order after accepting?",
-        a: "Yes, open the order details and update the shipping status from the status dropdown."
-      }
-    ]
-  },
-  {
-    category: "Payments",
-    items: [
-      {
-        q: "When are payouts processed?",
-        a: "Payouts are processed weekly. Funds usually arrive in your bank within 2-3 business days."
-      },
-      {
-        q: "How do I update bank details?",
-        a: "Commission is calculated as a percentage of the order total depending on your seller plan."
-      },
-    ]
-  },
-]
+
 
 export default function HelpSupport() {
   const [activeTab, setActiveTab] = useState("tickets");

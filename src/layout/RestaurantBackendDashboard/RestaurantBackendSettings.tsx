@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import {
   Shield,
   Bell,
@@ -44,58 +45,14 @@ const tabs = [
   { key: "team", label: "Team", icon: Users },
 ];
 
-const locations = [
-  {
-    name: "Downtown HQ",
-    address: "123 Main St, New York, NY",
-    phone: "+1 (555) 123-4567",
-    status: "Active",
-  },
-  {
-    name: "Westside Branch",
-    address: "456 West Ave, New York, NY",
-    phone: "+1 (555) 987-6543",
-    status: "Active",
-  },
-  {
-    name: "Brooklyn Hub",
-    address: "789 Park Slope, Brooklyn, NY",
-    phone: "+1 (555) 456-7890",
-    status: "Maintenance",
-  },
-];
+
 
 const statusStyles: any = {
   Active: "bg-[#ECFDF5] text-[#059669]",
   Maintenance: "bg-[#FFF7ED] text-[#EA580C]",
 };
 
-const initialMembers = [
-  {
-    name: "John Doe",
-    role: "Owner",
-    email: "john@goldenspoon.com",
-    access: "Full Access",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    name: "Sarah Smith",
-    role: "Manager",
-    email: "sarah@goldenspoon.com",
-    access: "Orders, Menu, Reports",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    name: "Mike Johnson",
-    role: "Staff",
-    email: "mike@goldenspoon.com",
-    access: "Orders Only",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-];
+
 
 const roleStyles: any = {
   Owner: "bg-[#EEF2FF] text-[#4F46E5]",
@@ -118,7 +75,7 @@ export default function RestaurantBackendSettings({
     confirm: false,
   });
 
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<any[]>([]);
 
   const toggleAccess = (index: number) => {
     setMembers((prev) =>
@@ -135,6 +92,40 @@ export default function RestaurantBackendSettings({
 
   const [settingsData, setSettingsData] = useState<any>({});
   const [locationsData, setLocationsData] = useState<any[]>([]);
+  const [isAddLocationOpen, setIsAddLocationOpen] = useState(false);
+  const [isAddingLocation, setIsAddingLocation] = useState(false);
+  const [locationForm, setLocationForm] = useState({
+    name: "",
+    address: "",
+    phone: "",
+    status: "Active"
+  });
+
+  const handleAddLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddingLocation(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(locationForm)
+      });
+      if (res.ok) {
+        toast.success("Location added successfully");
+        setIsAddLocationOpen(false);
+        setLocationForm({ name: "", address: "", phone: "", status: "Active" });
+        fetchLocations();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to add location");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setIsAddingLocation(false);
+    }
+  };
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -158,9 +149,20 @@ export default function RestaurantBackendSettings({
     } catch(err) { console.error(err); }
   };
 
+  const fetchTeam = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setMembers(data.data?.staff || data.staff || data.data || []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
   useEffect(() => {
     if (activeSettingTab === "general") fetchSettings();
     else if (activeSettingTab === "locations") fetchLocations();
+    else if (activeSettingTab === "team") fetchTeam();
   }, [activeSettingTab]);
 
   const updateSettings = async () => {
@@ -178,7 +180,7 @@ export default function RestaurantBackendSettings({
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("logo", file);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
@@ -189,7 +191,7 @@ export default function RestaurantBackendSettings({
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("banner", file);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
@@ -510,7 +512,7 @@ export default function RestaurantBackendSettings({
             </div>
           ))}
 
-          <div className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px]">
+          <div onClick={() => setIsAddLocationOpen(true)} className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px] cursor-pointer hover:bg-gray-50 transition">
             <div className="w-16 h-16 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4 shadow-sm">
               <Plus size={28} className="text-[#64748B]" />
             </div>
@@ -804,6 +806,40 @@ export default function RestaurantBackendSettings({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+      {isAddLocationOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-playfair mb-4">Add New Location</h2>
+            <form onSubmit={handleAddLocation} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Location Name</label>
+                <input required type="text" value={locationForm.name} onChange={e => setLocationForm({...locationForm, name: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <input required type="text" value={locationForm.address} onChange={e => setLocationForm({...locationForm, address: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <input required type="text" value={locationForm.phone} onChange={e => setLocationForm({...locationForm, phone: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#2563EB]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select value={locationForm.status} onChange={e => setLocationForm({...locationForm, status: e.target.value})} className="w-full border rounded-lg p-2 bg-white outline-none focus:border-[#2563EB]">
+                  <option value="Active">Active</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+              <div className="flex gap-3 justify-end mt-6">
+                <button type="button" onClick={() => setIsAddLocationOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
+                <button type="submit" disabled={isAddingLocation} className="px-4 py-2 rounded-lg bg-[#2563EB] text-white disabled:opacity-50">
+                  {isAddingLocation ? "Adding..." : "Add Location"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

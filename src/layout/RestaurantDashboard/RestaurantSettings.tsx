@@ -38,58 +38,14 @@ const authHeaders = () => {
   };
 };
 
-const locations = [
-  {
-    name: "Downtown HQ",
-    address: "123 Main St, New York, NY",
-    phone: "+1 (555) 123-4567",
-    status: "Active",
-  },
-  {
-    name: "Westside Branch",
-    address: "456 West Ave, New York, NY",
-    phone: "+1 (555) 987-6543",
-    status: "Active",
-  },
-  {
-    name: "Brooklyn Hub",
-    address: "789 Park Slope, Brooklyn, NY",
-    phone: "+1 (555) 456-7890",
-    status: "Maintenance",
-  },
-];
+
 
 const statusStyles: any = {
   Active: "bg-[#ECFDF5] text-[#059669]",
   Maintenance: "bg-[#FFF7ED] text-[#EA580C]",
 };
 
-const initialMembers = [
-  {
-    name: "John Doe",
-    role: "Owner",
-    email: "john@goldenspoon.com",
-    access: "Full Access",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    name: "Sarah Smith",
-    role: "Manager",
-    email: "sarah@goldenspoon.com",
-    access: "Orders, Menu, Reports",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    name: "Mike Johnson",
-    role: "Staff",
-    email: "mike@goldenspoon.com",
-    access: "Orders Only",
-    enabled: true,
-    image: "https://randomuser.me/api/portraits/men/65.jpg",
-  },
-];
+const initialMembers: any[] = [];
 
 const roleStyles: any = {
   Owner: "bg-[#EEF2FF] text-[#4F46E5]",
@@ -115,13 +71,58 @@ export default function RestaurantSettings({
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [editingLocation, setEditingLocation] = useState<any>({ name: "", address: "", phone: "", status: "Active" });
 
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<any[]>(initialMembers);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: "Staff" });
+  
+  const fetchTeam = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        // The API returns the list in data.data or data
+        const staffList = data.data || data;
+        if (Array.isArray(staffList)) {
+          setMembers(staffList);
+        }
+      }
+    } catch(err) { console.error(err); }
+  };
   const [profile, setProfile] = useState<any>({});
-  const [locs, setLocs] = useState<any[]>(locations);
+  const [locs, setLocs] = useState<any[]>([]);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
+
+
+  const getFullDayName = (shortDay: string) => {
+    const map: any = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday", Sun: "Sunday" };
+    return map[shortDay] || shortDay;
+  };
+
+  const mapTitleToKey = (title: string) => {
+    const map: any = {
+      "New Orders": "newOrders",
+      "Order Updates": "orderUpdates",
+      "Customer Reviews": "customerReviews",
+      "Payouts & Finance": "payoutsFinance",
+      "System Updates": "systemUpdates"
+    };
+    return map[title];
+  };
+
+  const fetchLocations = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      if (res.ok) {
+        const data = await res.json();
+        setLocs(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -130,9 +131,31 @@ export default function RestaurantSettings({
         const data = await res.json();
         const profileData = data.data?.restaurant || data.restaurant || data.data || {};
         setProfile(profileData);
-        if (profileData.locations) setLocs(profileData.locations);
-        if (profileData.operatingHours && Array.isArray(profileData.operatingHours)) setDays(profileData.operatingHours);
-        if (profileData.notifications && Array.isArray(profileData.notifications)) {
+        
+        // Handle new openingHours object
+        if (profileData.openingHours && typeof profileData.openingHours === 'object' && !Array.isArray(profileData.openingHours)) {
+          setDays(prev => prev.map(d => {
+            const fullDay = getFullDayName(d.day);
+            const shortDayLower = d.day.toLowerCase();
+            const h = profileData.openingHours[fullDay] || profileData.openingHours[fullDay.toLowerCase()] || profileData.openingHours[shortDayLower];
+            if (h) {
+              return { ...d, open: !h.isClosed, time: `${h.open || "09:00"} - ${h.close || "22:00"}` };
+            }
+            return d;
+          }));
+        } else if (profileData.operatingHours && Array.isArray(profileData.operatingHours)) {
+          setDays(profileData.operatingHours); // fallback
+        }
+
+        // Handle new notificationPreferences object
+        if (profileData.notificationPreferences && typeof profileData.notificationPreferences === 'object') {
+          setData(prev => prev.map(item => {
+            const key = mapTitleToKey(item.title);
+            const found = profileData.notificationPreferences[key];
+            return found ? { ...item, email: found.email, sms: found.sms } : item;
+          }));
+        } else if (profileData.notifications && Array.isArray(profileData.notifications)) {
+          // fallback
           setData(prev => prev.map(item => {
             const found = profileData.notifications.find((n: any) => n.title === item.title);
             return found ? { ...item, email: found.email, sms: found.sms } : item;
@@ -144,16 +167,41 @@ export default function RestaurantSettings({
 
   useEffect(() => {
     fetchProfile();
+    fetchTeam();
+    fetchLocations();
   }, []);
 
   const saveProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+      const openingHours: any = {};
+      days.forEach(d => {
+        const parts = d.time.split("-");
+        const openTime = parts[0]?.trim() || "09:00";
+        const closeTime = parts[1]?.trim() || "22:00";
+        openingHours[getFullDayName(d.day)] = {
+          open: openTime,
+          close: closeTime,
+          isClosed: !d.open
+        };
+      });
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify({ ...profile, operatingHours: days })
+        body: JSON.stringify({ openingHours })
       });
-      if (res.ok) alert("Settings saved!");
+      if (res.ok) {
+         // Also update the profile general fields using the old endpoint
+         const res2 = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+           method: "PUT",
+           headers: authHeaders(),
+           body: JSON.stringify(profile)
+         });
+         if (res2.ok) {
+           alert("Settings saved!");
+           fetchProfile();
+         }
+      }
     } catch (err) { console.error(err); }
   };
 
@@ -211,7 +259,7 @@ export default function RestaurantSettings({
         method: "DELETE",
         headers: authHeaders()
       });
-      if (res.ok) fetchProfile();
+      if (res.ok) fetchLocations();
     } catch (err) { console.error(err); }
   };
 
@@ -228,20 +276,30 @@ export default function RestaurantSettings({
         body: JSON.stringify(editingLocation)
       });
       if (res.ok) {
+        fetchLocations();
         setShowLocationModal(false);
-        fetchProfile();
       }
     } catch(err) { console.error(err); }
   };
 
   const saveNotifications = async () => {
     try {
-      await fetch(`${API_BASE}/restaurant-panel/settings/notifications`, {
+      const notificationPreferences: any = {};
+      data.forEach(item => {
+        const key = mapTitleToKey(item.title);
+        if (key) {
+           notificationPreferences[key] = { email: item.email, sms: item.sms };
+        }
+      });
+      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify({ notifications: data })
+        body: JSON.stringify({ notificationPreferences })
       });
-      alert("Notifications saved!");
+      if (res.ok) {
+        alert("Notifications saved!");
+        fetchProfile();
+      }
     } catch (err) { console.error(err); }
   };
 
@@ -894,10 +952,7 @@ export default function RestaurantSettings({
               </p>
             </div>
 
-            <button onClick={() => {
-              const email = prompt("Enter email to invite:");
-              if (email) alert(`Invitation sent to ${email}`);
-            }} className="flex items-center gap-2 bg-[#009966] text-white px-5 py-2.5 rounded-lg shadow">
+            <button onClick={() => setShowInviteModal(true)} className="flex items-center gap-2 bg-[#009966] text-white px-5 py-2.5 rounded-lg shadow">
               <Users size={16} />
               Invite Member
             </button>
@@ -917,7 +972,7 @@ export default function RestaurantSettings({
                       <p className="font-playfair text-lg">{m.name}</p>
 
                       <span
-                        className={`px-2 py-1 text-xs rounded-full ${roleStyles[m.role]}`}
+                        className={`px-2 py-1 text-xs rounded-full ${roleStyles[m.role] || "bg-[#F1F5F9] text-[#64748B]"}`}
                       >
                         {m.role}
                       </span>
@@ -952,6 +1007,63 @@ export default function RestaurantSettings({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-playfair text-2xl font-bold text-[#0F172A]">Invite Team Member</h3>
+              <button onClick={() => setShowInviteModal(false)} className="text-[#64748B] hover:text-[#0F172A]">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[#1E293B] mb-1">Name</label>
+                <input type="text" value={inviteForm.name} onChange={e => setInviteForm({...inviteForm, name: e.target.value})} className="w-full border border-[#E2E8F0] rounded-lg px-4 py-2 focus:outline-none focus:border-[#009966]" placeholder="e.g. John Doe" />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-[#1E293B] mb-1">Email Address</label>
+                <input type="email" value={inviteForm.email} onChange={e => setInviteForm({...inviteForm, email: e.target.value})} className="w-full border border-[#E2E8F0] rounded-lg px-4 py-2 focus:outline-none focus:border-[#009966]" placeholder="john@example.com" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#1E293B] mb-1">Role</label>
+                <select value={inviteForm.role} onChange={e => setInviteForm({...inviteForm, role: e.target.value})} className="w-full border border-[#E2E8F0] rounded-lg px-4 py-2 focus:outline-none focus:border-[#009966]">
+                  <option value="Manager">Manager</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Chef">Chef</option>
+                </select>
+              </div>
+              
+              <button onClick={async () => {
+                try {
+                  const res = await fetch(`${API_BASE}/restaurant-panel/staff`, {
+                    method: "POST",
+                    headers: authHeaders(),
+                    body: JSON.stringify(inviteForm)
+                  });
+                  if (res.ok) {
+                    alert("Member invited successfully! They have been emailed their login code.");
+                    setShowInviteModal(false);
+                    setInviteForm({ name: "", email: "", role: "Staff" });
+                    fetchTeam();
+                  } else {
+                    const errData = await res.json();
+                    alert(errData.message || "Failed to invite member");
+                  }
+                } catch(err) {
+                  console.error(err);
+                  alert("An error occurred");
+                }
+              }} className="w-full bg-[#009966] text-white py-3 rounded-lg font-medium hover:bg-[#008055] transition mt-4">
+                Send Invitation
+              </button>
+            </div>
           </div>
         </div>
       )}

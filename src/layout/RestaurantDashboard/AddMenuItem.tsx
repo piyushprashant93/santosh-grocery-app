@@ -100,11 +100,11 @@ export default function AddMenuItem({
           price: numericSellingPrice,
           ingredients: ingredients.map(i => ({
             name: i.name,
-            unit: i.type === "Solid" ? "g" : "ml", // Just a guess for unit based on type, or we could just use type
+            unit: i.type === "Solid" ? "g" : "ml",
             unitCost: i.unitCost,
             quantityUsed: Number(i.usedQty)
           })),
-          chefRate
+          chefHourlyRate: chefRate
         })
       });
 
@@ -123,12 +123,13 @@ export default function AddMenuItem({
           });
           setFieldErrors(newErrors);
         }
-        throw new Error("Validation failed");
+        throw new Error(data.message || "Validation failed");
       }
 
       setActiveTab("menu-management");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.message || "Failed to save menu item");
     } finally {
       setSaving(false);
     }
