@@ -5,7 +5,7 @@ import SystemHealth from "./SystemHealth"
 import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
-
+import SalesAndAnalytics from "./SalesAndAnalytics"
 export default function AdminChild({
   activeTab,
   setActiveTab
@@ -39,6 +39,10 @@ export default function AdminChild({
 
   if (activeTab === "settings") {
     return <PlatformSettingsLayout />
+  }
+
+  if (activeTab === "sales-analytics") {
+    return <SalesAndAnalytics />
   }
 
   // Fallback for other tabs not yet implemented
