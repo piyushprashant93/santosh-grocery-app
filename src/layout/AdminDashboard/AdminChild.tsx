@@ -7,6 +7,8 @@ import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
+import MarketingLayout from "./Marketing/MarketingLayout"
+
 export default function AdminChild({
   activeTab,
   setActiveTab
@@ -48,6 +50,10 @@ export default function AdminChild({
 
   if (activeTab === "access-control") {
     return <AccessControlLayout />
+  }
+
+  if (activeTab === "marketing") {
+    return <MarketingLayout />
   }
 
   // Fallback for other tabs not yet implemented
