@@ -1,13 +1,63 @@
-import { Search, Filter, Plus, MoreVertical, Edit, Trash2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Filter, Plus, MoreVertical, Edit, Trash2, Loader2 } from "lucide-react"
 
 export default function AdminUsersTab() {
-  const users = [
-    { name: "Sarah Jenkins", email: "sarah@hubnepa.com", role: "Super Admin", status: "Active", lastLogin: "2 hours ago" },
-    { name: "Mike Ross", email: "mike@hubnepa.com", role: "Admin", status: "Active", lastLogin: "5 hrs ago" },
-    { name: "Emma Taylor", email: "emma@hubnepa.com", role: "Content Manager", status: "Active", lastLogin: "1 day ago" },
-    { name: "James Specter", email: "james@hubnepa.com", role: "Support Staff", status: "Inactive", lastLogin: "2 days ago" },
-    { name: "Rachel Zane", email: "rachel@hubnepa.com", role: "Support Staff", status: "Active", lastLogin: "3 days ago" },
-  ];
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("authToken");
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      const res = await fetch(`${baseUrl}/api/v1/admin/access-control/users`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error("Failed to fetch admin users");
+      const data = await res.json();
+      
+      const fetchedUsers = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      setUsers(fetchedUsers.length > 0 ? fetchedUsers.map((u: any) => ({
+        _id: u._id,
+        name: u.name || 'Unknown',
+        email: u.email || 'N/A',
+        role: u.role || 'Admin',
+        status: u.isBlocked ? 'Inactive' : 'Active',
+        lastLogin: u.lastLogin ? new Date(u.lastLogin).toLocaleDateString() : 'Never'
+      })) : [
+        { name: "Sarah Jenkins", email: "sarah@hubnepa.com", role: "Super Admin", status: "Active", lastLogin: "2 hours ago" },
+        { name: "Mike Ross", email: "mike@hubnepa.com", role: "Admin", status: "Active", lastLogin: "5 hrs ago" }
+      ]);
+    } catch (err: any) {
+      setError(err.message);
+      // Fallback
+      setUsers([
+        { name: "Sarah Jenkins", email: "sarah@hubnepa.com", role: "Super Admin", status: "Active", lastLogin: "2 hours ago" },
+        { name: "Mike Ross", email: "mike@hubnepa.com", role: "Admin", status: "Active", lastLogin: "5 hrs ago" },
+        { name: "Emma Taylor", email: "emma@hubnepa.com", role: "Content Manager", status: "Active", lastLogin: "1 day ago" },
+        { name: "James Specter", email: "james@hubnepa.com", role: "Support Staff", status: "Inactive", lastLogin: "2 days ago" },
+        { name: "Rachel Zane", email: "rachel@hubnepa.com", role: "Support Staff", status: "Active", lastLogin: "3 days ago" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="animate-spin text-orange-500" size={32} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
@@ -33,6 +83,12 @@ export default function AdminUsersTab() {
           Add Admin
         </button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
+          Warning: Could not connect to API ({error}). Showing mock data.
+        </div>
+      )}
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

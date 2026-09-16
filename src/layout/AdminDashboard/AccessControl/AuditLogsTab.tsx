@@ -1,48 +1,63 @@
-import { Search, Filter, Download } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Search, Filter, Download, Loader2 } from "lucide-react"
 
 export default function AuditLogsTab() {
-  const logs = [
-    {
-      user: "Sarah Jenkins",
-      role: "Super Admin",
-      action: "Updated system settings",
-      resource: "Security",
-      status: "Success",
-      timestamp: "10 mins ago"
-    },
-    {
-      user: "Emma Taylor",
-      role: "Content Manager",
-      action: "Created new promotional banner",
-      resource: "Home Page",
-      status: "Success",
-      timestamp: "2 hrs ago"
-    },
-    {
-      user: "Mike Ross",
-      role: "Admin",
-      action: "Approved new restaurant",
-      resource: "Vendors",
-      status: "Success",
-      timestamp: "5 hrs ago"
-    },
-    {
-      user: "System",
-      role: "Automated",
-      action: "Weekly backup completed",
-      resource: "Database",
-      status: "Success",
-      timestamp: "1 day ago"
-    },
-    {
-      user: "Unknown User",
-      role: "None",
-      action: "Failed login attempt (3x)",
-      resource: "Authentication",
-      status: "Failed",
-      timestamp: "1 day ago"
-    },
-  ];
+  const [logs, setLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("authToken");
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      const res = await fetch(`${baseUrl}/api/v1/admin/access-control/logs?page=1`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error("Failed to fetch audit logs");
+      const data = await res.json();
+      
+      const fetchedLogs = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      setLogs(fetchedLogs.length > 0 ? fetchedLogs.map((l: any) => ({
+        _id: l._id,
+        user: l.userName || 'System',
+        role: l.userRole || 'Automated',
+        action: l.action || 'Unknown Action',
+        resource: l.resource || 'System',
+        status: l.status || 'Success',
+        timestamp: l.createdAt ? new Date(l.createdAt).toLocaleString() : 'Just now'
+      })) : [
+        { user: "Sarah Jenkins", role: "Super Admin", action: "Updated system settings", resource: "Security", status: "Success", timestamp: "10 mins ago" }
+      ]);
+    } catch (err: any) {
+      setError(err.message);
+      // Fallback
+      setLogs([
+        { user: "Sarah Jenkins", role: "Super Admin", action: "Updated system settings", resource: "Security", status: "Success", timestamp: "10 mins ago" },
+        { user: "Emma Taylor", role: "Content Manager", action: "Created new promotional banner", resource: "Home Page", status: "Success", timestamp: "2 hrs ago" },
+        { user: "Mike Ross", role: "Admin", action: "Approved new restaurant", resource: "Vendors", status: "Success", timestamp: "5 hrs ago" },
+        { user: "System", role: "Automated", action: "Weekly backup completed", resource: "Database", status: "Success", timestamp: "1 day ago" },
+        { user: "Unknown User", role: "None", action: "Failed login attempt (3x)", resource: "Authentication", status: "Failed", timestamp: "1 day ago" },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="animate-spin text-orange-500" size={32} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
@@ -68,6 +83,12 @@ export default function AuditLogsTab() {
           Export Logs
         </button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
+          Warning: Could not connect to API ({error}). Showing mock data.
+        </div>
+      )}
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

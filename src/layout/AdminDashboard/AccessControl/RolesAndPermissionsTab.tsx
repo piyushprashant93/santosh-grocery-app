@@ -1,42 +1,63 @@
-import { Shield, Users, Edit } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Shield, Users, Edit, Loader2 } from "lucide-react"
 
-export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (role: string) => void }) {
-  const roles = [
-    {
-      name: "Super Admin",
-      type: "System Default",
-      admins: 1,
-      description: "Full system access and security controls.",
-      score: 100,
-      iconColor: "text-purple-500",
-      iconBg: "bg-purple-50",
-    },
-    {
-      name: "Admin",
-      type: "System Default",
-      admins: 3,
-      description: "Manage users, partners, and analytics.",
-      score: 95,
-      iconColor: "text-emerald-500",
-      iconBg: "bg-emerald-50",
-    },
-    {
-      name: "Content Manager",
-      type: "Custom",
-      admins: 2,
-      description: "Manage marketing content and CMS.",
-      iconColor: "text-sky-500",
-      iconBg: "bg-sky-50",
-    },
-    {
-      name: "Support Staff",
-      type: "Custom",
-      admins: 5,
-      description: "Manage feedback and support tickets.",
-      iconColor: "text-orange-500",
-      iconBg: "bg-orange-50",
-    },
-  ];
+export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (role: any) => void }) {
+  const [roles, setRoles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const token = localStorage.getItem("authToken");
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      const res = await fetch(`${baseUrl}/api/v1/admin/access-control/roles`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error("Failed to fetch roles");
+      const data = await res.json();
+      
+      const fetchedRoles = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      // Map API data or fallback to some defaults if empty for visual purposes while testing
+      setRoles(fetchedRoles.length > 0 ? fetchedRoles.map((r: any, idx: number) => ({
+        _id: r._id,
+        name: r.name || 'Unnamed Role',
+        type: r.isSystemDefault ? 'System Default' : 'Custom',
+        admins: r.adminCount || 0,
+        description: r.description || 'No description provided.',
+        score: r.securityScore || null,
+        iconColor: idx % 2 === 0 ? "text-emerald-500" : "text-sky-500",
+        iconBg: idx % 2 === 0 ? "bg-emerald-50" : "bg-sky-50",
+      })) : [
+        { name: "Super Admin", type: "System Default", admins: 1, description: "Full system access and security controls.", score: 100, iconColor: "text-purple-500", iconBg: "bg-purple-50" },
+        { name: "Admin", type: "System Default", admins: 3, description: "Manage users, partners, and analytics.", score: 95, iconColor: "text-emerald-500", iconBg: "bg-emerald-50" }
+      ]);
+    } catch (err: any) {
+      setError(err.message);
+      // Fallback to mock data on error so UI doesn't look broken during development without backend
+      setRoles([
+        { name: "Super Admin", type: "System Default", admins: 1, description: "Full system access and security controls.", score: 100, iconColor: "text-purple-500", iconBg: "bg-purple-50" },
+        { name: "Admin", type: "System Default", admins: 3, description: "Manage users, partners, and analytics.", score: 95, iconColor: "text-emerald-500", iconBg: "bg-emerald-50" }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="animate-spin text-orange-500" size={32} />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
@@ -50,7 +71,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
             <div>
               <p className="text-gray-500 text-xs font-medium">Total Roles</p>
-              <h4 className="text-xl font-bold text-gray-900">12</h4>
+              <h4 className="text-xl font-bold text-gray-900">{roles.length}</h4>
             </div>
           </div>
         </div>
@@ -61,7 +82,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
             <div>
               <p className="text-gray-500 text-xs font-medium">Active Admins</p>
-              <h4 className="text-xl font-bold text-gray-900">24</h4>
+              <h4 className="text-xl font-bold text-gray-900">{roles.reduce((acc, r) => acc + (r.admins || 0), 0)}</h4>
             </div>
           </div>
         </div>
@@ -77,6 +98,12 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
           </div>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
+          Warning: Could not connect to API ({error}). Showing mock data.
+        </div>
+      )}
 
       {/* Role Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -108,7 +135,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             <p className="text-sm text-gray-600 mb-6">{role.description}</p>
             <div className="pt-4 border-t border-gray-100 flex justify-end">
               <button 
-                onClick={() => onEditRole(role.name)}
+                onClick={() => onEditRole(role)}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm"
               >
                 <Edit size={16} />

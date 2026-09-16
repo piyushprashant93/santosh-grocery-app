@@ -3,11 +3,11 @@ import { Shield, Users, Activity, FileText } from "lucide-react"
 import RolesAndPermissionsTab from "./RolesAndPermissionsTab"
 import AdminUsersTab from "./AdminUsersTab"
 import AuditLogsTab from "./AuditLogsTab"
-import RoleForm from "./RoleForm"
+import RoleForm, { RoleData } from "./RoleForm"
 
 export default function AccessControlLayout() {
   const [activeTab, setActiveTab] = useState("roles");
-  const [editingRole, setEditingRole] = useState<string | null>(null);
+  const [editingRole, setEditingRole] = useState<RoleData | 'New Role' | null>(null);
 
   const tabs = [
     { id: 'roles', label: 'Roles & Permissions', icon: Shield },
@@ -20,7 +20,7 @@ export default function AccessControlLayout() {
     return (
       <div className="w-full h-full p-4 sm:p-6 overflow-y-auto bg-gray-50/50">
         <RoleForm 
-          roleName={editingRole === 'New Role' ? undefined : editingRole} 
+          roleData={editingRole === 'New Role' ? null : editingRole} 
           onCancel={() => setEditingRole(null)} 
         />
       </div>
