@@ -6,6 +6,7 @@ import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
+import AccessControlLayout from "./AccessControl/AccessControlLayout"
 export default function AdminChild({
   activeTab,
   setActiveTab
@@ -43,6 +44,10 @@ export default function AdminChild({
 
   if (activeTab === "sales-analytics") {
     return <SalesAndAnalytics />
+  }
+
+  if (activeTab === "access-control") {
+    return <AccessControlLayout />
   }
 
   // Fallback for other tabs not yet implemented
