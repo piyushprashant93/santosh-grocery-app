@@ -3,6 +3,11 @@ import UserManagement from "./UserManagement"
 import Notifications from "./Notifications"
 import SystemHealth from "./SystemHealth"
 import PartnerManagement from "./PartnerManagement"
+import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
+import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
+import SalesAndAnalytics from "./SalesAndAnalytics"
+import AccessControlLayout from "./AccessControl/AccessControlLayout"
+import MarketingLayout from "./Marketing/MarketingLayout"
 
 export default function AdminChild({
   activeTab,
@@ -29,6 +34,26 @@ export default function AdminChild({
 
   if (activeTab === "partner-management") {
     return <PartnerManagement />
+  }
+
+  if (activeTab === "restaurant-panel") {
+    return <RestaurantPanelLayout />
+  }
+
+  if (activeTab === "settings") {
+    return <PlatformSettingsLayout />
+  }
+
+  if (activeTab === "sales-analytics") {
+    return <SalesAndAnalytics />
+  }
+
+  if (activeTab === "access-control") {
+    return <AccessControlLayout />
+  }
+
+  if (activeTab === "marketing") {
+    return <MarketingLayout />
   }
 
   // Fallback for other tabs not yet implemented

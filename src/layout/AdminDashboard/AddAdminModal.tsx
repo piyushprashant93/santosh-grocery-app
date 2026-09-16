@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Dialog from "../../components/common/Dialog"
 import { Loader2 } from "lucide-react"
 import api from "../../lib/api"
@@ -27,6 +27,24 @@ export default function AddAdminModal({ isOpen, onClose, onSuccess }: AddAdminMo
     "Restaurant Panel": { view: false, create: false, edit: false, delete: false },
     "Retailer Panel": { view: false, create: false, edit: false, delete: false },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        role: "admin",
+      });
+      setPermissions({
+        "Dashboard": { view: false, create: false, edit: false, delete: false },
+        "User Management": { view: false, create: false, edit: false, delete: false },
+        "Partner Management": { view: false, create: false, edit: false, delete: false },
+        "Restaurant Panel": { view: false, create: false, edit: false, delete: false },
+        "Retailer Panel": { view: false, create: false, edit: false, delete: false },
+      });
+    }
+  }, [isOpen]);
 
   const handlePermissionChange = (moduleName: PermissionKeys, action: 'view' | 'create' | 'edit' | 'delete') => {
     setPermissions(prev => ({

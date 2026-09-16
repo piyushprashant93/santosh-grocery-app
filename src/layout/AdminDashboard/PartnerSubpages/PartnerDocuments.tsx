@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { ArrowLeft, FileText, Image as ImageIcon, Calendar, Download, X, XCircle, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, FileText, Image as ImageIcon, Calendar, Download, X, XCircle, CheckCircle2, Loader2 } from "lucide-react"
+import api from "../../../lib/api"
 
 interface PartnerDocumentsProps {
   partnerId: string;
@@ -39,6 +40,24 @@ const MOCK_DOCS = [
 
 export default function PartnerDocuments({ partnerId, onBack }: PartnerDocumentsProps) {
   const [selectedDoc, setSelectedDoc] = useState<typeof MOCK_DOCS[0] | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleVerifyDocument = async (status: 'Verified' | 'Rejected') => {
+    if (!selectedDoc) return;
+    setLoading(true);
+    try {
+      await api.put(`/api/v1/admin/partners/restaurants/${partnerId}/verify-document`, {
+        documentId: selectedDoc.id,
+        status: status
+      });
+      alert(`Document ${status} successfully!`);
+      setSelectedDoc(null);
+    } catch (err: any) {
+      alert(err.response?.data?.message || err.message || "Failed to verify document");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -151,12 +170,20 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
 
             {/* Modal Footer */}
             <div className="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-white rounded-b-2xl">
-              <button className="flex items-center gap-2 px-5 py-2.5 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition">
-                <XCircle size={18} />
+              <button 
+                onClick={() => handleVerifyDocument('Rejected')}
+                disabled={loading}
+                className="flex items-center gap-2 px-5 py-2.5 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition disabled:opacity-50"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <XCircle size={18} />}
                 Reject Document
               </button>
-              <button className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm">
-                <CheckCircle2 size={18} />
+              <button 
+                onClick={() => handleVerifyDocument('Verified')}
+                disabled={loading}
+                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50"
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
                 Approve & Verify
               </button>
             </div>
