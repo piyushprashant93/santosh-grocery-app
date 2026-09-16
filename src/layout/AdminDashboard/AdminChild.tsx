@@ -4,6 +4,7 @@ import Notifications from "./Notifications"
 import SystemHealth from "./SystemHealth"
 import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
+import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 
 export default function AdminChild({
   activeTab,
@@ -34,6 +35,10 @@ export default function AdminChild({
 
   if (activeTab === "restaurant-panel") {
     return <RestaurantPanelLayout />
+  }
+
+  if (activeTab === "settings") {
+    return <PlatformSettingsLayout />
   }
 
   // Fallback for other tabs not yet implemented
