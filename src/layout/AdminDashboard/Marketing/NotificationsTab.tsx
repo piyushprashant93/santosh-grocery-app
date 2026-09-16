@@ -158,7 +158,6 @@ export default function NotificationsTab() {
             New Push Notification
           </button>
         </div>
-      </div>
 
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
