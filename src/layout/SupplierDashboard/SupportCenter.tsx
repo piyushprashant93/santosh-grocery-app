@@ -196,10 +196,7 @@ export default function HelpSupport() {
       {showChat && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl w-[90%] max-w-[600px] relative">
-            <SupportLiveChat />
-            <button onClick={() => setShowChat(false)} className="absolute top-4 right-16 text-gray-400 hover:text-gray-800 z-50">
-              <X size={20} />
-            </button>
+            <SupportLiveChat onClose={() => setShowChat(false)} />
           </div>
         </div>
       )}

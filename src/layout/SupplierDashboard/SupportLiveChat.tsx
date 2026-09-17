@@ -13,13 +13,15 @@ const authHeaders = () => {
   };
 };
 
-export default function SupportLiveChat() {
+export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const [message, setMessage] = useState("")
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const chatSessionIdRef = useRef<string | null>(null);
+
+  const [debugData, setDebugData] = useState<any>(null);
 
   const fetchChat = async () => {
     try {
@@ -29,14 +31,22 @@ export default function SupportLiveChat() {
         : `${API_BASE}/supplier/support/livechat`;
         
       const res = await fetch(url, { headers: authHeaders() });
-      const data = await res.json();
-      if (data.success && data.data) {
-        const newId = data.data.id || data.data._id;
-        setChatSessionId(newId);
-        chatSessionIdRef.current = newId;
-        setMessages(data.data.messages || []);
+      const text = await res.text();
+      try {
+        const data = JSON.parse(text);
+        if (data.success && data.data) {
+          const sessionObj = data.data.session || data.data;
+          const newId = sessionObj.id || sessionObj._id || sessionObj.sessionId || sessionObj.session_id;
+          if (newId) {
+            setChatSessionId(newId);
+            chatSessionIdRef.current = newId;
+          }
+          setMessages(sessionObj.messages || []);
+        }
+      } catch (parseErr) {
+        console.error("Failed to parse JSON:", text);
       }
-    } catch(err) {
+    } catch(err: any) {
       console.error(err);
     }
   };
@@ -114,9 +124,14 @@ export default function SupportLiveChat() {
             </p>
           </div>
         </div>
-        <button onClick={closeChat} className="text-[#6A7282] hover:text-red-500 transition" title="Close Chat">
-          <X size={20}/>
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={closeChat} className="text-xs text-red-500 hover:text-red-600 font-medium">
+            End Chat
+          </button>
+          <button onClick={onClose} className="text-[#6A7282]">
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-hide px-6 py-6 space-y-6">

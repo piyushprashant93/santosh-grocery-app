@@ -13,7 +13,7 @@ const authHeaders = () => {
   };
 };
 
-export default function SupportLiveChat() {
+export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const [message, setMessage] = useState("")
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
@@ -25,10 +25,11 @@ export default function SupportLiveChat() {
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat`, { headers: authHeaders() });
       const data = await res.json();
-      setDebugData(data); // Save for debugging
       if (data.success && data.data) {
-        setChatSessionId(data.data.id || data.data._id || data.data.sessionId || data.data.session_id);
-        setMessages(data.data.messages || []);
+        const sessionObj = data.data.session || data.data;
+        const newId = sessionObj.id || sessionObj._id || sessionObj.sessionId || sessionObj.session_id;
+        if (newId) setChatSessionId(newId);
+        setMessages(sessionObj.messages || []);
       }
     } catch(err) {
       console.error(err);
@@ -107,9 +108,14 @@ export default function SupportLiveChat() {
             </p>
           </div>
         </div>
-        <button onClick={closeChat} className="text-[#6A7282] hover:text-red-500 transition" title="Close Chat">
-          <X size={20}/>
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={closeChat} className="text-xs text-red-500 hover:text-red-600 font-medium">
+            End Chat
+          </button>
+          <button onClick={onClose} className="text-[#6A7282]">
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-hide px-6 py-6 space-y-6">
@@ -118,12 +124,6 @@ export default function SupportLiveChat() {
             Today
           </span>
         </div>
-
-        {!chatSessionId && debugData && (
-          <div className="text-xs text-red-500 break-words bg-red-50 p-2 rounded">
-            DEBUG: {JSON.stringify(debugData)}
-          </div>
-        )}
 
         {messages.map((m, i) => (
           <div
