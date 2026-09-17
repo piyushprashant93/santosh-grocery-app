@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Calendar, Download } from "lucide-react"
 import { useState, useEffect, useMemo } from "react"
+import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 export default function ReportsAnalytics() {
@@ -30,6 +31,35 @@ export default function ReportsAnalytics() {
   const activeCategoryData = useMemo(() => reportsData?.categoryBreakdown || [], [reportsData]);
   const activeProducts = useMemo(() => reportsData?.topProducts || [], [reportsData]);
 
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting reports...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/reports/export", {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-reports-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+  };
+
   return (
     <div className="space-y-6">
 
@@ -52,7 +82,7 @@ export default function ReportsAnalytics() {
             Last 7 Days
           </button>
 
-          <button className="flex items-center gap-2 bg-[#F54900] text-white rounded-lg px-4 py-2">
+          <button onClick={handleExport} className="flex items-center gap-2 bg-[#F54900] text-white rounded-lg px-4 py-2">
             <Download size={18}/>
             Export Report
           </button>

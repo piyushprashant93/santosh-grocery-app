@@ -31,7 +31,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
             const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
-                setClients(data.data?.clients || data.clients || data.data || []);
+                setClients(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));
             }
         } catch (err) { console.error(err); }
     };

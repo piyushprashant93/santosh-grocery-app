@@ -129,6 +129,10 @@ export default function SupplierSettings() {
           phone: profile.phone || profile.phoneNumber || "",
           address: profile.address || profile.businessAddress || ""
         });
+        if (profile.twoFA !== undefined) setTwoFA(profile.twoFA);
+        if (profile.notifications && Array.isArray(profile.notifications)) {
+          setSettings(profile.notifications);
+        }
       }
     } catch (err) { console.error(err); }
   };
@@ -145,6 +149,33 @@ export default function SupplierSettings() {
       } else {
         alert("Failed to update profile");
       }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleSavePreferences = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ notifications: settings })
+      });
+      if (res.ok) {
+        alert("Preferences saved successfully");
+      } else {
+        alert("Failed to save preferences");
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleToggleTwoFA = async () => {
+    const newValue = !twoFA;
+    setTwoFA(newValue);
+    try {
+      await fetch(`${API_BASE}/supplier/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ twoFA: newValue })
+      });
     } catch (err) { console.error(err); }
   };
 
@@ -450,7 +481,7 @@ export default function SupplierSettings() {
 
 
                 <button
-                  onClick={() => setTwoFA(!twoFA)}
+                  onClick={handleToggleTwoFA}
                   className={`relative w-12 h-6 rounded-full transition ${twoFA ? "bg-[#155DFC]" : "bg-gray-300"
                     }`}
                 >
@@ -552,8 +583,18 @@ export default function SupplierSettings() {
 
                     <div className="flex gap-8">
 
-                      <span className="text-sm text-[#64748B] cursor-pointer">Email</span>
-                      <span className="text-sm text-[#64748B] cursor-pointer">SMS</span>
+                      <span 
+                        onClick={() => toggle(i, "email")}
+                        className={`text-sm cursor-pointer ${settings[i]?.email ? "text-[#155DFC] font-medium" : "text-[#64748B]"}`}
+                      >
+                        Email
+                      </span>
+                      <span 
+                        onClick={() => toggle(i, "sms")}
+                        className={`text-sm cursor-pointer ${settings[i]?.sms ? "text-[#155DFC] font-medium" : "text-[#64748B]"}`}
+                      >
+                        SMS
+                      </span>
 
                     </div>
 
@@ -567,7 +608,7 @@ export default function SupplierSettings() {
 
               <div className="flex justify-end mt-8">
 
-                <button className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 shadow">
+                <button onClick={handleSavePreferences} className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 shadow">
 
                   <Save size={16} />
 

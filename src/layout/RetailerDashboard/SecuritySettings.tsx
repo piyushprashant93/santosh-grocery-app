@@ -1,4 +1,5 @@
 import { useState } from "react"
+import toast from "react-hot-toast"
 
 export default function SecuritySettings() {
 
@@ -15,8 +16,40 @@ export default function SecuritySettings() {
     })
   }
 
-  const handleSubmit = () => {
-    console.log(form)
+  const handleSubmit = async () => {
+    if (!form.currentPassword || !form.newPassword || !form.confirmPassword) {
+      return toast.error("Please fill in all fields");
+    }
+    if (form.newPassword !== form.confirmPassword) {
+      return toast.error("New passwords do not match");
+    }
+
+    try {
+      const toastId = toast.loading("Updating password...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/change-password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          currentPassword: form.currentPassword,
+          newPassword: form.newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || "Password updated successfully", { id: toastId });
+        setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        toast.error(data.message || "Failed to update password", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    }
   }
 
   return (

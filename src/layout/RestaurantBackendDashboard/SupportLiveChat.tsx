@@ -13,19 +13,23 @@ const authHeaders = () => {
   };
 };
 
-export default function SupportLiveChat() {
+export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const [message, setMessage] = useState("")
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const [debugData, setDebugData] = useState<any>(null);
 
   const fetchChat = async () => {
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat`, { headers: authHeaders() });
       const data = await res.json();
       if (data.success && data.data) {
-        setChatSessionId(data.data.id || data.data._id);
-        setMessages(data.data.messages || []);
+        const sessionObj = data.data.session || data.data;
+        const newId = sessionObj.id || sessionObj._id || sessionObj.sessionId || sessionObj.session_id;
+        if (newId) setChatSessionId(newId);
+        setMessages(sessionObj.messages || []);
       }
     } catch(err) {
       console.error(err);
@@ -44,21 +48,33 @@ export default function SupportLiveChat() {
 
   const sendMessage = async () => {
     if (!message.trim() || !chatSessionId) return;
+    
+    const tempMessage = message;
+    setMessage("");
+    
+    // Optimistic UI update
+    setMessages(prev => [...prev, { 
+      message: tempMessage, 
+      senderType: "restaurant", 
+      createdAt: new Date().toISOString() 
+    }]);
+
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message: tempMessage })
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage("");
         fetchChat();
       } else {
         toast.error(parseApiError(data, "Failed to send message"));
+        fetchChat();
       }
     } catch(err) {
       console.error(err);
+      fetchChat();
     }
   };
 
@@ -92,9 +108,14 @@ export default function SupportLiveChat() {
             </p>
           </div>
         </div>
-        <button onClick={closeChat} className="text-[#6A7282] hover:text-red-500 transition" title="Close Chat">
-          <X size={20}/>
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={closeChat} className="text-xs text-red-500 hover:text-red-600 font-medium">
+            End Chat
+          </button>
+          <button onClick={onClose} className="text-[#6A7282]">
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-hide px-6 py-6 space-y-6">

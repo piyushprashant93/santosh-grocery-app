@@ -46,9 +46,9 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
       trendText: ""
     },
     {
-      title: "Total Orders",
-      value: (dashboardData.totalOrders || 0).toLocaleString(),
-      change: "Lifetime",
+      title: "Pending Orders",
+      value: (dashboardData.pendingOrdersCount || 0).toLocaleString(),
+      change: "Active",
       icon: ShoppingBag,
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
@@ -56,13 +56,13 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
       trendText: "orders"
     },
     {
-      title: "Total Products",
-      value: (dashboardData.totalProducts || 0).toLocaleString(),
-      change: "Active",
+      title: "Low Stock Items",
+      value: (dashboardData.lowStockItems || 0).toLocaleString(),
+      change: "Needs attention",
       icon: Package,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-600",
-      trend: "up",
+      trend: "down",
       trendText: "catalog"
     },
     {

@@ -144,7 +144,7 @@ export default function RestaurantBackendSettings({
       const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setLocationsData(data.data?.locations || data.locations || data.data || []);
+        setLocationsData(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
       }
     } catch(err) { console.error(err); }
   };
@@ -154,7 +154,7 @@ export default function RestaurantBackendSettings({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setMembers(data.data?.staff || data.staff || data.data || []);
+        setMembers(data.data?.staff || data.staff || (Array.isArray(data.data) ? data.data : []));
       }
     } catch(err) { console.error(err); }
   };

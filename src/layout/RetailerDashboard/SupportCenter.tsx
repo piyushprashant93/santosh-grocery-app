@@ -226,7 +226,7 @@ export default function SupportCenter() {
       )}
 
       {activeTab === "chat" && (
-        <SupportLiveChat />
+        <SupportLiveChat onClose={() => setActiveTab("tickets")} />
       )}
 
       {activeTab === "faq" && (

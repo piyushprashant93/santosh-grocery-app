@@ -64,7 +64,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
       });
       if (res.ok) {
         const data = await res.json();
-        setMenuItems(data.data?.menu || data.menu || data.data || []);
+        const items = data.data?.menu || data.menu || (Array.isArray(data.data) ? data.data : []);
+        setMenuItems(Array.isArray(items) ? items : []);
       } else {
         const err = await res.json();
         setError(err.message || "Failed to fetch menu");

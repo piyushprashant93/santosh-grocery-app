@@ -22,12 +22,50 @@ const authHeaders = () => {
 };
 
 export default function Logistics() {
+  const [logisticsData, setLogisticsData] = useState<any[]>([]);
+  const [fleetData, setFleetData] = useState<any[]>([]);
+  const [openAssignDriver, setOpenAssignDriver] = useState(false);
+
+  const statusStyles: any = {
+    "In Transit": "bg-blue-100 text-blue-700",
+    Loading: "bg-yellow-100 text-yellow-700",
+    Delivered: "bg-green-100 text-green-700",
+    Pending: "bg-gray-200 text-gray-600"
+  };
+
+  const fetchLogistics = async () => {
+    try {
+      const [logisticsRes, driversRes] = await Promise.all([
+        fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() }),
+        fetch(`${API_BASE}/supplier/logistics/drivers`, { headers: authHeaders() })
+      ]);
+      if (logisticsRes.ok) {
+        const data = await logisticsRes.json();
+        const shipments = data.data || data;
+        setLogisticsData(Array.isArray(shipments) ? shipments : (Array.isArray(shipments.data) ? shipments.data : []));
+      }
+      if (driversRes.ok) {
+        const d = await driversRes.json();
+        setFleetData(Array.isArray(d.data) ? d.data : []);
+      }
+    } catch(err) { console.error(err); }
+  };
+
+  useEffect(() => {
+    fetchLogistics();
+  }, []);
+
+  const activeShipments = logisticsData.filter(d => d.status !== "Delivered").length;
+  const delayedShipments = logisticsData.filter(d => d.status === "Delayed").length;
+  
+  const availableDrivers = fleetData.filter(d => d.isOnline).length;
+  const totalDrivers = fleetData.length || 1;
 
   const stats = [
     {
       title: "ACTIVE SHIPMENTS",
-      value: "14",
-      note: "2 Delayed",
+      value: activeShipments.toString(),
+      note: `${delayedShipments} Delayed`,
       icon: Package,
       color: "text-blue-600"
     },
@@ -40,8 +78,8 @@ export default function Logistics() {
     },
     {
       title: "FLEET AVAILABILITY",
-      value: "8/10",
-      note: "2 in maintenance",
+      value: `${availableDrivers}/${totalDrivers}`,
+      note: `${totalDrivers - availableDrivers} unavailable`,
       icon: Truck,
       color: "text-orange-500"
     },
@@ -52,109 +90,7 @@ export default function Logistics() {
       icon: Calendar,
       color: "text-purple-600"
     }
-  ]
-
-  const fleet = [
-    {
-      vehicle: "Ford Transit #1",
-      driver: "Mike Ross",
-      status: "ON ROUTE",
-      location: "In Transit to Zone A",
-      progress: 65
-    },
-    {
-      vehicle: "Isuzu Box Truck",
-      driver: "John Doe",
-      status: "LOADING",
-      location: "Warehouse Dock 3",
-      progress: 88
-    },
-    {
-      vehicle: "Ford Transit #2",
-      driver: "Jane Smith",
-      status: "IDLE",
-      location: "Parking Lot B",
-      progress: 45
-    },
-    {
-      vehicle: "Rivian Van",
-      driver: "Alex Chen",
-      status: "ON ROUTE",
-      location: "Returning to HQ",
-      progress: 72
-    }
-  ]
-
-  const deliveries = [
-    {
-      id: "SHP-2891",
-      client: "Urban Bistro Group",
-      address: "123 Main St, Downtown",
-      status: "In Transit",
-      driver: "Mike Ross",
-      vehicle: "Ford Transit #1",
-      progress: 65,
-      eta: "25 min"
-    },
-    {
-      id: "SHP-2892",
-      client: "Whole Foods Local",
-      address: "45 Westside Ave, NY",
-      status: "Loading",
-      driver: "John Doe",
-      vehicle: "Isuzu Box Truck",
-      progress: 10,
-      eta: "2 hrs"
-    },
-    {
-      id: "SHP-2890",
-      client: "Sushi Zen",
-      address: "88 SoHo Blvd, NY",
-      status: "Delivered",
-      driver: "Alex Chen",
-      vehicle: "Rivian Van",
-      progress: 100,
-      eta: "Done"
-    },
-    {
-      id: "SHP-2893",
-      client: "Green Grocers",
-      address: "Queens Blvd, NY",
-      status: "Pending",
-      driver: "Pending",
-      vehicle: "-",
-      progress: 0,
-      eta: "Tomorrow"
-    }
-  ]
-
-  const statusStyles: any = {
-    "In Transit": "bg-blue-100 text-blue-700",
-    Loading: "bg-yellow-100 text-yellow-700",
-    Delivered: "bg-green-100 text-green-700",
-    Pending: "bg-gray-200 text-gray-600"
-  }
-
-  const [logisticsData, setLogisticsData] = useState<any>(null);
-
-  const fetchLogistics = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
-      if (res.ok) {
-        const data = await res.json();
-        setLogisticsData(data.data || data);
-      }
-    } catch(err) { console.error(err); }
-  };
-
-  useEffect(() => {
-    fetchLogistics();
-  }, []);
-
-  const deliveriesData = logisticsData?.manifests || logisticsData?.deliveries || deliveries;
-  const fleetData = logisticsData?.fleet || fleet;
-
-  const [openAssignDriver, setOpenAssignDriver] = useState(false);
+  ];
   
 
   return (
@@ -188,9 +124,11 @@ export default function Logistics() {
           </button>
 
           <AssignDriverModal
-                    open={openAssignDriver}
-                    onClose={() => setOpenAssignDriver(false)}
-                  />
+            open={openAssignDriver}
+            onClose={() => setOpenAssignDriver(false)}
+            deliveries={logisticsData}
+            onAssignSuccess={fetchLogistics}
+          />
 
         </div>
 
@@ -261,28 +199,28 @@ export default function Logistics() {
             <div key={f._id || i} className="border-b pb-4 last:border-none">
 
               <p className="font-medium">
-                {f.vehicle || f.name || "Vehicle"}
+                {f.name || f.firstName || "Driver"} {f.plateNumber ? `(${f.plateNumber})` : ""}
               </p>
 
               <p className="text-sm text-[#64748B]">
-                {f.driver || "No Driver"}
+                {f.vehicle || "No Vehicle Assigned"}
               </p>
 
               <p className="text-sm text-[#64748B] mt-1">
-                {f.location || "Unknown"}
+                {f.isOnline ? "Online" : "Offline"}
               </p>
 
               <div className="flex items-center gap-2 mt-2">
 
                 <div className="flex-1 bg-gray-200 h-2 rounded-full">
                   <div
-                    style={{ width: `${f.progress || 0}%` }}
-                    className="bg-[#155DFC] h-2 rounded-full"
+                    style={{ width: `${f.isOnline ? 100 : 0}%` }}
+                    className={`${f.isOnline ? 'bg-green-500' : 'bg-gray-400'} h-2 rounded-full`}
                   />
                 </div>
 
                 <span className="text-sm text-[#64748B]">
-                  {f.progress || 0}%
+                  {f.isOnline ? "Available" : "Offline"}
                 </span>
 
               </div>
@@ -290,6 +228,10 @@ export default function Logistics() {
             </div>
 
           ))}
+
+          {fleetData.length === 0 && (
+            <p className="text-[#64748B] text-center text-sm py-4">No drivers found.</p>
+          )}
 
         </div>
 
@@ -327,7 +269,7 @@ export default function Logistics() {
 
           <div className="space-y-6">
 
-            {deliveriesData.map((d: any, i: number) => (
+            {logisticsData.map((d: any, i: number) => (
 
               <div key={d._id || i} className="grid grid-cols-4 gap-4 items-center border-b pb-5 last:border-none">
 
@@ -338,7 +280,7 @@ export default function Logistics() {
                   </p>
 
                   <p className="text-sm text-[#64748B]">
-                    {d.client || d.clientName || (d.orders?.length > 0 ? `${d.orders.length} Orders` : "Unknown")}
+                    {d.client || d.clientName || (d.orders?.length > 0 ? `${d.orders.length} Orders` : "No Orders")}
                   </p>
 
                   <p className="text-xs text-[#94A3B8]">
