@@ -19,12 +19,21 @@ export default function SupportLiveChat() {
   const [messages, setMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const chatSessionIdRef = useRef<string | null>(null);
+
   const fetchChat = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/support/livechat`, { headers: authHeaders() });
+      const currentId = chatSessionIdRef.current;
+      const url = currentId 
+        ? `${API_BASE}/supplier/support/livechat/${currentId}`
+        : `${API_BASE}/supplier/support/livechat`;
+        
+      const res = await fetch(url, { headers: authHeaders() });
       const data = await res.json();
       if (data.success && data.data) {
-        setChatSessionId(data.data.id || data.data._id);
+        const newId = data.data.id || data.data._id;
+        setChatSessionId(newId);
+        chatSessionIdRef.current = newId;
         setMessages(data.data.messages || []);
       }
     } catch(err) {
@@ -34,7 +43,7 @@ export default function SupportLiveChat() {
 
   useEffect(() => {
     fetchChat();
-    const interval = setInterval(fetchChat, 10000); // Polling every 10s
+    const interval = setInterval(fetchChat, 4000); // Poll every 4s
     return () => clearInterval(interval);
   }, []);
 
@@ -72,6 +81,7 @@ export default function SupportLiveChat() {
       toast.success("Chat session closed.");
       setMessages([]);
       setChatSessionId(null);
+      chatSessionIdRef.current = null;
       fetchChat();
     } catch(err) {
       console.error(err);

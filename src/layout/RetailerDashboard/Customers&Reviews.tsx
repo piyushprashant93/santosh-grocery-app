@@ -52,6 +52,7 @@ export default function CustomersandReviews() {
 
     const [tab, setTab] = useState("customers");
     const [customersData, setCustomersData] = useState<any[]>([]);
+    const [reviewsData, setReviewsData] = useState<any[]>(reviews); // fallback to mock
 
     useEffect(() => {
         const fetchCustomers = async () => {
@@ -73,8 +74,54 @@ export default function CustomersandReviews() {
                 console.error(err);
             }
         };
+
+        const fetchReviews = async () => {
+            try {
+                const token = localStorage.getItem("authToken");
+                const res = await fetch(`${API_BASE}/retailer/reviews`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(token ? { Authorization: `Bearer ${token}` } : {})
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const payload = data.data || data;
+                    const arr = Array.isArray(payload) ? payload : (Array.isArray(payload.reviews) ? payload.reviews : []);
+                    if (arr.length > 0) setReviewsData(arr);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
         fetchCustomers();
+        fetchReviews();
     }, []);
+
+    const handleExport = async () => {
+        try {
+            const token = localStorage.getItem("authToken");
+            const res = await fetch(`${API_BASE}/retailer/customers/export`, {
+                headers: {
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                }
+            });
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `retailer-customers-${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -93,7 +140,7 @@ export default function CustomersandReviews() {
 
                 <div className="flex gap-3">
 
-                    <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+                    <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
                         <Download size={16} />
                         Export CSV
                     </button>
@@ -364,10 +411,10 @@ export default function CustomersandReviews() {
 
                     <div className="space-y-4">
 
-                        {reviews.map((r, i) => (
+                        {reviewsData.map((r, i) => (
 
                             <div
-                                key={i}
+                                key={r._id || i}
                                 className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
                             >
 
@@ -376,18 +423,18 @@ export default function CustomersandReviews() {
                                     <div className="flex items-center gap-3">
 
                                         <img
-                                            src={r.avatar}
+                                            src={r.avatar || r.profilePicture || "https://randomuser.me/api/portraits/lego/1.jpg"}
                                             className="w-10 h-10 rounded-full object-cover"
                                         />
 
                                         <div>
 
                                             <p className="font-medium text-[#111827]">
-                                                {r.name}
+                                                {r.name || r.userName || "Anonymous"}
                                             </p>
 
                                             <p className="text-sm text-[#6A7282]">
-                                                purchased <span className="text-[#F54900]">{r.product}</span>
+                                                purchased <span className="text-[#F54900]">{r.product || r.productName || "a product"}</span>
                                             </p>
 
                                         </div>
@@ -395,7 +442,7 @@ export default function CustomersandReviews() {
                                     </div>
 
                                     <span className="text-sm text-[#6A7282]">
-                                        {r.time}
+                                        {r.time || (r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "Recently")}
                                     </span>
 
                                 </div>
@@ -408,8 +455,8 @@ export default function CustomersandReviews() {
                                         <Star
                                             key={star}
                                             size={18}
-                                            fill={star <= r.rating ? "#F97316" : "transparent"}
-                                            className={star <= r.rating ? "text-[#F97316]" : "text-gray-300"}
+                                            fill={star <= (r.rating || 5) ? "#F97316" : "transparent"}
+                                            className={star <= (r.rating || 5) ? "text-[#F97316]" : "text-gray-300"}
                                         />
                                     ))}
 
@@ -418,7 +465,7 @@ export default function CustomersandReviews() {
 
 
                                 <p className="mt-3 text-[#374151]">
-                                    "{r.message}"
+                                    "{r.message || r.comment || "No comment provided."}"
                                 </p>
 
 
@@ -427,7 +474,7 @@ export default function CustomersandReviews() {
 
                                     <div className="flex items-center gap-2">
                                         <ThumbsUp size={16} />
-                                        {r.helpful} found this helpful
+                                        {r.helpful || 0} found this helpful
                                     </div>
 
                                     <button className="text-[#F54900] font-medium">

@@ -188,9 +188,11 @@ export default function Logistics() {
           </button>
 
           <AssignDriverModal
-                    open={openAssignDriver}
-                    onClose={() => setOpenAssignDriver(false)}
-                  />
+            open={openAssignDriver}
+            onClose={() => setOpenAssignDriver(false)}
+            deliveries={deliveriesData}
+            onAssignSuccess={fetchLogistics}
+          />
 
         </div>
 

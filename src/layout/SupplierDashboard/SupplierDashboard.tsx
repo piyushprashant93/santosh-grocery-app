@@ -134,7 +134,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     },
     {
       title: "Active Orders",
-      value: dashboardData?.activeOrdersCount || "0",
+      value: dashboardData?.activeOrders || "0",
       change: dashboardData?.ordersChange || "+0",
       icon: Package,
       iconBg: "bg-green-100",
@@ -143,7 +143,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     },
     {
       title: "Low Stock Items",
-      value: dashboardData?.lowStockCount || "0",
+      value: dashboardData?.lowStock || "0",
       change: dashboardData?.stockChange || "-0",
       icon: AlertTriangle,
       iconBg: "bg-orange-100",
@@ -313,12 +313,12 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                             <div className="flex items-center gap-3">
 
                               <img
-                                src={o.image}
+                                src={o.image || o.img || o.client?.image || o.restaurant?.image || "https://picsum.photos/40?1"}
                                 className="w-10 h-10 min-w-10 rounded-full object-cover"
                               />
 
                               <p className="font-medium text-[#334155]">
-                                {o.client}
+                                {o.client?.name || o.restaurant?.name || o.client || "Unknown Client"}
                               </p>
 
                             </div>
@@ -327,12 +327,12 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
                           <td className="py-5 text-[#64748B] max-w-[220px]">
-                            {o.item}
+                            {o.item || (o.items?.length ? `${o.items.length} Items` : (o.totalItems ? `${o.totalItems} Items` : "Items N/A"))}
                           </td>
 
 
                           <td className="py-5 font-semibold text-[#0F172A]">
-                            {o.amount}
+                            {typeof o.amount === "number" ? `$${o.amount.toFixed(2)}` : (o.total ? `$${o.total.toFixed(2)}` : o.amount || "$0.00")}
                           </td>
 
                         </tr>
@@ -349,27 +349,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
             </div>
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
 
-              <h3 className="text-xl font-playfair mb-4">
-                Live Fleet Tracking
-              </h3>
-
-              <div className="relative">
-
-                <img
-                  src={mapImage}
-                  className="rounded-lg w-full h-[300px] object-cover"
-                />
-
-                <div className="absolute right-4 top-4 bg-white rounded-lg shadow px-4 py-2 flex items-center gap-2">
-                  <Truck size={16} />
-                  <span className="text-sm">12 Vehicles Active</span>
-                </div>
-
-              </div>
-
-            </div>
           </div>
           <div className="space-y-5">
 
@@ -381,79 +361,35 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
               <div className="space-y-4">
 
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
+                {(dashboardData?.lowStockItems || []).map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
 
-                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
 
-                    <img
-                      src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
+                      <img
+                        src={item.image || "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
 
-                    <div>
-                      <p className="font-medium">Organic Rice 50kg</p>
-                      <p className="text-sm text-[#64748B]">
-                        5 units remaining
-                      </p>
+                      <div>
+                        <p className="font-medium">{item.name || item.productName}</p>
+                        <p className="text-sm text-[#64748B]">
+                          {item.stock} units remaining
+                        </p>
+                      </div>
+
                     </div>
 
-                  </div>
-
-                  <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-md">
-                    Critical
-                  </span>
-
-                </div>
-
-
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
-
-                  <div className="flex items-center gap-3">
-
-                    <img
-                      src="https://images.unsplash.com/photo-1600788907416-456578634209?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-
-                    <div>
-                      <p className="font-medium">Almond Milk Bulk</p>
-                      <p className="text-sm text-[#64748B]">
-                        12 crates remaining
-                      </p>
-                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-md ${item.stock <= 5 ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}>
+                      {item.stock <= 5 ? "Critical" : "Low"}
+                    </span>
 
                   </div>
+                ))}
 
-                  <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-md">
-                    Low
-                  </span>
-
-                </div>
-
-
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
-
-                  <div className="flex items-center gap-3">
-
-                    <img
-                      src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-
-                    <div>
-                      <p className="font-medium">Frozen Berries</p>
-                      <p className="text-sm text-[#64748B]">
-                        8 boxes remaining
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-md">
-                    Low
-                  </span>
-
-                </div>
+                {(!dashboardData?.lowStockItems || dashboardData.lowStockItems.length === 0) && (
+                  <p className="text-[#64748B] text-sm py-4">No low stock items.</p>
+                )}
 
               </div>
 
@@ -473,84 +409,36 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
               <div className="space-y-5">
 
-                <div className="flex items-center justify-between">
+                {(dashboardData?.topClients || []).map((client: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between">
 
-                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
 
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      U
+                      <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
+                        {(client.name || "C").charAt(0).toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className="font-medium">
+                          {client.name}
+                        </p>
+                        <p className="text-sm text-[#64748B]">
+                          Vol: {client.volume || "$0/mo"}
+                        </p>
+                      </div>
+
                     </div>
 
-                    <div>
-                      <p className="font-medium">
-                        Urban Bistro Group
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $45k/mo
-                      </p>
-                    </div>
+                    <span className={`${client.growth && client.growth.startsWith("-") ? 'text-red-500' : 'text-green-600'} text-sm font-medium`}>
+                      {client.growth || "+0%"}
+                    </span>
 
                   </div>
+                ))}
 
-                  <span className="text-green-600 text-sm font-medium">
-                    +5%
-                  </span>
-
-                </div>
-
-
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      W
-                    </div>
-
-                    <div>
-                      <p className="font-medium">
-                        Whole Foods Local
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $32k/mo
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-green-600 text-sm font-medium">
-                    +12%
-                  </span>
-
-                </div>
-
-
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      F
-                    </div>
-
-                    <div>
-                      <p className="font-medium">
-                        Fresh Eats Chain
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $28k/mo
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-red-500 text-sm font-medium">
-                    -2%
-                  </span>
-
-                </div>
+                {(!dashboardData?.topClients || dashboardData.topClients.length === 0) && (
+                  <p className="text-[#64748B] text-sm py-2">No top clients data available.</p>
+                )}
 
               </div>
 

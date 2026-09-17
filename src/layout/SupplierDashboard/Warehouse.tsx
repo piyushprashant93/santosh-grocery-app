@@ -35,6 +35,7 @@ export default function Warehouse() {
   const [zonesData, setZonesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchWarehouse = async () => {
     try {
@@ -67,6 +68,15 @@ export default function Warehouse() {
   useEffect(() => {
     fetchWarehouse();
   }, []);
+
+  const filteredItems = itemsData.filter(i => {
+    const name = i.name || i.product?.name || i.product?.title || "";
+    const sku = i.sku || i.product?.sku || i._id || "";
+    const location = i.location || i.bin || "";
+    return name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           sku.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           location.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="space-y-6">
@@ -160,6 +170,8 @@ export default function Warehouse() {
               <input
                 placeholder="Search SKU, Product, or Bin..."
                 className="px-3 py-2 outline-none text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
@@ -185,7 +197,7 @@ export default function Warehouse() {
             </thead>
 
             <tbody>
-              {itemsData.length > 0 ? itemsData.map((i, index) => (
+              {filteredItems.length > 0 ? filteredItems.map((i, index) => (
                 <tr key={i._id || index} className="border-b last:border-none">
                   <td className="py-5">
                     <div className="flex items-center gap-3">

@@ -1,5 +1,6 @@
 import { Download, Wallet, Clock, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -44,6 +45,35 @@ export default function FinanceWallet() {
     } catch(err) { console.error(err); }
   };
 
+  const handleDownloadStatement = async () => {
+    try {
+      const toastId = toast.loading("Downloading statement...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API_BASE}/retailer/finance/statement`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-finance-statement-${new Date().toISOString().split('T')[0]}.pdf`; // Assuming PDF or CSV
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Download successful", { id: toastId });
+      } else {
+        toast.error("Download failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Download failed");
+    }
+  };
+
   const resolvedTransactions = financeData?.transactions || [];
 
   const statusStyles: any = {
@@ -66,7 +96,7 @@ export default function FinanceWallet() {
           </p>
         </div>
 
-        <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+        <button onClick={handleDownloadStatement} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
           <Download size={18} />
           Download Statement
         </button>

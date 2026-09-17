@@ -22,6 +22,8 @@ const stats = [
 export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [ordersData, setOrdersData] = useState<any[]>([]);
   const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All Filters");
 
   const fetchOrders = async () => {
     try {
@@ -66,29 +68,44 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     Cancelled: "bg-red-100 text-red-600"
   };
 
-  const handleExport = () => {
-    if (ordersData.length === 0) return toast.error("No orders to export");
-    const headers = ["Order ID", "Date", "Client", "Items", "Amount", "Status"];
-    const csvRows = [];
-    csvRows.push(headers.join(","));
-    ordersData.forEach(o => {
-      const id = o.id || o.orderId || o._id;
-      const date = o.date ? new Date(o.date).toLocaleDateString() : (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : "");
-      const client = o.client || o.client?.name || o.restaurant?.name || "Unknown Client";
-      const items = o.items || o.totalItems || o.items?.length || 0;
-      const amount = typeof o.amount === "number" ? o.amount.toFixed(2) : (o.total ? o.total.toFixed(2) : o.amount);
-      const status = o.status || "New";
-      csvRows.push([id, date, client, items, amount, status].map(v => `"${String(v).replace(/"/g, '""')}"`).join(","));
-    });
-    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `supplier-orders-export-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    toast.success("Export successful!");
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting orders...");
+      const res = await fetch(`${API_BASE}/supplier/orders/export`, { headers: authHeaders() });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `supplier-orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
   };
+
+  const filteredOrders = ordersData.filter(o => {
+    const id = o.id || o.orderId || o._id || "";
+    const client = o.client || o.client?.name || o.restaurant?.name || "";
+    const status = o.status || "New";
+
+    const matchesSearch = 
+      id.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      client.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      status.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === "All Filters" || status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="space-y-6">
@@ -156,13 +173,24 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
           <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 flex-1">
             <Search size={18} className="text-[#64748B]" />
-            <input placeholder="Search by Order ID, Client, or Status..." className="w-full px-3 py-2 outline-none text-sm" />
+            <input 
+              placeholder="Search by Order ID, Client, or Status..." 
+              className="w-full px-3 py-2 outline-none text-sm" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
 
-          <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 shadow-sm flex items-center gap-2">
-            <Filter size={16} />
-            All Filters
-          </button>
+          <select 
+            className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none shadow-sm"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="All Filters">All Filters</option>
+            {["New", "Pending", "Processing", "In Transit", "Delivered", "Cancelled"].map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
 
         </div>
 
@@ -187,7 +215,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
             <tbody>
 
-              {ordersData.length > 0 ? ordersData.map((o, i) => (
+              {filteredOrders.length > 0 ? filteredOrders.map((o, i) => (
                 <tr key={o._id || i} className="border-b last:border-none">
                   <td className="py-5">
 

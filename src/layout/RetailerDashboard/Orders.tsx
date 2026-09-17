@@ -53,6 +53,35 @@ export default function Orders() {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting orders...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API_BASE}/retailer/orders/export`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-orders-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+  };
+
   const statusStyles: any = {
     Pending: "bg-yellow-100 text-yellow-700",
     Processing: "bg-blue-100 text-blue-700",
@@ -97,7 +126,7 @@ export default function Orders() {
               Status: All
             </button>
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+            <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
               <Download size={16} />
               Export CSV
             </button>
