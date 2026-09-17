@@ -141,7 +141,14 @@ export default function ShipmentHistory({
               className="flex items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm"
             >
               <Calendar size={18} />
-              Select Range
+              {startDate && endDate 
+                ? `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`
+                : startDate 
+                ? `From ${new Date(startDate).toLocaleDateString()}`
+                : endDate 
+                ? `Until ${new Date(endDate).toLocaleDateString()}`
+                : "Select Range"
+              }
             </button>
             {openRange && (
                 <>
