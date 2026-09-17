@@ -1,87 +1,12 @@
-import { DollarSign, Package, Users, AlertTriangle, Truck } from "lucide-react";
+import { DollarSign, Package, Users, AlertTriangle, Truck, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 import mapImage from "../../assets/images/dashboardmap.jpg";
 
-const stats = [
-  {
-    title: "Total Revenue",
-    value: "$124,592",
-    change: "+12.5%",
-    icon: DollarSign,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#155DFC]",
-    trend: "up"
-  },
-  {
-    title: "Active Orders",
-    value: "48",
-    change: "+4",
-    icon: Package,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Low Stock Items",
-    value: "12",
-    change: "-2",
-    icon: AlertTriangle,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
-    trend: "down"
-  },
-  {
-    title: "Active Clients",
-    value: "156",
-    change: "+8",
-    icon: Users,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    trend: "up"
-  }
-]
-
-const orders = [
-  {
-    id: "#ORD-7782",
-    client: "Fresh Market NYC",
-    item: "Organic Avocados (50 crates)",
-    amount: "$4,250",
-    image: "https://picsum.photos/40?1"
-  },
-  {
-    id: "#ORD-7781",
-    client: "Bistro 55",
-    item: "Premium Steak Cuts (200kg)",
-    amount: "$8,900",
-    image: "https://picsum.photos/40?2"
-  },
-  {
-    id: "#ORD-7780",
-    client: "Green Grocers",
-    item: "Seasonal Fruits Mix",
-    amount: "$1,200",
-    image: "https://picsum.photos/40?3"
-  },
-  {
-    id: "#ORD-7779",
-    client: "Sushi Zen",
-    item: "Fresh Salmon (Imported)",
-    amount: "$12,400",
-    image: "https://picsum.photos/40?4"
-  },
-  {
-    id: "#ORD-7778",
-    client: "Daily Mart",
-    item: "Dairy Products Bulk",
-    amount: "$3,150",
-    image: "https://picsum.photos/40?5"
-  }
-]
 
 import { useState, useEffect } from "react";
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -118,49 +43,12 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
       } catch (err) {
         console.error(err);
         setError("Network error occurred.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchDashboard();
   }, []);
-
-  const activeStats = [
-    {
-      title: "Total Revenue",
-      value: dashboardData?.totalRevenue ? `$${dashboardData.totalRevenue.toLocaleString()}` : "$0",
-      change: dashboardData?.revenueChange || "+0%",
-      icon: DollarSign,
-      iconBg: "bg-blue-100",
-      iconColor: "text-[#155DFC]",
-      trend: dashboardData?.revenueTrend || "up"
-    },
-    {
-      title: "Active Orders",
-      value: dashboardData?.activeOrders || "0",
-      change: dashboardData?.ordersChange || "+0",
-      icon: Package,
-      iconBg: "bg-green-100",
-      iconColor: "text-green-600",
-      trend: dashboardData?.ordersTrend || "up"
-    },
-    {
-      title: "Low Stock Items",
-      value: dashboardData?.lowStock || "0",
-      change: dashboardData?.stockChange || "-0",
-      icon: AlertTriangle,
-      iconBg: "bg-orange-100",
-      iconColor: "text-orange-600",
-      trend: dashboardData?.stockTrend || "down"
-    },
-    {
-      title: "Active Clients",
-      value: dashboardData?.activeClients || "0",
-      change: dashboardData?.clientsChange || "+0",
-      icon: Users,
-      iconBg: "bg-purple-100",
-      iconColor: "text-purple-600",
-      trend: dashboardData?.clientsTrend || "up"
-    }
-  ];
 
   const activeOrders = dashboardData?.recentOrders || [];
 
@@ -195,49 +83,65 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
       <div className="">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mb-5">
-
-          {activeStats.map((s, i) => {
-
-            const Icon = s.icon
-
-            return (
-
-              <div
-                key={i}
-                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
-              >
-
-                <div className="flex justify-between">
-
-                  <div>
-
-                    <p className="text-sm text-[#64748B]">
-                      {s.title}
-                    </p>
-
-                    <h3 className="text-xl font-semibold mt-2">
-                      {s.value}
-                    </h3>
-
-                  </div>
-
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${s.iconBg}`}>
-                    <Icon className={s.iconColor} size={18} />
-                  </div>
-
-                </div>
-
-                <p className={`text-sm mt-3 text-gray-400`}>
-                  <span className={`text-sm mt-3 ${s.trend === "up" ? "text-green-600" : "text-red-600"}`}>{s.change}</span> vs last month
-                </p>
-
+        {dashboardData && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-[#64748B]">Revenue</p>
+                <h3 className="text-2xl font-semibold mt-1">${dashboardData.totalRevenue?.toFixed(2) || "0.00"}</h3>
               </div>
-
-            )
-          })}
-
+              <DollarSign className="text-green-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +12.5% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-[#64748B]">Active Orders</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.activeOrders || 0}</h3>
+              </div>
+              <Package className="text-blue-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +5.2% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-[#64748B]">Low Stock Items</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.lowStock || 0}</h3>
+              </div>
+              <AlertCircle className="text-red-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${false ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingDown size={16} className="mr-1" />
+              -2.4% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-[#64748B]">Active Clients</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.activeClients || 0}</h3>
+              </div>
+              <Users className="text-purple-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +8.1% vs last month
+            </p>
+          </div>
         </div>
+      )}
 
         <div className="grid lg:grid-cols-3 gap-5 grid-cols-1">
           <div className="lg:col-span-2">

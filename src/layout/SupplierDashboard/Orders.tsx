@@ -13,12 +13,7 @@ const authHeaders = () => {
   };
 };
 
-const stats = [
-  { label: "Pending", value: 12, color: "bg-blue-100 text-blue-600", icon: Clock },
-  { label: "Processing", value: 8, color: "bg-yellow-100 text-yellow-600", icon: Box },
-  { label: "In Transit", value: 24, color: "bg-indigo-100 text-indigo-600", icon: Truck },
-  { label: "Completed", value: 156, color: "bg-green-100 text-green-600", icon: PackageCheck }
-]
+// Removed static stats array
 
 export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [ordersData, setOrdersData] = useState<any[]>([]);
@@ -105,6 +100,18 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   };
 
   const filteredOrders = ordersData;
+
+  const pendingCount = ordersData.filter(o => o.status === "Pending").length;
+  const processingCount = ordersData.filter(o => o.status === "Processing" || o.status === "New").length;
+  const inTransitCount = ordersData.filter(o => o.status === "In Transit" || o.status === "Shipped").length;
+  const completedCount = ordersData.filter(o => o.status === "Delivered" || o.status === "Completed").length;
+
+  const stats = [
+    { label: "Pending", value: pendingCount, color: "bg-blue-100 text-blue-600", icon: Clock },
+    { label: "Processing", value: processingCount, color: "bg-yellow-100 text-yellow-600", icon: Box },
+    { label: "In Transit", value: inTransitCount, color: "bg-indigo-100 text-indigo-600", icon: Truck },
+    { label: "Completed", value: completedCount, color: "bg-green-100 text-green-600", icon: PackageCheck }
+  ];
 
   return (
     <div className="space-y-6">

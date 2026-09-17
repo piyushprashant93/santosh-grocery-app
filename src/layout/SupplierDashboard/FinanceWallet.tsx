@@ -24,138 +24,11 @@ const authHeaders = () => {
   };
 };
 
-const data = [
-  { month: "Jan", revenue: 45000, profit: 12000 },
-  { month: "Feb", revenue: 52000, profit: 15000 },
-  { month: "Mar", revenue: 48000, profit: 13000 },
-  { month: "Apr", revenue: 61000, profit: 18000 },
-  { month: "May", revenue: 58000, profit: 16500 },
-  { month: "Jun", revenue: 75000, profit: 22000 },
-  { month: "Jul", revenue: 84000, profit: 26000 }
-]
-
-const invoices = [
-  {
-    id: "INV-2024-001",
-    client: "Urban Bistro Group",
-    issued: "Oct 20, 2024",
-    due: "Nov 20, 2024",
-    status: "Paid",
-    amount: "$1,250.00"
-  },
-  {
-    id: "INV-2024-002",
-    client: "Whole Foods Local",
-    issued: "Oct 18, 2024",
-    due: "Nov 18, 2024",
-    status: "Paid",
-    amount: "$4,500.00"
-  },
-  {
-    id: "INV-2024-003",
-    client: "Green Grocers",
-    issued: "Oct 25, 2024",
-    due: "Nov 25, 2024",
-    status: "Unpaid",
-    amount: "$2,100.00"
-  },
-  {
-    id: "INV-2024-004",
-    client: "Sushi Zen",
-    issued: "Oct 26, 2024",
-    due: "Nov 26, 2024",
-    status: "Overdue",
-    amount: "$840.50"
-  }
-]
-
 const statusStyles: any = {
   Paid: "bg-green-100 text-green-700",
   Unpaid: "bg-orange-100 text-orange-700",
   Overdue: "bg-red-100 text-red-700"
 }
-
-const cards = [
-  {
-    title: "Total Balance",
-    value: "$124,592.00",
-    desc: "Total earnings across all channels",
-    icon: <DollarSign size={20} />,
-    iconBg: "bg-[#EEF2FF]",
-    badge: "+12.5%",
-    badgeColor: "text-green-700 bg-green-100",
-  },
-  {
-    title: "Pending Payout",
-    value: "$12,450.00",
-    desc: "Scheduled for Oct 31, 2024",
-    icon: <Clock size={20} />,
-    iconBg: "bg-[#FFF7ED]",
-    badge: "Pending",
-    badgeColor: "text-[#F54900] bg-[#FFF1E6]",
-  },
-  {
-    title: "Last Payout",
-    value: "$8,500.00",
-    desc: "Processed on Oct 24, 2024",
-    icon: <CheckCircle2 size={20} />,
-    iconBg: "bg-[#ECFDF5]",
-    badge: "Paid",
-    badgeColor: "text-[#64748B] bg-[#F1F5F9]",
-  },
-  {
-    title: "Net Profit Margin",
-    value: "24.8%",
-    desc: "Higher than industry average",
-    icon: <BarChart3 size={20} />,
-    iconBg: "bg-[#EEF2FF]",
-    badge: "+2.1%",
-    badgeColor: "text-green-700 bg-green-100",
-  },
-];
-
-const transactions = [
-  {
-    id: "TRX-9921",
-    date: "Oct 24, 2024",
-    desc: "Payout to Bank Account ****4589",
-    status: "Completed",
-    amount: "-$8,500.00",
-    type: "debit"
-  },
-  {
-    id: "TRX-9920",
-    date: "Oct 23, 2024",
-    desc: "Order #ORD-2891 Payment (Urban Bistro)",
-    status: "Completed",
-    amount: "+$1,250.00",
-    type: "credit"
-  },
-  {
-    id: "TRX-9919",
-    date: "Oct 23, 2024",
-    desc: "Order #ORD-2890 Payment (Sushi Zen)",
-    status: "Completed",
-    amount: "+$840.50",
-    type: "credit"
-  },
-  {
-    id: "TRX-9918",
-    date: "Oct 22, 2024",
-    desc: "Logistics Fee (DHL Express)",
-    status: "Pending",
-    amount: "-$320.00",
-    type: "debit"
-  },
-  {
-    id: "TRX-9917",
-    date: "Oct 21, 2024",
-    desc: "Order #ORD-2888 Payment (Whole Foods)",
-    status: "Completed",
-    amount: "+$4,500.00",
-    type: "credit"
-  }
-]
 
 const statusTransStyles: any = {
   Completed: "bg-green-100 text-green-700",
@@ -243,7 +116,7 @@ export default function FinanceWallet() {
       </div>
 
       <div className="grid lg:grid-cols-4 gap-6">
-        {cardsData.map((c: any, i: number) => (
+        {cardsData.length > 0 ? cardsData.map((c: any, i: number) => (
           <div
             key={i}
             className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
@@ -258,17 +131,19 @@ export default function FinanceWallet() {
               <span
                 className={`px-3 py-1 text-xs rounded-full ${c.badgeColor || 'text-gray-700 bg-gray-100'}`}
               >
-                {c.badge}
+                {c.badge || "Status"}
               </span>
             </div>
 
-            <p className="text-[#62748E]">{c.title}</p>
+            <p className="text-[#62748E]">{c.title || "Metric"}</p>
 
-            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `$${c.value.toFixed(2)}` : c.value}</h3>
+            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `$${c.value.toFixed(2)}` : c.value || "-"}</h3>
 
-            <p className="text-[#94A3B8] mt-2 text-sm">{c.desc}</p>
+            <p className="text-[#94A3B8] mt-2 text-sm">{c.desc || ""}</p>
           </div>
-        ))}
+        )) : (
+          <div className="lg:col-span-4 text-center py-6 text-gray-500">No finance cards data available.</div>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-[2fr_1fr] gap-6 items-start">
@@ -470,19 +345,19 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {transactionsData.map((t: any, i: number) => (
+                  {transactionsData.length > 0 ? transactionsData.map((t: any, i: number) => (
                     <tr key={t.id || t._id || i} className="border-b last:border-none">
 
                       <td className="py-4 text-[#64748B]">
-                        {t.id || t._id?.substring(0,8)}
+                        {t.id || t._id?.substring(0,8) || "N/A"}
                       </td>
 
                       <td className="py-4 text-[#64748B]">
-                        {t.date || new Date(t.createdAt).toLocaleDateString()}
+                        {t.date || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "-")}
                       </td>
 
                       <td className="py-4 text-[#0F172A] font-medium">
-                        {t.desc || t.description}
+                        {t.desc || t.description || "-"}
                       </td>
 
                       <td className="py-4">
@@ -494,16 +369,20 @@ export default function FinanceWallet() {
                       </td>
 
                       <td
-                        className={`py-4 text-end font-medium ${t.type === "credit"
+                        className={`py-4 text-end font-medium ${t.type === "credit" || (typeof t.amount === 'number' && t.amount > 0)
                           ? "text-green-600"
                           : "text-[#0F172A]"
                           }`}
                       >
-                        {typeof t.amount === "number" ? `$${t.amount.toFixed(2)}` : t.amount}
+                        {typeof t.amount === "number" ? `$${Math.abs(t.amount).toFixed(2)}` : (t.amount || "-")}
                       </td>
 
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-gray-500">No recent transactions found.</td>
+                    </tr>
+                  )}
 
                 </tbody>
 
@@ -556,11 +435,11 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {invoicesData.map((inv: any, i: number) => (
+                  {invoicesData.length > 0 ? invoicesData.map((inv: any, i: number) => (
                     <tr key={inv.id || inv._id || i} className="border-b last:border-none">
 
                       <td className="py-4 text-[#64748B]">
-                        {inv.id || inv._id?.substring(0,8) || inv.invoiceNumber}
+                        {inv.id || inv._id?.substring(0,8) || inv.invoiceNumber || "N/A"}
                       </td>
 
                       <td className="py-4 font-medium text-[#0F172A]">
@@ -568,7 +447,7 @@ export default function FinanceWallet() {
                       </td>
 
                       <td className="py-4 text-[#64748B]">
-                        {inv.issued || inv.issuedDate || new Date(inv.createdAt).toLocaleDateString()}
+                        {inv.issued || inv.issuedDate || (inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : "-")}
                       </td>
 
                       <td className="py-4 text-[#64748B]">
@@ -584,7 +463,7 @@ export default function FinanceWallet() {
                       </td>
 
                       <td className="py-4 text-end font-medium text-[#0F172A]">
-                        {typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : (inv.total ? `$${inv.total.toFixed(2)}` : inv.amount)}
+                        {typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : (inv.total ? `$${inv.total.toFixed(2)}` : (inv.amount || "-"))}
                       </td>
 
                       <td className="py-4 text-end">
@@ -596,7 +475,11 @@ export default function FinanceWallet() {
                       </td>
 
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-gray-500">No invoices found.</td>
+                    </tr>
+                  )}
 
                 </tbody>
 
