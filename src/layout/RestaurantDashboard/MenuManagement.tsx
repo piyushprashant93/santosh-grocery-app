@@ -107,8 +107,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
         headers: authHeaders(),
       });
       if (res.ok) {
-        const items = prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item);
-        setMenuItems(Array.isArray(items) ? items : []);
+        setMenuItems(prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item));
       }
     } catch (err) {
       console.error(err);
@@ -123,8 +122,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
         headers: authHeaders(),
       });
       if (res.ok) {
-        const items = prev => prev.filter(item => item._id !== id);
-        setMenuItems(Array.isArray(items) ? items : []);
+        setMenuItems(prev => prev.filter(item => item._id !== id));
       }
     } catch (err) {
       console.error(err);

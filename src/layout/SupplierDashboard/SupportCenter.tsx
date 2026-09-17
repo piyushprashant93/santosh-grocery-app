@@ -44,61 +44,6 @@ export default function HelpSupport() {
     },
   ];
 
-  const tickets = [
-    {
-      title: "Integration Issue with API",
-      id: "TKT-2491",
-      time: "2 hours ago",
-      priority: "HIGH",
-      status: "Open",
-      dot: "bg-green-500",
-    },
-    {
-      title: "Billing Inquiry – Invoice #4501",
-      id: "TKT-2458",
-      time: "2 days ago",
-      priority: "MEDIUM",
-      status: "Resolved",
-      dot: "bg-blue-500",
-    },
-    {
-      title: "Feature Request: Bulk Export",
-      id: "TKT-2390",
-      time: "1 week ago",
-      priority: "LOW",
-      status: "Closed",
-      dot: "bg-gray-400",
-    },
-  ];
-
-  const faq = [
-    {
-      question: "How do I manage my inventory across multiple warehouses?",
-      answer:
-        "In the Inventory tab, you can use the 'Filter by Location' feature to view stock levels for specific warehouses. You can also bulk update stock by uploading a CSV file with location IDs.",
-    },
-    {
-      question: "What are the fees for bulk orders?",
-      answer:
-        "Our standard commission fee for bulk orders is 5%. However, this may vary based on your specific contract tier. You can view a detailed breakdown of fees in your Finance dashboard under 'Transaction History'.",
-    },
-    {
-      question: "How do I update my banking information for payouts?",
-      answer:
-        "You can update your banking details in the Finance section under 'Settings'. Go to Finance > Settings > Payout Methods to add or edit your bank account information securely.",
-    },
-    {
-      question: "Can I integrate my own logistics provider?",
-      answer:
-        "Yes, HUBNEPA supports third-party logistics integration. Please contact our technical support team to request API access and documentation for connecting your logistics provider.",
-    },
-    {
-      question: "How do I handle returns and refunds?",
-      answer:
-        "Returns are managed through the 'Orders' tab. Select the specific order, click on 'Manage Return', and follow the prompts to approve or reject the return request based on your policy.",
-    },
-  ];
-
   const priorityStyles: any = {
     HIGH: "bg-red-100 text-red-600",
     Medium: "bg-yellow-100 text-yellow-700",
@@ -111,6 +56,7 @@ export default function HelpSupport() {
     Resolved: "bg-blue-100 text-blue-700",
     Closed: "bg-gray-200 text-gray-600",
   };
+
 
   const [open, setOpen] = useState<number | null>(null);
   
@@ -291,8 +237,11 @@ export default function HelpSupport() {
               Frequently Asked Questions
             </h3>
 
-            <div className="space-y-5">
-              {(faqData.length > 0 ? faqData : faq).map((item, i) => (
+            <div className="space-y-4">
+            {faqData.length === 0 ? (
+              <div className="text-center py-8 text-[#94A3B8]">No FAQs available.</div>
+            ) : (
+              faqData.map((item, i) => (
                 <div key={i} className="border-b pb-3">
                   <button
                     onClick={() => setOpen(open === i ? null : i)}
@@ -312,7 +261,8 @@ export default function HelpSupport() {
                     </p>
                   )}
                 </div>
-              ))}
+              ))
+            )}
             </div>
           </div>
         </div>

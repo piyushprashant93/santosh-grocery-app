@@ -108,7 +108,7 @@ export default function ReportsAnalytics() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        {stats.map((s, i) => {
+        {stats.map((s: any, i: number) => {
 
           const Icon = s.icon
 
@@ -234,8 +234,9 @@ export default function ReportsAnalytics() {
                     paddingAngle={3}
                   >
 
-                    {categoryData.map((c, i) => (
-                      <Cell key={i} fill={c.color} />
+                    {categoryData.map((c: any, i: number) => (
+                      <Cell
+                        key={`cell-${i}`} fill={c.color} />
                     ))}
 
                   </Pie>
@@ -250,11 +251,9 @@ export default function ReportsAnalytics() {
 
             <div className="space-y-3 mt-6">
 
-              {categoryData.map((c, i) => (
-
-                <div key={i} className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
+              {categoryData.map((c: any, i: number) => (
+                <div key={i} className="flex justify-between items-center text-sm">
+                  <div className="flex items-center gap-2">
 
                     <span
                       className="w-3 h-3 rounded-full"
@@ -359,9 +358,9 @@ export default function ReportsAnalytics() {
 
               <tbody>
 
-                {products.map((p, i) => (
-
-                  <tr key={i} className="border-t">
+                {products.map((p: any, i: number) => (
+                  <tr
+                    key={i} className="border-t">
 
                     <td className="py-5 px-4 text-[#111827] font-medium">
                       {p.name}
@@ -480,8 +479,9 @@ export default function ReportsAnalytics() {
                       paddingAngle={3}
                     >
 
-                      {statusData.map((s, i) => (
-                        <Cell key={i} fill={s.color} />
+                      {statusData.map((s: any, i: number) => (
+                        <Cell
+                          key={`cell-${i}`} fill={s.color} />
                       ))}
 
                     </Pie>
@@ -506,10 +506,8 @@ export default function ReportsAnalytics() {
 
               <div className="space-y-2 mt-24">
 
-                {statusData.map((s, i) => (
-
-                  <div key={i} className="flex items-center justify-between">
-
+                {statusData.map((s: any, i: number) => (
+                  <div key={i} className="flex justify-between items-center text-sm">
                     <div className="flex items-center gap-2">
 
                       <span
