@@ -31,7 +31,8 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
       const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setProductsData(data.data?.products || data.products || data.data || []);
+        const prods = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
+        setProductsData(Array.isArray(prods) ? prods : []);
       }
     } catch(err) { console.error(err); }
   };

@@ -55,8 +55,10 @@ export default function Warehouse() {
         zonesRes.ok ? zonesRes.json() : { data: [] }
       ]);
 
-      setItemsData(itemsJson.data?.items || itemsJson.items || itemsJson.data || []);
-      setZonesData(zonesJson.data?.zones || zonesJson.zones || zonesJson.data || []);
+      const items = itemsJson.data?.items || itemsJson.items || (Array.isArray(itemsJson.data) ? itemsJson.data : []);
+      const zones = zonesJson.data?.zones || zonesJson.zones || (Array.isArray(zonesJson.data) ? zonesJson.data : []);
+      setItemsData(Array.isArray(items) ? items : []);
+      setZonesData(Array.isArray(zones) ? zones : []);
     } catch(err: any) { 
       console.error(err); 
       setError(err.message || "An error occurred while loading warehouse data");

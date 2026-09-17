@@ -30,7 +30,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setOrdersData(data.data?.orders || data.orders || data.data || []);
+        const ords = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
+        setOrdersData(Array.isArray(ords) ? ords : []);
       }
     } catch(err) { console.error(err); }
   };

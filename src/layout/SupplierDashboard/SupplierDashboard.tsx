@@ -107,7 +107,8 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
             });
             if (ordersRes.ok) {
               const ordersJson = await ordersRes.json();
-              data.recentOrders = (ordersJson.data?.orders || ordersJson.data || []).slice(0, 5);
+              const recentOrds = ordersJson.data?.orders || (Array.isArray(ordersJson.data) ? ordersJson.data : []);
+              data.recentOrders = (Array.isArray(recentOrds) ? recentOrds : []).slice(0, 5);
             }
           }
           setDashboardData(data);

@@ -21,7 +21,7 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
       const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setClientsData(data.data?.clients || data.clients || data.data || []);
+        setClientsData(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));
       }
     } catch(err) { console.error(err); }
   };

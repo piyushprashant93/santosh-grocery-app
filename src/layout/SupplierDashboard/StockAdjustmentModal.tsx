@@ -33,7 +33,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
             const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
-                const fetched = data.data?.products || data.products || data.data || [];
+                const fetched = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
                 setProducts(Array.isArray(fetched) ? fetched : []);
             }
         } catch(err) { console.error(err); }

@@ -64,7 +64,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
       });
       if (res.ok) {
         const data = await res.json();
-        setMenuItems(data.data?.menu || data.menu || data.data || []);
+        const items = data.data?.menu || data.menu || (Array.isArray(data.data) ? data.data : []);
+        setMenuItems(Array.isArray(items) ? items : []);
       } else {
         const err = await res.json();
         setError(err.message || "Failed to fetch menu");
@@ -106,7 +107,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
         headers: authHeaders(),
       });
       if (res.ok) {
-        setMenuItems(prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item));
+        const items = prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item);
+        setMenuItems(Array.isArray(items) ? items : []);
       }
     } catch (err) {
       console.error(err);
@@ -121,7 +123,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
         headers: authHeaders(),
       });
       if (res.ok) {
-        setMenuItems(prev => prev.filter(item => item._id !== id));
+        const items = prev => prev.filter(item => item._id !== id);
+        setMenuItems(Array.isArray(items) ? items : []);
       }
     } catch (err) {
       console.error(err);

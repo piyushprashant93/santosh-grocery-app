@@ -123,7 +123,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       const res = await fetch(`${API_BASE}/restaurant-panel/orders/live`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        const live = data.data?.orders || data.orders || data.data || [];
+        const liveRaw = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
+        const live = Array.isArray(liveRaw) ? liveRaw : [];
         setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New" || o.status === "confirmed"));
         setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking" || o.status === "preparing"));
         setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
