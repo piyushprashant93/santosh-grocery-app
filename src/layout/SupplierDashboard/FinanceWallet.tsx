@@ -9,6 +9,7 @@ import {
   Filter, Info
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import CreateInvoiceModal from "./CreateInvoiceModal";
 import RequestPayoutModal from "./RequestPayoutModal";
@@ -179,6 +180,30 @@ export default function FinanceWallet() {
     } catch(err) { console.error(err); }
   };
 
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting finance report...");
+      const res = await fetch(`${API_BASE}/supplier/finance/export`, { headers: authHeaders() });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `supplier-finance-export-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+  };
+
   useEffect(() => {
     fetchFinance();
   }, []);
@@ -202,7 +227,7 @@ export default function FinanceWallet() {
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export Report
           </button>

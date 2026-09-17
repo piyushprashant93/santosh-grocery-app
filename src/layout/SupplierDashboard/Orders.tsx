@@ -1,5 +1,6 @@
 import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filter, Package, ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useDebounce } from "use-debounce"
 import { toast } from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -25,9 +26,15 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Filters");
 
+  const [debouncedSearch] = useDebounce(searchQuery, 500);
+
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams();
+      if (debouncedSearch) queryParams.append("search", debouncedSearch);
+      if (statusFilter !== "All Filters") queryParams.append("status", statusFilter);
+
+      const res = await fetch(`${API_BASE}/supplier/orders?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const ords = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
@@ -38,7 +45,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [debouncedSearch, statusFilter]);
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
@@ -72,7 +79,11 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const handleExport = async () => {
     try {
       const toastId = toast.loading("Exporting orders...");
-      const res = await fetch(`${API_BASE}/supplier/orders/export`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams();
+      if (debouncedSearch) queryParams.append("search", debouncedSearch);
+      if (statusFilter !== "All Filters") queryParams.append("status", statusFilter);
+
+      const res = await fetch(`${API_BASE}/supplier/orders/export?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
@@ -93,20 +104,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
   };
 
-  const filteredOrders = ordersData.filter(o => {
-    const id = o.id || o.orderId || o._id || "";
-    const client = o.client || o.client?.name || o.restaurant?.name || "";
-    const status = o.status || "New";
-
-    const matchesSearch = 
-      id.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      status.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesStatus = statusFilter === "All Filters" || status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
+  const filteredOrders = ordersData;
 
   return (
     <div className="space-y-6">

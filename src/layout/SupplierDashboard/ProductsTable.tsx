@@ -1,5 +1,6 @@
 import { Search, Download, Plus, Trash2, Upload } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import { useDebounce } from "use-debounce"
 import toast from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -26,20 +27,27 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
   const [statusFilter, setStatusFilter] = useState("All");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [debouncedSearch] = useDebounce(searchQuery, 500);
+
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams();
+      if (debouncedSearch) queryParams.append("search", debouncedSearch);
+      if (categoryFilter !== "All") queryParams.append("category", categoryFilter);
+      if (statusFilter !== "All") queryParams.append("status", statusFilter);
+
+      const res = await fetch(`${API_BASE}/supplier/products?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const prods = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
         setProductsData(Array.isArray(prods) ? prods : []);
       }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
   };
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [debouncedSearch, categoryFilter, statusFilter]);
 
   const deleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
@@ -51,7 +59,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
       if (res.ok) {
         fetchProducts();
       }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
   };
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +76,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
         headers: authHeadersForm(),
         body: formData
       });
-      
+
       if (res.ok) {
         toast.success("Products imported successfully", { id: toastId });
         fetchProducts();
@@ -87,7 +95,12 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
   const handleExport = async () => {
     try {
       const toastId = toast.loading("Exporting products...");
-      const res = await fetch(`${API_BASE}/supplier/products/export`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams();
+      if (debouncedSearch) queryParams.append("search", debouncedSearch);
+      if (categoryFilter !== "All") queryParams.append("category", categoryFilter);
+      if (statusFilter !== "All") queryParams.append("status", statusFilter);
+
+      const res = await fetch(`${API_BASE}/supplier/products/export?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
@@ -114,22 +127,9 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
     "Out of Stock": "bg-gray-100 text-gray-600"
   }
 
-  const categories = ["All", ...Array.from(new Set(productsData.map(p => p.category?.name || p.category || "General")))];
+  const categories = ["All", "Fresh Produce", "Meat & Poultry", "Seafood", "Dairy", "Grains", "Oils", "Packaging", "Beverages", "Other"];
 
-  const filteredProducts = productsData.filter(p => {
-    const matchesSearch = 
-      (p.name || p.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.sku || p.barcode || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (p.category?.name || p.category || "").toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const cat = p.category?.name || p.category || "General";
-    const matchesCategory = categoryFilter === "All" || cat === categoryFilter;
-
-    const stat = p.status || (p.stock > 0 ? "In Stock" : "Out of Stock");
-    const matchesStatus = statusFilter === "All" || stat === statusFilter;
-
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+  const filteredProducts = productsData;
 
   return (
     <div className="space-y-6">
@@ -171,15 +171,15 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
         <div className="flex flex-col lg:flex-row gap-3 mb-6">
           <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 flex-1">
             <Search size={18} className="text-[#64748B]" />
-            <input 
-              placeholder="Search by name, SKU, or category..." 
+            <input
+              placeholder="Search by name, SKU, or category..."
               className="w-full px-3 py-2 outline-none text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <select 
+          <select
             className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
@@ -187,7 +187,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
             {categories.map((c, i) => <option key={i} value={c}>Category: {c}</option>)}
           </select>
 
-          <select 
+          <select
             className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -229,7 +229,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                   <td className="py-5">
                     <div>
                       <p className="text-[#111827]">{p.unit || p.quantityUnit || "Unit"}</p>
-                      <p className="text-sm text-[#64748B]">{p.sku || p.barcode || p._id?.substring(0,8)}</p>
+                      <p className="text-sm text-[#64748B]">{p.sku || p.barcode || p._id?.substring(0, 8)}</p>
                     </div>
                   </td>
 
