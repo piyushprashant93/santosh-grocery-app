@@ -161,7 +161,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     }
   ];
 
-  const activeOrders = dashboardData?.recentOrders || orders;
+  const activeOrders = dashboardData?.recentOrders || [];
 
   return (
 
@@ -327,12 +327,12 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
                           <td className="py-5 text-[#64748B] max-w-[220px]">
-                            {o.item || (o.items?.length ? `${o.items.length} Items` : (o.totalItems ? `${o.totalItems} Items` : "Items N/A"))}
+                            {typeof o.item === "object" ? o.item?.name || o.item?.productName || "Item N/A" : o.item || (Array.isArray(o.items) ? o.items.map((it: any) => typeof it === "string" ? it : it.name || it.productName).join(", ") : (o.items?.length ? `${o.items.length} Items` : (o.totalItems ? `${o.totalItems} Items` : "Items N/A")))}
                           </td>
 
 
                           <td className="py-5 font-semibold text-[#0F172A]">
-                            {typeof o.amount === "number" ? `$${o.amount.toFixed(2)}` : (o.total ? `$${o.total.toFixed(2)}` : o.amount || "$0.00")}
+                            {typeof o.amount === "number" ? `$${o.amount.toFixed(2)}` : (o.total ? `$${o.total.toFixed(2)}` : (o.totalAmount ? `$${o.totalAmount.toFixed(2)}` : (o.total_amount ? `$${o.total_amount.toFixed(2)}` : o.amount || "$0.00")))}
                           </td>
 
                         </tr>
@@ -348,7 +348,27 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
             </div>
 
+            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
 
+              <h3 className="text-xl font-playfair mb-4">
+                Live Fleet Tracking
+              </h3>
+
+              <div className="relative">
+
+                <img
+                  src={mapImage}
+                  className="rounded-lg w-full h-[300px] object-cover"
+                />
+
+                <div className="absolute right-4 top-4 bg-white rounded-lg shadow px-4 py-2 flex items-center gap-2">
+                  <Truck size={16} />
+                  <span className="text-sm">12 Vehicles Active</span>
+                </div>
+
+              </div>
+
+            </div>
 
           </div>
           <div className="space-y-5">
