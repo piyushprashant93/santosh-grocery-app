@@ -20,169 +20,7 @@ import {
   Users,
   TrendingDown, Filter
 } from "lucide-react"
-import { useState } from "react"
-
-const stats = [
-  {
-    icon: DollarSign,
-    label: "Total Revenue",
-    value: "$45,231.89",
-    change: "+20.1%",
-    color: "text-blue-600",
-    bg: "bg-blue-100"
-  },
-  {
-    icon: Package,
-    label: "Total Orders",
-    value: "356",
-    change: "+12.5%",
-    color: "text-green-600",
-    bg: "bg-green-100"
-  },
-  {
-    icon: Users,
-    label: "Active Clients",
-    value: "28",
-    change: "+4.3%",
-    color: "text-gray-800",
-    bg: "bg-gray-100"
-  },
-  {
-    icon: TrendingDown,
-    label: "Return Rate",
-    value: "2.4%",
-    change: "-0.5%",
-    color: "text-orange-500",
-    bg: "bg-orange-100"
-  }
-]
-
-const revenueData = [
-  { day: "Mon", value: 4000 },
-  { day: "Tue", value: 2900 },
-  { day: "Wed", value: 2000 },
-  { day: "Thu", value: 2800 },
-  { day: "Fri", value: 1900 },
-  { day: "Sat", value: 2500 },
-  { day: "Sun", value: 3500 }
-]
-
-const categoryData = [
-  {
-    name: "Fresh Produce",
-    amount: "$8,500",
-    percent: "43%",
-    value: 43,
-    color: "#2563EB"
-  },
-  {
-    name: "Meat & Poultry",
-    amount: "$6,200",
-    percent: "32%",
-    value: 32,
-    color: "#10B981"
-  },
-  {
-    name: "Dairy",
-    amount: "$3,400",
-    percent: "17%",
-    value: 17,
-    color: "#F59E0B"
-  },
-  {
-    name: "Grains",
-    amount: "$1,450",
-    percent: "7%",
-    value: 7,
-    color: "#6366F1"
-  }
-]
-
-const products = [
-  {
-    name: "Premium Avocado Box (50ct)",
-    volume: "124 units",
-    revenue: "$6,200",
-    growth: "+12%"
-  },
-  {
-    name: "Organic Chicken Breast",
-    volume: "98 units",
-    revenue: "$4,900",
-    growth: "+8%"
-  },
-  {
-    name: "Grass-fed Ribeye",
-    volume: "85 units",
-    revenue: "$12,750",
-    growth: "+15%"
-  },
-  {
-    name: "Basmati Rice (20kg)",
-    volume: "76 units",
-    revenue: "$2,280",
-    growth: "+5%"
-  },
-  {
-    name: "Atlantic Salmon Fillet",
-    volume: "62 units",
-    revenue: "$8,680",
-    growth: "+22%"
-  }
-]
-
-const growthData = [
-  { month: "Jan", new: 4, returning: 12 },
-  { month: "Feb", new: 6, returning: 15 },
-  { month: "Mar", new: 3, returning: 18 },
-  { month: "Apr", new: 8, returning: 22 },
-  { month: "May", new: 5, returning: 24 },
-  { month: "Jun", new: 9, returning: 28 }
-]
-
-const statusData = [
-  { name: "Active", value: 65, color: "#10B981" },
-  { name: "At Risk", value: 20, color: "#F59E0B" },
-  { name: "Inactive", value: 15, color: "#EF4444" }
-]
-
-const clients = [
-  {
-    name: "Urban Bistro Group",
-    orders: "45 orders",
-    revenue: "$12,450",
-    last: "2 days ago",
-    status: "Active"
-  },
-  {
-    name: "Whole Foods Local",
-    orders: "32 orders",
-    revenue: "$8,900",
-    last: "1 day ago",
-    status: "Active"
-  },
-  {
-    name: "Sushi Zen",
-    orders: "28 orders",
-    revenue: "$7,200",
-    last: "5 days ago",
-    status: "Active"
-  },
-  {
-    name: "Green Grocers",
-    orders: "15 orders",
-    revenue: "$3,100",
-    last: "24 days ago",
-    status: "At Risk"
-  },
-  {
-    name: "Daily Mart",
-    orders: "12 orders",
-    revenue: "$2,800",
-    last: "45 days ago",
-    status: "Inactive"
-  }
-]
+import { useState, useEffect } from "react"
 
 const statusStyles = {
   Active: "bg-green-100 text-green-700",
@@ -192,6 +30,39 @@ const statusStyles = {
 
 export default function ReportsAnalytics() {
   const [activeReportTab, setActiveReportTab] = useState("Sales Analysis")
+  const [reportData, setReportData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/reports", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          setReportData(json.data || json);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReports();
+  }, []);
+
+  const stats = reportData?.stats || [];
+  const revenueData = reportData?.revenueData || [];
+  const categoryData = reportData?.categoryData || [];
+  const products = reportData?.products || [];
+  const growthData = reportData?.growthData || [];
+  const statusData = reportData?.statusData || [];
+  const clients = reportData?.clients || [];
 
   return (
 
@@ -703,7 +574,7 @@ export default function ReportsAnalytics() {
 
               <tbody>
 
-                {clients.map((c, i) => (
+                {clients.map((c: any, i: number) => (
 
                   <tr key={i} className="border-t">
 

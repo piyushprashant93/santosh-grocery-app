@@ -340,10 +340,10 @@ export default function HelpSupport() {
                     PHONE SUPPORT
                   </p>
                   <p className="text-lg font-bold text-[#2563EB] mt-2">
-                    {contactData?.phone || "+1 (800) 123-4567"}
+                    {typeof contactData?.phone === 'object' ? contactData.phone.number : (contactData?.phone || "+1 (800) 123-4567")}
                   </p>
                   <p className="text-sm text-[#1447E6] mt-2">
-                    Mon-Fri, 9am - 6pm EST
+                    {typeof contactData?.phone === 'object' ? contactData.phone.hours : "Mon-Fri, 9am - 6pm EST"}
                   </p>
                 </div>
               </div>
@@ -356,10 +356,10 @@ export default function HelpSupport() {
                     EMAIL SUPPORT
                   </p>
                   <p className="text-sm font-bold text-[#007A55] mt-2">
-                    {contactData?.email || "support@hubnepa.com"}
+                    {typeof contactData?.email === 'object' ? contactData.email.address : (contactData?.email || "support@hubnepa.com")}
                   </p>
                   <p className="text-sm text-[#007A55] mt-2">
-                    Response time: &lt; 24 hrs
+                    Response time: {typeof contactData?.email === 'object' ? contactData.email.responseTime : "< 24 hrs"}
                   </p>
                 </div>
               </div>

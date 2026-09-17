@@ -19,12 +19,15 @@ export default function SupportLiveChat() {
   const [messages, setMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [debugData, setDebugData] = useState<any>(null);
+
   const fetchChat = async () => {
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat`, { headers: authHeaders() });
       const data = await res.json();
+      setDebugData(data); // Save for debugging
       if (data.success && data.data) {
-        setChatSessionId(data.data.id || data.data._id);
+        setChatSessionId(data.data.id || data.data._id || data.data.sessionId || data.data.session_id);
         setMessages(data.data.messages || []);
       }
     } catch(err) {
@@ -44,21 +47,33 @@ export default function SupportLiveChat() {
 
   const sendMessage = async () => {
     if (!message.trim() || !chatSessionId) return;
+    
+    const tempMessage = message;
+    setMessage("");
+    
+    // Optimistic UI update
+    setMessages(prev => [...prev, { 
+      message: tempMessage, 
+      senderType: "restaurant", 
+      createdAt: new Date().toISOString() 
+    }]);
+
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/support/livechat/${chatSessionId}`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message: tempMessage })
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage("");
         fetchChat();
       } else {
         toast.error(parseApiError(data, "Failed to send message"));
+        fetchChat();
       }
     } catch(err) {
       console.error(err);
+      fetchChat();
     }
   };
 
@@ -103,6 +118,12 @@ export default function SupportLiveChat() {
             Today
           </span>
         </div>
+
+        {!chatSessionId && debugData && (
+          <div className="text-xs text-red-500 break-words bg-red-50 p-2 rounded">
+            DEBUG: {JSON.stringify(debugData)}
+          </div>
+        )}
 
         {messages.map((m, i) => (
           <div

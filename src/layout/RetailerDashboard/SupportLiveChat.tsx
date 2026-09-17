@@ -44,21 +44,33 @@ export default function SupportLiveChat() {
 
   const sendMessage = async () => {
     if (!message.trim() || !chatSessionId) return;
+    
+    const tempMessage = message;
+    setMessage("");
+    
+    // Optimistic UI update
+    setMessages(prev => [...prev, { 
+      message: tempMessage, 
+      senderType: "retailer", 
+      createdAt: new Date().toISOString() 
+    }]);
+
     try {
       const res = await fetch(`${API_BASE}/retailer/support/livechat/${chatSessionId}`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message: tempMessage })
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage("");
         fetchChat();
       } else {
         toast.error(parseApiError(data, "Failed to send message"));
+        fetchChat();
       }
     } catch(err) {
       console.error(err);
+      fetchChat();
     }
   };
 
