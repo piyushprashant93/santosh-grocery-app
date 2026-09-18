@@ -11,6 +11,7 @@ import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
 import MarketingLayout from "./Marketing/MarketingLayout"
+import OrderManagement from "./OrderManagement"
 
 export default function AdminChild({
   activeTab,
@@ -69,6 +70,10 @@ export default function AdminChild({
 
   if (activeTab === "marketing") {
     return <MarketingLayout />
+  }
+
+  if (activeTab === "order-management") {
+    return <OrderManagement />
   }
 
   // Fallback for other tabs not yet implemented
