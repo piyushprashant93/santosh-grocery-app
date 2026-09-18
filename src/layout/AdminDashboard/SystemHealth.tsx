@@ -1,24 +1,54 @@
-import { RefreshCw, Server, Database, Cloud, CreditCard, Activity, AlertTriangle, Info, CheckCircle2 } from "lucide-react"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const chartData = [
-  { time: '10:00', latency: 120 },
-  { time: '10:05', latency: 135 },
-  { time: '10:10', latency: 110 },
-  { time: '10:15', latency: 150 },
-  { time: '10:20', latency: 190 },
-  { time: '10:25', latency: 140 },
-  { time: '10:30', latency: 115 },
-];
-
-const mockLogs = [
-  { id: 1, type: "error", message: "Failed to connect to SMTP", source: "Notifications", time: "10:28 AM" },
-  { id: 2, type: "warning", message: "High memory usage detected", source: "Worker-01", time: "10:15 AM" },
-  { id: 3, type: "success", message: "Daily backup completed successfully", source: "Backup Service", time: "09:00 AM" },
-  { id: 4, type: "info", message: "New deployment version v2.1.0", source: "Deployer", time: "08:30 AM" },
-];
+import { useState, useEffect } from "react"
+import { RefreshCw, Server, Database, Cloud, CreditCard, AlertTriangle, Info, CheckCircle2, Loader2 } from "lucide-react"
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import api from "../../lib/api"
 
 export default function SystemHealth() {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [healthData, setHealthData] = useState<any>(null)
+
+  useEffect(() => {
+    fetchHealthData()
+  }, [])
+
+  const fetchHealthData = async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const response = await api.get('/api/v1/admin/system-health')
+      setHealthData(response.data?.data || response.data || {})
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "Failed to load system health data")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fallbacks if data doesn't map perfectly from backend yet
+  const chartData = healthData?.chartData || [
+    { time: '10:00', latency: 120 },
+    { time: '10:05', latency: 135 },
+    { time: '10:10', latency: 110 },
+    { time: '10:15', latency: 150 },
+    { time: '10:20', latency: 190 },
+    { time: '10:25', latency: 140 },
+    { time: '10:30', latency: 115 },
+  ]
+
+  const logs = healthData?.logs || [
+    { id: 1, type: "error", message: "Failed to connect to SMTP", source: "Notifications", time: "10:28 AM" },
+    { id: 2, type: "warning", message: "High memory usage detected", source: "Worker-01", time: "10:15 AM" },
+    { id: 3, type: "success", message: "Daily backup completed successfully", source: "Backup Service", time: "09:00 AM" },
+    { id: 4, type: "info", message: "New deployment version v2.1.0", source: "Deployer", time: "08:30 AM" },
+  ]
+
+  const resources = {
+    cpu: healthData?.resources?.cpu || 42,
+    memory: healthData?.resources?.memory || 68,
+    storage: healthData?.resources?.storage || 24
+  }
+
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
       
@@ -34,45 +64,61 @@ export default function SystemHealth() {
           </h1>
           <p className="text-gray-500 mt-1">Real-time infrastructure monitoring and status reports.</p>
         </div>
-        <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm">
-          <RefreshCw size={16} />
-          Refresh Status
+        <button 
+          onClick={fetchHealthData}
+          disabled={loading}
+          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm disabled:opacity-50"
+        >
+          <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+          {loading ? "Refreshing..." : "Refresh Status"}
         </button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg flex items-center gap-3">
+          <AlertTriangle size={18} />
+          {error}
+        </div>
+      )}
 
       {/* Top Status Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatusCard 
           icon={<Server size={20} />} 
           title="API Gateway" 
-          uptime="99.99%" 
-          latency="45ms" 
+          uptime={healthData?.status?.apiGateway?.uptime || "99.99%"} 
+          latency={healthData?.status?.apiGateway?.latency || "45ms"} 
         />
         <StatusCard 
           icon={<Database size={20} />} 
           title="Primary Database (PostgreSQL)" 
-          uptime="99.95%" 
-          latency="12ms" 
+          uptime={healthData?.status?.database?.uptime || "99.95%"} 
+          latency={healthData?.status?.database?.latency || "12ms"} 
         />
         <StatusCard 
           icon={<Cloud size={20} />} 
           title="Object Storage (CDN)" 
-          uptime="100%" 
-          latency="24ms" 
+          uptime={healthData?.status?.cdn?.uptime || "100%"} 
+          latency={healthData?.status?.cdn?.latency || "24ms"} 
         />
         <StatusCard 
           icon={<CreditCard size={20} />} 
           title="Payment Processing" 
-          uptime="99.9%" 
-          latency="-" 
+          uptime={healthData?.status?.payments?.uptime || "99.9%"} 
+          latency={healthData?.status?.payments?.latency || "-"} 
         />
       </div>
 
       {/* Main Split */}
-      <div className="flex flex-col lg:flex-row gap-6">
-        
+      <div className="flex flex-col lg:flex-row gap-6 relative min-h-[400px]">
+        {loading && (
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center pt-20">
+            <Loader2 className="animate-spin text-orange-500 mb-2" size={32} />
+          </div>
+        )}
+
         {/* Left Chart Area */}
-        <div className="flex-1 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col min-h-[400px]">
+        <div className="flex-1 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col">
           <h3 className="font-bold text-gray-900 mb-1">API Latency & Traffic</h3>
           <p className="text-sm text-gray-500 mb-8">Response time in milliseconds (ms) over the last 30 minutes.</p>
           
@@ -125,9 +171,9 @@ export default function SystemHealth() {
             </div>
             
             <div className="flex flex-col gap-4 mt-2">
-              <ProgressBar label="CPU Usage" percentage={42} color="bg-orange-500" />
-              <ProgressBar label="Memory (RAM)" percentage={68} color="bg-blue-500" />
-              <ProgressBar label="Storage" percentage={24} color="bg-emerald-500" />
+              <ProgressBar label="CPU Usage" percentage={resources.cpu} color="bg-orange-500" />
+              <ProgressBar label="Memory (RAM)" percentage={resources.memory} color="bg-blue-500" />
+              <ProgressBar label="Storage" percentage={resources.storage} color="bg-emerald-500" />
             </div>
           </div>
 
@@ -135,8 +181,8 @@ export default function SystemHealth() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex-1 flex flex-col">
             <h3 className="font-bold text-gray-900 mb-6">Recent Logs</h3>
             <div className="flex flex-col gap-5">
-              {mockLogs.map(log => (
-                <div key={log.id} className="flex gap-4">
+              {logs.map((log: any, index: number) => (
+                <div key={log.id || index} className="flex gap-4">
                   <div className="mt-0.5">
                     {log.type === 'error' && <AlertTriangle size={18} className="text-red-500" />}
                     {log.type === 'warning' && <AlertTriangle size={18} className="text-amber-500" />}

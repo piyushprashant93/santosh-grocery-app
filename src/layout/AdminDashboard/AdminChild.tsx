@@ -4,10 +4,16 @@ import Notifications from "./Notifications"
 import SystemHealth from "./SystemHealth"
 import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
+import RetailerPanelLayout from "./RetailerPanel/RetailerPanelLayout"
+import SupplierPanelLayout from "./SupplierPanel/SupplierPanelLayout"
+import ProductFoodPanelLayout from "./ProductFoodPanel/ProductFoodPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
 import MarketingLayout from "./Marketing/MarketingLayout"
+import OrderManagement from "./OrderManagement"
+import FeedbackComplaints from "./FeedbackComplaints"
+import FinanceSettlements from "./FinanceSettlements"
 
 export default function AdminChild({
   activeTab,
@@ -40,6 +46,18 @@ export default function AdminChild({
     return <RestaurantPanelLayout />
   }
 
+  if (activeTab === "retailer-panel") {
+    return <RetailerPanelLayout />
+  }
+
+  if (activeTab === "supplier-panel") {
+    return <SupplierPanelLayout />
+  }
+
+  if (activeTab === "product-food") {
+    return <ProductFoodPanelLayout />
+  }
+
   if (activeTab === "settings") {
     return <PlatformSettingsLayout />
   }
@@ -54,6 +72,18 @@ export default function AdminChild({
 
   if (activeTab === "marketing") {
     return <MarketingLayout />
+  }
+
+  if (activeTab === "order-management") {
+    return <OrderManagement />
+  }
+
+  if (activeTab === "feedback") {
+    return <FeedbackComplaints />
+  }
+
+  if (activeTab === "finance") {
+    return <FinanceSettlements />
   }
 
   // Fallback for other tabs not yet implemented
