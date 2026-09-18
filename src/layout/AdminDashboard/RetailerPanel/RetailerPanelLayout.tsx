@@ -112,14 +112,15 @@ export default function RetailerPanelLayout() {
       {/* Main Content Router */}
       <div className="flex-1 mt-2">
         <Routes>
-          <Route path="" element={<OverviewTab />} />
-          <Route path="products" element={<ProductsTab />} />
-          <Route path="orders" element={<OrdersTab />} />
-          <Route path="customers" element={<CustomersTab />} />
-          <Route path="offers" element={<OffersTab />} />
-          <Route path="refunds" element={<RefundsTab />} />
-          <Route path="finance" element={<FinanceTab />} />
-          <Route path="reports" element={<ReportsTab />} />
+          <Route path="*" element={<OverviewTab />} />
+          <Route path="retailer-panel" element={<OverviewTab />} />
+          <Route path="retailer-panel/products" element={<ProductsTab />} />
+          <Route path="retailer-panel/orders" element={<OrdersTab />} />
+          <Route path="retailer-panel/customers" element={<CustomersTab />} />
+          <Route path="retailer-panel/offers" element={<OffersTab />} />
+          <Route path="retailer-panel/refunds" element={<RefundsTab />} />
+          <Route path="retailer-panel/finance" element={<FinanceTab />} />
+          <Route path="retailer-panel/reports" element={<ReportsTab />} />
         </Routes>
       </div>
 
