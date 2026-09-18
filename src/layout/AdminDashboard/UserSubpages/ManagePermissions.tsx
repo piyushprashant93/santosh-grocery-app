@@ -24,12 +24,12 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
     try {
       // Update role
       if (role !== user.role) {
-        await api.patch(`/api/v1/admin/users/${user.id}/role`, { role });
+        await api.put(`/api/v1/admin/users/${user.id}/role`, { role });
       }
       
       // Update permissions if it's an admin user (example integration)
       if (role === 'admin') {
-        // await api.patch(`/api/v1/admin/access-control/users/${user.id}/permissions`, { ... });
+        // await api.put(`/api/v1/admin/access-control/users/${user.id}/permissions`, { ... });
       }
       
       alert("Permissions updated successfully.");
@@ -45,7 +45,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
     setActionLoading('block');
     try {
       // Assuming we're blocking (newStatus = false for isActive)
-      await api.patch(`/api/v1/admin/users/${user.id}/block`, { isActive: false });
+      await api.put(`/api/v1/admin/users/${user.id}/block`, { isActive: false });
       alert("User has been blocked.");
     } catch (err: any) {
       alert(err.response?.data?.message || err.message || "Failed to block user");

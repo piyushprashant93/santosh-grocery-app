@@ -89,7 +89,7 @@ export default function UserManagement() {
     setActionLoading(userId);
     try {
       const newStatus = !currentStatus;
-      await api.patch(`/api/v1/admin/users/${userId}/block`, { isActive: newStatus });
+      await api.put(`/api/v1/admin/users/${userId}/block`, { isActive: newStatus });
       fetchUsers();
     } catch (err) {
       alert("Error updating user status. Please try again.");
