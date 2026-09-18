@@ -13,6 +13,7 @@ import AccessControlLayout from "./AccessControl/AccessControlLayout"
 import MarketingLayout from "./Marketing/MarketingLayout"
 import OrderManagement from "./OrderManagement"
 import FeedbackComplaints from "./FeedbackComplaints"
+import FinanceSettlements from "./FinanceSettlements"
 
 export default function AdminChild({
   activeTab,
@@ -79,6 +80,10 @@ export default function AdminChild({
 
   if (activeTab === "feedback") {
     return <FeedbackComplaints />
+  }
+
+  if (activeTab === "finance") {
+    return <FinanceSettlements />
   }
 
   // Fallback for other tabs not yet implemented
