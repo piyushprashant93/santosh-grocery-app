@@ -55,27 +55,29 @@ export default function ShipmentHistory({
     fetchHistory();
   }, []);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     try {
-      const csvContent = "data:text/csv;charset=utf-8,ID,Date,Client,Items,Amount,Vehicle,Driver,Status\n" + 
-        filteredData.map(s => {
-          const id = s.id || s.manifestId || s._id?.substring(0,8);
-          const date = s.date ? new Date(s.date).toLocaleDateString() : (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : "");
-          const client = s.client || s.clientName || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "Unknown");
-          const items = s.items || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "-");
-          const amount = typeof s.amount === "number" ? s.amount.toFixed(2) : (s.total ? s.total.toFixed(2) : s.amount || "0.00");
-          const vehicle = s.vehicle || s.carrier || "-";
-          const driver = s.driver || s.driverName || "-";
-          const status = s.status || "Pending";
-          return `${id},${date},"${client}","${items}",${amount},"${vehicle}","${driver}",${status}`;
-        }).join("\n");
-      const encodedUri = encodeURI(csvContent);
+      const params = new URLSearchParams({
+        view: 'history',
+      });
+      if (searchQuery) params.append('search', searchQuery);
+      if (statusFilter !== 'All') params.append('status', statusFilter);
+      if (startDate) params.append('dateFrom', startDate);
+      if (endDate) params.append('dateTo', endDate);
+      
+      const res = await fetch(`${API_BASE}/supplier/logistics/export?${params.toString()}`, { headers: authHeaders() });
+      if (!res.ok) throw new Error("Export failed");
+      
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `shipment_history_${new Date().toISOString().split('T')[0]}.csv`);
+      link.href = url;
+      link.download = `shipment_history_${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
       toast.success("Exported successfully!");
     } catch(err) {
       toast.error("Failed to export CSV");
@@ -277,7 +279,9 @@ export default function ShipmentHistory({
                     {s.client || s.clientName || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "Unknown")}
                   </td>
 
-                  <td className="py-5 text-[#64748B]">{s.items || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "-")}</td>
+                  <td className="py-5 text-[#64748B]">
+                    {Array.isArray(s.items) ? `${s.items.length} Items` : (typeof s.items === 'object' && s.items !== null ? (s.items.productName || s.items.name || "1 Item") : (s.items || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "-")))}
+                  </td>
 
                   <td className="py-5 font-semibold text-[#111827]">
                     {typeof s.amount === "number" ? `$${s.amount.toFixed(2)}` : (s.total ? `$${s.total.toFixed(2)}` : (s.amount ? (s.amount.toString().startsWith('$') ? s.amount : `$${s.amount}`) : "$0.00"))}
