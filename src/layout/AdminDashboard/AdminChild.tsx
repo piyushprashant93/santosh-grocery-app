@@ -12,6 +12,7 @@ import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
 import MarketingLayout from "./Marketing/MarketingLayout"
 import OrderManagement from "./OrderManagement"
+import FeedbackComplaints from "./FeedbackComplaints"
 
 export default function AdminChild({
   activeTab,
@@ -74,6 +75,10 @@ export default function AdminChild({
 
   if (activeTab === "order-management") {
     return <OrderManagement />
+  }
+
+  if (activeTab === "feedback") {
+    return <FeedbackComplaints />
   }
 
   // Fallback for other tabs not yet implemented
