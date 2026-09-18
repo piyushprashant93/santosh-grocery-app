@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { 
   Download, 
   Search, 
@@ -7,75 +7,146 @@ import {
   Truck, 
   CheckCircle2, 
   AlertCircle,
-  Eye
+  Eye,
+  Loader2,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
+import api from "../../lib/api"
+
+interface Order {
+  _id: string;
+  orderId: string;
+  createdAt: string;
+  customer?: {
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
+  };
+  vendor?: {
+    name?: string;
+    type?: string;
+  };
+  totalAmount?: number;
+  orderStatus?: string;
+  orderType?: string;
+}
 
 export default function OrderManagement() {
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  
   const [searchQuery, setSearchQuery] = useState("")
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  const orders = [
-    {
-      id: "ORD-9921",
-      date: "Feb 12, 10:30 AM",
-      customer: "John Doe",
-      vendor: "Spicy Kitchen",
-      type: "Restaurant",
-      status: "Processing",
-      amount: "$45.50"
-    },
-    {
-      id: "ORD-9922",
-      date: "Feb 12, 09:15 AM",
-      customer: "Sarah Connor",
-      vendor: "Fresh Mart",
-      type: "Retail",
-      status: "Delivered",
-      amount: "$120.00"
-    },
-    {
-      id: "ORD-9923",
-      date: "Feb 11, 08:45 PM",
-      customer: "Mike Ross",
-      vendor: "Burger King Clone",
-      type: "Restaurant",
-      status: "Cancelled",
-      amount: "$22.00"
-    },
-    {
-      id: "ORD-9924",
-      date: "Feb 11, 04:30 PM",
-      customer: "Jessica Pearson",
-      vendor: "Tech Gadgets",
-      type: "Retail",
-      status: "Shipped",
-      amount: "$899.00"
-    }
-  ];
+  // We might not have aggregated stats from this endpoint, so we'll use placeholder or calculated values 
+  // if the backend doesn't provide them. Ideally, we would fetch these from an analytics endpoint.
+  const [stats, setStats] = useState({
+    total: 0,
+    processing: 0,
+    completed: 0,
+    cancelled: 0
+  })
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Processing':
-        return <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">Processing</span>;
-      case 'Delivered':
-        return <span className="px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full text-xs font-medium">Delivered</span>;
-      case 'Cancelled':
-        return <span className="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-medium">Cancelled</span>;
-      case 'Shipped':
-        return <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">Shipped</span>;
-      default:
-        return <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">{status}</span>;
+  useEffect(() => {
+    fetchOrders()
+  }, [page, searchQuery])
+
+  const fetchOrders = async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const params = new URLSearchParams({ page: page.toString() })
+      if (searchQuery) params.append("search", searchQuery)
+
+      const response = await api.get(`/api/v1/admin/orders?${params.toString()}`)
+      const result = response.data
+
+      let fetchedOrders: Order[] = []
+      
+      if (result.data && Array.isArray(result.data.data)) {
+        fetchedOrders = result.data.data
+        setTotalPages(result.data.pagination?.totalPages || 1)
+        setStats({
+          total: result.data.pagination?.totalItems || fetchedOrders.length,
+          processing: result.data.stats?.processing || 0,
+          completed: result.data.stats?.completed || 0,
+          cancelled: result.data.stats?.cancelled || 0
+        })
+      } else if (result.data && Array.isArray(result.data)) {
+        fetchedOrders = result.data
+        setTotalPages(1)
+        setStats({
+          total: fetchedOrders.length,
+          processing: fetchedOrders.filter(o => o.orderStatus?.toLowerCase() === 'processing').length,
+          completed: fetchedOrders.filter(o => o.orderStatus?.toLowerCase() === 'completed' || o.orderStatus?.toLowerCase() === 'delivered').length,
+          cancelled: fetchedOrders.filter(o => o.orderStatus?.toLowerCase() === 'cancelled').length
+        })
+      } else {
+        fetchedOrders = []
+        setTotalPages(1)
+      }
+      
+      setOrders(fetchedOrders)
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "An error occurred while fetching orders")
+    } finally {
+      setLoading(false)
     }
   }
 
-  const getTypeBadge = (type: string) => {
-    if (type === 'Restaurant') {
-      return <span className="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-100 rounded-full text-xs font-medium">Restaurant</span>;
+  const getStatusBadge = (status?: string) => {
+    const s = (status || 'Unknown').toLowerCase();
+    switch (s) {
+      case 'processing':
+      case 'pending':
+        return <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium capitalize">{status}</span>;
+      case 'delivered':
+      case 'completed':
+        return <span className="px-3 py-1 bg-emerald-100 text-emerald-600 rounded-full text-xs font-medium capitalize">{status}</span>;
+      case 'cancelled':
+        return <span className="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-medium capitalize">{status}</span>;
+      case 'shipped':
+        return <span className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium capitalize">{status}</span>;
+      default:
+        return <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium capitalize">{status || 'Unknown'}</span>;
     }
-    return <span className="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-xs font-medium">Retail</span>;
+  }
+
+  const getTypeBadge = (type?: string) => {
+    const t = (type || 'Unknown').toLowerCase();
+    if (t.includes('restaurant')) {
+      return <span className="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-100 rounded-full text-xs font-medium capitalize">{type}</span>;
+    }
+    return <span className="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 rounded-full text-xs font-medium capitalize">{type || 'Retail'}</span>;
+  }
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return { date: "N/A", time: "" };
+    try {
+      const d = new Date(dateStr);
+      return {
+        date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        time: d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+      }
+    } catch {
+      return { date: dateStr, time: "" };
+    }
+  }
+
+  const formatId = (id?: string) => {
+    if (!id) return "N/A";
+    const str = id.toString();
+    if (str.length > 10) {
+      return `${str.substring(0, 6)}...`;
+    }
+    return str;
   }
 
   return (
-    <div className="flex flex-col gap-8 max-w-7xl mx-auto animate-in fade-in duration-300">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto animate-in fade-in duration-300 relative">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -97,7 +168,7 @@ export default function OrderManagement() {
               <FileText size={20} />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-blue-600">85,200</h3>
+          <h3 className="text-3xl font-bold text-blue-600">{stats.total.toLocaleString()}</h3>
         </div>
 
         <div className="bg-orange-50/50 border border-orange-100 rounded-2xl p-6 flex flex-col justify-between h-[130px]">
@@ -107,7 +178,7 @@ export default function OrderManagement() {
               <Truck size={20} />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-orange-600">145</h3>
+          <h3 className="text-3xl font-bold text-orange-600">{stats.processing.toLocaleString()}</h3>
         </div>
 
         <div className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-6 flex flex-col justify-between h-[130px]">
@@ -117,7 +188,7 @@ export default function OrderManagement() {
               <CheckCircle2 size={20} />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-emerald-600">84,500</h3>
+          <h3 className="text-3xl font-bold text-emerald-600">{stats.completed.toLocaleString()}</h3>
         </div>
 
         <div className="bg-red-50/50 border border-red-100 rounded-2xl p-6 flex flex-col justify-between h-[130px]">
@@ -127,21 +198,24 @@ export default function OrderManagement() {
               <AlertCircle size={20} />
             </div>
           </div>
-          <h3 className="text-3xl font-bold text-red-600">555</h3>
+          <h3 className="text-3xl font-bold text-red-600">{stats.cancelled.toLocaleString()}</h3>
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative min-h-[400px]">
         {/* Table Controls */}
-        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
+        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white z-10">
           <div className="relative w-full sm:w-[400px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
               type="text" 
               placeholder="Search by Order ID, Customer, or Vendor..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setPage(1)
+              }}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-gray-50/50 text-sm"
             />
           </div>
@@ -150,6 +224,25 @@ export default function OrderManagement() {
             Filter
           </button>
         </div>
+
+        {/* Loading / Error States */}
+        {loading && (
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center pt-16">
+            <Loader2 className="animate-spin text-orange-500 mb-2" size={32} />
+            <p className="text-sm text-gray-500 font-medium">Loading orders...</p>
+          </div>
+        )}
+        {!loading && error && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-16 p-6 text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+          </div>
+        )}
+        {!loading && !error && orders.length === 0 && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-16 p-6 text-center text-gray-500">
+            <p>No orders found matching your criteria.</p>
+          </div>
+        )}
 
         {/* Table */}
         <div className="overflow-x-auto">
@@ -167,44 +260,76 @@ export default function OrderManagement() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {orders.map((order, index) => (
-                <tr key={index} className="hover:bg-gray-50/50 transition">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-bold text-gray-900 text-sm">
-                      {order.id.split('-')[0]}-<br/>{order.id.split('-')[1]}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex flex-col">
-                      <span>{order.date.split(',')[0]},</span>
-                      <span>{order.date.split(',')[1]}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-semibold text-gray-900 text-sm">{order.customer}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-gray-500 text-sm">{order.vendor}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getTypeBadge(order.type)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusBadge(order.status)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-bold text-gray-900">{order.amount}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition inline-flex">
-                      <Eye size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {orders.map((order, index) => {
+                const { date, time } = formatDate(order.createdAt);
+                const customerName = order.customer?.fullName || 
+                                     (order.customer?.firstName ? `${order.customer.firstName} ${order.customer.lastName || ''}`.trim() : 'Guest');
+                const vendorName = order.vendor?.name || 'N/A';
+                
+                return (
+                  <tr key={order._id || index} className="hover:bg-gray-50/50 transition">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="font-bold text-gray-900 text-sm">
+                        {formatId(order.orderId || order._id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex flex-col">
+                        <span>{date}</span>
+                        <span>{time}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="font-semibold text-gray-900 text-sm">{customerName}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-gray-500 text-sm">{vendorName}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getTypeBadge(order.vendor?.type || order.orderType)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(order.orderStatus)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="font-bold text-gray-900">${(order.totalAmount || 0).toFixed(2)}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition inline-flex">
+                        <Eye size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        {!loading && orders.length > 0 && (
+          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between mt-auto">
+            <span className="text-sm text-gray-500">
+              Showing page <span className="font-medium text-gray-900">{page}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button 
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="p-2 border border-gray-200 text-gray-600 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

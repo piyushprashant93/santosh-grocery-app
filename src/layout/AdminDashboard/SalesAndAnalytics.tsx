@@ -1,27 +1,104 @@
-import { Calendar, Download, TrendingUp, DollarSign, Activity } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import api from "../../lib/api"
 
-const revenueData = [
-  { name: 'Jan', retail: 4000, restaurant: 2400 },
-  { name: 'Feb', retail: 3000, restaurant: 1398 },
-  { name: 'Mar', retail: 2000, restaurant: 9800 },
-  { name: 'Apr', retail: 2780, restaurant: 3908 },
-  { name: 'May', retail: 1890, restaurant: 4800 },
-  { name: 'Jun', retail: 2390, restaurant: 3800 },
-]
-
-const categoryData = [
-  { name: 'Electronics', value: 400 },
-  { name: 'Food & Bev', value: 300 },
-  { name: 'Fashion', value: 300 },
-  { name: 'Home', value: 200 },
-]
-
-const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444']
+const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
 export default function SalesAndAnalytics() {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+  const [analyticsData, setAnalyticsData] = useState<any>(null)
+  const [downloading, setDownloading] = useState(false)
+
+  useEffect(() => {
+    fetchAnalytics()
+  }, [])
+
+  const fetchAnalytics = async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const response = await api.get('/api/v1/admin/analytics')
+      setAnalyticsData(response.data?.data || response.data || {})
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message || "Failed to load analytics data")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownloadReport = async () => {
+    setDownloading(true)
+    try {
+      const token = localStorage.getItem("authToken")
+      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com"
+      const response = await fetch(`${baseUrl}/api/v1/admin/reports`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        }
+      })
+      
+      if (!response.ok) throw new Error("Failed to download report")
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = "sales-analytics-report.pdf" 
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      a.remove()
+    } catch (err) {
+      alert("Error downloading report")
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  // Map API data or fallback to defaults
+  let revenueData: any[] = []
+  if (analyticsData?.revenueGrowth && Array.isArray(analyticsData.revenueGrowth)) {
+    revenueData = analyticsData.revenueGrowth.map((item: any) => ({
+      name: item._id || item.name,
+      retail: item.retail || 0,
+      restaurant: item.restaurant || item.revenue || 0
+    }))
+  } else {
+    revenueData = [
+      { name: 'Jan', retail: 4000, restaurant: 2400 },
+      { name: 'Feb', retail: 3000, restaurant: 1398 },
+      { name: 'Mar', retail: 2000, restaurant: 9800 },
+      { name: 'Apr', retail: 2780, restaurant: 3908 },
+      { name: 'May', retail: 1890, restaurant: 4800 },
+      { name: 'Jun', retail: 2390, restaurant: 3800 },
+    ]
+  }
+
+  let categoryData: any[] = []
+  if (analyticsData?.salesByCategory && Array.isArray(analyticsData.salesByCategory)) {
+    categoryData = analyticsData.salesByCategory.map((item: any) => ({
+      name: item._id || item.name || 'Unknown',
+      value: item.value || item.count || item.totalSales || 0
+    }))
+  } else {
+    categoryData = [
+      { name: 'Electronics', value: 400 },
+      { name: 'Food & Bev', value: 300 },
+      { name: 'Fashion', value: 300 },
+      { name: 'Home', value: 200 },
+    ]
+  }
+
+  const metrics = {
+    cac: analyticsData?.metrics?.cac || 12.50,
+    aov: analyticsData?.metrics?.aov || 45.00,
+    retentionRate: analyticsData?.metrics?.retentionRate || 85
+  }
+
   return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300 relative">
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -34,15 +111,31 @@ export default function SalesAndAnalytics() {
             <Calendar size={16} className="text-gray-400" />
             Last 30 Days
           </button>
-          <button className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2">
-            <Download size={16} />
-            Export Report
+          <button 
+            onClick={handleDownloadReport}
+            disabled={downloading}
+            className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2 disabled:opacity-70"
+          >
+            {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+            {downloading ? "Downloading..." : "Export Report"}
           </button>
         </div>
       </div>
 
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg flex items-center gap-3">
+          <AlertTriangle size={18} />
+          {error}
+        </div>
+      )}
+
       {/* Main Content Area */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 relative min-h-[400px]">
+        {loading && (
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center pt-20">
+            <Loader2 className="animate-spin text-orange-500 mb-2" size={32} />
+          </div>
+        )}
         
         {/* Revenue Growth Chart */}
         <div className="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
@@ -123,7 +216,7 @@ export default function SalesAndAnalytics() {
                   dataKey="value"
                   stroke="none"
                 >
-                  {categoryData.map((entry, index) => (
+                  {categoryData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -136,22 +229,12 @@ export default function SalesAndAnalytics() {
           </div>
           {/* Legend */}
           <div className="grid grid-cols-2 gap-2 mt-4 text-sm font-medium">
-            <div className="flex items-center gap-2 text-sky-500 justify-center">
-              <div className="w-2.5 h-2.5 rounded-sm bg-sky-500"></div>
-              Electronics
-            </div>
-            <div className="flex items-center gap-2 text-emerald-500 justify-center">
-              <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500"></div>
-              Food & Bev
-            </div>
-            <div className="flex items-center gap-2 text-amber-500 justify-center">
-              <div className="w-2.5 h-2.5 rounded-sm bg-amber-500"></div>
-              Fashion
-            </div>
-            <div className="flex items-center gap-2 text-red-500 justify-center">
-              <div className="w-2.5 h-2.5 rounded-sm bg-red-500"></div>
-              Home
-            </div>
+            {categoryData.slice(0, 4).map((cat, i) => (
+              <div key={i} className="flex items-center gap-2 justify-center" style={{ color: COLORS[i % COLORS.length] }}>
+                <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                <span className="truncate max-w-[80px]" title={cat.name}>{cat.name}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -168,7 +251,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">$12.50</h3>
+            <h3 className="text-3xl font-bold text-gray-900">${metrics.cac.toFixed(2)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+4% from last month</p>
           </div>
         </div>
@@ -182,7 +265,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">$45.00</h3>
+            <h3 className="text-3xl font-bold text-gray-900">${metrics.aov.toFixed(2)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+2% from last month</p>
           </div>
         </div>
@@ -196,7 +279,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">85%</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{metrics.retentionRate}%</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">Excellent</p>
           </div>
         </div>
