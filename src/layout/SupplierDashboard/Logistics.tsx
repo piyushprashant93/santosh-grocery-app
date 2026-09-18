@@ -35,24 +35,45 @@ export default function Logistics() {
 
   const fetchLogistics = async () => {
     try {
-      const [logisticsRes, driversRes] = await Promise.all([
-        fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() }),
-        fetch(`${API_BASE}/supplier/logistics/drivers`, { headers: authHeaders() })
-      ]);
+      const logisticsRes = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
       if (logisticsRes.ok) {
         const data = await logisticsRes.json();
         const shipments = data.data || data;
         setLogisticsData(Array.isArray(shipments) ? shipments : (Array.isArray(shipments.data) ? shipments.data : []));
-      }
-      if (driversRes.ok) {
-        const d = await driversRes.json();
-        setFleetData(Array.isArray(d.data) ? d.data : []);
       }
     } catch(err) { console.error(err); }
   };
 
   useEffect(() => {
     fetchLogistics();
+
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    const es = new EventSource(`${API_BASE}/supplier/logistics/fleet/stream?token=${token}`);
+    
+    es.addEventListener('message', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.vehicles) {
+          setFleetData(data.vehicles);
+        }
+      } catch (err) {
+        console.error("SSE parse error", err);
+      }
+    });
+
+    es.addEventListener('closed', () => {
+      es.close();
+    });
+
+    es.addEventListener('error', () => {
+      // EventSource handles reconnection automatically
+    });
+
+    return () => {
+      es.close();
+    };
   }, []);
 
   const activeShipments = logisticsData.filter(d => d.status !== "Delivered").length;

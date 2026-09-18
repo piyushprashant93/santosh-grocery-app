@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const [fleetData, setFleetData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +49,31 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
       }
     };
     fetchDashboard();
+
+    // SSE for Fleet Tracking
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    const es = new EventSource(`https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/logistics/fleet/stream?token=${token}`);
+    
+    es.addEventListener('message', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data) {
+          setFleetData(data);
+        }
+      } catch (err) {
+        console.error("SSE parse error", err);
+      }
+    });
+
+    es.addEventListener('closed', () => {
+      es.close();
+    });
+
+    return () => {
+      es.close();
+    };
   }, []);
 
   const activeOrders = dashboardData?.recentOrders || [];
@@ -223,7 +249,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                               />
 
                               <p className="font-medium text-[#334155]">
-                                {o.client?.name || o.restaurant?.name || o.client || "Unknown Client"}
+                                {o.client?.name || o.client?.fullName || o.restaurant?.name || (typeof o.client === 'string' ? o.client : "Unknown Client")}
                               </p>
 
                             </div>
@@ -268,7 +294,9 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
                 <div className="absolute right-4 top-4 bg-white rounded-lg shadow px-4 py-2 flex items-center gap-2">
                   <Truck size={16} />
-                  <span className="text-sm">12 Vehicles Active</span>
+                  <span className="text-sm">
+                    {fleetData?.summary?.activeVehicles || fleetData?.vehicles?.filter((v: any) => v.isOnline).length || 0} Vehicles Active
+                  </span>
                 </div>
 
               </div>
@@ -340,22 +368,22 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                     <div className="flex items-center gap-3">
 
                       <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                        {(client.name || "C").charAt(0).toUpperCase()}
+                        {client.initial || (client.clientName || client.name || "C").charAt(0).toUpperCase()}
                       </div>
 
                       <div>
                         <p className="font-medium">
-                          {client.name}
+                          {client.clientName || client.name}
                         </p>
                         <p className="text-sm text-[#64748B]">
-                          Vol: {client.volume || "$0/mo"}
+                          Vol: {client.volumeLabel || client.volume || "$0/mo"}
                         </p>
                       </div>
 
                     </div>
 
-                    <span className={`${client.growth && client.growth.startsWith("-") ? 'text-red-500' : 'text-green-600'} text-sm font-medium`}>
-                      {client.growth || "+0%"}
+                    <span className={`${client.trendDirection === 'down' || (client.growth && client.growth.startsWith("-")) ? 'text-red-500' : 'text-green-600'} text-sm font-medium`}>
+                      {client.trendPercent !== undefined ? `${client.trendDirection === 'down' ? '-' : '+'}${client.trendPercent}%` : (client.growth || "+0%")}
                     </span>
 
                   </div>
