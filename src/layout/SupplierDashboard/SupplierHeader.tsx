@@ -1,7 +1,34 @@
 import { Search, Bell, Menu } from "lucide-react"
+import { useState, useEffect } from "react";
 import ProfileMenu from "./ProfileMenu";
 
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }: { activeTab: string; setActiveTab: (tab: string) => void; openSidebar: () => void }) {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch(`${API_BASE}/notifications`, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        const data = await res.json();
+        const notifs = data.data || data;
+        if (Array.isArray(notifs)) {
+          setUnreadCount(notifs.filter(n => !n.isRead).length);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchNotifications();
+  }, []);
+
   return (
     <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white border-b border-[#E5E7EB]">
 
@@ -26,7 +53,9 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
           <button onClick={() => setActiveTab("notifications")} className=" relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]">
             <Bell size={18} className="text-[#64748B]" />
 
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+            {unreadCount > 0 && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+            )}
           </button>
           <ProfileMenu setActiveTab={setActiveTab} />
         </div>
