@@ -6,6 +6,7 @@ import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
 import RetailerPanelLayout from "./RetailerPanel/RetailerPanelLayout"
 import SupplierPanelLayout from "./SupplierPanel/SupplierPanelLayout"
+import ProductFoodPanelLayout from "./ProductFoodPanel/ProductFoodPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
@@ -48,6 +49,10 @@ export default function AdminChild({
 
   if (activeTab === "supplier-panel") {
     return <SupplierPanelLayout />
+  }
+
+  if (activeTab === "product-food") {
+    return <ProductFoodPanelLayout />
   }
 
   if (activeTab === "settings") {
