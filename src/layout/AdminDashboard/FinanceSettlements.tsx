@@ -12,7 +12,8 @@ import {
   AlertCircle,
   Eye,
   ArrowUpRight,
-  Loader2
+  Loader2,
+  Download
 } from "lucide-react"
 import api from "../../lib/api"
 
@@ -254,6 +255,7 @@ export default function FinanceSettlements() {
           </div>
 
           {/* Table Section */}
+          {activeTab === 'Settlements' && (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col min-h-[300px]">
             {/* Table Controls */}
             <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
@@ -342,6 +344,198 @@ export default function FinanceSettlements() {
               </div>
             )}
           </div>
+          )}
+
+          {activeTab === 'Refunds' && (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col min-h-[300px]">
+              {/* Table Controls */}
+              <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Customer Refunds</h2>
+                  <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold">2 Pending Action</span>
+                </div>
+                
+                <div className="flex gap-3 w-full sm:w-auto">
+                  <div className="relative w-full sm:w-[300px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input 
+                      type="text" 
+                      placeholder="Search order or customer..."
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-gray-50/50 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[800px]">
+                  <thead>
+                    <tr className="bg-gray-50/50 border-b border-gray-100">
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Refund ID</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Customer & Order</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Reason</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider text-right"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    <tr className="hover:bg-gray-50/50 transition">
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-gray-400 text-sm">RF-8821</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-gray-900 text-sm">John Doe</span>
+                          <span className="text-blue-500 text-xs mt-0.5">ORD-9921</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        Item missing
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex flex-col">
+                          <span>Feb 12,</span>
+                          <span>2024</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                          Approved
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="font-bold text-gray-900 text-lg">$12.50</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50/50 transition">
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-gray-400 text-sm">RF-8822</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-gray-900 text-sm">Sarah Smith</span>
+                          <span className="text-blue-500 text-xs mt-0.5">ORD-9925</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        Food cold
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex flex-col">
+                          <span>Feb 12,</span>
+                          <span>2024</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                          Pending
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="font-bold text-gray-900 text-lg">$24.00</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <button className="px-4 py-1.5 border border-emerald-200 text-emerald-600 hover:bg-emerald-50 rounded-lg text-sm font-medium transition">
+                          Approve
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'Commissions' && (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col min-h-[300px]">
+              {/* Table Controls */}
+              <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Platform Commissions</h2>
+                </div>
+                
+                <div className="flex gap-3 w-full sm:w-auto">
+                  <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm shadow-sm">
+                    <Download size={16} />
+                    Export CSV
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[800px]">
+                  <thead>
+                    <tr className="bg-gray-50/50 border-b border-gray-100">
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Commission ID</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Partner</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Source Order</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Order Value</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Rate</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider text-right">Fee Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    <tr className="hover:bg-gray-50/50 transition">
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-gray-400 text-sm">COM-4421</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-bold text-gray-900 text-sm">Spicy Kitchen</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-blue-500 text-sm hover:underline cursor-pointer">ORD-9921</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        $125.00
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        15%
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                          Collected
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <span className="font-bold text-emerald-600 text-lg">+$18.75</span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50/50 transition">
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-gray-400 text-sm">COM-4422</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-bold text-gray-900 text-sm">Fresh Mart</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-blue-500 text-sm hover:underline cursor-pointer">ORD-9922</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        $85.00
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        10%
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                          Collected
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <span className="font-bold text-emerald-600 text-lg">+$8.50</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </>
       )}
 
