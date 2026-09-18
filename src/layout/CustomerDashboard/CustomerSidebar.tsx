@@ -66,8 +66,8 @@ export default function CustomerSidebar({
   }, []);
   return (
     <div className="w-[288px] flex flex-col h-full pb-5">
-      <div className="px-6 py-6">
-        <img src={Logo} alt="" />
+      <div className="px-6 py-6 cursor-pointer" onClick={() => navigate("/")}>
+        <img src={Logo} alt="Hubnepa Logo" />
       </div>
 
       <div className="px-4">

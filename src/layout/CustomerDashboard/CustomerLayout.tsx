@@ -6,7 +6,6 @@ import CustomerChild from "./CustomerChild";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRole } from "../RoleProvider";
 import { ThemeProvider } from "./ThemeContext";
-import { CurrencyProvider } from "./CurrencyContext";
 
 const customerTabToPath = (tab: string) => {
   if (tab === "overview") return "";
@@ -146,7 +145,6 @@ const { setRole } = useRole();
 
   return (
     <ThemeProvider>
-      <CurrencyProvider>
       <div className="flex h-screen bg-white dark:bg-[#0B1120] text-gray-900 dark:text-white relative">
       {sidebarOpen && (
         <div
@@ -215,7 +213,6 @@ const { setRole } = useRole();
         </div>
       </div>
       </div>
-      </CurrencyProvider>
     </ThemeProvider>
   );
 }

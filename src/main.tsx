@@ -6,13 +6,16 @@ import { RoleProvider } from './layout/RoleProvider'
 import { patchFetchForTokenExpiry } from './lib/fetchInterceptor'
 
 import { ErrorBoundary } from './components/ErrorBoundary'
+import { CurrencyProvider } from './layout/CustomerDashboard/CurrencyContext'
 
 patchFetchForTokenExpiry()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ErrorBoundary>
     <RoleProvider>
-      <App />
+      <CurrencyProvider>
+        <App />
+      </CurrencyProvider>
     </RoleProvider>
   </ErrorBoundary>
 )

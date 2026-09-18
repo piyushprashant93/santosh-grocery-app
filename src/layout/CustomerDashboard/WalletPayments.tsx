@@ -68,7 +68,7 @@ const PAYMENT_METHODS = [
 const BRANDS = ["Visa", "Mastercard", "Amex", "RuPay"];
 
 export default function WalletPayments() {
-  const { formatPrice } = useCurrency();
+  const { formatPrice, currency, rates } = useCurrency();
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [walletLoading, setWalletLoading] = useState(true);
   const [walletError, setWalletError] = useState("");
@@ -378,6 +378,10 @@ export default function WalletPayments() {
     setTopUpLoading(true);
 
     try {
+      const rate = rates[currency] || 1;
+      // Round to 2 decimal places to avoid floating point precision issues on the backend
+      const amountInUSD = Math.round((amount / rate) * 100) / 100;
+
       const response = await fetch(`${API_BASE}/wallet/top-up`, {
         method: "POST",
         headers: {
@@ -385,7 +389,7 @@ export default function WalletPayments() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          amount,
+          amount: amountInUSD,
           paymentMethod: topUpMethod,
         }),
       });
@@ -419,7 +423,11 @@ export default function WalletPayments() {
       return;
     }
 
-    if (wallet && amount > wallet.balance) {
+    const rate = rates[currency] || 1;
+    // Round to 2 decimal places to avoid floating point precision issues on the backend
+    const amountInUSD = Math.round((amount / rate) * 100) / 100;
+
+    if (wallet && (amountInUSD - wallet.balance) > 0.0001) {
       setWithdrawError("Amount exceeds your available balance.");
       return;
     }
@@ -440,7 +448,7 @@ export default function WalletPayments() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ amount: amountInUSD }),
       });
 
       const data = await response.json();
@@ -969,8 +977,8 @@ export default function WalletPayments() {
             <label className="text-sm text-[#94A3B8]">Amount</label>
 
             <div className="mt-1 mb-4 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]">
-                $
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-xs font-semibold">
+                {currency}
               </span>
 
               <input
@@ -980,7 +988,7 @@ export default function WalletPayments() {
                 placeholder="0.00"
                 value={topUpAmount}
                 onChange={(e) => setTopUpAmount(e.target.value)}
-                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-8 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-14 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
               />
             </div>
 
@@ -1048,8 +1056,8 @@ export default function WalletPayments() {
             <label className="text-sm text-[#94A3B8]">Amount</label>
 
             <div className="mt-1 mb-2 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]">
-                $
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-xs font-semibold">
+                {currency}
               </span>
 
               <input
@@ -1059,7 +1067,7 @@ export default function WalletPayments() {
                 placeholder="0.00"
                 value={withdrawAmount}
                 onChange={(e) => setWithdrawAmount(e.target.value)}
-                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-8 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-14 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
               />
             </div>
 
