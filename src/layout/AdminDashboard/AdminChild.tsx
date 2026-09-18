@@ -4,6 +4,7 @@ import Notifications from "./Notifications"
 import SystemHealth from "./SystemHealth"
 import PartnerManagement from "./PartnerManagement"
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
+import RetailerPanelLayout from "./RetailerPanel/RetailerPanelLayout"
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
 import SalesAndAnalytics from "./SalesAndAnalytics"
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
@@ -38,6 +39,10 @@ export default function AdminChild({
 
   if (activeTab === "restaurant-panel") {
     return <RestaurantPanelLayout />
+  }
+
+  if (activeTab === "retailer-panel") {
+    return <RetailerPanelLayout />
   }
 
   if (activeTab === "settings") {
