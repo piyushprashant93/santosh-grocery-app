@@ -253,27 +253,27 @@ const methodMeta: Record<
 > = {
   wallet: {
     icon: Wallet,
-    iconBg: "bg-[#1E293B]",
+    iconBg: "bg-theme-bg",
     iconColor: "text-[#00BC7D]",
   },
   card: {
     icon: CardIcon,
-    iconBg: "bg-[#1E293B]",
+    iconBg: "bg-theme-bg",
     iconColor: "text-[#60A5FA]",
   },
   cash: {
     icon: Banknote,
-    iconBg: "bg-[#1E293B]",
+    iconBg: "bg-theme-bg",
     iconColor: "text-[#F59E0B]",
   },
   esewa: {
     icon: Wallet,
-    iconBg: "bg-[#1E293B]",
+    iconBg: "bg-theme-bg",
     iconColor: "text-[#60a917]", // eSewa green
   },
   khalti: {
     icon: Wallet,
-    iconBg: "bg-[#1E293B]",
+    iconBg: "bg-theme-bg",
     iconColor: "text-[#5C2D91]", // Khalti purple
   },
 };
@@ -310,14 +310,14 @@ const methodMeta: Record<
                   className={`flex items-center justify-between lg:p-5 p-3 rounded-lg lg:rounded-xl border cursor-pointer transition
                   ${
                     active
-                      ? "border-[#00BC7D] bg-[#031F2E]"
-                      : "border-[#1E293B]"
+                      ? "border-[#00BC7D] bg-[#00BC7D]/10"
+                      : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
                   }`}
                 >
                   <div className="flex items-center lg:gap-4 gap-2">
                     <div
                       className={`lg:w-12 w-8 lg:h-12 h-8 rounded-full flex items-center justify-center ${
-                        active ? "bg-[#043D34]" : meta.iconBg
+                        active ? "bg-[#00BC7D]/20" : meta.iconBg
                       }`}
                     >
                       <Icon
@@ -364,8 +364,8 @@ const methodMeta: Record<
                             className={`flex items-center relative justify-between lg:p-4 p-3 rounded-lg border cursor-pointer transition
                             ${
                               cardActive
-                                ? "border-[#00BC7D] bg-[#031F2E]"
-                                : "border-[#1E293B]"
+                                ? "border-[#00BC7D] bg-[#00BC7D]/10"
+                                : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
                             }`}
                           >
                             <div className="flex items-center lg:gap-4 gap-2">

@@ -180,6 +180,16 @@ export default function Checkout() {
   };
 
   const nextStep = () => {
+    if (step === 1) {
+      const rawAddress = localStorage.getItem(ADDRESS_STORAGE_KEY);
+      const address = rawAddress ? JSON.parse(rawAddress) : null;
+      if (!address?._id) {
+        setPlaceOrderError("Please add or select a delivery address to continue.");
+        return;
+      }
+      setPlaceOrderError(""); // Clear any previous error
+    }
+
     if (step < 4) {
       setStep(step + 1);
       return;
@@ -223,6 +233,7 @@ export default function Checkout() {
       const initiatePayload: any = {
         paymentMethod: payment.method,
         deliveryAddressId: address._id,
+        deliveryAddress: address._id,
       };
       if (payment.method === "card" && payment.cardId) {
         initiatePayload.cardId = payment.cardId;
@@ -244,6 +255,7 @@ export default function Checkout() {
       // Step 2: confirm
       const confirmPayload: any = {
         paymentMethod: payment.method,
+        deliveryAddressId: address._id,
         deliveryAddress: address._id,
         notes: schedule?.title
           ? `${schedule.title} (${schedule.time})`

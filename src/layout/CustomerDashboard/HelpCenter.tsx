@@ -371,13 +371,20 @@ const [legalModal, setLegalModal] = useState({
 
     setTicketSubmitting(true);
     try {
+      const payload = {
+        subject: ticketForm.subject,
+        category: ticketForm.category,
+        priority: ticketForm.priority,
+        description: ticketForm.message,
+      };
+
       const res = await fetch(`${BASE_URL}/support`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(ticketForm),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
 
