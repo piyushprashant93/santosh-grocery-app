@@ -63,18 +63,17 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   const formatPrice = (priceInUSD: number) => {
     if (priceInUSD === undefined || priceInUSD === null || isNaN(priceInUSD)) return "";
-    const rate = rates[currency] || 1;
+    // Enforce fallback to USD if a different currency got stuck
+    const safeCurrency = currency === "NPR" ? "NPR" : "USD";
+    const rate = rates[safeCurrency] || 1;
     const converted = priceInUSD * rate;
     
-    let locale = undefined;
-    if (currency === "INR") locale = "en-IN";
-    else if (currency === "NPR") locale = "en-NP";
-    else if (currency === "USD") locale = "en-US";
-    else if (currency === "EUR") locale = "en-IE"; // fallback for Euro
+    let locale = "en-US";
+    if (safeCurrency === "NPR") locale = "en-NP";
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
-      currency: currency,
+      currency: safeCurrency,
     }).format(converted);
   };
 

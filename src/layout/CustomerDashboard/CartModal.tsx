@@ -8,7 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
 

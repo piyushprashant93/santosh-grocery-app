@@ -10,7 +10,7 @@ import {
   FileText,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getImageUrl } from "../../utils/dataHelper";

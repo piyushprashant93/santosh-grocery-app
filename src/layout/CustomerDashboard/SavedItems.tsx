@@ -8,7 +8,7 @@ import {
   PackageX,
   AlertTriangle,
 } from "lucide-react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import CartModal from "./CartModal";
 import { useNavigate } from "react-router-dom";
 

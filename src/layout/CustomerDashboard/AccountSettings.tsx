@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import AddressModal from "./AddressModal";
 import { QRCodeSVG } from "qrcode.react";
 import { useTheme } from "./ThemeContext";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 
 type UserProfile = {
   firstName: string;

@@ -7,7 +7,7 @@ import {
   Loader2,
   X,
 } from "lucide-react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";

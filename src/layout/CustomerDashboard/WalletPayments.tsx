@@ -15,7 +15,7 @@ import {
   Check,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import VoucherSection from "./VoucherSection";
 import AddCardModal from "./AddCardModal";
 

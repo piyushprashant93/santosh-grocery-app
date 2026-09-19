@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { Wallet, Package, TrendingUp, Clock, AlertCircle, Loader2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

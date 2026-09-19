@@ -17,7 +17,7 @@ import { ConfirmStep } from "./ConfirmStep";
 import AddressStep from "./AddressStep";
 import OrderSuccess from "./OrderSuccess";
 import { useNavigate } from "react-router-dom";
-import { useCurrency } from "../CurrencyContext";
+import { useCurrency } from "../../../context/CurrencyContext";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 

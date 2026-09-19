@@ -19,7 +19,7 @@ import {
   Twitter,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
 import { getImageUrl } from "../../utils/dataHelper";

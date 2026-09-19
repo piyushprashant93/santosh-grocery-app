@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import {
   Gift,
   Copy,
