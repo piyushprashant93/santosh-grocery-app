@@ -83,15 +83,15 @@ export default function CustomerHeader({
   }, [openCart]); // Re-fetch when cart modal closes
 
   return (
-    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white dark:bg-[#020618] border-b border-[#E5E7EB] dark:border-[#1E293B]">
-      <div className="cursor-pointer lg:hidden dark:text-white" onClick={openSidebar}>
+    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-theme-surface dark:bg-theme-bg border-b border-theme-border dark:border-theme-border">
+      <div className="cursor-pointer lg:hidden dark:text-theme-text" onClick={openSidebar}>
         <Menu />
       </div>
 
       <div className="sm:flex items-center gap-3 text-sm ml-3 hidden">
-        <span className="text-[#64748B]">HubNepa</span>
-        <span className="text-[#94A3B8]">›</span>
-       <span className="font-semibold text-[#0F172A] dark:text-white">
+        <span className="text-theme-muted">HubNepa</span>
+        <span className="text-theme-muted">›</span>
+       <span className="font-semibold text-theme-text dark:text-theme-text">
   {activeTab
     .replace(/-/g, " ")
     .split(" ")
@@ -107,25 +107,25 @@ export default function CustomerHeader({
         >
           <Search
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] cursor-pointer"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted cursor-pointer"
           />
 
           <input
             placeholder="Search orders..."
             readOnly
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] dark:bg-[#0F172B] dark:text-white dark:border dark:border-[#1E293B] text-sm outline-none cursor-pointer"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] dark:bg-theme-surface dark:text-theme-text dark:border dark:border-theme-border text-sm outline-none cursor-pointer"
           />
         </div>
 
 
         <button
           onClick={() => setOpenCart(true)}
-          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] dark:text-white"
+          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-theme-border dark:border-theme-border dark:text-theme-text"
         >
-          <ShoppingBag size={18} className="text-[#64748B] dark:text-[#94A3B8]" />
+          <ShoppingBag size={18} className="text-theme-muted dark:text-theme-muted" />
 
           {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#00A63E] rounded-full text-[10px] text-white font-bold flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#00A63E] rounded-full text-[10px] text-theme-text font-bold flex items-center justify-center">
               {cartCount > 99 ? "99+" : cartCount}
             </span>
           )}
@@ -135,9 +135,9 @@ export default function CustomerHeader({
 
         <button
           onClick={() => setActiveTab("notifications")}
-          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] dark:text-white"
+          className="relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-theme-border dark:border-theme-border dark:text-theme-text"
         >
-          <Bell size={18} className="text-[#64748B] dark:text-[#94A3B8]" />
+          <Bell size={18} className="text-theme-muted dark:text-theme-muted" />
 
           {unreadCount > 0 && (
             <span className="absolute top-1 right-1 min-w-[14px] h-3.5 px-1.5 bg-red-500 rounded-full text-[9px] text-white flex items-center justify-center">

@@ -19,23 +19,23 @@ const LegalInfoModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-      <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl w-full max-w-3xl">
+      <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-3xl">
 
         {/* Header */}
-        <div className="flex justify-between items-start p-6 border-b border-[#1E293B]">
+        <div className="flex justify-between items-start p-6 border-b border-theme-border">
           <div>
-            <h2 className="font-playfair text-3xl text-white">
+            <h2 className="font-playfair text-3xl text-theme-text">
               {title}
             </h2>
 
-            <p className="text-[#94A3B8] mt-2 max-w-2xl">
+            <p className="text-theme-muted mt-2 max-w-2xl">
               {subtitle}
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="text-[#94A3B8] hover:text-white"
+            className="text-theme-muted hover:text-theme-text"
           >
             <X size={22} />
           </button>
@@ -57,7 +57,7 @@ const LegalInfoModal = ({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[#1E293B] p-5 flex justify-end">
+        <div className="border-t border-theme-border p-5 flex justify-end">
           <button
             onClick={onClose}
             className="bg-[#009966] hover:bg-[#00b377] text-white px-6 py-2 rounded-lg"

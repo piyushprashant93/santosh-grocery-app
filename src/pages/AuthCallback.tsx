@@ -64,9 +64,9 @@ export default function AuthCallback() {
   }, [location.search, navigate]);
 
   return (
-    <div className="min-h-screen bg-[#020618] flex items-center justify-center flex-col gap-4">
+    <div className="min-h-screen bg-theme-bg flex items-center justify-center flex-col gap-4">
       <div className="w-12 h-12 border-4 border-[#00BC7D] border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-[#90A1B9] text-sm font-medium animate-pulse">Completing authentication...</p>
+      <p className="text-theme-muted text-sm font-medium animate-pulse">Completing authentication...</p>
     </div>
   );
 }

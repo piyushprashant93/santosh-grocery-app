@@ -140,7 +140,7 @@ export default function AddMenuItem({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            className="text-[#64748B] text-sm"
+            className="text-theme-muted text-sm"
             onClick={() => setActiveTab("menu-management")}
           >
             ←
@@ -152,7 +152,7 @@ export default function AddMenuItem({
         <div className="flex gap-3">
           <button
             onClick={() => setActiveTab("menu-management")}
-            className="border border-[#E5E7EB] px-5 py-2.5 rounded-lg"
+            className="border border-theme-border px-5 py-2.5 rounded-lg"
           >
             Cancel
           </button>
@@ -160,7 +160,7 @@ export default function AddMenuItem({
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow disabled:opacity-50"
+            className="flex items-center gap-2 bg-[#059669] text-theme-text px-5 py-2.5 rounded-lg shadow disabled:opacity-50"
           >
             <Check size={16} />
             {saving ? "Saving..." : "Save Item"}
@@ -168,7 +168,7 @@ export default function AddMenuItem({
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
         <div className="flex gap-2 bg-[#F1F5F9] p-1 rounded-lg w-fit mb-6">
           <button
             onClick={() => setTab("details")}
@@ -200,34 +200,34 @@ export default function AddMenuItem({
                 <Upload className="text-[#059669]" />
               </div>
 
-              <p className="font-medium text-[#0F172A]">Upload Dish Image</p>
+              <p className="font-medium text-theme-text">Upload Dish Image</p>
 
-              <p className="text-sm text-[#64748B] mt-1">PNG, JPG up to 5MB</p>
+              <p className="text-sm text-theme-muted mt-1">PNG, JPG up to 5MB</p>
             </div>
 
             <div className="space-y-5">
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-sm text-[#64748B]">Item Name</label>
+                  <label className="text-sm text-theme-muted">Item Name</label>
 
                   <input
                     value={menuItem.name}
                     onChange={(e) => setMenuItem({ ...menuItem, name: e.target.value })}
                     placeholder="e.g. Truffle Mushroom Burger"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                   {fieldErrors.name && <p className="text-red-500 text-xs mt-1">{fieldErrors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">Category</label>
+                  <label className="text-sm text-theme-muted">Category</label>
 
                   <input
                     list="category-options"
                     value={menuItem.category}
                     onChange={(e) => setMenuItem({ ...menuItem, category: e.target.value })}
                     placeholder="e.g. Main Course"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                   <datalist id="category-options">
                     {fetchedCategories.map((c, i) => <option key={i} value={c} />)}
@@ -237,26 +237,26 @@ export default function AddMenuItem({
               </div>
 
               <div>
-                <label className="text-sm text-[#64748B]">Description</label>
+                <label className="text-sm text-theme-muted">Description</label>
 
                 <textarea
                   rows={4}
                   value={menuItem.description}
                   onChange={(e) => setMenuItem({ ...menuItem, description: e.target.value })}
                   placeholder="Describe the dish..."
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
                 {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
               </div>
 
               <div className="grid md:grid-cols-3 gap-5">
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Selling Price ($)
                   </label>
 
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted">
                       $
                     </span>
 
@@ -267,38 +267,38 @@ export default function AddMenuItem({
                       value={sellingPrice}
                       onChange={(e) => setSellingPrice(e.target.value)}
                       placeholder="0.00"
-                      className="w-full pl-8 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                      className="w-full pl-8 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                     />
                   </div>
                   {fieldErrors.price && <p className="text-red-500 text-xs mt-1">{fieldErrors.price}</p>}
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">Prep Time</label>
+                  <label className="text-sm text-theme-muted">Prep Time</label>
 
                   <div className="relative mt-1">
                     <Clock
                       size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     />
 
                     <input
                       value={prepTime}
                       onChange={(e) => setPrepTime(Number(e.target.value))}
                       placeholder="15"
-                      className="w-full pl-8 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                      className="w-full pl-8 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                     />
                   </div>
                   {fieldErrors.prepTime && <p className="text-red-500 text-xs mt-1">{fieldErrors.prepTime}</p>}
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">Dietary Type</label>
+                  <label className="text-sm text-theme-muted">Dietary Type</label>
 
                   <select
                     value={menuItem.dietaryType}
                     onChange={(e) => setMenuItem({ ...menuItem, dietaryType: e.target.value })}
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   >
                     <option>Vegetarian</option>
                     <option>Non-Veg</option>
@@ -313,35 +313,35 @@ export default function AddMenuItem({
         {tab === "recipe" && (
           <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
             <div className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3 lg:p-6">
+              <div className="grid md:grid-cols-2 gap-4 bg-theme-bg border border-[#E2E8F0] rounded-lg p-3 lg:p-6">
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Chef Hourly Rate ($/hr)
                   </label>
                   <input
                     value={chefRate}
                     onChange={(e) => setChefRate(Number(e.target.value))}
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Prep Time (min)
                   </label>
                   <input
                     disabled
                     placeholder="Set in Details tab"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none bg-gray-100"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none bg-gray-100"
                   />
                 </div>
               </div>
 
-              <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3 lg:p-6">
+              <div className="bg-theme-bg border border-[#E2E8F0] rounded-lg p-3 lg:p-6">
                     <h3 className="font-playfair text-lg mb-4 flex items-center gap-2">
                   <Calculator size={18} className="text-[#009966]" /> Ingredient Cost Calculator
                 </h3>
-                <div className="border border-[#E5E7EB] rounded-xl overflow-hidden p-5 mb-5">
+                <div className="border border-theme-border rounded-xl overflow-hidden p-5 mb-5">
 
                 <div className="grid md:grid-cols-5 gap-3">
                   <input
@@ -390,14 +390,14 @@ export default function AddMenuItem({
 
                 <button
                   onClick={addIngredient}
-                  className="mt-4 w-full bg-[#0F172A] text-white py-3 rounded-lg flex items-center justify-center gap-2"
+                  className="mt-4 w-full bg-[#0F172A] text-theme-text py-3 rounded-lg flex items-center justify-center gap-2"
                 >
                   <Plus size={16} /> Add Ingredient
                 </button>
                 </div>
-              <div className="border border-[#E5E7EB] rounded-xl overflow-hidden">
+              <div className="border border-theme-border rounded-xl overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-[#F8FAFC] text-[#64748B]">
+                  <thead className="bg-theme-bg text-theme-muted">
                     <tr>
                       <th className="px-5 py-3 text-left">Ingredient</th>
                       <th className="px-5 py-3">Unit Cost</th>
@@ -406,12 +406,12 @@ export default function AddMenuItem({
                     </tr>
                   </thead>
 
-                  <tbody className="bg-white">
+                  <tbody className="bg-theme-surface">
                     {ingredients.length === 0 && (
                       <tr>
                         <td
                           colSpan={4}
-                          className="text-center px-6 py-3 text-[#94A3B8] bg-white"
+                          className="text-center px-6 py-3 text-theme-muted bg-theme-surface"
                         >
                           No ingredients added yet
                         </td>
@@ -467,15 +467,15 @@ export default function AddMenuItem({
               </div>
 
               <div>
-                <label className="text-sm text-[#64748B]">Selling Price</label>
+                <label className="text-sm text-theme-muted">Selling Price</label>
                 <input
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
 
-              <div className="flex justify-between items-center bg-white p-3 rounded-lg">
+              <div className="flex justify-between items-center bg-theme-surface p-3 rounded-lg">
                 <span className="text-[#1C398E]">Profit Margin</span>
 
                 <span
@@ -488,7 +488,7 @@ export default function AddMenuItem({
               </div>
 
               <div className="border-t pt-3">
-                <p className="text-sm text-[#64748B] mb-2">
+                <p className="text-sm text-theme-muted mb-2">
                   Suggested Price (3.5x)
                 </p>
 

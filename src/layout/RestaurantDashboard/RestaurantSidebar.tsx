@@ -95,18 +95,18 @@ export default function RestaurantSidebar({
               </button>
             )
           })}
-          <div className="border-t border-[#E5E7EB] my-4"></div>
+          <div className="border-t border-theme-border my-4"></div>
 
           <div className="px-4 text-xs font-semibold text-[#9CA3AF] tracking-wider !mt-5">
             SHOP
           </div>
 
-          <button onClick={() => navigate("/marketplace")} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] hover:bg-gray-50">
+          <button onClick={() => navigate("/marketplace")} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50">
             <ShoppingBag size={20} />
             Marketplace
           </button>
 
-          <button onClick={() => navigate("/restaurants")} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] hover:bg-gray-50">
+          <button onClick={() => navigate("/restaurants")} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50">
             <ShoppingBag size={20} />
             Restaurant
           </button>

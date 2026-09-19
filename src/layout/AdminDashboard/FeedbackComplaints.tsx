@@ -145,7 +145,7 @@ export default function FeedbackComplaints() {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Feedback & Complaints</h1>
           <p className="text-gray-500 mt-1">Review customer feedback and resolve complaints efficiently</p>
         </div>
-        <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
+        <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
           <Download size={18} />
           Export Reports
         </button>
@@ -153,7 +153,7 @@ export default function FeedbackComplaints() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
+        <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
           <div className="flex justify-between items-start">
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Total Cases</p>
             <BarChart2 size={18} className="text-gray-400" />
@@ -161,7 +161,7 @@ export default function FeedbackComplaints() {
           <h3 className="text-3xl font-bold text-gray-900">{stats.total.toLocaleString()}</h3>
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
+        <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
           <div className="flex justify-between items-start">
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Open</p>
             <div className="w-3 h-3 rounded-full bg-red-500 mt-1"></div>
@@ -169,7 +169,7 @@ export default function FeedbackComplaints() {
           <h3 className="text-3xl font-bold text-gray-900">{stats.open.toLocaleString()}</h3>
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
+        <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
           <div className="flex justify-between items-start">
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">In Review</p>
             <SearchIcon size={18} className="text-gray-400" />
@@ -177,7 +177,7 @@ export default function FeedbackComplaints() {
           <h3 className="text-3xl font-bold text-gray-900">{stats.inReview.toLocaleString()}</h3>
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
+        <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
           <div className="flex justify-between items-start">
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Resolved</p>
             <CheckSquare size={18} className="text-emerald-500" />
@@ -185,7 +185,7 @@ export default function FeedbackComplaints() {
           <h3 className="text-3xl font-bold text-gray-900">{stats.resolved.toLocaleString()}</h3>
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
+        <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
           <div className="flex justify-between items-start">
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Rejected</p>
             <X size={18} className="text-red-500" />
@@ -195,9 +195,9 @@ export default function FeedbackComplaints() {
       </div>
 
       {/* Table Section */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative min-h-[400px]">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative min-h-[400px]">
         {/* Table Controls */}
-        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white z-10">
+        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-theme-surface z-10">
           <div className="relative w-full sm:w-[450px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
@@ -211,7 +211,7 @@ export default function FeedbackComplaints() {
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-gray-50/50 text-sm"
             />
           </div>
-          <button className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+          <button className="px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
             <Filter size={16} />
             Filter
           </button>
@@ -227,7 +227,7 @@ export default function FeedbackComplaints() {
         {!loading && error && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-16 p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchComplaints} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+            <button onClick={fetchComplaints} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
           </div>
         )}
         {!loading && !error && complaints.length === 0 && (

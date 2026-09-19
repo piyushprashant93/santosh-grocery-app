@@ -112,13 +112,13 @@ export default function CreateShipment({
           Create New Shipment
         </h1>
 
-        <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+        <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
           Schedule a bulk delivery for a client.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
           <div className="flex items-center gap-2 mb-6">
             <User size={20} className="text-blue-500" />
 
@@ -129,7 +129,7 @@ export default function CreateShipment({
             <div>
               <label className="text-sm text-[#374151]">Select Client</label>
 
-              <select value={form.clientId} onChange={(e) => setForm({...form, clientId: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+              <select value={form.clientId} onChange={(e) => setForm({...form, clientId: e.target.value})} className="w-full border h-12 border-theme-border rounded-lg px-3 py-2 mt-1 outline-none">
                 <option value="">Choose a client...</option>
                 {clients.map(c => (
                   <option key={c._id} value={c._id}>{c.name}</option>
@@ -140,19 +140,19 @@ export default function CreateShipment({
             <div>
               <label className="text-sm text-[#374151]">Delivery Address</label>
 
-              <div className="border border-[#E5E7EB] rounded-lg p-4 mt-1 flex gap-3">
-                <MapPin size={18} className="text-[#64748B]" />
+              <div className="border border-theme-border rounded-lg p-4 mt-1 flex gap-3">
+                <MapPin size={18} className="text-theme-muted" />
 
                 <div>
                   <p className="font-medium">
                     {form.clientId ? clients.find(c => c._id === form.clientId)?.name : "Main Distribution Center"}
                   </p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {form.clientId ? (clients.find(c => c._id === form.clientId)?.address?.street || "123 Supply Chain Blvd, Suite 400") : "123 Supply Chain Blvd, Suite 400"}
                   </p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {form.clientId ? (clients.find(c => c._id === form.clientId)?.address?.city || "New York, NY 10001") : "New York, NY 10001"}
                   </p>
                 </div>
@@ -161,7 +161,7 @@ export default function CreateShipment({
           </div>
         </div>
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
           <div className="flex items-center gap-2 mb-6">
             <Truck size={20} className="text-blue-500" />
 
@@ -172,7 +172,7 @@ export default function CreateShipment({
             <div>
               <label className="text-sm text-[#374151]">Shipping Method</label>
 
-              <select value={form.shippingMethod} onChange={(e) => setForm({...form, shippingMethod: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+              <select value={form.shippingMethod} onChange={(e) => setForm({...form, shippingMethod: e.target.value})} className="w-full border h-12 border-theme-border rounded-lg px-3 py-2 mt-1 outline-none">
                 <option value="Standard Ground">Standard Ground</option>
                 <option value="Express">Express</option>
                 <option value="Overnight">Overnight</option>
@@ -186,7 +186,7 @@ export default function CreateShipment({
                 type="date"
                 value={form.dispatchDate}
                 onChange={(e) => setForm({...form, dispatchDate: e.target.value})}
-                className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                className="w-full border h-12 border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
               />
             </div>
 
@@ -195,7 +195,7 @@ export default function CreateShipment({
                 Assign Vehicle (Optional)
               </label>
 
-              <select value={form.vehicle} onChange={(e) => setForm({...form, vehicle: e.target.value})} className="w-full border h-12 border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none">
+              <select value={form.vehicle} onChange={(e) => setForm({...form, vehicle: e.target.value})} className="w-full border h-12 border-theme-border rounded-lg px-3 py-2 mt-1 outline-none">
                 <option value="Auto-assign">Auto-assign</option>
                 <option value="Vehicle 1">Vehicle 1</option>
                 <option value="Vehicle 2">Vehicle 2</option>
@@ -206,7 +206,7 @@ export default function CreateShipment({
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <Package size={20} className="text-blue-500" />
@@ -226,7 +226,7 @@ export default function CreateShipment({
         <div className="space-y-4">
           {items.map((item, i) => (
             <div key={i} className="grid lg:grid-cols-[2fr_1fr_1fr_auto] gap-4 items-center">
-              <select value={item.product} onChange={(e) => handleProductChange(i, e.target.value)} className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none">
+              <select value={item.product} onChange={(e) => handleProductChange(i, e.target.value)} className="border border-theme-border h-12 rounded-lg px-3 py-2 outline-none">
                 <option value="">Select product...</option>
                 {products.map(p => (
                   <option key={p._id} value={p._id}>{p.name || p.title}</option>
@@ -241,14 +241,14 @@ export default function CreateShipment({
                   newItems[i].qty = Number(e.target.value);
                   setItems(newItems);
                 }}
-                className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none"
+                className="border border-theme-border h-12 rounded-lg px-3 py-2 outline-none"
               />
 
               <input
                 type="text"
                 readOnly
                 value={`$ ${item.price.toFixed(2)}`}
-                className="border border-[#E5E7EB] h-12 rounded-lg px-3 py-2 outline-none bg-gray-50 text-gray-500"
+                className="border border-theme-border h-12 rounded-lg px-3 py-2 outline-none bg-gray-50 text-gray-500"
               />
               <button onClick={() => removeItem(i)} className="p-3 text-red-500 bg-red-50 rounded-lg">
                 <Trash2 size={20} />
@@ -258,14 +258,14 @@ export default function CreateShipment({
         </div>
 
         <div className="flex justify-end mt-6">
-          <div className="bg-[#F8FAFC] rounded-lg p-6 w-[280px] space-y-2">
-            <div className="flex justify-between text-sm text-[#64748B]">
+          <div className="bg-theme-bg rounded-lg p-6 w-[280px] space-y-2">
+            <div className="flex justify-between text-sm text-theme-muted">
               <span>Subtotal</span>
 
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
-            <div className="flex justify-between text-sm text-[#64748B]">
+            <div className="flex justify-between text-sm text-theme-muted">
               <span>Shipping</span>
 
               <span>$150.00</span>
@@ -281,9 +281,9 @@ export default function CreateShipment({
       </div>
 
       <div className="flex justify-end gap-4">
-        <button onClick={() => setActiveTab("logistics")} className="text-[#64748B]">Cancel</button>
+        <button onClick={() => setActiveTab("logistics")} className="text-theme-muted">Cancel</button>
 
-        <button onClick={handleConfirm} className="bg-[#2563EB] h-12 text-white px-6 py-2 rounded-lg shadow">
+        <button onClick={handleConfirm} className="bg-[#2563EB] h-12 text-theme-text px-6 py-2 rounded-lg shadow">
           Confirm Shipment
         </button>
       </div>

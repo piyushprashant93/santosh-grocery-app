@@ -182,14 +182,14 @@ export default function Inventory({
             Recipe & Inventory
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track stock levels, manage recipes, and calculate food costs.
           </p>
         </div>
 
         <div className="flex gap-3">
           <div className="relative">
-            <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+            <button className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
               Stock Adjustment
             </button>
           </div>
@@ -208,7 +208,7 @@ export default function Inventory({
           return (
             <div
               key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm flex items-center gap-4"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm flex items-center gap-4"
             >
               <div
                 className={`w-14 h-14 rounded-xl flex items-center justify-center ${s.iconBg}`}
@@ -217,9 +217,9 @@ export default function Inventory({
               </div>
 
               <div>
-                <p className="text-[#64748B] text-sm">{s.title}</p>
+                <p className="text-theme-muted text-sm">{s.title}</p>
 
-                <h3 className="text-[28px] font-playfair mt-1 text-[#0F172A]">
+                <h3 className="text-[28px] font-playfair mt-1 text-theme-text">
                   {s.value}
                 </h3>
               </div>
@@ -228,7 +228,7 @@ export default function Inventory({
         })}
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
         <div className="flex gap-8 border-b mb-6">
           <button
             onClick={() => setTab("beverage")}
@@ -267,7 +267,7 @@ export default function Inventory({
         {tab === "beverage" && (
           <>
             <div className="flex items-center justify-between mb-6">
-              <p className="text-[#64748B]">Total: {beverages.length} items</p>
+              <p className="text-theme-muted">Total: {beverages.length} items</p>
 
               <div className="flex gap-3">
                 <button className="flex items-center gap-2 px-4 py-2 border rounded-lg">
@@ -284,7 +284,7 @@ export default function Inventory({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="border-b text-sm text-[#64748B]">
+                <thead className="border-b text-sm text-theme-muted">
                   <tr>
                     <th className="py-3">Beverage Name</th>
                     <th>Category</th>
@@ -365,7 +365,7 @@ export default function Inventory({
             {subTab === "cooked" && (
               <>
                 <div className="flex items-center justify-between mb-6">
-                  <p className="text-[#64748B]">Total: 3 items</p>
+                  <p className="text-theme-muted">Total: 3 items</p>
 
                   <button className="flex items-center gap-2 px-4 py-2 bg-[#009966] text-white rounded-lg">
                     <Plus size={16} />
@@ -374,7 +374,7 @@ export default function Inventory({
                 </div>
 
                 <table className="w-full text-left">
-                  <thead className="border-b text-sm text-[#64748B]">
+                  <thead className="border-b text-sm text-theme-muted">
                     <tr>
                       <th className="py-3">Dish Name</th>
                       <th>Prepared By</th>
@@ -445,9 +445,9 @@ export default function Inventory({
                   </button>
                 </div>
 
-                <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+                <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
-                    <p className="text-[#64748B]">
+                    <p className="text-theme-muted">
                       Total:{" "}
                       {subTab2 === "raw"
                         ? rawItems.length
@@ -465,7 +465,7 @@ export default function Inventory({
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                      <thead className="border-b text-sm text-[#64748B]">
+                      <thead className="border-b text-sm text-theme-muted">
                         <tr>
                           <th className="py-3">Item Name</th>
                           <th>Current Stock</th>
@@ -483,7 +483,7 @@ export default function Inventory({
                           : solidItems
                         ).map((item, i) => (
                           <tr key={item._id || i} className="border-b last:border-none">
-                            <td className="py-4 font-medium text-[#0F172A]">
+                            <td className="py-4 font-medium text-theme-text">
                               {item.name}
                             </td>
                             <td>{item.stockQuantity || item.stock || 0}</td>
@@ -533,7 +533,7 @@ export default function Inventory({
         {tab === "recipes" && (
           <>
             <div className="flex items-center justify-between mb-6">
-              <p className="text-[#64748B]">Total: {recipes.length} recipes</p>
+              <p className="text-theme-muted">Total: {recipes.length} recipes</p>
 
               <button className="flex items-center gap-2 px-4 py-2 bg-[#009966] text-white rounded-lg">
                 <Plus size={16} />
@@ -543,7 +543,7 @@ export default function Inventory({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="border-b text-sm text-[#64748B]">
+                <thead className="border-b text-sm text-theme-muted">
                   <tr>
                     <th className="py-3">Recipe Name</th>
                     <th>Category</th>
@@ -557,7 +557,7 @@ export default function Inventory({
                 <tbody>
                   {recipes.map((r, i) => (
                     <tr key={r._id || i} className="border-b last:border-none">
-                      <td className="py-4 font-medium text-[#0F172A]">{r.name}</td>
+                      <td className="py-4 font-medium text-theme-text">{r.name}</td>
                       <td>{r.category || "-"}</td>
                       <td>{r.prepTime || "-"}</td>
                       <td>{r.cost ? `$${r.cost}` : "-"}</td>
@@ -580,7 +580,7 @@ export default function Inventory({
                   ))}
                   {recipes.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-[#64748B]">No recipes found.</td>
+                      <td colSpan={6} className="py-8 text-center text-theme-muted">No recipes found.</td>
                     </tr>
                   )}
                 </tbody>

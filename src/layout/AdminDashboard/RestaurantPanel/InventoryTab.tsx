@@ -29,7 +29,7 @@ export default function InventoryTab() {
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* Low Stock Alerts */}
-      <div className="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-red-100 overflow-hidden">
         <div className="bg-red-50 px-6 py-4 border-b border-red-100 flex items-center justify-between">
           <div className="flex items-center gap-2 text-red-700">
             <AlertTriangle size={20} />
@@ -58,7 +58,7 @@ export default function InventoryTab() {
       {/* Inventory Categories */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {inventoryCategories.map((category, i) => (
-          <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div key={i} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>{category.name}</h2>
               <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1">

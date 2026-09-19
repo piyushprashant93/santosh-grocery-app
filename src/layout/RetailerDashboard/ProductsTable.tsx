@@ -56,7 +56,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
             Products
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Manage your product catalog, inventory, and pricing.
           </p>
         </div>
@@ -68,12 +68,12 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
       </div>
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[320px]">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[320px]">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search products..."
               className="w-full px-3 py-2 outline-none text-sm"
@@ -82,12 +82,12 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
           <div className="flex gap-3">
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
               <Filter size={16} />
               Filters
             </button>
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
               <Download size={16} />
               Export
             </button>
@@ -101,7 +101,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
                 <th className="py-3 text-sm font-medium text-[#62748E] min-w-6">
@@ -136,7 +136,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                         src={p.img || p.imageUrl || p.image || "https://images.unsplash.com/photo-1580910051074-3eb694886505"}
                         className="w-12 h-12 min-w-12 rounded-lg object-cover"
                       />
-                      <span className="text-[#111827] font-medium">
+                      <span className="text-theme-text font-medium">
                         {p.name}
                       </span>
 
@@ -144,7 +144,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
                   </td>
 
-                  <td className="py-4 text-[#6A7282]">
+                  <td className="py-4 text-theme-muted">
                     {p.sku}
                   </td>
 
@@ -172,7 +172,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                     <button className="p-2 hover:bg-gray-100 rounded-lg">
                       <MoreHorizontal size={18} />
                     </button>
-                    <div className="absolute right-0 mt-2 hidden group-hover:block bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32">
+                    <div className="absolute right-0 mt-2 hidden group-hover:block bg-theme-surface border border-theme-border rounded-lg shadow-lg z-10 w-32">
                       <button onClick={() => deleteProduct(p._id)} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Delete</button>
                     </div>
                   </td>
@@ -192,7 +192,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
         </div>
 
 
-        <div className="flex items-center justify-between mt-6 text-sm text-[#6A7282]">
+        <div className="flex items-center justify-between mt-6 text-sm text-theme-muted">
 
           <p>
             Showing {productsData.length} product{productsData.length !== 1 ? 's' : ''}
@@ -200,11 +200,11 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
           <div className="flex gap-3">
 
-            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-gray-100">
+            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-gray-100">
               Previous
             </button>
 
-            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-white">
+            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-theme-surface">
               Next
             </button>
 

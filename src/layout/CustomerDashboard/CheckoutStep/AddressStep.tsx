@@ -164,9 +164,9 @@ export default function AddressStep() {
   };
 
   return (
-    <div className="border-[#1E293B] border rounded-xl p-6 bg-[#0F172B80]">
+    <div className="border-theme-border border rounded-xl p-6 bg-theme-surface">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-playfair text-white">
+        <h2 className="text-xl font-playfair text-theme-text">
           Choose a delivery address
         </h2>
       </div>
@@ -184,7 +184,7 @@ export default function AddressStep() {
       )}
 
       {loading && (
-        <div className="flex items-center justify-center gap-2 text-[#94A3B8] py-12">
+        <div className="flex items-center justify-center gap-2 text-theme-muted py-12">
           <Loader2 size={20} className="animate-spin" />
           Loading addresses...
         </div>
@@ -195,9 +195,9 @@ export default function AddressStep() {
       )}
 
       {!loading && !fetchError && addresses.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border border-dashed border-[#1E293B] rounded-xl">
-          <MapPin size={32} className="text-[#475569]" />
-          <p className="text-[#94A3B8] text-sm">
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center border border-dashed border-theme-border rounded-xl">
+          <MapPin size={32} className="text-theme-muted" />
+          <p className="text-theme-muted text-sm">
             No saved addresses yet. Add one to continue.
           </p>
           <button
@@ -209,7 +209,7 @@ export default function AddressStep() {
               setAddressError("");
               setShowAddressModal(true);
             }}
-            className="flex items-center justify-center gap-2 text-sm bg-white text-[#000] w-max px-6 py-2.5 rounded-lg border border-[#1E293B] hover:border-[#00BC7D] transition mt-2"
+            className="flex items-center justify-center gap-2 text-sm bg-theme-surface text-[#000] w-max px-6 py-2.5 rounded-lg border border-theme-border hover:border-[#00BC7D] transition mt-2"
           >
             <Plus size={16} />
             Add New Address
@@ -250,12 +250,12 @@ export default function AddressStep() {
                       isSelected ? "bg-[#009966]" : "bg-[#1E293B]"
                     }`}
                   >
-                    <MapPin size={16} className="text-white" />
+                    <MapPin size={16} className="text-theme-text" />
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium text-white">
+                      <span className="text-sm font-medium text-theme-text">
                         {addr.label}
                       </span>
                       {addr.isDefault && (
@@ -264,10 +264,10 @@ export default function AddressStep() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-[#94A3B8] mt-1">
+                    <p className="text-sm text-theme-muted mt-1">
                       {addr.fullName} • {addr.phone}
                     </p>
-                    <p className="text-sm text-[#64748B] mt-0.5">
+                    <p className="text-sm text-theme-muted mt-0.5">
                       {addr.street}, {addr.city}, {addr.state} {addr.zipCode},{" "}
                       {addr.country}
                     </p>
@@ -294,7 +294,7 @@ export default function AddressStep() {
                         setAddressError("");
                         setShowAddressModal(true);
                       }}
-                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#1E293B] text-[#94A3B8]"
+                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-theme-surface text-theme-muted"
                     >
                       <Pencil size={14} />
                     </button>
@@ -306,7 +306,7 @@ export default function AddressStep() {
                         setConfirmDeleteId(addr._id);
                       }}
                       disabled={isDeleting}
-                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-500/10 text-[#94A3B8] hover:text-red-400 disabled:opacity-60"
+                      className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-500/10 text-theme-muted hover:text-red-400 disabled:opacity-60"
                     >
                       {isDeleting ? (
                         <Loader2 size={14} className="animate-spin" />
@@ -323,13 +323,13 @@ export default function AddressStep() {
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center justify-between gap-3 px-4 pb-4"
                   >
-                    <p className="text-sm text-[#94A3B8]">
+                    <p className="text-sm text-theme-muted">
                       Delete this address? This cannot be undone.
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => setConfirmDeleteId(null)}
-                        className="px-3 py-1.5 text-sm rounded-lg border border-[#1E293B] text-[#94A3B8] hover:border-[#334155]"
+                        className="px-3 py-1.5 text-sm rounded-lg border border-theme-border text-theme-muted hover:border-[#334155]"
                       >
                         Cancel
                       </button>
@@ -355,7 +355,7 @@ export default function AddressStep() {
               setAddressError("");
               setShowAddressModal(true);
             }}
-            className="flex items-center justify-center gap-2 text-sm bg-white text-[#000] w-full border border-[#1E293B] hover:border-[#00BC7D] px-4 py-4 rounded-lg transition"
+            className="flex items-center justify-center gap-2 text-sm bg-theme-surface text-[#000] w-full border border-theme-border hover:border-[#00BC7D] px-4 py-4 rounded-lg transition"
           >
             <Plus size={16} />
             Add New Address

@@ -67,7 +67,7 @@ export default function SystemHealth() {
         <button 
           onClick={fetchHealthData}
           disabled={loading}
-          className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm disabled:opacity-50"
+          className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm disabled:opacity-50"
         >
           <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
           {loading ? "Refreshing..." : "Refresh Status"}
@@ -118,7 +118,7 @@ export default function SystemHealth() {
         )}
 
         {/* Left Chart Area */}
-        <div className="flex-1 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col">
+        <div className="flex-1 bg-theme-surface border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col">
           <h3 className="font-bold text-gray-900 mb-1">API Latency & Traffic</h3>
           <p className="text-sm text-gray-500 mb-8">Response time in milliseconds (ms) over the last 30 minutes.</p>
           
@@ -167,7 +167,7 @@ export default function SystemHealth() {
           <div className="bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-800 flex flex-col gap-5">
             <div className="flex items-center gap-3">
               <Server size={20} className="text-gray-400" />
-              <h3 className="font-bold text-white">Server Resources</h3>
+              <h3 className="font-bold text-theme-text">Server Resources</h3>
             </div>
             
             <div className="flex flex-col gap-4 mt-2">
@@ -178,7 +178,7 @@ export default function SystemHealth() {
           </div>
 
           {/* Recent Logs */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex-1 flex flex-col">
+          <div className="bg-theme-surface rounded-2xl p-6 shadow-sm border border-gray-100 flex-1 flex flex-col">
             <h3 className="font-bold text-gray-900 mb-6">Recent Logs</h3>
             <div className="flex flex-col gap-5">
               {logs.map((log: any, index: number) => (
@@ -215,7 +215,7 @@ export default function SystemHealth() {
 
 function StatusCard({ icon, title, uptime, latency }: { icon: React.ReactNode, title: string, uptime: string, latency: string }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+    <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
       <div className="flex justify-between items-start mb-4">
         <div className="p-2 bg-gray-50 text-gray-600 rounded-xl">
           {icon}
@@ -245,7 +245,7 @@ function ProgressBar({ label, percentage, color }: { label: string, percentage: 
     <div className="flex flex-col gap-1.5">
       <div className="flex justify-between items-center text-sm">
         <span className="text-gray-400">{label}</span>
-        <span className="font-bold text-white">{percentage}%</span>
+        <span className="font-bold text-theme-text">{percentage}%</span>
       </div>
       <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
         <div className={`h-full rounded-full ${color}`} style={{ width: `${percentage}%` }}></div>

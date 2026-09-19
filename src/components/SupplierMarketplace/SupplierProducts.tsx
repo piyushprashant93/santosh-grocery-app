@@ -89,7 +89,7 @@ export default function SupplierProducts({
         </div>
         <button
           onClick={onGoToCart}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-theme-text rounded-lg hover:bg-orange-700 transition shadow-sm"
         >
           <ShoppingCart size={18} />
           <span>Supply Cart</span>
@@ -101,14 +101,14 @@ export default function SupplierProducts({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
         </div>
       ) : products.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
+        <div className="bg-theme-surface rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
            <PackageOpen size={48} className="text-gray-300 mb-4" />
            <p className="text-lg font-medium">No bulk products available from this supplier.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
-             <div key={product._id || product.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
+             <div key={product._id || product.id} className="bg-theme-surface rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
                 <div className="h-48 bg-gray-50 relative border-b border-gray-100">
                    {product.image ? (
                      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />

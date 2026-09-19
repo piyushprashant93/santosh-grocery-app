@@ -314,7 +314,7 @@ export default function SearchTab() {
       <div className="relative mb-2">
         <Search
           size={20}
-          className="absolute sm:left-4 left-2 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+          className="absolute sm:left-4 left-2 top-1/2 -translate-y-1/2 text-theme-muted"
         />
 
         <input
@@ -327,7 +327,7 @@ export default function SearchTab() {
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
           placeholder="Search for orders, products, or restaurants..."
-          className="w-full h-14 sm:pl-12 pl-8 sm:pr-12 pr-8 lg:rounded-xl text-sm sm:text-base rounded-lg border border-[#E5E7EB] outline-none
+          className="w-full h-14 sm:pl-12 pl-8 sm:pr-12 pr-8 lg:rounded-xl text-sm sm:text-base rounded-lg border border-theme-border outline-none
           shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
         />
 
@@ -338,29 +338,29 @@ export default function SearchTab() {
               setSuggestions([]);
               setShowSuggestions(false);
             }}
-            className="absolute sm:right-4 right-2 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#4A5565]"
+            className="absolute sm:right-4 right-2 top-1/2 -translate-y-1/2 text-theme-muted hover:text-[#4A5565]"
           >
             <X size={18} />
           </button>
         ) : (
           <FilterIcon
             size={20}
-            className="absolute sm:right-4 right-2 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+            className="absolute sm:right-4 right-2 top-1/2 -translate-y-1/2 text-theme-muted"
           />
         )}
 
         {/* Autocomplete dropdown */}
         {showSuggestions && suggestions.length > 0 && (
-          <div className="absolute z-10 top-[calc(100%+6px)] left-0 right-0 bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden">
+          <div className="absolute z-10 top-[calc(100%+6px)] left-0 right-0 bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden">
             {suggestions.map((s, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmitSearch(s.text)}
-                className="w-full text-left px-4 py-3 hover:bg-[#F8FAFC] flex items-center justify-between gap-3 border-b border-[#F1F5F9] last:border-b-0"
+                className="w-full text-left px-4 py-3 hover:bg-theme-bg flex items-center justify-between gap-3 border-b border-[#F1F5F9] last:border-b-0"
               >
-                <span className="text-sm text-[#0F172A]">{s.text}</span>
+                <span className="text-sm text-theme-text">{s.text}</span>
                 {s.category && (
-                  <span className="text-xs text-[#94A3B8]">{s.category}</span>
+                  <span className="text-xs text-theme-muted">{s.category}</span>
                 )}
               </button>
             ))}
@@ -370,19 +370,19 @@ export default function SearchTab() {
 
       {/* Recent / Popular chips */}
       <div className="mb-10 mt-6">
-        <h3 className="text-sm tracking-widest text-[#6A7282] mb-3 font-playfair">
+        <h3 className="text-sm tracking-widest text-theme-muted mb-3 font-playfair">
           {isTypingMode ? "POPULAR SEARCHES" : "RECENT SEARCHES"}
         </h3>
 
         <div className="flex flex-wrap lg:gap-3 gap-2">
           {(isTypingMode ? popularSearches : chipsToShow).length === 0 ? (
-            <p className="text-[#94A3B8] text-sm">No searches yet.</p>
+            <p className="text-theme-muted text-sm">No searches yet.</p>
           ) : (
             (isTypingMode ? popularSearches : chipsToShow).map((item, i) => (
               <button
                 key={i}
                 onClick={() => handleSubmitSearch(item)}
-                className="lg:px-5 px-2 text-[#4A5565] sm:py-2 py-2 rounded-full border border-[#E5E7EB] bg-white
+                className="lg:px-5 px-2 text-[#4A5565] sm:py-2 py-2 rounded-full border border-theme-border bg-theme-surface
                 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
               >
                 {item}
@@ -394,12 +394,12 @@ export default function SearchTab() {
 
       {/* Results */}
       <div className="space-y-4">
-        <h3 className="text-sm tracking-widest text-[#6A7282] font-playfair">
+        <h3 className="text-sm tracking-widest text-theme-muted font-playfair">
           {isTypingMode ? `RESULTS FOR "${query.trim()}"` : "SUGGESTED FOR YOU"}
         </h3>
 
         {(isTypingMode ? searching : trendingLoading) && (
-          <div className="flex items-center justify-center gap-2 text-[#6A7282] py-10">
+          <div className="flex items-center justify-center gap-2 text-theme-muted py-10">
             <Loader2 size={18} className="animate-spin" />
             Loading...
           </div>
@@ -412,7 +412,7 @@ export default function SearchTab() {
         {!(isTypingMode ? searching : trendingLoading) &&
           !searchError &&
           rowsToShow.length === 0 && (
-            <p className="text-center text-[#94A3B8] py-10">
+            <p className="text-center text-theme-muted py-10">
               {isTypingMode ? "No results found." : "Nothing trending right now."}
             </p>
           )}
@@ -425,7 +425,7 @@ export default function SearchTab() {
               <div
                 key={`${item.kind}-${item.id}`}
                 onClick={() => handleRowClick(item)}
-                className="flex md:flex-row flex-col md:items-center gap-4 lg:p-5 p-2 rounded-lg lg:rounded-xl border border-[#E5E7EB] bg-white
+                className="flex md:flex-row flex-col md:items-center gap-4 lg:p-5 p-2 rounded-lg lg:rounded-xl border border-theme-border bg-theme-surface
                 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] cursor-pointer hover:border-[#00A63E] transition"
               >
                 <img
@@ -439,7 +439,7 @@ export default function SearchTab() {
                     {item.title}
                   </h3>
 
-                  <p className="text-[#6A7282] text-base">{item.subtitle}</p>
+                  <p className="text-theme-muted text-base">{item.subtitle}</p>
 
                   <p className="text-[#99A1AF] text-sm">{item.desc}</p>
                 </div>
@@ -457,9 +457,9 @@ export default function SearchTab() {
                     {item.status}
                   </span>
 
-                  <div className="text-right border-l border-[#E5E7EB] pl-6 flex md:flex-col gap-3 md:items-end">
+                  <div className="text-right border-l border-theme-border pl-6 flex md:flex-col gap-3 md:items-end">
                     <p className="font-playfair text-lg">{item.price}</p>
-                    <Icon size={18} className="text-[#94A3B8] mt-1" />
+                    <Icon size={18} className="text-theme-muted mt-1" />
                   </div>
                 </div>
               </div>

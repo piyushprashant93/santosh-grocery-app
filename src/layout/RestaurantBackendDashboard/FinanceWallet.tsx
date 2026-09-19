@@ -143,13 +143,13 @@ export default function FinanceWallet() {
             Expenses & Finance
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Track your spending, salaries, and operational costs.
           </p>
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface shadow-sm">
             <Download size={18} />
             Export Report
           </button>
@@ -170,7 +170,7 @@ export default function FinanceWallet() {
         {cards.map((c, i) => (
           <div
             key={i}
-            className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
+            className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm"
           >
 
             <div className="flex items-start justify-between mb-5">
@@ -185,7 +185,7 @@ export default function FinanceWallet() {
 
             </div>
 
-            <p className="text-[#64748B] text-lg">
+            <p className="text-theme-muted text-lg">
               {c.title}
             </p>
 
@@ -218,9 +218,9 @@ export default function FinanceWallet() {
             ))}
 
           </div>
-          <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
+          <div className="flex items-center gap-2 border border-theme-border rounded-lg px-3 h-10 bg-theme-surface w-[200px]">
 
-            <Search size={16} className="text-[#94A3B8]" />
+            <Search size={16} className="text-theme-muted" />
 
             <input
               placeholder="Filter records..."
@@ -231,13 +231,13 @@ export default function FinanceWallet() {
         </div>
         {
           activeFinance === 0 &&
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
 
             <div className="overflow-x-auto">
 
               <table className="w-full text-left">
 
-                <thead className="bg-[#F8FAFC] border-b text-sm text-[#64748B]">
+                <thead className="bg-theme-bg border-b text-sm text-theme-muted">
 
                   <tr>
 
@@ -277,7 +277,7 @@ export default function FinanceWallet() {
                     const id = e._id || i.toString();
                     return (
                     <tr key={id} className="border-b last:border-none">
-                      <td className="py-6 px-6 text-[#0F172A] font-medium text-lg">
+                      <td className="py-6 px-6 text-theme-text font-medium text-lg">
                         {e.title}
                       </td>
                       <td className="py-6 px-6">
@@ -285,10 +285,10 @@ export default function FinanceWallet() {
                           {e.category}
                         </span>
                       </td>
-                      <td className="py-6 px-6 text-[#64748B]">
+                      <td className="py-6 px-6 text-theme-muted">
                         {e.date ? new Date(e.date).toLocaleDateString() : "-"}
                       </td>
-                      <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
+                      <td className="py-6 px-6 font-semibold text-theme-text text-lg">
                         ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.amount}
                       </td>
                       <td className="py-6 px-6">
@@ -299,22 +299,22 @@ export default function FinanceWallet() {
                       </td>
                       <td className="py-6 px-6 text-end relative">
                         <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
-                          <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                          <MoreHorizontal size={18} className="text-theme-muted" />
                         </button>
                         {openMenu === id && (
-                          <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
+                          <div className="absolute right-6 top-12 w-max bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden z-50">
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
 
-                              <View size={16} className="text-[#64748B]" />
+                              <View size={16} className="text-theme-muted" />
 
                               View Invoice
 
                             </button>
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
 
-                              <Download size={16} className="text-[#64748B]" />
+                              <Download size={16} className="text-theme-muted" />
 
                               Download Receipt
 
@@ -347,7 +347,7 @@ export default function FinanceWallet() {
                 Payroll Management
               </h2>
 
-              <button className="flex items-center gap-2 border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 shadow-sm">
+              <button className="flex items-center gap-2 border border-theme-border bg-theme-surface rounded-lg px-4 py-2 shadow-sm">
 
                 <Download size={16} />
                 Payroll Summary
@@ -358,13 +358,13 @@ export default function FinanceWallet() {
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
 
               <div className="overflow-x-auto">
 
                 <table className="w-full text-left">
 
-                  <thead className="bg-[#F8FAFC] border-b text-sm text-[#64748B]">
+                  <thead className="bg-theme-bg border-b text-sm text-theme-muted">
 
                     <tr>
 
@@ -408,18 +408,18 @@ export default function FinanceWallet() {
                         <td className="py-6 px-6">
                           <div className="flex items-center gap-3">
                             <img src={staff.image || staff.imageUrl || "https://randomuser.me/api/portraits/men/32.jpg"} className="w-10 h-10 rounded-full object-cover" />
-                            <p className="font-medium text-[#0F172A] text-lg">
+                            <p className="font-medium text-theme-text text-lg">
                               {staff.name || "Unknown"}
                             </p>
                           </div>
                         </td>
-                        <td className="py-6 px-6 text-[#475569]">
+                        <td className="py-6 px-6 text-theme-muted">
                           {staff.role || "Staff"}
                         </td>
-                        <td className="py-6 px-6 text-[#64748B]">
+                        <td className="py-6 px-6 text-theme-muted">
                           {e.month || e.period || "-"}
                         </td>
-                        <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
+                        <td className="py-6 px-6 font-semibold text-theme-text text-lg">
                           ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.totalPay || e.amount || "0.00"}
                         </td>
                         <td className="py-6 px-6">
@@ -432,16 +432,16 @@ export default function FinanceWallet() {
                             <button className="text-[#059669] font-medium">Payslip</button>
                             <div className="relative top-1">
                               <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
-                                <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                                <MoreHorizontal size={18} className="text-theme-muted" />
                               </button>
                               {openMenu === id && (
-                                <div className="absolute right-3 top-5 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
-                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-                                    <Edit size={16} className="text-[#64748B]" />
+                                <div className="absolute right-3 top-5 w-max bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden z-50">
+                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
+                                    <Edit size={16} className="text-theme-muted" />
                                     Edit Salary
                                   </button>
-                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-                                    <View size={16} className="text-[#64748B]" />
+                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
+                                    <View size={16} className="text-theme-muted" />
                                     View Profile
                                   </button>
                                 </div>
@@ -474,7 +474,7 @@ export default function FinanceWallet() {
                 Maintenance & Repairs
               </h2>
 
-              <button className="flex items-center gap-2 bg-[#0F172A] text-white px-5 py-2.5 rounded-lg shadow">
+              <button className="flex items-center gap-2 bg-[#0F172A] text-theme-text px-5 py-2.5 rounded-lg shadow">
 
                 <Wrench size={16} />
                 Report Issue
@@ -488,13 +488,13 @@ export default function FinanceWallet() {
             <div className="grid md:grid-cols-2 gap-6">
 
               {issues.map((item, i) => (
-                <div key={item._id || i} className="border border-[#E5E7EB] bg-white rounded-xl p-6 shadow-sm">
+                <div key={item._id || i} className="border border-theme-border bg-theme-surface rounded-xl p-6 shadow-sm">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="font-playfair text-xl">
                         {item.title}
                       </h3>
-                      <p className="text-[#64748B] mt-1">
+                      <p className="text-theme-muted mt-1">
                         {item.description || item.desc}
                       </p>
                     </div>
@@ -504,19 +504,19 @@ export default function FinanceWallet() {
                   </div>
                   <div className="border-t pt-4 grid grid-cols-2 gap-y-4 text-sm">
                     <div>
-                      <p className="text-[#64748B]">Vendor</p>
-                      <p className="font-medium text-[#0F172A]">{item.vendor || "-"}</p>
+                      <p className="text-theme-muted">Vendor</p>
+                      <p className="font-medium text-theme-text">{item.vendor || "-"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Cost</p>
-                      <p className="font-medium text-[#0F172A]">${typeof item.cost === "number" ? item.cost.toFixed(2) : item.cost || "0.00"}</p>
+                      <p className="text-theme-muted">Cost</p>
+                      <p className="font-medium text-theme-text">${typeof item.cost === "number" ? item.cost.toFixed(2) : item.cost || "0.00"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Date Reported</p>
-                      <p className="font-medium text-[#0F172A]">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</p>
+                      <p className="text-theme-muted">Date Reported</p>
+                      <p className="font-medium text-theme-text">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Status</p>
+                      <p className="text-theme-muted">Status</p>
                       <div className={`flex items-center gap-1 font-medium ${statusIssueStyles[item.status || "Scheduled"] || "text-gray-500"}`}>
                         {(item.status === "Resolved" || item.status === "Paid") && <CheckCircle2 size={16} />}
                         {item.status === "In Progress" && <Clock size={16} />}
@@ -525,11 +525,11 @@ export default function FinanceWallet() {
                     </div>
                   </div>
                   <div className="flex gap-4 mt-6">
-                    <button className="flex-1 border border-[#E5E7EB] rounded-lg py-2 bg-[#F8FAFC] text-[#0F172A]">
+                    <button className="flex-1 border border-theme-border rounded-lg py-2 bg-theme-bg text-theme-text">
                       View Details
                     </button>
                     {(item.status !== "Resolved" && item.status !== "Paid") && (
-                      <button onClick={() => markMaintenanceResolved(item._id)} className="flex-1 bg-[#059669] text-white rounded-lg py-2">
+                      <button onClick={() => markMaintenanceResolved(item._id)} className="flex-1 bg-[#059669] text-theme-text rounded-lg py-2">
                         Mark Resolved
                       </button>
                     )}

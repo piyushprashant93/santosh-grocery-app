@@ -123,14 +123,14 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
             Order Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track and fulfill bulk orders from your clients.
           </p>
         </div>
 
         <div className="flex gap-3">
 
-          <button onClick={handleExport} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:bg-gray-50">
+          <button onClick={handleExport} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:bg-gray-50">
             <Download size={16} />
             Export
           </button>
@@ -153,14 +153,14 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
           return (
 
-            <div key={i} className="border border-[#E5E7EB] rounded-lg lg:rounded-xl p-4 flex items-center gap-4">
+            <div key={i} className="border border-theme-border rounded-lg lg:rounded-xl p-4 flex items-center gap-4">
 
               <div className={`w-12 h-12 flex items-center justify-center rounded-lg ${s.color}`}>
                 <Icon size={20} />
               </div>
 
               <div>
-                <p className="text-[#64748B]">{s.label}</p>
+                <p className="text-theme-muted">{s.label}</p>
                 <p className="text-xl font-semibold">{s.value}</p>
               </div>
 
@@ -173,12 +173,12 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       </div>
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
         <div className="flex gap-3 mb-6">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 flex-1">
-            <Search size={18} className="text-[#64748B]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 flex-1">
+            <Search size={18} className="text-theme-muted" />
             <input 
               placeholder="Search by Order ID, Client, or Status..." 
               className="w-full px-3 py-2 outline-none text-sm" 
@@ -188,7 +188,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
           </div>
 
           <select 
-            className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none shadow-sm"
+            className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 text-sm outline-none shadow-sm"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -205,7 +205,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#64748B] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
                 <th className="py-3">ORDER ID</th>
@@ -227,7 +227,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                     <div>
                       <p className="font-medium">{o.id || o.orderId || o._id?.substring(0,8)}</p>
-                      <p className="text-sm text-[#64748B]">{o.date ? new Date(o.date).toLocaleDateString() : (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : "")}</p>
+                      <p className="text-sm text-theme-muted">{o.date ? new Date(o.date).toLocaleDateString() : (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : "")}</p>
                     </div>
 
                   </td>
@@ -241,7 +241,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                       <div>
                         <p className="font-medium">{o.client || o.client?.name || o.restaurant?.name || "Unknown Client"}</p>
-                        <p className="text-sm text-[#64748B]">{o.type || o.client?.type || "Retailer/Restaurant"}</p>
+                        <p className="text-sm text-theme-muted">{o.type || o.client?.type || "Retailer/Restaurant"}</p>
                       </div>
 
                     </div>
@@ -253,7 +253,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                     <div>
                       <p>{o.items || o.totalItems || o.items?.length || 0} Items</p>
-                      <p className="text-sm text-[#64748B]">{o.weight || o.totalWeight || ""}</p>
+                      <p className="text-sm text-theme-muted">{o.weight || o.totalWeight || ""}</p>
                     </div>
 
                   </td>
@@ -286,7 +286,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                       <ChevronDown size={14} />
                     </button>
                     {openStatusMenu === (o._id || i) && (
-                      <div className="absolute top-12 left-6 bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32 py-1">
+                      <div className="absolute top-12 left-6 bg-theme-surface border border-theme-border rounded-lg shadow-lg z-10 w-32 py-1">
                         {["New", "Pending", "Processing", "In Transit", "Delivered", "Cancelled"].map(s => (
                           <button key={s} onClick={() => updateOrderStatus(o._id, s)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{s}</button>
                         ))}

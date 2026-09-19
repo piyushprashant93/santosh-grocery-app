@@ -14,7 +14,7 @@ export default function InsightsSection() {
   ];
 
   return (
-    <section className="relative bg-[#0F172B] border-y border-[#FFFFFF0D] overflow-hidden py-[100px]">
+    <section className="relative bg-theme-surface border-y border-[#FFFFFF0D] overflow-hidden py-[100px]">
       
       <div className="absolute -top-48 -right-48 w-[600px] h-[600px] bg-[#00BC7D1A] blur-[240px] rounded-full" />
       <div className="absolute -bottom-32 -left-32 w-[400px] h-[400px] bg-[#2B7FFF1A] blur-[200px] rounded-full" />
@@ -27,11 +27,11 @@ export default function InsightsSection() {
             Restaurant Owners
           </div>
 
-          <h2 className="font-playfair text-[54px] text-white font-bold leading-[1.1] mb-6">
+          <h2 className="font-playfair text-[54px] text-theme-text font-bold leading-[1.1] mb-6">
             Real-time insights <br /> at your fingertips
           </h2>
 
-          <p className="text-[#90A1B9] text-[20px] mb-8 max-w-[566px]">
+          <p className="text-theme-muted text-[20px] mb-8 max-w-[566px]">
             Stop guessing and start knowing. Our powerful dashboard gives you a
             live view of your restaurant's performance, from sales velocity to
             inventory levels.

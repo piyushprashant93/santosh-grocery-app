@@ -25,7 +25,7 @@ export default function OverviewTab() {
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">
+            <div key={idx} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">
               <div className="flex justify-between items-start mb-4">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
                   <Icon size={20} />
@@ -46,7 +46,7 @@ export default function OverviewTab() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="lg:col-span-2 bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Campaign Performance</h3>
@@ -87,7 +87,7 @@ export default function OverviewTab() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col">
           <h3 className="text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'serif' }}>Quick Actions</h3>
           <p className="text-sm text-gray-500 mb-6">Launch new marketing initiatives</p>
           

@@ -313,10 +313,10 @@ export default function Checkout() {
   const { subtotal, deliveryFee, tax, total, discount = 0 } = pricing;
 
   return (
-    <div className="bg-[#020618] min-h-svh">
-      <div className="border-b border-[#1E293B]">
+    <div className="bg-theme-bg min-h-svh">
+      <div className="border-b border-theme-border">
         <div className="flex items-center justify-between lg:px-6 px-3 py-4 max-w-[1265px] mx-auto flex-wrap gap-3">
-          <div className="flex items-center gap-5 text-sm text-[#94A3B8]">
+          <div className="flex items-center gap-5 text-sm text-theme-muted">
             <span
               className="cursor-pointer"
               onClick={() => {
@@ -327,9 +327,9 @@ export default function Checkout() {
               HubNepa
             </span>
 
-            <span className="text-[#475569]">›</span>
+            <span className="text-theme-muted">›</span>
 
-            <span className="text-white font-medium">Checkout</span>
+            <span className="text-theme-text font-medium">Checkout</span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -347,14 +347,14 @@ export default function Checkout() {
       {step === 5 ? (
         <OrderSuccess />
       ) : (
-        <div className="grid lg:grid-cols-[1fr_380px] gap-10 py-20 text-white lg:px-6 px-3 max-w-[1265px] mx-auto">
+        <div className="grid lg:grid-cols-[1fr_380px] gap-10 py-20 text-theme-text lg:px-6 px-3 max-w-[1265px] mx-auto">
           <div>
             <button
               onClick={prevStep}
-              className="flex items-center gap-2 mb-8 text-[#94A3B8]"
+              className="flex items-center gap-2 mb-8 text-theme-muted"
             >
               {step != 1 && <ArrowLeft size={18} />}
-              <h1 className="text-3xl font-playfair text-white">Checkout</h1>
+              <h1 className="text-3xl font-playfair text-theme-text">Checkout</h1>
             </button>
 
             <div className="flex items-center justify-between mb-10">
@@ -396,11 +396,11 @@ export default function Checkout() {
             {step === 4 && <ConfirmStep />}
           </div>
 
-          <div className="border border-[#1E293B] rounded-lg lg:rounded-xl bg-[#0F172B80] lg:p-6 p-3 h-fit">
+          <div className="border border-theme-border rounded-lg lg:rounded-xl bg-theme-surface lg:p-6 p-3 h-fit">
             <h3 className="font-playfair text-xl mb-6">Order Summary</h3>
 
             {summaryLoading ? (
-              <div className="flex items-center justify-center gap-2 text-[#94A3B8] py-10">
+              <div className="flex items-center justify-center gap-2 text-theme-muted py-10">
                 <Loader2 size={18} className="animate-spin" />
                 Loading summary...
               </div>
@@ -408,7 +408,7 @@ export default function Checkout() {
               <p className="text-red-400 text-sm py-4">{summaryError}</p>
             ) : (
               <>
-                <div className="space-y-3 text-[#94A3B8]">
+                <div className="space-y-3 text-theme-muted">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span>{formatPrice(subtotal)}</span>
@@ -443,7 +443,7 @@ export default function Checkout() {
                       </div>
                       <button
                         onClick={handleRemovePromo}
-                        className="text-[#94A3B8] hover:text-white"
+                        className="text-theme-muted hover:text-theme-text"
                       >
                         <X size={14} />
                       </button>
@@ -453,7 +453,7 @@ export default function Checkout() {
                       <div className="relative flex-1">
                         <Tag
                           size={14}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
                         />
                         <input
                           value={promoCode}
@@ -462,14 +462,14 @@ export default function Checkout() {
                             setPromoError("");
                           }}
                           placeholder="Promo code"
-                          className="w-full h-10 pl-9 pr-3 rounded-lg bg-[#0F172A] border border-[#1E293B] text-sm text-white outline-none focus:border-[#334155]"
+                          className="w-full h-10 pl-9 pr-3 rounded-lg bg-[#0F172A] border border-theme-border text-sm text-theme-text outline-none focus:border-[#334155]"
                         />
                       </div>
 
                       <button
                         onClick={handleApplyPromo}
                         disabled={promoApplying}
-                        className="px-4 h-10 rounded-lg bg-[#1E293B] text-sm text-white hover:bg-[#334155] disabled:opacity-60"
+                        className="px-4 h-10 rounded-lg bg-theme-surface text-sm text-theme-text hover:bg-[#334155] disabled:opacity-60"
                       >
                         {promoApplying ? "..." : "Apply"}
                       </button>
@@ -481,7 +481,7 @@ export default function Checkout() {
                   )}
                 </div>
 
-                <div className="border-t border-[#1E293B] mt-4 pt-4 flex justify-between items-center">
+                <div className="border-t border-theme-border mt-4 pt-4 flex justify-between items-center">
                   <span>Total</span>
 
                   <span className="text-[#00BC7D] text-[24px] font-playfair">

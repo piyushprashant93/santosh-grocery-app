@@ -128,7 +128,7 @@ export default function CouponsTab() {
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
             <Filter size={16} />
             Filter
           </button>
@@ -155,7 +155,7 @@ export default function CouponsTab() {
         </div>
 
         {coupons.map((coupon) => (
-          <div key={coupon._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col relative overflow-hidden group">
+          <div key={coupon._id} className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col relative overflow-hidden group">
             <div className="absolute left-0 top-0 bottom-0 w-1.5 border-l-[3px] border-dashed border-gray-200"></div>
             
             <div className="flex justify-between items-start mb-3 ml-2">
@@ -207,7 +207,7 @@ export default function CouponsTab() {
       {/* Create Coupon Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
+          <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
               <h3 className="font-bold text-lg text-gray-900">Create New Coupon</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-700">
@@ -276,7 +276,7 @@ export default function CouponsTab() {
                 <button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium transition"
+                  className="flex items-center gap-2 px-5 py-2 bg-orange-500 hover:bg-orange-600 text-theme-text rounded-lg text-sm font-medium transition"
                 >
                   {isSubmitting && <Loader2 size={16} className="animate-spin" />}
                   Create Coupon

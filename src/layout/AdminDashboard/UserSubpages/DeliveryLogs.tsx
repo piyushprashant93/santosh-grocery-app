@@ -47,7 +47,7 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
@@ -130,7 +130,7 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
               </div>
               <button 
                 onClick={() => onViewRoute(delivery.id)}
-                className="w-full px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition"
+                className="w-full px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition"
               >
                 View Route Map
               </button>

@@ -32,7 +32,7 @@ export default function BannersTab() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         
         {banners.map((banner) => (
-          <div key={banner.id} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group hover:shadow-md transition">
+          <div key={banner.id} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group hover:shadow-md transition">
             <div className="h-36 w-full relative">
               <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
               <div className="absolute top-2 right-2">
@@ -66,7 +66,7 @@ export default function BannersTab() {
         
         {/* Add New Card */}
         <div className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 p-5 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition text-gray-500 min-h-[250px]">
-          <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 text-orange-500">
+          <div className="w-12 h-12 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mb-3 text-orange-500">
             <Plus size={24} />
           </div>
           <h3 className="font-medium text-gray-900">Add New Banner</h3>

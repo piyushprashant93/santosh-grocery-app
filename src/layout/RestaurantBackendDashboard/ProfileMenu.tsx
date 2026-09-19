@@ -30,7 +30,7 @@ const navigate = useNavigate();
         className="flex items-center gap-3 pl-5 border-l cursor-pointer"
       >
         <div>
-          <div className="font-medium text-[#111827]">{userName}</div>
+          <div className="font-medium text-theme-text">{userName}</div>
           <div className="text-[#62748E] text-sm text-end">Kitchen Staff</div>
         </div>
 
@@ -47,10 +47,10 @@ const navigate = useNavigate();
 
           <div
             ref={ref}
-            className="absolute right-0 top-16 z-50 w-[250px] bg-white lg:rounded-2xl rounded-lg overflow-hidden shadow-xl border border-[#E5E7EB]"
+            className="absolute right-0 top-16 z-50 w-[250px] bg-theme-surface lg:rounded-2xl rounded-lg overflow-hidden shadow-xl border border-theme-border"
           >
 
-            <div className="px-6 py-3 text-base font-bold text-[#0F172A] border-b">
+            <div className="px-6 py-3 text-base font-bold text-theme-text border-b">
               My Account
             </div>
 

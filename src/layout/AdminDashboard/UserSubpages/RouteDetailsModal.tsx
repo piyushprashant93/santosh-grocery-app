@@ -42,7 +42,7 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
 
             {/* Overlays */}
             <div className="absolute bottom-6 left-6 right-6">
-              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 flex items-center divide-x divide-gray-100">
+              <div className="bg-theme-surface rounded-xl shadow-lg border border-gray-100 p-4 flex items-center divide-x divide-gray-100">
                 <div className="flex-1 flex items-center gap-3 pr-4">
                   <div className="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0">
                     <Navigation size={20} />
@@ -59,7 +59,7 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
           </div>
 
           {/* Right: Info Sidebar */}
-          <div className="w-full md:w-[320px] shrink-0 bg-white p-6 border-t md:border-t-0 md:border-l border-gray-100 flex flex-col gap-8 overflow-y-auto">
+          <div className="w-full md:w-[320px] shrink-0 bg-theme-surface p-6 border-t md:border-t-0 md:border-l border-gray-100 flex flex-col gap-8 overflow-y-auto">
             
             {/* Driver Info */}
             <div className="flex flex-col gap-4">
@@ -76,7 +76,7 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
                     <span className="text-xs text-gray-500">+1 234 567 890</span>
                   </div>
                 </div>
-                <button className="p-2 bg-white border border-gray-200 text-gray-600 rounded-full hover:bg-gray-100 transition shadow-sm">
+                <button className="p-2 bg-theme-surface border border-gray-200 text-gray-600 rounded-full hover:bg-gray-100 transition shadow-sm">
                   <Phone size={16} />
                 </button>
               </div>

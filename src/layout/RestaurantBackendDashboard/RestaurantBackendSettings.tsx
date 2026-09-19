@@ -266,7 +266,7 @@ export default function RestaurantBackendSettings({
             Settings
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Manage your restaurant profile, locations, team, and security.
           </p>
         </div>
@@ -302,99 +302,99 @@ export default function RestaurantBackendSettings({
       {activeSettingTab == "general" && (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-5 items-start">
           <div className="space-y-5">
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="font-playfair text-2xl">Restaurant Details</h2>
 
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   Update your public restaurant information.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-sm text-[#64748B]">Restaurant Name</label>
+                  <label className="text-sm text-theme-muted">Restaurant Name</label>
                   <input
                     value={settingsData.restaurantName || ""}
                     onChange={(e) => setSettingsData({...settingsData, restaurantName: e.target.value})}
                     placeholder="The Golden Spoon"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-[#64748B]">Phone Number</label>
+                  <label className="text-sm text-theme-muted">Phone Number</label>
                   <input
                     value={settingsData.phone || ""}
                     onChange={(e) => setSettingsData({...settingsData, phone: e.target.value})}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
               </div>
               <div className="mt-5">
-                <label className="text-sm text-[#64748B]">Email Address</label>
+                <label className="text-sm text-theme-muted">Email Address</label>
                 <input
                   value={settingsData.email || ""}
                   onChange={(e) => setSettingsData({...settingsData, email: e.target.value})}
                   placeholder="contact@goldenspoon.com"
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
               <div className="mt-5">
-                <label className="text-sm text-[#64748B]">Description</label>
+                <label className="text-sm text-theme-muted">Description</label>
                 <textarea
                   rows={4}
                   value={settingsData.description || ""}
                   onChange={(e) => setSettingsData({...settingsData, description: e.target.value})}
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
             </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="font-playfair text-2xl">Operational Details</h2>
 
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   Configure cuisines, timing, and order rules.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-5 items-start">
                 <div>
-                  <label className="text-sm text-[#64748B]">Cuisine Type</label>
+                  <label className="text-sm text-theme-muted">Cuisine Type</label>
                   <input
                     value={settingsData.cuisineType || ""}
                     onChange={(e) => setSettingsData({...settingsData, cuisineType: e.target.value})}
                     placeholder="Italian, Continental, Seafood"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                   <span className="text-sm text-[#62748E80]">Separate cuisines with commas.</span>
                 </div>
                 <div>
-                  <label className="text-sm text-[#64748B]">Average Cost for Two</label>
+                  <label className="text-sm text-theme-muted">Average Cost for Two</label>
                   <input
                     value={settingsData.averageCost || ""}
                     onChange={(e) => setSettingsData({...settingsData, averageCost: e.target.value})}
                     placeholder="65.00"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-[#64748B]">Preparation Time (Avg)</label>
+                  <label className="text-sm text-theme-muted">Preparation Time (Avg)</label>
                   <input
                     value={settingsData.preparationTime || ""}
                     onChange={(e) => setSettingsData({...settingsData, preparationTime: e.target.value})}
                     placeholder="30-45 mins"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-[#64748B]">Min. Order Value</label>
+                  <label className="text-sm text-theme-muted">Min. Order Value</label>
                   <input
                     value={settingsData.minOrderValue || ""}
                     onChange={(e) => setSettingsData({...settingsData, minOrderValue: e.target.value})}
                     placeholder="20.00"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
               </div>
@@ -402,7 +402,7 @@ export default function RestaurantBackendSettings({
           </div>
 
           <div className="space-y-5">
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <h3 className="font-playfair text-2xl mb-5">Branding</h3>
 
               <div className="flex flex-col items-center">
@@ -411,13 +411,13 @@ export default function RestaurantBackendSettings({
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
                 <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
-                <button onClick={() => logoInputRef.current?.click()} className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A]">
+                <button onClick={() => logoInputRef.current?.click()} className="mt-4 w-full border border-theme-border rounded-lg py-2 text-theme-text">
                   Change Logo
                 </button>
               </div>
               <div className="border-t my-6"></div>
               <div>
-                <p className="text-sm text-[#64748B] mb-2">Cover Image</p>
+                <p className="text-sm text-theme-muted mb-2">Cover Image</p>
                 <div className="relative rounded-xl overflow-hidden">
                   <img
                     src={settingsData.bannerUrl || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
@@ -432,7 +432,7 @@ export default function RestaurantBackendSettings({
                 </div>
               </div>
             </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm max-w-md">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm max-w-md">
               <h2 className="font-playfair text-2xl mb-6">Operating Hours</h2>
 
               <div className="space-y-5">
@@ -447,20 +447,20 @@ export default function RestaurantBackendSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
 
-                      <span className="text-[#0F172A] font-medium w-10">
+                      <span className="text-theme-text font-medium w-10">
                         {d.day}
                       </span>
                     </div>
 
                     {d.open ? (
-                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-[#475569]">
+                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-theme-muted">
                         {d.time}
                       </span>
                     ) : (
-                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-[#64748B]">
+                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-theme-muted">
                         Closed
                       </span>
                     )}
@@ -481,16 +481,16 @@ export default function RestaurantBackendSettings({
           {locationsData.map((loc, i) => (
             <div
               key={loc._id || i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
             >
               <div className="flex justify-between items-start mb-5">
                 <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
-                  <Store size={20} className="text-[#64748B]" />
+                  <Store size={20} className="text-theme-muted" />
                 </div>
-                <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                <MoreHorizontal size={18} className="text-theme-muted" />
               </div>
               <h3 className="font-playfair text-xl mb-3">{loc.name}</h3>
-              <div className="space-y-2 text-[#64748B] text-sm">
+              <div className="space-y-2 text-theme-muted text-sm">
                 <p className="flex items-start gap-2">
                   <MapPin size={16} className="mt-0.5" />
                   {loc.address}
@@ -505,7 +505,7 @@ export default function RestaurantBackendSettings({
                 <span className={`px-3 py-1 rounded-full text-sm ${statusStyles[loc.status || "Active"] || "bg-green-100"}`}>
                   {loc.status || "Active"}
                 </span>
-                <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg text-[#0F172A] shadow-sm">
+                <button className="border border-theme-border px-4 py-2 rounded-lg text-theme-text shadow-sm">
                   View Dashboard
                 </button>
               </div>
@@ -514,24 +514,24 @@ export default function RestaurantBackendSettings({
 
           <div onClick={() => setIsAddLocationOpen(true)} className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px] cursor-pointer hover:bg-gray-50 transition">
             <div className="w-16 h-16 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4 shadow-sm">
-              <Plus size={28} className="text-[#64748B]" />
+              <Plus size={28} className="text-theme-muted" />
             </div>
 
-            <h3 className="text-lg font-medium text-[#0F172A]">
+            <h3 className="text-lg font-medium text-theme-text">
               Add New Location
             </h3>
 
-            <p className="text-[#64748B] text-sm mt-1">Expand your business</p>
+            <p className="text-theme-muted text-sm mt-1">Expand your business</p>
           </div>
         </div>
       )}
 
       {activeSettingTab == "notifications" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="mb-6">
             <h2 className="font-playfair text-2xl">Notification Preferences</h2>
 
-            <p className="text-[#64748B] mt-1">
+            <p className="text-theme-muted mt-1">
               Choose how you want to be notified about important updates.
             </p>
           </div>
@@ -544,19 +544,19 @@ export default function RestaurantBackendSettings({
                 <div key={i} className="py-5 flex items-center justify-between">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
-                      <Icon size={20} className="text-[#64748B]" />
+                      <Icon size={20} className="text-theme-muted" />
                     </div>
 
                     <div>
                       <h3 className="font-playfair text-lg">{item.title}</h3>
 
-                      <p className="text-[#64748B] text-sm mt-1">{item.desc}</p>
+                      <p className="text-theme-muted text-sm mt-1">{item.desc}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-xs text-[#94A3B8]">EMAIL</span>
+                      <span className="text-xs text-theme-muted">EMAIL</span>
 
                       <button
                         onClick={() => toggle(i, "email")}
@@ -566,12 +566,12 @@ export default function RestaurantBackendSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
                     </div>
 
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-xs text-[#94A3B8]">SMS</span>
+                      <span className="text-xs text-theme-muted">SMS</span>
 
                       <button
                         onClick={() => toggle(i, "sms")}
@@ -581,7 +581,7 @@ export default function RestaurantBackendSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
                     </div>
                   </div>
@@ -593,11 +593,11 @@ export default function RestaurantBackendSettings({
       )}
 
       {activeSettingTab == "security" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="mb-6">
             <h2 className="font-playfair text-2xl">Password & Security</h2>
 
-            <p className="text-[#64748B] mt-1">
+            <p className="text-theme-muted mt-1">
               Manage your account security settings.
             </p>
           </div>
@@ -612,19 +612,19 @@ export default function RestaurantBackendSettings({
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Current Password
                   </label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.current ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button
                       onClick={() => toggleShow("current")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.current ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -632,17 +632,17 @@ export default function RestaurantBackendSettings({
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">New Password</label>
+                  <label className="text-sm text-theme-muted">New Password</label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.new ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button
                       onClick={() => toggleShow("new")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.new ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -650,19 +650,19 @@ export default function RestaurantBackendSettings({
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Confirm New Password
                   </label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.confirm ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button
                       onClick={() => toggleShow("confirm")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -670,7 +670,7 @@ export default function RestaurantBackendSettings({
                 </div>
               </div>
 
-              <button className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow">
+              <button className="mt-5 w-full bg-[#0F172A] text-theme-text py-3 rounded-lg font-medium shadow">
                 Update Password
               </button>
             </div>
@@ -685,14 +685,14 @@ export default function RestaurantBackendSettings({
                   </h3>
                 </div>
 
-                <div className="border border-[#E5E7EB] rounded-xl p-4 bg-[#F8FAFC]">
+                <div className="border border-theme-border rounded-xl p-4 bg-theme-bg">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-medium text-[#0F172A]">
+                      <p className="font-medium text-theme-text">
                         SMS Authentication
                       </p>
 
-                      <p className="text-sm text-[#64748B] mt-1 max-w-xs">
+                      <p className="text-sm text-theme-muted mt-1 max-w-xs">
                         Secure your account by requiring a code sent to your
                         phone.
                       </p>
@@ -706,21 +706,21 @@ export default function RestaurantBackendSettings({
                           : "bg-gray-300 justify-start"
                       }`}
                     >
-                      <div className="w-4 h-4 bg-white rounded-full" />
+                      <div className="w-4 h-4 bg-theme-surface rounded-full" />
                     </button>
                   </div>
 
-                  <div className="border-t mt-4 pt-3 text-sm text-[#64748B]">
+                  <div className="border-t mt-4 pt-3 text-sm text-theme-muted">
                     Verified Phone: +1 (555) ***-4567
                   </div>
                 </div>
               </div>
 
-              <div className="border border-[#E5E7EB] rounded-xl p-4 bg-[#F8FAFC] flex items-center justify-between">
+              <div className="border border-theme-border rounded-xl p-4 bg-theme-bg flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-[#0F172A]">Active Sessions</p>
+                  <p className="font-medium text-theme-text">Active Sessions</p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     You are logged in on 2 devices.
                   </p>
                 </div>
@@ -741,12 +741,12 @@ export default function RestaurantBackendSettings({
       )}
 
       {activeSettingTab == "team" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="font-playfair text-2xl">Team Management</h2>
 
-              <p className="text-[#64748B] mt-1">
+              <p className="text-theme-muted mt-1">
                 Control who has access to your restaurant dashboard.
               </p>
             </div>
@@ -777,15 +777,15 @@ export default function RestaurantBackendSettings({
                       </span>
                     </div>
 
-                    <p className="text-[#64748B] text-sm">{m.email}</p>
+                    <p className="text-theme-muted text-sm">{m.email}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="text-sm text-[#64748B]">Access Level</p>
+                    <p className="text-sm text-theme-muted">Access Level</p>
 
-                    <p className="text-sm text-[#0F172A]">{m.access}</p>
+                    <p className="text-sm text-theme-text">{m.access}</p>
                   </div>
 
                   <button
@@ -796,12 +796,12 @@ export default function RestaurantBackendSettings({
                         : "bg-gray-300 justify-start"
                     }`}
                   >
-                    <div className="w-4 h-4 bg-white rounded-full" />
+                    <div className="w-4 h-4 bg-theme-surface rounded-full" />
                   </button>
 
                   <Settings
                     size={18}
-                    className="text-[#94A3B8] cursor-pointer"
+                    className="text-theme-muted cursor-pointer"
                   />
                 </div>
               </div>
@@ -811,7 +811,7 @@ export default function RestaurantBackendSettings({
       )}
       {isAddLocationOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-md">
             <h2 className="text-2xl font-playfair mb-4">Add New Location</h2>
             <form onSubmit={handleAddLocation} className="space-y-4">
               <div>
@@ -828,14 +828,14 @@ export default function RestaurantBackendSettings({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select value={locationForm.status} onChange={e => setLocationForm({...locationForm, status: e.target.value})} className="w-full border rounded-lg p-2 bg-white outline-none focus:border-[#2563EB]">
+                <select value={locationForm.status} onChange={e => setLocationForm({...locationForm, status: e.target.value})} className="w-full border rounded-lg p-2 bg-theme-surface outline-none focus:border-[#2563EB]">
                   <option value="Active">Active</option>
                   <option value="Maintenance">Maintenance</option>
                 </select>
               </div>
               <div className="flex gap-3 justify-end mt-6">
                 <button type="button" onClick={() => setIsAddLocationOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
-                <button type="submit" disabled={isAddingLocation} className="px-4 py-2 rounded-lg bg-[#2563EB] text-white disabled:opacity-50">
+                <button type="submit" disabled={isAddingLocation} className="px-4 py-2 rounded-lg bg-[#2563EB] text-theme-text disabled:opacity-50">
                   {isAddingLocation ? "Adding..." : "Add Location"}
                 </button>
               </div>

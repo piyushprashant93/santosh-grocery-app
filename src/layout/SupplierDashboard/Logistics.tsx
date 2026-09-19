@@ -126,7 +126,7 @@ export default function Logistics() {
             Logistics & Delivery
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track shipments, manage fleet, and optimize delivery routes.
           </p>
 
@@ -134,7 +134,7 @@ export default function Logistics() {
 
         <div className="flex gap-3">
 
-          <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2">
+          <button className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2">
             <Calendar size={16} />
             Schedule
           </button>
@@ -167,14 +167,14 @@ export default function Logistics() {
 
             <div
               key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4"
             >
 
               <div className="flex justify-between">
 
                 <div>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {s.title}
                   </p>
 
@@ -182,7 +182,7 @@ export default function Logistics() {
                     {s.value}
                   </p>
 
-                  <p className="text-sm text-[#64748B] mt-1">
+                  <p className="text-sm text-theme-muted mt-1">
                     {s.note}
                   </p>
 
@@ -204,7 +204,7 @@ export default function Logistics() {
 
       <div className="grid lg:grid-cols-3 gap-5">
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 space-y-5">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 space-y-5">
 
           <div className="flex justify-between">
             <h3 className="font-playfair text-xl">
@@ -223,11 +223,11 @@ export default function Logistics() {
                 {f.name || f.firstName || "Driver"} {f.plateNumber ? `(${f.plateNumber})` : ""}
               </p>
 
-              <p className="text-sm text-[#64748B]">
+              <p className="text-sm text-theme-muted">
                 {f.vehicle || "No Vehicle Assigned"}
               </p>
 
-              <p className="text-sm text-[#64748B] mt-1">
+              <p className="text-sm text-theme-muted mt-1">
                 {f.isOnline ? "Online" : "Offline"}
               </p>
 
@@ -240,7 +240,7 @@ export default function Logistics() {
                   />
                 </div>
 
-                <span className="text-sm text-[#64748B]">
+                <span className="text-sm text-theme-muted">
                   {f.isOnline ? "Available" : "Offline"}
                 </span>
 
@@ -251,7 +251,7 @@ export default function Logistics() {
           ))}
 
           {fleetData.length === 0 && (
-            <p className="text-[#64748B] text-center text-sm py-4">No drivers found.</p>
+            <p className="text-theme-muted text-center text-sm py-4">No drivers found.</p>
           )}
 
         </div>
@@ -259,7 +259,7 @@ export default function Logistics() {
 
 
         <div className="lg:col-span-2 ">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 mb-5">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 mb-5">
 
           <div className="flex justify-between items-center mb-6">
 
@@ -269,7 +269,7 @@ export default function Logistics() {
 
             <div className="flex gap-3">
 
-              <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3">
+              <div className="flex items-center border border-theme-border rounded-lg px-3">
                 <Search size={16} />
                 <input
                   placeholder="Search ID..."
@@ -277,7 +277,7 @@ export default function Logistics() {
                 />
               </div>
 
-              <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg flex items-center gap-2">
+              <button className="border border-theme-border px-4 py-2 rounded-lg flex items-center gap-2">
                 <Filter size={16} />
                 Filter
               </button>
@@ -300,11 +300,11 @@ export default function Logistics() {
                     {d.id || d.manifestId || d._id?.substring(0,8)}
                   </p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {d.client || d.clientName || (d.orders?.length > 0 ? `${d.orders.length} Orders` : "No Orders")}
                   </p>
 
-                  <p className="text-xs text-[#94A3B8]">
+                  <p className="text-xs text-theme-muted">
                     {d.address || d.destination || "Multiple Destinations"}
                   </p>
 
@@ -320,7 +320,7 @@ export default function Logistics() {
                     {d.driver || d.driverName || "Pending"}
                   </p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {d.vehicle || d.carrier || "-"}
                   </p>
 
@@ -328,7 +328,7 @@ export default function Logistics() {
 
                 <div>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     {d.progress || 0}% ETA: {d.eta || "Unknown"}
                   </p>
 
@@ -351,7 +351,7 @@ export default function Logistics() {
 
         </div>
 
-        <div className="bg-gradient-to-r from-[#0F172A] to-[#1E3A8A] text-white rounded-xl p-6 flex justify-between items-center">
+        <div className="bg-gradient-to-r from-[#0F172A] to-[#1E3A8A] text-theme-text rounded-xl p-6 flex justify-between items-center">
 
           <div>
 
@@ -365,7 +365,7 @@ export default function Logistics() {
 
           </div>
 
-          <button className="bg-white text-[#111827] px-4 py-2 rounded-lg min-w-max flex items-center gap-2 text-sm">
+          <button className="bg-theme-surface text-theme-text px-4 py-2 rounded-lg min-w-max flex items-center gap-2 text-sm">
             <BarChart3 size={14} />
             View Analytics
           </button>

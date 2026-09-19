@@ -28,17 +28,17 @@ export default function MarketingLayout() {
             <p className="text-gray-500 mt-1">Manage banners, campaigns, push notifications, and SEO.</p>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm flex-1 sm:flex-none text-center">
+            <button className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm flex-1 sm:flex-none text-center">
               SEO Settings
             </button>
-            <button className="px-5 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center">
+            <button className="px-5 py-2 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center">
               + Create Campaign
             </button>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
           <div className="flex gap-8 whitespace-nowrap">
             {tabs.map((tab) => {
               const Icon = tab.icon;

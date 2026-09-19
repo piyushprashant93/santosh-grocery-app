@@ -52,15 +52,15 @@ export default function Reviews() {
           <h1 className="text-3xl lg:text-[34px] font-playfair font-semibold">
             Customer Reviews
           </h1>
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             See what customers are saying about your restaurant.
           </p>
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
         {loading ? (
-          <p className="text-center text-[#64748B] py-8">Loading reviews...</p>
+          <p className="text-center text-theme-muted py-8">Loading reviews...</p>
         ) : reviews.length === 0 ? (
           <div className="text-center py-12 flex flex-col items-center">
             <MessageSquare size={48} className="text-gray-300 mb-4" />
@@ -77,8 +77,8 @@ export default function Reviews() {
                       {(r.user?.name || r.userName || "C")[0]}
                     </div>
                     <div>
-                      <p className="font-medium text-[#0F172A]">{r.user?.name || r.userName || "Customer"}</p>
-                      <p className="text-sm text-[#64748B]">{new Date(r.createdAt || Date.now()).toLocaleDateString()}</p>
+                      <p className="font-medium text-theme-text">{r.user?.name || r.userName || "Customer"}</p>
+                      <p className="text-sm text-theme-muted">{new Date(r.createdAt || Date.now()).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 bg-[#FFF7ED] px-2 py-1 rounded-lg">
@@ -86,7 +86,7 @@ export default function Reviews() {
                     <span className="font-semibold text-[#B45309]">{r.rating || 5}.0</span>
                   </div>
                 </div>
-                <p className="text-[#475569] mt-3">
+                <p className="text-theme-muted mt-3">
                   {r.comment || r.reviewText || "No comment provided."}
                 </p>
               </div>

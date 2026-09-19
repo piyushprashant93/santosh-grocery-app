@@ -70,22 +70,22 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
       onClick={onClose}
     >
       <div
-        className="bg-white max-w-[576px] w-[96%] max-h-[96vh] overflow-auto rounded-xl shadow-xl"
+        className="bg-theme-surface max-w-[576px] w-[96%] max-h-[96vh] overflow-auto rounded-xl shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-start p-6 border-b bg-[#F8FAFC80]">
           <div>
             <h3 className="font-playfair text-2xl">Assign Driver</h3>
-            <p className="text-[#64748B] mt-1">Dispatch a shipment to a driver.</p>
+            <p className="text-theme-muted mt-1">Dispatch a shipment to a driver.</p>
           </div>
-          <button onClick={onClose} className="text-[#64748B] text-xl">✕</button>
+          <button onClick={onClose} className="text-theme-muted text-xl">✕</button>
         </div>
 
         <div className="p-6 space-y-6">
           <div>
             <label className="text-[#374151] block mb-2">Select Shipment</label>
             <select 
-              className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 outline-none"
+              className="w-full border border-theme-border rounded-lg h-12 px-3 outline-none"
               value={selectedShipment}
               onChange={(e) => setSelectedShipment(e.target.value)}
             >
@@ -116,26 +116,26 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
                     {d.avatar || d.image ? (
                         <img src={d.avatar || d.image} className="w-full h-full object-cover" />
                     ) : (
-                        <User size={20} className="text-[#64748B]" />
+                        <User size={20} className="text-theme-muted" />
                     )}
                   </div>
 
                   <div className="text-left">
-                    <p className="font-medium text-[#0F172A]">{d.name || d.firstName + " " + d.lastName}</p>
-                    <p className="text-sm text-[#64748B]">
+                    <p className="font-medium text-theme-text">{d.name || d.firstName + " " + d.lastName}</p>
+                    <p className="text-sm text-theme-muted">
                       {d.isOnline ? "Available" : "Offline"} • {d.vehicle || "No Vehicle"} {d.plateNumber ? `(${d.plateNumber})` : ""}
                     </p>
                   </div>
                 </button>
               )) : (
-                <p className="text-[#64748B] text-center py-4">No drivers available</p>
+                <p className="text-theme-muted text-center py-4">No drivers available</p>
               )}
             </div>
           </div>
         </div>
 
         <div className="flex justify-end gap-4 border-t p-6 bg-[#F8FAFC80]">
-          <button onClick={onClose} className="text-[#64748B]">Cancel</button>
+          <button onClick={onClose} className="text-theme-muted">Cancel</button>
 
           <button 
             onClick={handleAssign}

@@ -65,15 +65,15 @@ export default function AddressModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#0F172A] border border-[#1E293B] rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        className="bg-[#0F172A] border border-theme-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between p-5 border-b border-[#1E293B]">
-          <h3 className="font-playfair text-xl text-white">
+        <div className="flex items-center justify-between p-5 border-b border-theme-border">
+          <h3 className="font-playfair text-xl text-theme-text">
             {isEditing ? "Edit Address" : "Add New Address"}
           </h3>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#1E293B] text-[#94A3B8]"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-theme-surface text-theme-muted"
           >
             <X size={18} />
           </button>
@@ -87,7 +87,7 @@ export default function AddressModal({
           )}
 
           <div>
-            <label className="text-xs text-[#94A3B8] mb-1.5 block">
+            <label className="text-xs text-theme-muted mb-1.5 block">
               Label
             </label>
             <div className="flex gap-2">
@@ -110,87 +110,87 @@ export default function AddressModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 Full Name
               </label>
               <input
                 required
                 value={form.fullName}
                 onChange={(e) => update("fullName", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 Phone
               </label>
               <input
                 required
                 value={form.phone}
                 onChange={(e) => update("phone", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
           </div>
 
           <div>
-            <label className="text-xs text-[#94A3B8] mb-1.5 block">
+            <label className="text-xs text-theme-muted mb-1.5 block">
               Street Address
             </label>
             <input
               required
               value={form.street}
               onChange={(e) => update("street", e.target.value)}
-              className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+              className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 City
               </label>
               <input
                 required
                 value={form.city}
                 onChange={(e) => update("city", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 State
               </label>
               <input
                 required
                 value={form.state}
                 onChange={(e) => update("state", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 Zip Code
               </label>
               <input
                 required
                 value={form.zipCode}
                 onChange={(e) => update("zipCode", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
             <div>
-              <label className="text-xs text-[#94A3B8] mb-1.5 block">
+              <label className="text-xs text-theme-muted mb-1.5 block">
                 Country
               </label>
               <input
                 required
                 value={form.country}
                 onChange={(e) => update("country", e.target.value)}
-                className="w-full h-11 px-3 rounded-lg bg-[#020618] border border-[#1E293B] text-white text-sm outline-none focus:border-[#009966]"
+                className="w-full h-11 px-3 rounded-lg bg-theme-bg border border-theme-border text-theme-text text-sm outline-none focus:border-[#009966]"
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function AddressModal({
               onChange={(e) => update("isDefault", e.target.checked)}
               className="w-4 h-4 accent-[#009966]"
             />
-            <span className="text-sm text-[#94A3B8]">
+            <span className="text-sm text-theme-muted">
               Set as default address
             </span>
           </label>

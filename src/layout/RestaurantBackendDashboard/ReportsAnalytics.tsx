@@ -102,13 +102,13 @@ export default function ReportsAnalytics() {
             Reports & Analytics
           </h1>
 
-          <p className="text-[#6A7282] mt-2">
+          <p className="text-theme-muted mt-2">
             Track your restaurant's performance, revenue, and customer insights.
           </p>
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white">
+          <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface">
             <Calendar size={18} />
 
             <select value={days} onChange={(e) => setDays(Number(e.target.value))} className="outline-none bg-transparent">
@@ -133,14 +133,14 @@ export default function ReportsAnalytics() {
           return (
             <div
               key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6"
             >
               <div className="flex items-center gap-2 mb-3">
                 <Icon size={18} className={s.color} />
-                <p className="text-[#64748B] text-sm font-medium">{s.label}</p>
+                <p className="text-theme-muted text-sm font-medium">{s.label}</p>
               </div>
 
-              <p className="text-2xl font-semibold text-[#0F172A]">{s.value}</p>
+              <p className="text-2xl font-semibold text-theme-text">{s.value}</p>
 
               <p
                 className={`text-sm mt-2 flex items-center gap-1 ${isNegative ? "text-red-500" : "text-green-600"}`}
@@ -162,15 +162,15 @@ export default function ReportsAnalytics() {
       </div>
 
       <div className="mt-6">
-        <div className="border border-l-[4px] border-[#FB2C36] rounded-xl p-6 bg-white">
+        <div className="border border-l-[4px] border-[#FB2C36] rounded-xl p-6 bg-theme-surface">
           <div className="flex items-center gap-2 mb-3">
             <Receipt size={18} className="text-red-500" />
-            <p className="text-[#64748B] text-sm font-medium">
+            <p className="text-theme-muted text-sm font-medium">
               Total Monthly Expense
             </p>
           </div>
 
-          <p className="text-3xl font-semibold text-[#0F172A]">${typeof totalMonthlyExpense === "number" ? totalMonthlyExpense.toFixed(2) : totalMonthlyExpense}</p>
+          <p className="text-3xl font-semibold text-theme-text">${typeof totalMonthlyExpense === "number" ? totalMonthlyExpense.toFixed(2) : totalMonthlyExpense}</p>
 
           <p
             className={`text-sm mt-2 flex items-center gap-1 ${isNegative ? "text-red-500" : "text-green-600"
@@ -183,9 +183,9 @@ export default function ReportsAnalytics() {
       </div>
 
       <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-playfair text-lg text-[#111827]">
+            <h3 className="font-playfair text-lg text-theme-text">
               Revenue Trends
             </h3>
 
@@ -225,8 +225,8 @@ export default function ReportsAnalytics() {
           </div>
         </div>
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
-          <h3 className="font-playfair text-lg text-[#111827] mb-4">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
+          <h3 className="font-playfair text-lg text-theme-text mb-4">
             Sales Mix
           </h3>
 
@@ -258,10 +258,10 @@ export default function ReportsAnalytics() {
                     style={{ background: c.color }}
                   />
 
-                  <p className="text-sm text-[#475569]">{c.name}</p>
+                  <p className="text-sm text-theme-muted">{c.name}</p>
                 </div>
 
-                <p className="text-sm font-medium text-[#111827]">
+                <p className="text-sm font-medium text-theme-text">
                   {c.percent}
                 </p>
               </div>
@@ -272,21 +272,21 @@ export default function ReportsAnalytics() {
 
       <div className="mt-10">
 
-        <h2 className="text-lg font-playfair font-semibold text-[#111827] mb-3">
+        <h2 className="text-lg font-playfair font-semibold text-theme-text mb-3">
           Expense Overview
         </h2>
 
         <div className="grid lg:grid-cols-2 gap-6">
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
-            <h3 className="text-lg font-medium text-[#111827] mb-4">
+            <h3 className="text-lg font-medium text-theme-text mb-4">
               Expense by Category
             </h3>
 
             <div className="text-sm">
 
-              <div className="grid grid-cols-3 text-[#64748B] border-b pb-3 mb-3">
+              <div className="grid grid-cols-3 text-theme-muted border-b pb-3 mb-3">
                 <p>CATEGORY</p>
                 <p className="text-right">TOTAL EXPENSE</p>
                 <p className="text-right">% OF TOTAL</p>
@@ -297,9 +297,9 @@ export default function ReportsAnalytics() {
                   key={i}
                   className="grid grid-cols-3 py-3 border-b last:border-2"
                 >
-                  <p className="text-[#111827]">{item.name}</p>
+                  <p className="text-theme-text">{item.name}</p>
                   <p className="text-right">${typeof item.amount === "number" ? item.amount.toFixed(2) : item.amount}</p>
-                  <p className="text-right text-[#475569]">{item.percent}</p>
+                  <p className="text-right text-theme-muted">{item.percent}</p>
                 </div>
               ))}
 
@@ -313,15 +313,15 @@ export default function ReportsAnalytics() {
 
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
-            <h3 className="text-lg font-medium text-[#111827] mb-4">
+            <h3 className="text-lg font-medium text-theme-text mb-4">
               Expense by Title
             </h3>
 
             <div className="text-sm">
 
-              <div className="grid grid-cols-4 text-[#64748B] border-b pb-3 mb-3">
+              <div className="grid grid-cols-4 text-theme-muted border-b pb-3 mb-3">
                 <p>EXPENSE TITLE</p>
                 <p>CATEGORY</p>
                 <p className="text-right">AMOUNT</p>
@@ -333,8 +333,8 @@ export default function ReportsAnalytics() {
                   key={i}
                   className="grid grid-cols-4 py-3 border-b last:border-none"
                 >
-                  <p className="text-[#111827] break-words">{item.title}</p>
-                  <p className="text-[#475569]">{item.category}</p>
+                  <p className="text-theme-text break-words">{item.title}</p>
+                  <p className="text-theme-muted">{item.category}</p>
                   <p className="text-right">${typeof item.amount === "number" ? item.amount.toFixed(2) : item.amount}</p>
                   <p className="text-right">{item.entries}</p>
                 </div>
@@ -350,15 +350,15 @@ export default function ReportsAnalytics() {
 
       <div className="grid lg:grid-cols-2 gap-6 mt-6">
 
-  <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+  <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
-    <h3 className="text-lg font-medium text-[#111827] mb-4">
+    <h3 className="text-lg font-medium text-theme-text mb-4">
       Top Selling Items
     </h3>
 
     <div className="text-sm">
 
-      <div className="grid grid-cols-3 text-[#64748B] border-b pb-3 mb-3">
+      <div className="grid grid-cols-3 text-theme-muted border-b pb-3 mb-3">
         <p>ITEM NAME</p>
         <p className="text-right">ORDERS</p>
         <p className="text-right">REVENUE</p>
@@ -369,7 +369,7 @@ export default function ReportsAnalytics() {
           key={i}
           className="grid grid-cols-3 py-3 border-b last:border-none"
         >
-          <p className="text-[#111827]">{item.name}</p>
+          <p className="text-theme-text">{item.name}</p>
           <p className="text-right">{item.orders}</p>
           <p className="text-right">${typeof item.revenue === "number" ? item.revenue.toFixed(2) : item.revenue}</p>
         </div>
@@ -386,9 +386,9 @@ export default function ReportsAnalytics() {
   </div>
 
 
-  <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+  <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
-    <h3 className="text-lg font-medium text-[#111827] mb-4">
+    <h3 className="text-lg font-medium text-theme-text mb-4">
       Peak Hours
     </h3>
 

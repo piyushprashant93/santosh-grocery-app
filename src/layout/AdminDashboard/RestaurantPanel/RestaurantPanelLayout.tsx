@@ -38,7 +38,7 @@ export default function RestaurantPanelLayout() {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
             <ShoppingBag size={24} />
           </div>
@@ -49,7 +49,7 @@ export default function RestaurantPanelLayout() {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
             <DollarSign size={24} />
           </div>
@@ -60,7 +60,7 @@ export default function RestaurantPanelLayout() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
             <Clock size={24} />
           </div>
@@ -71,7 +71,7 @@ export default function RestaurantPanelLayout() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
             <Users size={24} />
           </div>
@@ -84,7 +84,7 @@ export default function RestaurantPanelLayout() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
         <div className="flex gap-8 whitespace-nowrap">
           {tabs.map((tab) => (
             <button 

@@ -131,7 +131,7 @@ export default function ShipmentHistory({
             Shipment History
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Archive of all completed and cancelled shipments.
           </p>
         </div>
@@ -140,7 +140,7 @@ export default function ShipmentHistory({
           <div className="relative">
             <button
               onClick={() => setOpenRange(true)}
-              className="flex items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm"
+              className="flex items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm"
             >
               <Calendar size={18} />
               {startDate && endDate 
@@ -155,10 +155,10 @@ export default function ShipmentHistory({
             {openRange && (
                 <>
              <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setOpenRange(false)}></div>   
-              <div className="absolute z-50 right-0 mt-2 w-[380px] bg-white rounded-xl p-6 shadow-xl border border-[#E5E7EB]">
+              <div className="absolute z-50 right-0 mt-2 w-[380px] bg-theme-surface rounded-xl p-6 shadow-xl border border-theme-border">
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-[#475569] mb-2">
+                    <label className="block text-theme-muted mb-2">
                       Start Date
                     </label>
 
@@ -171,7 +171,7 @@ export default function ShipmentHistory({
                   </div>
 
                   <div>
-                    <label className="block text-[#475569] mb-2">
+                    <label className="block text-theme-muted mb-2">
                       End Date
                     </label>
 
@@ -190,7 +190,7 @@ export default function ShipmentHistory({
                         setTempEndDate(endDate);
                         setOpenRange(false);
                       }}
-                      className="flex-1 border border-[#E5E7EB] py-3 rounded-lg hover:bg-gray-50"
+                      className="flex-1 border border-theme-border py-3 rounded-lg hover:bg-gray-50"
                     >
                       Cancel
                     </button>
@@ -212,17 +212,17 @@ export default function ShipmentHistory({
             )}
           </div>
 
-          <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm hover:bg-gray-50">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export CSV
           </button>
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full">
+            <Search size={18} className="text-theme-muted" />
 
             <input
               placeholder="Search by ID, Client, or Driver..."
@@ -235,7 +235,7 @@ export default function ShipmentHistory({
           <select 
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="flex min-w-max items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm outline-none cursor-pointer"
+            className="flex min-w-max items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm outline-none cursor-pointer"
           >
             <option value="All">Status: All</option>
             <option value="Delivered">Delivered</option>
@@ -247,7 +247,7 @@ export default function ShipmentHistory({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[900px]">
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
               <tr>
                 <th className="py-4 font-normal text-[#62748E]">SHIPMENT ID</th>
                 <th className="py-4 font-normal text-[#62748E]">DATE</th>
@@ -264,31 +264,31 @@ export default function ShipmentHistory({
             <tbody>
               {activeShipments.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-[#64748B]">
+                  <td colSpan={7} className="py-12 text-center text-theme-muted">
                     No shipments found.
                   </td>
                 </tr>
               ) : (
                 activeShipments.map((s, i) => (
                 <tr key={s._id || i} className="border-b last:border-none">
-                  <td className="py-5 font-medium text-[#111827]">{s.id || s.manifestId || s._id?.substring(0,8)}</td>
+                  <td className="py-5 font-medium text-theme-text">{s.id || s.manifestId || s._id?.substring(0,8)}</td>
 
-                  <td className="py-5 text-[#64748B]">{s.date ? new Date(s.date).toLocaleDateString() : (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : "")}</td>
+                  <td className="py-5 text-theme-muted">{s.date ? new Date(s.date).toLocaleDateString() : (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : "")}</td>
 
-                  <td className="py-5 font-medium text-[#111827]">
+                  <td className="py-5 font-medium text-theme-text">
                     {s.client || s.clientName || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "Unknown")}
                   </td>
 
-                  <td className="py-5 text-[#64748B]">
+                  <td className="py-5 text-theme-muted">
                     {Array.isArray(s.items) ? `${s.items.length} Items` : (typeof s.items === 'object' && s.items !== null ? (s.items.productName || s.items.name || "1 Item") : (s.items || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "-")))}
                   </td>
 
-                  <td className="py-5 font-semibold text-[#111827]">
+                  <td className="py-5 font-semibold text-theme-text">
                     {typeof s.amount === "number" ? `$${s.amount.toFixed(2)}` : (s.total ? `$${s.total.toFixed(2)}` : (s.amount ? (s.amount.toString().startsWith('$') ? s.amount : `$${s.amount}`) : "$0.00"))}
                   </td>
 
                   <td className="py-5">
-                    <div className="flex items-start gap-2 text-[#64748B]">
+                    <div className="flex items-start gap-2 text-theme-muted">
                       <Truck size={14} />
 
                       <div className="-mt-1 text-sm">

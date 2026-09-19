@@ -145,7 +145,7 @@ const { setRole } = useRole();
 
   return (
     <ThemeProvider>
-      <div className="flex h-screen bg-white dark:bg-[#0B1120] text-gray-900 dark:text-white relative">
+      <div className="flex h-screen bg-theme-surface dark:bg-[#0B1120] text-gray-900 dark:text-theme-text relative">
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -171,8 +171,8 @@ const { setRole } = useRole();
 
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="text-xl font-semibold text-[#111827]">Sign Out</h2>
+          <div className="w-full max-w-md rounded-2xl bg-theme-surface p-6 shadow-xl">
+            <h2 className="text-xl font-semibold text-theme-text">Sign Out</h2>
 
             <p className="mt-3 text-sm text-[#6B7280]">
               Are you sure you want to sign out?

@@ -415,30 +415,30 @@ const [pendingUser, setPendingUser] = useState<any>(null);
   };
 
   return (
-    <section className="bg-[#020618] text-white">
+    <section className="bg-theme-bg text-theme-text">
       <div className="min-h-[calc(100vh-80px)] max-w-[1265px] lg:px-6 px-3 mx-auto flex">
         <div className="w-[50%] max-w-[400px] py-10 mx-auto flex flex-col justify-center">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[#90A1B9] mb-8"
+            className="flex items-center gap-2 text-theme-muted mb-8"
           >
             <ArrowLeft size={18} />
             Switch Portal
           </button>
 
-          <div className="w-12 h-12 rounded-xl bg-[#0F172B] border border-[#1D293D] focus:outline-none focus:border-[#00A63E] flex items-center justify-center mb-6">
+          <div className="w-12 h-12 rounded-xl bg-theme-surface border border-theme-border focus:outline-none focus:border-[#00A63E] flex items-center justify-center mb-6">
             <Icon className={config.iconColor} />
           </div>
 
           <h1 className="font-playfair text-[44px] mb-4">{config.title}</h1>
 
-          <p className="text-[#90A1B9] text-lg mb-10">{config.description}</p>
+          <p className="text-theme-muted text-lg mb-10">{config.description}</p>
 
           <div>
             <div>
-              <p className="text-sm mb-2 text-[#90A1B9]">Email Address</p>
+              <p className="text-sm mb-2 text-theme-muted">Email Address</p>
               <div
-                className="flex items-center border border-[#1D293D] bg-[#0F172B] rounded-lg px-4 py-3 focus-within:ring-[0.5px] transition"
+                className="flex items-center border border-theme-border bg-theme-surface rounded-lg px-4 py-3 focus-within:ring-[0.5px] transition"
                 style={
                   { "--focus-color": config.borderColor } as React.CSSProperties
                 }
@@ -450,7 +450,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                   onChange={(event: ChangeEvent<HTMLInputElement>) =>
                     setEmail(event.target.value)
                   }
-                  className="bg-transparent outline-none w-full text-white placeholder-gray-400"
+                  className="bg-transparent outline-none w-full text-theme-text placeholder-gray-400"
                   placeholder="name@hubnepa.com"
                 />
               </div>
@@ -458,7 +458,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
             <div className="mt-6">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-[#90A1B9]">Password</span>
+                <span className="text-theme-muted">Password</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -474,7 +474,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
               </div>
 
               <div
-                className="flex items-center border border-[#1D293D] bg-[#0F172B] rounded-lg px-4 py-3 focus-within:ring-[0.5px] transition"
+                className="flex items-center border border-theme-border bg-theme-surface rounded-lg px-4 py-3 focus-within:ring-[0.5px] transition"
                 style={
                   { "--focus-color": config.borderColor } as React.CSSProperties
                 }
@@ -488,7 +488,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                     setPassword(event.target.value)
                   }
                   type={show ? "text" : "password"}
-                  className="bg-transparent outline-none w-full text-white placeholder-gray-400"
+                  className="bg-transparent outline-none w-full text-theme-text placeholder-gray-400"
                   placeholder="••••••••"
                 />
 
@@ -521,10 +521,10 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                                 `}
               >
                 {checked && (
-                  <Check size={14} className="text-white" strokeWidth={3} />
+                  <Check size={14} className="text-theme-text" strokeWidth={3} />
                 )}
               </button>
-              <p className="text-sm text-[#90A1B9] leading-relaxed">
+              <p className="text-sm text-theme-muted leading-relaxed">
                 Remember this device
               </p>
             </div>
@@ -544,7 +544,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
             ) : null}
 
             {config.applyText && (
-              <div className="border border-[#1D293D] bg-[#0F172B80] rounded-xl text-sm p-5 text-center text-[#90A1B9] mt-6">
+              <div className="border border-theme-border bg-theme-surface rounded-xl text-sm p-5 text-center text-theme-muted mt-6">
                 <span className="text-xs mb-3 inline-block">
                   {config.partnerText}
                 </span>
@@ -570,13 +570,13 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                     const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
                     window.location.href = `${baseUrl}/api/v1/auth/google`;
                   }}
-                  className="w-full bg-white text-[#0F172B] py-3 rounded-lg flex items-center justify-center gap-3 font-medium hover:bg-gray-100 transition"
+                  className="w-full bg-theme-surface text-[#0F172B] py-3 rounded-lg flex items-center justify-center gap-3 font-medium hover:bg-gray-100 transition"
                 >
                   <img src={GoogleIcon} alt="google" className="w-5 h-5" />
                   Sign in with Google
                 </button>
 
-                <p className="text-center text-[#90A1B9] mt-6 text-sm">
+                <p className="text-center text-theme-muted mt-6 text-sm">
                   Don't have an account?{" "}
                   <span
                     onClick={() => navigate("/sign-up")}
@@ -596,7 +596,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#020618] to-transparent"></div>
 
-          <div className="relative max-w-[420px] text-white pb-10">
+          <div className="relative max-w-[420px] text-theme-text pb-10">
             <div className={`h-[4px] w-14 ${config.quoteColor} mb-6`} />
 
             <h2 className="font-playfair text-[42px] leading-[1.2] mb-8">
@@ -612,7 +612,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
               <div>
                 <p className="text-sm">{config.person}</p>
-                <p className="text-[#90A1B9] text-xs">Verified Partner</p>
+                <p className="text-theme-muted text-xs">Verified Partner</p>
               </div>
             </div>
           </div>
@@ -621,7 +621,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div
-            className="w-full max-w-md rounded-2xl bg-white p-6 border-2"
+            className="w-full max-w-md rounded-2xl bg-theme-surface p-6 border-2"
             style={{ borderColor: config.borderColor }}
           >
             <h2 className="text-xl font-semibold text-gray-900">
@@ -730,7 +730,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                   showResetForm ? handleResetPassword : handleForgotPassword
                 }
                 disabled={forgotLoading || resetLoading}
-                className="rounded-lg px-5 py-2 text-white transition hover:opacity-90 disabled:opacity-70"
+                className="rounded-lg px-5 py-2 text-theme-text transition hover:opacity-90 disabled:opacity-70"
                 style={{
                   backgroundColor: config.borderColor,
                 }}
@@ -751,7 +751,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
       {show2FAModal && (
   <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
 
-    <div className="bg-white rounded-xl p-6 w-full max-w-sm">
+    <div className="bg-theme-surface rounded-xl p-6 w-full max-w-sm">
 
       <h2 className="text-xl font-semibold text-black">
         Two-Factor Authentication

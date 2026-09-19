@@ -26,14 +26,14 @@ const pressArticles = [
 
 export default function PressSection() {
   return (
-    <section className="bg-[#020618] py-24 text-white">
+    <section className="bg-theme-bg py-24 text-theme-text">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3">
         <div className="text-center mb-16">
-          <div className="bg-[#0F172B] w-[72px] h-[72px] rounded-[18px] border border-[#1D293D] flex justify-center items-center mx-auto mb-6">
+          <div className="bg-theme-surface w-[72px] h-[72px] rounded-[18px] border border-theme-border flex justify-center items-center mx-auto mb-6">
             <LucideBookCopy size={40} className="text-[#FF6900]" />
           </div>
           <h2 className="font-playfair text-[54px] font-medium">Newsroom</h2>
-          <p className="text-[#90A1B9] max-w-[731px] mx-auto text-[22px] mt-6">
+          <p className="text-theme-muted max-w-[731px] mx-auto text-[22px] mt-6">
             Latest updates, press releases, and media resources.
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function PressSection() {
             {pressArticles.map((item, index) => (
               <div
                 key={index}
-                className="bg-[#0F172B80] border border-[#1D293D] rounded-[18px] overflow-hidden hover:border-[#334155] transition"
+                className="bg-theme-surface border border-theme-border rounded-[18px] overflow-hidden hover:border-[#334155] transition"
               >
                 <div className="relative">
   <img
@@ -62,11 +62,11 @@ export default function PressSection() {
                     <span className="text-[#62748E] text-xs font-medium">{item.date}</span>
                   </div>
 
-                  <h3 className="font-playfair text-[22px] text-white font-medium leading-snug mb-6">
+                  <h3 className="font-playfair text-[22px] text-theme-text font-medium leading-snug mb-6">
                     {item.title}
                   </h3>
 
-                  <button className="flex items-center font-medium gap-2 text-[#90A1B9] hover:text-white transition">
+                  <button className="flex items-center font-medium gap-2 text-theme-muted hover:text-theme-text transition">
                     Read Article →
                   </button>
                 </div>
@@ -75,17 +75,17 @@ export default function PressSection() {
           </div>
 
           <div className="mt-20 flex justify-center">
-            <div className="bg-[#0F172B80] border border-[#1D293D] rounded-[18px] px-12 py-10 text-center max-w-[760px] w-full">
-              <h3 className="font-playfair text-[22px] font-medium text-white mb-3">
+            <div className="bg-theme-surface border border-theme-border rounded-[18px] px-12 py-10 text-center max-w-[760px] w-full">
+              <h3 className="font-playfair text-[22px] font-medium text-theme-text mb-3">
                 Media Inquiries
               </h3>
 
-              <p className="text-[#90A1B9] text-lg mb-6">
+              <p className="text-theme-muted text-lg mb-6">
                 For press kits and interview requests, please contact our media
                 team.
               </p>
 
-              <button className="bg-white text-[#050B1E] px-6 py-3 rounded-lg">
+              <button className="bg-theme-surface text-[#050B1E] px-6 py-3 rounded-lg">
                 Contact Press Team
               </button>
             </div>

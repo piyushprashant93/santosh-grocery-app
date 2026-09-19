@@ -89,10 +89,10 @@ export default function VoucherSection({
 }, [error]);
 
   return (
-    <div className="border border-[#E5E7EB] lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+    <div className="border border-theme-border lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
       <div className="flex items-center gap-2 mb-5">
         <Gift size={18} />
-        <h3 className="font-playfair text-xl text-[#0F172A]">Vouchers</h3>
+        <h3 className="font-playfair text-xl text-theme-text">Vouchers</h3>
       </div>
 
       <div className="flex gap-2 mb-2">
@@ -103,14 +103,14 @@ export default function VoucherSection({
             setError(null);
           }}
           placeholder="Enter code"
-          className="flex-1 border w-full border-[#E5E7EB] rounded-lg px-3 py-2 outline-none"
+          className="flex-1 border w-full border-theme-border rounded-lg px-3 py-2 outline-none"
           disabled={loading}
         />
 
         <button
           onClick={handleApplyClick}
           disabled={loading}
-          className="bg-[#0F172A] text-white px-4 rounded-lg flex items-center justify-center min-w-[80px] disabled:opacity-60"
+          className="bg-[#0F172A] text-theme-text px-4 rounded-lg flex items-center justify-center min-w-[80px] disabled:opacity-60"
         >
           {loading ? <Loader2 size={16} className="animate-spin" /> : "Apply"}
         </button>
@@ -132,7 +132,7 @@ export default function VoucherSection({
           className="w-full bg-[#F1F5F9] rounded-lg p-3 flex gap-2 flex-wrap items-center justify-between mb-3 last:mb-0 text-left hover:bg-[#E5E7EB] transition-colors disabled:opacity-60"
         >
           <span className="text-[#009966] font-semibold">{voucher.code}</span>
-          <span className="text-[#6A7282] text-sm">{voucher.label}</span>
+          <span className="text-theme-muted text-sm">{voucher.label}</span>
         </button>
       ))}
     </div>

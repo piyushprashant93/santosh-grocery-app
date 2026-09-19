@@ -54,9 +54,9 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-full pt-20 text-center">
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-[#E5E7EB] max-w-md w-full">
+        <div className="bg-theme-surface p-8 rounded-xl shadow-sm border border-theme-border max-w-md w-full">
           <h2 className="text-2xl font-playfair font-bold text-red-600 mb-2">Setup Required</h2>
-          <p className="text-[#64748B] mb-6">{error}</p>
+          <p className="text-theme-muted mb-6">{error}</p>
           <button 
             onClick={() => setActiveTab("settings")}
             className="bg-[#009966] text-white px-6 py-2.5 rounded-lg font-medium w-full"
@@ -120,7 +120,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
           <h1 className="text-3xl lg:text-[34px] font-semibold font-playfair">
             Dashboard
           </h1>
-          <p className="text-[#64748B]">
+          <p className="text-theme-muted">
             Welcome back! Here's what's happening in your restaurant today.
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
               <div
                 key={i}
-                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
               >
 
                 <div className="flex items-start justify-between">
@@ -159,11 +159,11 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
 
-                <p className="text-[#64748B] mt-4">
+                <p className="text-theme-muted mt-4">
                   {s.title}
                 </p>
 
-                <h3 className="text-[28px] font-playfair mt-2 text-[#0F172A]">
+                <h3 className="text-[28px] font-playfair mt-2 text-theme-text">
                   {s.value}
                 </h3>
 
@@ -181,7 +181,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
           <div className="lg:col-span-2">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
               <div className="flex justify-between items-center mb-6">
 
@@ -201,7 +201,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                 <table className="w-full text-left min-w-[700px]">
 
-                  <thead className="border-b text-sm text-[#64748B]">
+                  <thead className="border-b text-sm text-theme-muted">
 
                     <tr>
 
@@ -221,7 +221,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                     {activeOrders.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="py-12 text-center text-[#64748B]">
+                        <td colSpan={5} className="py-12 text-center text-theme-muted">
                           <div className="flex flex-col items-center justify-center gap-2">
                             <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-2">
                               <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
@@ -245,7 +245,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
                             className="border-b border-[#F1F5F9] last:border-none"
                           >
 
-                            <td className="py-5 font-medium text-[#0F172A]">
+                            <td className="py-5 font-medium text-theme-text">
 
                               <div className="leading-5">
                                 <p>{orderPrefix}</p>
@@ -265,7 +265,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
                                     {o.customer?.name || (typeof o.customer === 'string' ? o.customer : "Customer")}
                                   </p>
 
-                                  <p className="text-sm text-[#64748B]">
+                                  <p className="text-sm text-theme-muted">
                                     {o.time || (o.createdAt ? new Date(o.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "")}
                                   </p>
                                 </div>
@@ -276,7 +276,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
 
-                            <td className="py-5 text-[#64748B] max-w-[240px]">
+                            <td className="py-5 text-theme-muted max-w-[240px]">
                               {Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity || 1}x ${it.name || it.menuItem?.name || "Item"}`).join(", ") : o.items}
                             </td>
 
@@ -292,7 +292,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
 
-                            <td className="py-5 font-semibold text-[#0F172A] text-end">
+                            <td className="py-5 font-semibold text-theme-text text-end">
                               {typeof o.totalAmount === 'number' ? `$${o.totalAmount.toFixed(2)}` : (typeof o.total === 'number' ? `$${o.total.toFixed(2)}` : (o.total || `$${o.totalAmount || 0}`))}
                             </td>
 
@@ -317,7 +317,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
           <div>
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
               <h3 className="text-xl font-playfair mb-6">
                 Popular Items
@@ -340,11 +340,11 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                       <div>
 
-                        <p className="font-medium text-[#0F172A]">
+                        <p className="font-medium text-theme-text">
                           {p.name}
                         </p>
 
-                        <p className="text-sm text-[#64748B]">
+                        <p className="text-sm text-theme-muted">
                           {p.orders} orders today
                         </p>
 
@@ -352,7 +352,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
                     </div>
 
-                    <p className="font-semibold text-[#0F172A]">
+                    <p className="font-semibold text-theme-text">
                       {p.price}
                     </p>
 

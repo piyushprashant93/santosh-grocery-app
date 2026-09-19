@@ -161,7 +161,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             Menu Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Organize your menu, manage availability, and calculate food costs.
           </p>
         </div>
@@ -192,7 +192,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
             </button>
 
           </div>
-          <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex gap-2 items-center bg-white">
+          <button className="border border-theme-border rounded-lg px-4 py-2 flex gap-2 items-center bg-theme-surface">
             <Filter size={16} />
             Filter
           </button>
@@ -206,11 +206,11 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
       <div className="space-y-6">
 
-        <div className="flex items-center justify-between border border-[#E5E7EB] bg-white rounded-xl px-4 py-3">
+        <div className="flex items-center justify-between border border-theme-border bg-theme-surface rounded-xl px-4 py-3">
 
           <div className="flex items-center gap-3 w-full">
 
-            <Search size={18} className="text-[#94A3B8]" />
+            <Search size={18} className="text-theme-muted" />
 
             <input
               value={search}
@@ -253,7 +253,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
               setCustomCategories(prev => [...prev, newCat.trim()]);
               setActive(newCat.trim());
             }
-          }} className="w-10 h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center hover:bg-gray-50">
+          }} className="w-10 h-10 rounded-full border border-theme-border flex items-center justify-center hover:bg-gray-50">
             <Plus size={18} />
           </button>
 
@@ -278,7 +278,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
             <div
               key={id}
-              className="border border-[#E5E7EB] bg-white rounded-xl p-4 flex items-center gap-4"
+              className="border border-theme-border bg-theme-surface rounded-xl p-4 flex items-center gap-4"
             >
 
               <img
@@ -314,12 +314,12 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                         Cost: {item.cost || item.productionCost || "$0.00"}
                       </span>
 
-                      <span className="text-[#64748B] text-sm">
+                      <span className="text-theme-muted text-sm">
                         Margin: {item.margin || "0%"}
                       </span>
 
                     </div> :
-                    <p className="text-[#64748B] text-sm mt-1 line-clamp-1">
+                    <p className="text-theme-muted text-sm mt-1 line-clamp-1">
                       {item.description || item.desc}
                     </p>
 
@@ -327,7 +327,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                 </div>
 
 
-                <div className="flex items-center gap-4 text-sm text-[#94A3B8] mt-2">
+                <div className="flex items-center gap-4 text-sm text-theme-muted mt-2">
 
                   <span className="flex items-center gap-1">
                     <Clock size={14} /> {item.preparationTime || item.time || "15 min"}
@@ -362,7 +362,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                         }`}
                     >
 
-                    <div className="w-4 h-4 bg-white rounded-full mx-1" />
+                    <div className="w-4 h-4 bg-theme-surface rounded-full mx-1" />
 
                   </button>
 
@@ -373,27 +373,27 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
                   <button
                     onClick={() => setOpenMenu(openMenu === id ? null : id)}
                   >
-                    <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                    <MoreHorizontal size={18} className="text-theme-muted" />
                   </button>
 
 
                   {openMenu === id && (
                     <>
                     <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setOpenMenu(null)}></div>
-                    <div className="absolute right-0 top-7 w-52 bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
+                    <div className="absolute right-0 top-7 w-52 bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden z-50">
 
-                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[#F8FAFC]">
-                        <Edit size={16} className="text-[#64748B]" />
+                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-theme-bg">
+                        <Edit size={16} className="text-theme-muted" />
                         Edit Item
                       </button>
 
-                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[#F8FAFC] relative">
+                      <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-theme-bg relative">
                         <input type="file" ref={fileInputRef} className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={(e) => handleImageUpload(e, id)} />
-                        <ImageIcon size={16} className="text-[#64748B]" />
+                        <ImageIcon size={16} className="text-theme-muted" />
                         {uploadingId === id ? "Uploading..." : "Change Photo"}
                       </button>
 
-                      <div className="border-t border-[#E5E7EB]" />
+                      <div className="border-t border-theme-border" />
 
                       <button onClick={() => deleteItem(id)} className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50">
                         <Trash2 size={16} />

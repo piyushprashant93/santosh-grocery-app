@@ -256,15 +256,15 @@ const handleCardClick = (restaurant: Restaurant) => {
 };
 
   return (
-    <section className="bg-[#020618] py-16 text-white">
+    <section className="bg-theme-bg py-16 text-theme-text">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3">
         <div className="flex flex-wrap gap-3 items-center mb-10">
           {searchQuery ? (
-            <div className="flex items-center gap-2 px-5 py-2 rounded-full text-sm bg-[#0F172B] text-[#CAD5E2]">
+            <div className="flex items-center gap-2 px-5 py-2 rounded-full text-sm bg-theme-surface text-[#CAD5E2]">
               Results for "{searchQuery}"
               <button
                 onClick={() => onClearSearch?.()}
-                className="ml-1 hover:text-white"
+                className="ml-1 hover:text-theme-text"
               >
                 <X size={14} />
               </button>
@@ -286,7 +286,7 @@ const handleCardClick = (restaurant: Restaurant) => {
             ))
           )}
 
-          <div className="border-l border-[#1D293D] ml-2 pl-5 flex items-center gap-2 text-[#94A3B8]">
+          <div className="border-l border-theme-border ml-2 pl-5 flex items-center gap-2 text-theme-muted">
             <Filter size={16} />
             Filters
           </div>
@@ -297,18 +297,18 @@ const handleCardClick = (restaurant: Restaurant) => {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[420px] rounded-2xl bg-[#0F172B] animate-pulse"
+                className="h-[420px] rounded-2xl bg-theme-surface animate-pulse"
               />
             ))}
           </div>
         )}
 
         {!loading && error && (
-          <p className="text-center text-[#94A3B8] py-16">{error}</p>
+          <p className="text-center text-theme-muted py-16">{error}</p>
         )}
 
         {!loading && !error && restaurants.length === 0 && (
-          <p className="text-center text-[#94A3B8] py-16">
+          <p className="text-center text-theme-muted py-16">
             No restaurants found{searchQuery ? ` for "${searchQuery}"` : ""}.
           </p>
         )}
@@ -319,7 +319,7 @@ const handleCardClick = (restaurant: Restaurant) => {
               <div
                 key={item.id}
                 onClick={() => handleCardClick(item)}
-                className="bg-[#0F172B] cursor-pointer border border-[#1D293D] rounded-2xl overflow-hidden hover:border-[#334155] transition"
+                className="bg-theme-surface cursor-pointer border border-theme-border rounded-2xl overflow-hidden hover:border-[#334155] transition"
               >
                 <div className="relative">
                   {item.image ? (
@@ -329,7 +329,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                       className="w-full h-56 object-cover"
                     />
                   ) : (
-                    <div className="w-full h-56 bg-[#1E293B] flex flex-col items-center justify-center text-[#94A3B8]">
+                    <div className="w-full h-56 bg-theme-surface flex flex-col items-center justify-center text-theme-muted">
                       <ImageOff size={36} />
                       <span className="mt-2 text-sm">No Image Available</span>
                     </div>
@@ -361,7 +361,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     )}
                   </div>
 
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-white text-black text-sm font-bold px-2 py-1 rounded-full">
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-theme-surface text-black text-sm font-bold px-2 py-1 rounded-full">
                     <Star
                       size={12}
                       color="#0F172B"
@@ -375,7 +375,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                   <div className="flex justify-between items-center mb-2">
                     <div>
                       <h3 className="font-playfair text-[22px]">{item.name}</h3>
-                      <p className="text-xs text-[#90A1B9] uppercase">
+                      <p className="text-xs text-theme-muted uppercase">
                         {item.type}
                       </p>
                     </div>
@@ -391,7 +391,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     {/* )} */}
                   </div>
 
-                  <div className="text-sm mt-4 text-[#94A3B8] bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
+                  <div className="text-sm mt-4 text-theme-muted bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
                     {item.delivery && (
                       <>
                         <span className="text-sm text-[#CAD5E2] font-medium">
@@ -400,7 +400,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                         •
                       </>
                     )}
-                    <span className="text-sm text-[#90A1B9]">
+                    <span className="text-sm text-theme-muted">
                       {item.reviews}
                     </span>
                   </div>
@@ -410,7 +410,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                       {item.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="text-[10px] text-[#90A1B9] px-3 py-1 bg-[#FFFFFF0D] rounded-full"
+                          className="text-[10px] text-theme-muted px-3 py-1 bg-[#FFFFFF0D] rounded-full"
                         >
                           {tag.toUpperCase()}
                         </span>

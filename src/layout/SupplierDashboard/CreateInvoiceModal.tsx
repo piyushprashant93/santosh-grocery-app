@@ -91,7 +91,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
         >
 
             <div
-                className="bg-white max-w-[756px] w-[95%] rounded-xl shadow-xl"
+                className="bg-theme-surface max-w-[756px] w-[95%] rounded-xl shadow-xl"
                 onClick={(e) => e.stopPropagation()}
             >
 
@@ -103,13 +103,13 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                             New Invoice
                         </h3>
 
-                        <p className="text-[#64748B] mt-1">
+                        <p className="text-theme-muted mt-1">
                             Create a new invoice for a client.
                         </p>
 
                     </div>
 
-                    <button onClick={onClose} className="text-[#64748B]">
+                    <button onClick={onClose} className="text-theme-muted">
                         <X size={20} />
                     </button>
 
@@ -127,7 +127,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                                 CLIENT
                             </label>
 
-                            <select value={form.clientId} onChange={(e) => setForm({...form, clientId: e.target.value})} className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none">
+                            <select value={form.clientId} onChange={(e) => setForm({...form, clientId: e.target.value})} className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none">
                                 <option value="">Select client</option>
                                 {clients.map(c => (
                                     <option key={c._id} value={c._id}>{c.name}</option>
@@ -148,7 +148,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                                 type="date"
                                 value={form.dueDate}
                                 onChange={(e) => setForm({...form, dueDate: e.target.value})}
-                                className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
+                                className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none"
                             />
 
                         </div>
@@ -191,7 +191,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                                             newItems[i].desc = e.target.value;
                                             setItems(newItems);
                                         }}
-                                        className="border border-[#E5E7EB] rounded-lg h-12 px-3 outline-none"
+                                        className="border border-theme-border rounded-lg h-12 px-3 outline-none"
                                     />
 
                                     <input
@@ -202,7 +202,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                                             newItems[i].qty = Number(e.target.value);
                                             setItems(newItems);
                                         }}
-                                        className="border border-[#E5E7EB] rounded-lg h-12 px-3 outline-none"
+                                        className="border border-theme-border rounded-lg h-12 px-3 outline-none"
                                     />
 
                                     <input
@@ -214,12 +214,12 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
                                             newItems[i].price = e.target.value;
                                             setItems(newItems);
                                         }}
-                                        className="border border-[#E5E7EB] rounded-lg h-12 px-3 outline-none"
+                                        className="border border-theme-border rounded-lg h-12 px-3 outline-none"
                                     />
 
                                     <button
                                         onClick={() => removeItem(i)}
-                                        className="text-[#94A3B8]"
+                                        className="text-theme-muted"
                                     >
                                         <Trash2 size={18} />
                                     </button>
@@ -238,17 +238,17 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
 
                         <div className="w-[260px] space-y-2 text-sm">
 
-                            <div className="flex justify-between text-[#64748B]">
+                            <div className="flex justify-between text-theme-muted">
                                 <span>Subtotal</span>
                                 <span>${subtotal.toFixed(2)}</span>
                             </div>
 
-                            <div className="flex justify-between text-[#64748B]">
+                            <div className="flex justify-between text-theme-muted">
                                 <span>Tax (0%)</span>
                                 <span>${tax.toFixed(2)}</span>
                             </div>
 
-                            <div className="flex justify-between text-[#0F172A] font-semibold text-lg pt-2">
+                            <div className="flex justify-between text-theme-text font-semibold text-lg pt-2">
                                 <span>Total</span>
                                 <span>${total.toFixed(2)}</span>
                             </div>
@@ -263,11 +263,11 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
 
                 <div className="flex justify-end gap-6 border-t p-6">
 
-                    <button onClick={onClose} className="text-[#64748B]">
+                    <button onClick={onClose} className="text-theme-muted">
                         Cancel
                     </button>
 
-                    <button onClick={handleCreateInvoice} className="bg-[#2563EB] text-white px-6 py-2 rounded-lg shadow">
+                    <button onClick={handleCreateInvoice} className="bg-[#2563EB] text-theme-text px-6 py-2 rounded-lg shadow">
                         Create Invoice
                     </button>
 

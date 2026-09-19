@@ -79,7 +79,7 @@ export default function HelpSupport() {
             Support Center
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Get help with technical issues or operational questions.
           </p>
         </div>
@@ -123,10 +123,10 @@ export default function HelpSupport() {
       </div>
 
       {activeTab === "tickets" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[360px]">
-              <Search size={18} className="text-[#94A3B8]" />
+            <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[360px]">
+              <Search size={18} className="text-theme-muted" />
 
               <input
                 placeholder="Search tickets..."
@@ -134,7 +134,7 @@ export default function HelpSupport() {
               />
             </div>
 
-            <button className="flex items-center gap-2 text-[#64748B] font-medium">
+            <button className="flex items-center gap-2 text-theme-muted font-medium">
               <Filter size={16} />
               Filter
             </button>
@@ -142,7 +142,7 @@ export default function HelpSupport() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="border-b text-sm text-[#64748B] bg-[#F8FAFC]">
+              <thead className="border-b text-sm text-theme-muted bg-theme-bg">
                 <tr>
                   <th className="py-4 font-medium px-2">TICKET ID</th>
                   <th className="py-4 font-medium px-2">SUBJECT</th>
@@ -156,12 +156,12 @@ export default function HelpSupport() {
               <tbody>
                 {ticketsData.map((t, i) => (
                   <tr key={i} className="border-b last:border-none">
-                    <td className="py-6 px-2 text-[#64748B] text-sm">
+                    <td className="py-6 px-2 text-theme-muted text-sm">
                       {t.id ? `#${t.id}` : t.ticketId ? `#${t.ticketId}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"}
                     </td>
 
                     <td className="py-6 px-2">
-                      <p className="font-semibold text-[#0F172A] leading-6">
+                      <p className="font-semibold text-theme-text leading-6">
                         {t.subject || t.title || t.issue || "No Subject"}
                       </p>
                     </td>
@@ -182,7 +182,7 @@ export default function HelpSupport() {
                       </span>
                     </td>
 
-                    <td className="py-6 px-2 text-[#64748B] text-sm">
+                    <td className="py-6 px-2 text-theme-muted text-sm">
                       {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                     </td>
 
@@ -195,7 +195,7 @@ export default function HelpSupport() {
                 ))}
                 {ticketsData.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-[#94A3B8]">
+                    <td colSpan={6} className="py-8 text-center text-theme-muted">
                       No support tickets found.
                     </td>
                   </tr>
@@ -216,7 +216,7 @@ export default function HelpSupport() {
 
       {showNewTicketModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+          <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
             <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
               <X size={20} />
             </button>

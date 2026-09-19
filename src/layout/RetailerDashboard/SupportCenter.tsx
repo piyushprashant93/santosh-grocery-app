@@ -78,7 +78,7 @@ export default function SupportCenter() {
             Support Center
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Get help with your store and orders.
           </p>
         </div>
@@ -132,10 +132,10 @@ export default function SupportCenter() {
 
       {activeTab === "tickets" && (
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[320px] mb-6">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[320px] mb-6">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search tickets..."
               className="w-full px-3 py-2 outline-none text-sm"
@@ -148,7 +148,7 @@ export default function SupportCenter() {
 
             <table className="w-full text-left">
 
-              <thead className="border-b text-[#6A7282] text-sm">
+              <thead className="border-b text-theme-muted text-sm">
 
                 <tr>
 
@@ -189,7 +189,7 @@ export default function SupportCenter() {
                     <td className="py-5 text-[#62748E]">
                       {t.id ? `#${t.id}` : t.ticketId ? `#${t.ticketId}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"}
                     </td>
-                    <td className="py-5 text-[#111827] font-medium">
+                    <td className="py-5 text-theme-text font-medium">
                       {t.subject || t.title || t.issue || "No Subject"}
                     </td>
                     <td className="py-5">
@@ -202,7 +202,7 @@ export default function SupportCenter() {
                         {t.status || "Open"}
                       </span>
                     </td>
-                    <td className="py-5 text-[#6A7282]">
+                    <td className="py-5 text-theme-muted">
                       {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                     </td>
                     <td className="py-5 text-center text-[#F54900] font-medium cursor-pointer">
@@ -235,7 +235,7 @@ export default function SupportCenter() {
 
       {showNewTicketModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+          <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
             <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
               <X size={20} />
             </button>

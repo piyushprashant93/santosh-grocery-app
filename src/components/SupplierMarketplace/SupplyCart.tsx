@@ -152,10 +152,10 @@ export default function SupplyCart({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
         </div>
       ) : !cart || !cart.items || cart.items.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
+        <div className="bg-theme-surface rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
            <ShoppingBag size={48} className="text-gray-300 mb-4" />
            <p className="text-lg font-medium">Your supply cart is empty.</p>
-           <button onClick={onBack} className="mt-6 px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition shadow-md shadow-orange-200">
+           <button onClick={onBack} className="mt-6 px-6 py-2.5 bg-orange-600 text-theme-text rounded-lg hover:bg-orange-700 transition shadow-md shadow-orange-200">
               Browse Suppliers
            </button>
         </div>
@@ -170,7 +170,7 @@ export default function SupplyCart({
              </div>
              
              {cart.items.map((item: any) => (
-                <div key={item._id || item.id} className="bg-white rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm">
+                <div key={item._id || item.id} className="bg-theme-surface rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm">
                    <div className="w-20 h-20 bg-gray-50 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100">
                       {item.product?.image ? (
                         <img src={item.product.image} alt={item.product?.name} className="w-full h-full object-cover" />
@@ -209,7 +209,7 @@ export default function SupplyCart({
            </div>
 
            <div className="col-span-1">
-             <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm sticky top-6">
+             <div className="bg-theme-surface rounded-xl border border-gray-200 p-6 shadow-sm sticky top-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h2>
                 
                 <div className="space-y-3 mb-6">
@@ -239,7 +239,7 @@ export default function SupplyCart({
                 <button
                   onClick={handleCheckout}
                   disabled={processing || cart.items.length === 0}
-                  className="w-full py-3.5 rounded-xl bg-orange-600 text-white font-semibold text-lg hover:bg-orange-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-orange-200"
+                  className="w-full py-3.5 rounded-xl bg-orange-600 text-theme-text font-semibold text-lg hover:bg-orange-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-orange-200"
                 >
                    {processing ? (
                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

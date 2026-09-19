@@ -41,7 +41,7 @@ const steps = [
 
 export default function HowItWorksSection() {
   return (
-    <section className="relative w-full bg-cover bg-center bg-[#020618]">
+    <section className="relative w-full bg-cover bg-center bg-theme-bg">
       <div className="relative max-w-[1265px] mx-auto px-3 lg:px-6 py-20">
 
         <div className="flex flex-col gap-32">
@@ -69,15 +69,15 @@ export default function HowItWorksSection() {
                 </div>
 
                 <div className="text-left">
-                  <div className="w-12 h-12 rounded-xl bg-[#0F172B] flex items-center justify-center mb-6 border border-[#1E293B]">
+                  <div className="w-12 h-12 rounded-xl bg-theme-surface flex items-center justify-center mb-6 border border-theme-border">
                     <Icon size={22} className={step.color} />
                   </div>
 
-                  <h3 className="font-playfair text-[28px] md:text-[36px] font-medium text-white mb-4">
+                  <h3 className="font-playfair text-[28px] md:text-[36px] font-medium text-theme-text mb-4">
                     {step.title}
                   </h3>
 
-                  <p className="text-[#90A1B9] text-[18px] leading-relaxed max-w-[560px]">
+                  <p className="text-theme-muted text-[18px] leading-relaxed max-w-[560px]">
                     {step.desc}
                   </p>
 

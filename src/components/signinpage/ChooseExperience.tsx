@@ -63,23 +63,23 @@ export default function ChooseExperience() {
   const { setRole } = useRole();
     const navigate = useNavigate();
   return (
-    <section className="bg-[#020618] min-h-[calc(100vh-80px)] flex flex-col justify-between w-full">
+    <section className="bg-theme-bg min-h-[calc(100vh-80px)] flex flex-col justify-between w-full">
       <div className="max-w-[1265px] mx-auto px-3 lg:px-6 w-full">
         <div className="flex py-9 items-center justify-between gap-3">
             <img src={Logo} alt="" />
-            <div className="text-[#90A1B9] font-medium flex items-center gap-2 cursor-pointer" onClick={()=>navigate("/")}>
+            <div className="text-theme-muted font-medium flex items-center gap-2 cursor-pointer" onClick={()=>navigate("/")}>
                 <ArrowLeft />
                 Back to Home
             </div>
         </div>
         <div className="text-center mx-auto mt-9">
-          <h2 className="text-4xl md:text-5xl text-white font-playfair">
+          <h2 className="text-4xl md:text-5xl text-theme-text font-playfair">
             Choose Your{" "}
             <span className="text-[#00A63E] italic font-playfair">
               Experience
             </span>
           </h2>
-          <p className="mt-4 text-[#90A1B9] text-[22px]">
+          <p className="mt-4 text-theme-muted text-[22px]">
             Access your personalized dashboard to manage orders, products, or
             deliveries.
           </p>
@@ -102,26 +102,26 @@ export default function ChooseExperience() {
                     backgroundPosition: "center",
                   }}
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-[#0F172B] border-2 border-[#314158] flex items-center justify-center shadow-[0px_0px_0px_1px_#FFFFFF0D]">
+                  <div className="w-16 h-16 rounded-2xl bg-theme-surface border-2 border-[#314158] flex items-center justify-center shadow-[0px_0px_0px_1px_#FFFFFF0D]">
                     <Icon size={28} className={card.iconColor} />
                   </div>
                 </div>
 
                 <div className="absolute bottom-5 left-4 right-4 text-center">
-                  <h3 className="font-playfair text-[27px] font-bold text-white">
+                  <h3 className="font-playfair text-[27px] font-bold text-theme-text">
                     {card.title}
                   </h3>
                   <p className="text-xs font-bold text-[#62748E] mt-2">
                     {card.subtitle}
                   </p>
-                  <p className="text-[#90A1B9] text-sm mt-4 leading-relaxed">
+                  <p className="text-theme-muted text-sm mt-4 leading-relaxed">
                     {card.desc}
                   </p>
 
                   <button onClick={() => {
     setRole(card.role as RoleType);
     navigate(`/role-wise-sign-in?role=${card.role}`);
-  }} className="mt-6 w-full bg-[#FFFFFF0D] border border-[#FFFFFF1A] text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:border-[#00A63E] transition">
+  }} className="mt-6 w-full bg-[#FFFFFF0D] border border-[#FFFFFF1A] text-theme-text py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:border-[#00A63E] transition">
                     {card.btn}
                     <ArrowRight size={16} />
                   </button>

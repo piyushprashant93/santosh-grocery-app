@@ -48,7 +48,7 @@ const statusStyles: any = {
             Client Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Manage relationships with restaurants and retailers.
           </p>
 
@@ -68,13 +68,13 @@ const statusStyles: any = {
 
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4">
 
         <div className="flex gap-3">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 flex-1">
+          <div className="flex items-center border border-theme-border rounded-lg px-3 flex-1">
 
-            <Search size={18} className="text-[#64748B]" />
+            <Search size={18} className="text-theme-muted" />
 
             <input
               placeholder="Search clients by name, email, or location..."
@@ -83,7 +83,7 @@ const statusStyles: any = {
 
           </div>
 
-          <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg flex items-center gap-2 bg-white">
+          <button className="border border-theme-border px-4 py-2 rounded-lg flex items-center gap-2 bg-theme-surface">
             <Filter size={16} />
             Filter
           </button>
@@ -100,7 +100,7 @@ const statusStyles: any = {
 
           <div
             key={c._id || i}
-            className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
+            className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm"
           >
 
             <div className="flex justify-between">
@@ -113,11 +113,11 @@ const statusStyles: any = {
 
                 <div>
 
-                  <p className="font-semibold text-[#111827]">
+                  <p className="font-semibold text-theme-text">
                     {c.name || "Unknown Client"}
                   </p>
 
-                  <div className="flex items-center gap-2 text-sm text-[#64748B] mt-1">
+                  <div className="flex items-center gap-2 text-sm text-theme-muted mt-1">
                     <Building2 size={14} />
                     {c.type || "Client"}
                   </div>
@@ -126,7 +126,7 @@ const statusStyles: any = {
 
               </div>
 
-              <button className="text-[#64748B]">
+              <button className="text-theme-muted">
                 <MoreHorizontal size={18} />
               </button>
 
@@ -137,17 +137,17 @@ const statusStyles: any = {
             <div className="space-y-3 mt-5 text-sm text-[#374151]">
 
               <div className="flex items-center gap-2">
-                <Mail size={16} className="text-[#64748B]" />
+                <Mail size={16} className="text-theme-muted" />
                 {c.email || "N/A"}
               </div>
 
               <div className="flex items-center gap-2">
-                <Phone size={16} className="text-[#64748B]" />
+                <Phone size={16} className="text-theme-muted" />
                 {c.phone || "N/A"}
               </div>
 
               <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-[#64748B]" />
+                <MapPin size={16} className="text-theme-muted" />
                 {c.location || c.address?.city || "N/A"}
               </div>
 
@@ -159,7 +159,7 @@ const statusStyles: any = {
 
               <div>
 
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-theme-muted">
                   Total Spend
                 </p>
 
@@ -171,7 +171,7 @@ const statusStyles: any = {
 
               <div>
 
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-theme-muted">
                   Active Orders
                 </p>
 

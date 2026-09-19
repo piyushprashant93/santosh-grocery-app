@@ -73,12 +73,12 @@ export default function AdminUsersTab() {
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-sm"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm whitespace-nowrap">
             <Filter size={16} />
             Filter By Role
           </button>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition shadow-sm w-full sm:w-auto justify-center">
+        <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg hover:bg-emerald-700 transition shadow-sm w-full sm:w-auto justify-center">
           <Plus size={16} />
           Add Admin
         </button>
@@ -91,7 +91,7 @@ export default function AdminUsersTab() {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

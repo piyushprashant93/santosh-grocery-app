@@ -2,7 +2,7 @@ import { BarChart2, Package } from "lucide-react"
 
 export default function ReportsTab() {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
+    <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
       
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-900">Reports & Analytics</h2>
@@ -14,7 +14,7 @@ export default function ReportsTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Sales Report */}
-        <div className="border border-gray-100 rounded-xl p-5 bg-white shadow-sm">
+        <div className="border border-gray-100 rounded-xl p-5 bg-theme-surface shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="text-orange-500">
               <BarChart2 size={24} />
@@ -44,7 +44,7 @@ export default function ReportsTab() {
         </div>
 
         {/* Inventory Report */}
-        <div className="border border-gray-100 rounded-xl p-5 bg-white shadow-sm">
+        <div className="border border-gray-100 rounded-xl p-5 bg-theme-surface shadow-sm">
           <div className="flex items-center gap-3 mb-2">
             <div className="text-orange-500">
               <Package size={24} />

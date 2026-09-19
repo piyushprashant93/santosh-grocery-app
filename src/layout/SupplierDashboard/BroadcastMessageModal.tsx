@@ -49,19 +49,19 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
       onClick={onClose}
     >
       <div
-        className="bg-white max-w-[680px] w-[96%] max-h-[96vh] overflow-auto rounded-xl shadow-xl"
+        className="bg-theme-surface max-w-[680px] w-[96%] max-h-[96vh] overflow-auto rounded-xl shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-start p-6 border-b bg-[#F8FAFC80]">
           <div>
             <h3 className="font-playfair text-2xl">Broadcast Message</h3>
 
-            <p className="text-[#64748B] mt-1">
+            <p className="text-theme-muted mt-1">
               Send announcements to your clients.
             </p>
           </div>
 
-          <button onClick={onClose} className="text-[#64748B]">
+          <button onClick={onClose} className="text-theme-muted">
             ✕
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
               placeholder="e.g. New Product Arrival: Organic Avocados"
               value={form.subject}
               onChange={(e) => setForm({...form, subject: e.target.value})}
-              className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
+              className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none"
             />
           </div>
 
@@ -107,7 +107,7 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
               placeholder="Type your message here..."
               value={form.message}
               onChange={(e) => setForm({...form, message: e.target.value})}
-              className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
+              className="w-full border border-theme-border rounded-lg px-3 py-3 mt-1 outline-none"
             />
           </div>
 
@@ -122,11 +122,11 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
         </div>
 
         <div className="flex justify-end gap-4 border-t p-6 bg-[#F8FAFC80]">
-          <button onClick={onClose} className="text-[#64748B]">
+          <button onClick={onClose} className="text-theme-muted">
             Cancel
           </button>
 
-          <button onClick={handleSend} className="bg-[#2563EB] text-white px-6 py-2 rounded-lg flex items-center gap-2 shadow">
+          <button onClick={handleSend} className="bg-[#2563EB] text-theme-text px-6 py-2 rounded-lg flex items-center gap-2 shadow">
             <Send size={16} />
             Send Message
           </button>

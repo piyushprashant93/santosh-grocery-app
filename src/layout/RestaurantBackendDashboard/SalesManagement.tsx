@@ -129,13 +129,13 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
             Sales Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track daily revenue across all delivery platforms and in-house dining.
           </p>
         </div>
 
         <div className="flex gap-3 items-center">
-          <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex gap-2 items-center bg-white">
+          <button className="border border-theme-border rounded-lg px-4 py-2 flex gap-2 items-center bg-theme-surface">
             <Download size={16} />
             Export Report
           </button>
@@ -145,18 +145,18 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
       <div className="grid lg:grid-cols-[2fr_1fr] gap-5">
 
         <div className="space-y-5">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
           <div className="flex items-start justify-between mb-6">
             <div>
               <h3 className="font-playfair text-xl">Daily Sales Entry</h3>
-              <p className="text-[#64748B] mt-1">
+              <p className="text-theme-muted mt-1">
                 Enter end-of-day sales figures for each platform.
               </p>
             </div>
 
             <div className="flex items-center gap-2 border rounded-lg px-3 py-2">
-              <Calendar size={16} className="text-[#64748B]" />
+              <Calendar size={16} className="text-theme-muted" />
               <input type="date" value={dateStr} onChange={(e) => setDateStr(e.target.value)} className="outline-none text-sm" />
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
           <div className="flex items-center justify-between mt-6 pt-4 border-t">
 
             <div>
-              <p className="text-[#64748B] text-sm">Total Daily Revenue</p>
+              <p className="text-theme-muted text-sm">Total Daily Revenue</p>
               <h3 className="text-2xl font-semibold">${total.toFixed(2)}</h3>
             </div>
 
@@ -191,7 +191,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
           </div>
 
         </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-0 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-0 shadow-sm">
 
       <div className="p-6 border-b">
         <h3 className="font-playfair text-xl">Recent Entries</h3>
@@ -201,7 +201,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
         <table className="w-full text-left min-w-[800px]">
 
-          <thead className="bg-[#F8FAFC] text-sm text-[#64748B]">
+          <thead className="bg-theme-bg text-sm text-theme-muted">
             <tr>
               <th className="py-4 px-6 font-medium">DATE</th>
               <th className="py-4 px-6 font-medium">IN-HOUSE</th>
@@ -221,22 +221,22 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
               return (
               <tr key={e._id || i} className="border-t">
 
-                <td className="py-5 px-6 text-[#0F172A] font-medium">
+                <td className="py-5 px-6 text-theme-text font-medium">
                   <div className="leading-5">
                     <p>{dateParts[0] + "-" + dateParts[1]}</p>
                     <p>{dateParts[2]}</p>
                   </div>
                 </td>
 
-                <td className="py-5 px-6 text-[#64748B]">
+                <td className="py-5 px-6 text-theme-muted">
                   ${inhouse.toFixed(2)}
                 </td>
 
-                <td className="py-5 px-6 text-[#64748B]">
+                <td className="py-5 px-6 text-theme-muted">
                   ${delivery.toFixed(2)}
                 </td>
 
-                <td className="py-5 px-6 font-semibold text-[#0F172A]">
+                <td className="py-5 px-6 font-semibold text-theme-text">
                   ${typeof e.total === "number" ? e.total.toFixed(2) : parseFloat(e.total || "0").toFixed(2)}
                 </td>
 
@@ -248,7 +248,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
                 </td>
 
                 <td className="py-5 px-6 text-center">
-                  <FileText size={18} className="text-[#94A3B8] cursor-pointer mx-auto" />
+                  <FileText size={18} className="text-theme-muted cursor-pointer mx-auto" />
                 </td>
 
               </tr>
@@ -265,10 +265,10 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
         <div className="space-y-5">
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
             <h3 className="font-playfair text-lg">Sales Trend</h3>
-            <p className="text-[#64748B] text-sm mb-4">Last 3 days performance</p>
+            <p className="text-theme-muted text-sm mb-4">Last 3 days performance</p>
 
             <div className="h-[260px] mt-6 -ml-5">
 
@@ -313,18 +313,18 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
           </div>
 
-          <div className="rounded-xl p-6 text-white bg-gradient-to-br from-[#1E1B4B] to-[#312E81] shadow-sm">
+          <div className="rounded-xl p-6 text-theme-text bg-gradient-to-br from-[#1E1B4B] to-[#312E81] shadow-sm">
 
             <h3 className="font-playfair text-lg mb-4">Weekly Insight</h3>
 
             <h2 className="text-3xl font-semibold">$13,240.50</h2>
 
-            <p className="text-sm mt-2 text-white/80">
+            <p className="text-sm mt-2 text-theme-text/80">
               +12% vs last week
             </p>
 
-            <p className="mt-4 text-sm text-white/80">
-              Top Platform <span className="font-semibold text-white">Uber Eats (32%)</span>
+            <p className="mt-4 text-sm text-theme-text/80">
+              Top Platform <span className="font-semibold text-theme-text">Uber Eats (32%)</span>
             </p>
 
             <div className="w-full h-2 bg-white/20 rounded-full mt-3">

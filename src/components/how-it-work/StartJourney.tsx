@@ -20,9 +20,9 @@ const cards = [
 export default function StartJourney() {
   const navigate = useNavigate();
   return (
-    <section className="relative w-full bg-[#020618]">
+    <section className="relative w-full bg-theme-bg">
       <div className="max-w-[1265px] mx-auto px-3 lg:px-6 pt-10 pb-[120px] text-center">
-        <h2 className="font-playfair text-[40px] md:text-[56px] text-white mb-16">
+        <h2 className="font-playfair text-[40px] md:text-[56px] text-theme-text mb-16">
           Start Your Journey
         </h2>
 
@@ -33,17 +33,17 @@ export default function StartJourney() {
             return (
               <div
                 key={index}
-                className="bg-[#0F172B] border border-[#1E293B] rounded-[20px] p-10 text-center max-w-[432px]"
+                className="bg-theme-surface border border-theme-border rounded-[20px] p-10 text-center max-w-[432px]"
               >
-                <div className="flex justify-center mb-6 text-[#94A3B8]">
+                <div className="flex justify-center mb-6 text-theme-muted">
                   <Icon size={36} />
                 </div>
 
-                <h3 className="font-playfair text-[24px] font-bold text-white mb-4">
+                <h3 className="font-playfair text-[24px] font-bold text-theme-text mb-4">
                   {card.title}
                 </h3>
 
-                <p className="text-[#90A1B9] text-[16px] leading-relaxed max-w-[360px] mx-auto mb-10">
+                <p className="text-theme-muted text-[16px] leading-relaxed max-w-[360px] mx-auto mb-10">
                   {card.desc}
                 </p>
 

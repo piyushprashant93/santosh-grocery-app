@@ -26,9 +26,9 @@ const features = [
 
 export default function EcosystemSection() {
   return (
-    <section className="w-full bg-[#020618] pt-10 pb-[100px]">
-      <div className="bg-[#0F172B80] border-y border-[#FFFFFF0D] mb-10">
-        <div className="h-[104px] flex items-center justify-between text-[#64748B] text-sm max-w-[1265px] lg:px-6 px-3 mx-auto">
+    <section className="w-full bg-theme-bg pt-10 pb-[100px]">
+      <div className="bg-theme-surface border-y border-[#FFFFFF0D] mb-10">
+        <div className="h-[104px] flex items-center justify-between text-theme-muted text-sm max-w-[1265px] lg:px-6 px-3 mx-auto">
           <span>Michelin Stars</span>
           <span>Eater Approved</span>
           <span>James Beard Foundation</span>
@@ -41,11 +41,11 @@ export default function EcosystemSection() {
 
 
         <div className="text-center max-w-[720px] mx-auto mb-16">
-          <h2 className="font-playfair text-[54px] text-white font-medium leading-[1.1] mb-6">
+          <h2 className="font-playfair text-[54px] text-theme-text font-medium leading-[1.1] mb-6">
             A complete ecosystem for food lovers
           </h2>
 
-          <p className="text-[#90A1B9] text-[20px]">
+          <p className="text-theme-muted text-[20px]">
             Whether you're ordering dinner or serving it, we've built the tools
             to make the experience seamless.
           </p>
@@ -58,17 +58,17 @@ export default function EcosystemSection() {
             return (
               <div
                 key={i}
-                className="bg-[#0F172B80] border border-[#FFFFFF0D] rounded-[18px] p-8"
+                className="bg-theme-surface border border-[#FFFFFF0D] rounded-[18px] p-8"
               >
                 <div className="w-12 h-12 rounded-lg bg-[#FFFFFF0D] flex items-center justify-center mb-6">
                   <Icon className={`${item.color}`} size={22} />
                 </div>
 
-                <h3 className="font-playfair text-[24px] text-white mb-4">
+                <h3 className="font-playfair text-[24px] text-theme-text mb-4">
                   {item.title}
                 </h3>
 
-                <p className="text-[#90A1B9] text-[18px] mb-6">
+                <p className="text-theme-muted text-[18px] mb-6">
                   {item.desc}
                 </p>
 

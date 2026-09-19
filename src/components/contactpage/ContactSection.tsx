@@ -21,13 +21,13 @@ const icon = new L.Icon({
 
 export default function ContactSection() {
   return (
-    <section className="bg-[#020618] py-24 text-white">
+    <section className="bg-theme-bg py-24 text-theme-text">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3">
         <div className="text-center mb-16">
           <h2 className="font-playfair text-[54px] font-medium">
             Get in Touch
           </h2>
-          <p className="text-[#90A1B9] max-w-[731px] mx-auto text-[22px] mt-6">
+          <p className="text-theme-muted max-w-[731px] mx-auto text-[22px] mt-6">
             Have a question or feedback? We're here to help. Reach out to our
             team and we'll get back to you as soon as possible.
           </p>
@@ -35,12 +35,12 @@ export default function ContactSection() {
 
         <div className="grid lg:grid-cols-[320px_1fr] gap-8">
           <div className="space-y-6">
-            <div className="bg-[#0F172B80] border border-[#1D293D] rounded-xl p-6">
+            <div className="bg-theme-surface border border-theme-border rounded-xl p-6">
               <div className="w-12 h-12 rounded-lg bg-[#0D542B33] flex items-center justify-center mb-4">
                 <MapPin className="text-[#00C950]" size={20} />
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Headquarters</h3>
-              <p className="text-[#90A1B9] text-base">
+              <p className="text-theme-muted text-base">
                 123 Innovation Drive,
                 <br />
                 Tech Valley, CA 94043
@@ -49,24 +49,24 @@ export default function ContactSection() {
               </p>
             </div>
 
-            <div className="bg-[#0F172B80] border border-[#1D293D] rounded-xl p-6">
+            <div className="bg-theme-surface border border-theme-border rounded-xl p-6">
               <div className="w-12 h-12 rounded-lg bg-[#1D4ED833] flex items-center justify-center mb-4">
                 <Mail className="text-[#60A5FA]" size={20} />
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Email Us</h3>
-              <p className="text-[#90A1B9] text-base">
+              <p className="text-theme-muted text-base">
                 General: hello@hubnepa.com
                 <br />
                 Support: support@hubnepa.com
               </p>
             </div>
 
-            <div className="bg-[#0F172B80] border border-[#1D293D] rounded-xl p-6">
+            <div className="bg-theme-surface border border-theme-border rounded-xl p-6">
               <div className="w-12 h-12 rounded-lg bg-[#9333EA33] flex items-center justify-center mb-4">
                 <Clock className="text-[#C084FC]" size={20} />
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Business Hours</h3>
-              <p className="text-[#90A1B9] text-base">
+              <p className="text-theme-muted text-base">
                 Mon - Fri: 9:00 AM - 6:00 PM
                 <br />
                 Sat - Sun: 10:00 AM - 4:00 PM
@@ -74,33 +74,33 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="bg-[#0F172B80] border border-[#1D293D] rounded-xl p-8">
+          <div className="bg-theme-surface border border-theme-border rounded-xl p-8">
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm text-[#90A1B9]">First Name</label>
-                  <input className="w-full mt-2 h-11 bg-[#020618] border border-[#1D293D] rounded-lg px-4 outline-none" />
+                  <label className="text-sm text-theme-muted">First Name</label>
+                  <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#90A1B9]">Last Name</label>
-                  <input className="w-full mt-2 h-11 bg-[#020618] border border-[#1D293D] rounded-lg px-4 outline-none" />
+                  <label className="text-sm text-theme-muted">Last Name</label>
+                  <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
                 </div>
               </div>
 
               <div>
-                <label className="text-sm text-[#90A1B9]">Email Address</label>
-                <input className="w-full mt-2 h-11 bg-[#020618] border border-[#1D293D] rounded-lg px-4 outline-none" />
+                <label className="text-sm text-theme-muted">Email Address</label>
+                <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
               </div>
 
               <div>
-                <label className="text-sm text-[#90A1B9]">Subject</label>
-                <input className="w-full mt-2 h-11 bg-[#020618] border border-[#1D293D] rounded-lg px-4 outline-none" />
+                <label className="text-sm text-theme-muted">Subject</label>
+                <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
               </div>
 
               <div>
-                <label className="text-sm text-[#90A1B9]">Message</label>
-                <textarea className="w-full mt-2 h-32 bg-[#020618] border border-[#1D293D] rounded-lg px-4 py-3 outline-none" />
+                <label className="text-sm text-theme-muted">Message</label>
+                <textarea className="w-full mt-2 h-32 bg-theme-bg border border-theme-border rounded-lg px-4 py-3 outline-none" />
               </div>
 
               <button className="w-full h-[48px] rounded-lg bg-[#009966] flex items-center justify-center gap-2">
@@ -111,7 +111,7 @@ export default function ContactSection() {
         </div>
 
         <div className="relative">
-          <div className="mt-16 rounded-xl overflow-hidden border border-[#1D293D] relative z-0">
+          <div className="mt-16 rounded-xl overflow-hidden border border-theme-border relative z-0">
             <div className="h-[400px]">
               <MapContainer
                 center={[37.4221, -122.0841]}
@@ -133,10 +133,10 @@ export default function ContactSection() {
           <div className="absolute inset-0 bg-black/50"></div>
 
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1000]">
-            <div className="bg-[#0F172B] px-8 py-6 rounded-xl border border-[#1D293D] text-center">
+            <div className="bg-theme-surface px-8 py-6 rounded-xl border border-theme-border text-center">
               <MapPin className="mx-auto mb-2 text-[#00C950]" />
               <p className="font-playfair text-lg">Visit Our Office</p>
-              <p className="text-[#90A1B9] text-base">
+              <p className="text-theme-muted text-base">
                 We love meeting our community!
               </p>
             </div>

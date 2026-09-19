@@ -95,18 +95,18 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
             Dashboard
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Welcome back! Here's what's happening with your store today.
           </p>
         </div>
 
         <div className="flex gap-3">
 
-          <button onClick={() => setActiveTab("orders")} className="border border-[#E5E7EB] bg-white shadow-sm rounded-lg px-4 py-2 text-[#111827]">
+          <button onClick={() => setActiveTab("orders")} className="border border-theme-border bg-theme-surface shadow-sm rounded-lg px-4 py-2 text-theme-text">
             View Orders
           </button>
 
-          <button onClick={() => setActiveTab("products")} className="bg-[#F97316] text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+          <button onClick={() => setActiveTab("products")} className="bg-[#F97316] text-theme-text rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
             + Add Product
           </button>
 
@@ -124,14 +124,14 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
           return(
             <div
               key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
             >
 
               <div className="flex justify-between items-start">
 
                 <div>
 
-                  <p className="text-[#6A7282] text-sm">
+                  <p className="text-theme-muted text-sm">
                     {s.title}
                   </p>
 
@@ -159,7 +159,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
                   {s.change}
                 </span>
 
-                <span className="text-[#6A7282]">
+                <span className="text-theme-muted">
                   {s.trendText !== undefined ? s.trendText : "vs last month"}
                 </span>
 
@@ -175,7 +175,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 <ChartsSection />
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex items-center justify-between mb-6">
 
@@ -184,7 +184,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
               Recent Orders
             </h3>
 
-            <p className="text-[#6A7282] text-sm">
+            <p className="text-theme-muted text-sm">
               Latest transactions from your store
             </p>
           </div>
@@ -200,7 +200,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
 
           <table className="w-full text-left">
 
-            <thead className="text-[#6A7282] text-sm border-b">
+            <thead className="text-theme-muted text-sm border-b">
 
               <tr>
                 <th className="py-3">ORDER ID</th>
@@ -227,7 +227,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
                     </span>
                   </td>
 
-                  <td className="py-4 text-[#6A7282]">
+                  <td className="py-4 text-theme-muted">
                     {o.date}
                   </td>
 

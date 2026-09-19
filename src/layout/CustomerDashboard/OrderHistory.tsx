@@ -764,11 +764,11 @@ const submitCancelOrder = async () => {
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-theme-text">
             Order History
           </h1>
 
-          <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+          <p className="text-theme-muted mt-1 lg:text-lg text-base">
             Track current orders and view past receipts.
           </p>
         </div>
@@ -791,8 +791,8 @@ const submitCancelOrder = async () => {
       </div>
 
       <div className="flex gap-3">
-        <div className="flex items-center gap-2 flex-1 border border-[#E5E7EB] rounded-lg lg:rounded-xl px-4 py-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
-          <Search size={18} className="text-[#64748B]" />
+        <div className="flex items-center gap-2 flex-1 border border-theme-border rounded-lg lg:rounded-xl px-4 py-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+          <Search size={18} className="text-theme-muted" />
 
           <input
             placeholder="Search by restaurant or item..."
@@ -804,7 +804,7 @@ const submitCancelOrder = async () => {
 
         <button
           onClick={() => setShowFilter(!showFilter)}
-          className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg lg:rounded-xl px-4 bg-[#009966] text-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+          className="flex items-center gap-2 border border-theme-border rounded-lg lg:rounded-xl px-4 bg-[#009966] text-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
         >
           <Filter size={18} />
           Filter
@@ -812,8 +812,8 @@ const submitCancelOrder = async () => {
       </div>
 
       {showFilter && (
-        <div className="mt-4 border border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-[#fff] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
-          <p className="text-sm font-semibold text-[#64748B] mb-4">
+        <div className="mt-4 border border-theme-border lg:rounded-xl rounded-lg lg:p-6 p-3 bg-[#fff] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+          <p className="text-sm font-semibold text-theme-muted mb-4">
             ORDER STATUS
           </p>
 
@@ -839,7 +839,7 @@ const submitCancelOrder = async () => {
       <div className="grid lg:grid-cols-[1fr_340px] gap-6 items-start">
         <div className="space-y-4">
           {ordersLoading && (
-            <p className="text-[#6A7282] text-center py-6">Loading orders...</p>
+            <p className="text-theme-muted text-center py-6">Loading orders...</p>
           )}
 
           {!ordersLoading && ordersError && (
@@ -847,7 +847,7 @@ const submitCancelOrder = async () => {
           )}
 
           {!ordersLoading && !ordersError && filteredOrders.length === 0 && (
-            <p className="text-[#94A3B8] text-center py-6">
+            <p className="text-theme-muted text-center py-6">
               No orders match your filters.
             </p>
           )}
@@ -868,11 +868,11 @@ const submitCancelOrder = async () => {
                   {/* Header */}
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-xs text-[#94A3B8] uppercase">
+                      <p className="text-xs text-theme-muted uppercase">
                         {o.orderType} Order
                       </p>
 
-                      <h3 className="font-semibold text-[#0F172A]">
+                      <h3 className="font-semibold text-theme-text">
                         {o.orderId}
                       </h3>
                     </div>
@@ -888,9 +888,9 @@ const submitCancelOrder = async () => {
 
                   {/* Restaurant / Retailer */}
                   <div className="mt-4">
-                    <p className="text-sm text-[#94A3B8]">Store</p>
+                    <p className="text-sm text-theme-muted">Store</p>
 
-                    <p className="font-medium text-[#0F172A]">
+                    <p className="font-medium text-theme-text">
                       {o.restaurant?.name ||
                         o.retailer?.fullName ||
                         "Grocery Store"}
@@ -899,7 +899,7 @@ const submitCancelOrder = async () => {
 
                   {/* Items */}
                   <div className="mt-4">
-                    <p className="text-sm text-[#94A3B8]">
+                    <p className="text-sm text-theme-muted">
                       Items ({o.items.length})
                     </p>
 
@@ -926,7 +926,7 @@ const submitCancelOrder = async () => {
                   {/* Footer */}
                   <div className="flex justify-between items-center mt-5 pt-4 border-t">
                     <div>
-                      <p className="text-xs text-[#94A3B8]">Payment</p>
+                      <p className="text-xs text-theme-muted">Payment</p>
 
                       <p className="text-sm capitalize">
                         {o.paymentMethod} • {o.paymentStatus}
@@ -938,7 +938,7 @@ const submitCancelOrder = async () => {
                         {formatPrice(o.total)}
                       </p>
 
-                      <p className="text-xs text-[#94A3B8]">
+                      <p className="text-xs text-theme-muted">
                         {formatTime(o.createdAt)}
                       </p>
                     </div>
@@ -951,22 +951,22 @@ const submitCancelOrder = async () => {
             <button
               onClick={handleLoadMore}
               disabled={loadingMore}
-              className="w-full text-[#6A7282] border border-[#E5E7EB] rounded-lg py-3 bg-white disabled:opacity-60"
+              className="w-full text-theme-muted border border-theme-border rounded-lg py-3 bg-theme-surface disabled:opacity-60"
             >
               {loadingMore ? "Loading..." : "Load more"}
             </button>
           )}
         </div>
 
-        <div className="border border-[#E5E7EB] rounded-lg lg:rounded-xl lg:p-4 p-2 bg-[#F9FAFB]">
+        <div className="border border-theme-border rounded-lg lg:rounded-xl lg:p-4 p-2 bg-[#F9FAFB]">
           {!selectedOrderId ? (
-            <div className="flex flex-col items-center justify-center text-center text-[#94A3B8] py-10">
+            <div className="flex flex-col items-center justify-center text-center text-theme-muted py-10">
               <Package size={40} />
 
               <p className="mt-3">Select an order to view details</p>
             </div>
           ) : detailsLoading ? (
-            <div className="flex flex-col items-center justify-center text-center text-[#94A3B8] py-10">
+            <div className="flex flex-col items-center justify-center text-center text-theme-muted py-10">
               <p>Loading details...</p>
             </div>
           ) : detailsError ? (
@@ -977,17 +977,17 @@ const submitCancelOrder = async () => {
             <div className="space-y-6">
               <div className="flex items-start justify-between relative">
                 <div>
-                  <h2 className="font-playfair text-2xl text-[#0F172A]">
+                  <h2 className="font-playfair text-2xl text-theme-text">
                     Order Details
                   </h2>
 
-                  <p className="text-[#6A7282] mt-1">{selectedOrder.orderId}</p>
+                  <p className="text-theme-muted mt-1">{selectedOrder.orderId}</p>
                 </div>
 
                 <div className="relative">
                   <button
                     onClick={() => setShowOrderMenu((prev) => !prev)}
-                    className="text-[#94A3B8] text-xl hover:text-[#0F172A] transition"
+                    className="text-theme-muted text-xl hover:text-theme-text transition"
                   >
                     ⋮
                   </button>
@@ -1000,7 +1000,7 @@ const submitCancelOrder = async () => {
                         onClick={() => setShowOrderMenu(false)}
                       />
 
-                      <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-20 py-1">
+                      <div className="absolute right-0 top-full mt-2 w-44 bg-theme-surface border border-theme-border rounded-lg shadow-lg z-20 py-1">
                         {selectedOrder.status !== "delivered" &&
                           selectedOrder.status !== "cancelled" && (
                             <button
@@ -1008,7 +1008,7 @@ const submitCancelOrder = async () => {
                                 setShowOrderMenu(false);
                                 fetchTracking(selectedOrder._id);
                               }}
-                              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[#0F172A] hover:bg-[#F1F5F9] text-left"
+                              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-theme-text hover:bg-[#F1F5F9] text-left"
                             >
                               <Truck size={15} />
                               Track Order
@@ -1020,7 +1020,7 @@ const submitCancelOrder = async () => {
                             setShowOrderMenu(false);
                             fetchInvoice(selectedOrder._id);
                           }}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[#0F172A] hover:bg-[#F1F5F9] text-left"
+                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-theme-text hover:bg-[#F1F5F9] text-left"
                         >
                           <FileText size={15} />
                           Invoice
@@ -1034,9 +1034,9 @@ const submitCancelOrder = async () => {
               <div className="relative">
                 <div className="w-full h-48 rounded-xl bg-gray-100 flex items-center justify-center">
                   {selectedOrder.orderType === "food" ? (
-                    <Utensils size={40} className="text-[#94A3B8]" />
+                    <Utensils size={40} className="text-theme-muted" />
                   ) : (
-                    <ShoppingBag size={40} className="text-[#94A3B8]" />
+                    <ShoppingBag size={40} className="text-theme-muted" />
                   )}
                 </div>
 
@@ -1055,11 +1055,11 @@ const submitCancelOrder = async () => {
                 <MapPin className="text-[#009966]" size={20} />
 
                 <div>
-                  <p className="font-semibold text-[#0F172A]">
+                  <p className="font-semibold text-theme-text">
                     Delivery Address
                   </p>
 
-                  <p className="text-[#6A7282] text-sm">
+                  <p className="text-theme-muted text-sm">
                     {selectedOrder.deliveryAddress.street},{" "}
                     {selectedOrder.deliveryAddress.city},{" "}
                     {selectedOrder.deliveryAddress.state}
@@ -1071,20 +1071,20 @@ const submitCancelOrder = async () => {
                 <Clock className="text-[#009966]" size={20} />
 
                 <div>
-                  <p className="font-semibold text-[#0F172A]">
+                  <p className="font-semibold text-theme-text">
                     Estimated Arrival
                   </p>
 
-                  <p className="text-[#6A7282] text-sm">
+                  <p className="text-theme-muted text-sm">
                     {formatTime(selectedOrder.estimatedDelivery)}
                   </p>
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB]" />
+              <div className="border-t border-theme-border" />
 
               <div className="mt-5">
-                <h3 className="font-semibold text-[#0F172A] mb-4">
+                <h3 className="font-semibold text-theme-text mb-4">
                   Order Items ({selectedOrder.items.length})
                 </h3>
 
@@ -1092,11 +1092,11 @@ const submitCancelOrder = async () => {
                   {selectedOrder.items.map((item) => (
                     <div
                       key={item._id}
-                      className="flex justify-between items-center border border-[#E5E7EB] rounded-lg p-3 bg-white"
+                      className="flex justify-between items-center border border-theme-border rounded-lg p-3 bg-theme-surface"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-[#F8FAFC] flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F8FAFC] flex items-center justify-center border border-[#E5E7EB]">
+                        <div className="w-12 h-12 rounded-lg bg-theme-bg flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-theme-bg flex items-center justify-center border border-theme-border">
                             {item.image ? (
                               <img
                                 src={item.image}
@@ -1115,11 +1115,11 @@ const submitCancelOrder = async () => {
                         </div>
 
                         <div>
-                          <p className="font-medium text-[#0F172A]">
+                          <p className="font-medium text-theme-text">
                             {item.name}
                           </p>
 
-                          <p className="text-sm text-[#6A7282]">
+                          <p className="text-sm text-theme-muted">
                             {formatPrice(item.price)} × {item.quantity}
                           </p>
                         </div>
@@ -1135,29 +1135,29 @@ const submitCancelOrder = async () => {
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB] mt-5" />
+              <div className="border-t border-theme-border mt-5" />
 
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between text-[#6A7282]">
+                <div className="flex justify-between text-theme-muted">
                   <span>Subtotal</span>
                   <span>{formatPrice(selectedOrder.subtotal)}</span>
                 </div>
 
-                <div className="flex justify-between text-[#6A7282]">
+                <div className="flex justify-between text-theme-muted">
                   <span>Delivery Fee</span>
                   <span>{formatPrice(selectedOrder.deliveryFee)}</span>
                 </div>
 
-                <div className="flex justify-between text-[#6A7282]">
+                <div className="flex justify-between text-theme-muted">
                   <span>Tax</span>
                   <span>{formatPrice(selectedOrder.tax)}</span>
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB]" />
+              <div className="border-t border-theme-border" />
 
               <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold text-[#0F172A]">
+                <span className="text-lg font-semibold text-theme-text">
                   Total
                 </span>
 
@@ -1170,14 +1170,14 @@ const submitCancelOrder = async () => {
                 selectedOrder.status !== "cancelled" && (
                   <button
                     onClick={() => fetchTracking(selectedOrder._id)}
-                    className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex items-center gap-2 text-[#0F172A] bg-white shadow-sm"
+                    className="border border-theme-border rounded-lg px-4 py-2 flex items-center gap-2 text-theme-text bg-theme-surface shadow-sm"
                   >
                     <Truck size={16} />
                     Track Order
                   </button>
                 )}
 
-              <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex items-center gap-2 text-[#0F172A] bg-white shadow-sm">
+              <button className="border border-theme-border rounded-lg px-4 py-2 flex items-center gap-2 text-theme-text bg-theme-surface shadow-sm">
                 Invoice
               </button> */}
 
@@ -1188,7 +1188,7 @@ const submitCancelOrder = async () => {
     <button
       onClick={() => handleReorder(selectedOrder._id)}
       disabled={reordering}
-      className="w-full border border-[#009966] text-[#009966] rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 bg-white shadow-sm disabled:opacity-60"
+      className="w-full border border-[#009966] text-[#009966] rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 bg-theme-surface shadow-sm disabled:opacity-60"
     >
       <ShoppingBag size={16} />
       {reordering ? "Adding to cart..." : "Reorder"}
@@ -1217,7 +1217,7 @@ const submitCancelOrder = async () => {
       setCancelSuccess(false);
       setShowCancelModal(true);
     }}
-    className="w-full border border-red-200 text-red-600 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 bg-white shadow-sm hover:bg-red-50"
+    className="w-full border border-red-200 text-red-600 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2 bg-theme-surface shadow-sm hover:bg-red-50"
   >
     Cancel Order
   </button>
@@ -1230,10 +1230,10 @@ const submitCancelOrder = async () => {
     setRefundSuccess(false);
     setShowRefundModal(true);
   }}
-  className="text-xs text-[#6A7282] text-left cursor-text"
+  className="text-xs text-theme-muted text-left cursor-text"
 >
   Problem with order?{" "}
-  <span className="text-xs text-[#6A7282] cursor-pointer hover:text-[#009966] underline text-left">
+  <span className="text-xs text-theme-muted cursor-pointer hover:text-[#009966] underline text-left">
     Request Return/Refund
   </span>
 </button>
@@ -1244,15 +1244,15 @@ const submitCancelOrder = async () => {
 
       {showCancelModal && (
   <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0 px-4">
-    <div className="bg-white rounded-xl p-6 w-full max-w-md">
+    <div className="bg-theme-surface rounded-xl p-6 w-full max-w-md">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-[#0F172A]">
+        <h2 className="text-xl font-semibold text-theme-text">
           Cancel Order
         </h2>
 
         <button
           onClick={() => setShowCancelModal(false)}
-          className="text-[#94A3B8] text-xl"
+          className="text-theme-muted text-xl"
         >
           ×
         </button>
@@ -1275,22 +1275,22 @@ const submitCancelOrder = async () => {
               />
             </svg>
           </div>
-          <p className="text-[#0F172A] font-medium">Order cancelled!</p>
-          <p className="text-sm text-[#6A7282]">
+          <p className="text-theme-text font-medium">Order cancelled!</p>
+          <p className="text-sm text-theme-muted">
             Your order has been cancelled successfully.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          <p className="text-sm text-[#6A7282]">
+          <p className="text-sm text-theme-muted">
             Order:{" "}
-            <span className="font-medium text-[#0F172A]">
+            <span className="font-medium text-theme-text">
               {selectedOrder?.orderId}
             </span>
           </p>
 
           <div>
-            <label className="text-sm text-[#475569] block mb-2">
+            <label className="text-sm text-theme-muted block mb-2">
               Select a reason
             </label>
 
@@ -1313,7 +1313,7 @@ const submitCancelOrder = async () => {
           </div>
 
           <div>
-            <label className="text-sm text-[#475569] block mb-2">
+            <label className="text-sm text-theme-muted block mb-2">
               Additional details (optional)
             </label>
 
@@ -1325,7 +1325,7 @@ const submitCancelOrder = async () => {
                   setCancelReason(e.target.value);
                 }
               }}
-              className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 outline-none resize-none text-sm"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 outline-none resize-none text-sm"
             />
           </div>
 
@@ -1337,7 +1337,7 @@ const submitCancelOrder = async () => {
             <button
               onClick={() => setShowCancelModal(false)}
               disabled={cancelSubmitting}
-              className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+              className="border border-theme-border px-4 py-2 rounded-lg"
             >
               Keep Order
             </button>
@@ -1358,15 +1358,15 @@ const submitCancelOrder = async () => {
 
       {showRefundModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-[#0F172A]">
+              <h2 className="text-xl font-semibold text-theme-text">
                 Request Return / Refund
               </h2>
 
               <button
                 onClick={() => setShowRefundModal(false)}
-                className="text-[#94A3B8] text-xl"
+                className="text-theme-muted text-xl"
               >
                 ×
               </button>
@@ -1389,22 +1389,22 @@ const submitCancelOrder = async () => {
                     />
                   </svg>
                 </div>
-                <p className="text-[#0F172A] font-medium">Request submitted!</p>
-                <p className="text-sm text-[#6A7282]">
+                <p className="text-theme-text font-medium">Request submitted!</p>
+                <p className="text-sm text-theme-muted">
                   We'll review your request and get back to you shortly.
                 </p>
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-sm text-[#6A7282]">
+                <p className="text-sm text-theme-muted">
                   Order:{" "}
-                  <span className="font-medium text-[#0F172A]">
+                  <span className="font-medium text-theme-text">
                     {selectedOrder?.orderId}
                   </span>
                 </p>
 
                 <div>
-                  <label className="text-sm text-[#475569] block mb-2">
+                  <label className="text-sm text-theme-muted block mb-2">
                     Select a reason
                   </label>
 
@@ -1427,7 +1427,7 @@ const submitCancelOrder = async () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#475569] block mb-2">
+                  <label className="text-sm text-theme-muted block mb-2">
                     Additional details (optional)
                   </label>
 
@@ -1448,7 +1448,7 @@ const submitCancelOrder = async () => {
                         setRefundReason(e.target.value);
                       }
                     }}
-                    className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 outline-none resize-none text-sm"
+                    className="w-full border border-theme-border rounded-lg px-3 py-2 outline-none resize-none text-sm"
                   />
                 </div>
 
@@ -1460,7 +1460,7 @@ const submitCancelOrder = async () => {
                   <button
                     onClick={() => setShowRefundModal(false)}
                     disabled={refundSubmitting}
-                    className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+                    className="border border-theme-border px-4 py-2 rounded-lg"
                   >
                     Cancel
                   </button>
@@ -1481,9 +1481,9 @@ const submitCancelOrder = async () => {
 
       {showInvoiceModal && (
         <div className="fixed inset-0 z-50 !mt-0 flex items-center justify-center bg-black/50 px-4">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-6">
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-theme-surface p-6">
             {invoiceLoading ? (
-              <div className="py-16 text-center text-[#6A7282]">
+              <div className="py-16 text-center text-theme-muted">
                 Loading invoice...
               </div>
             ) : invoiceError ? (
@@ -1494,13 +1494,13 @@ const submitCancelOrder = async () => {
               invoice && (
                 <>
                   {/* Header */}
-                  <div className="flex items-start justify-between border-b border-[#E5E7EB] pb-5">
+                  <div className="flex items-start justify-between border-b border-theme-border pb-5">
                     <div>
-                      <h2 className="text-3xl font-bold text-[#0F172A]">
+                      <h2 className="text-3xl font-bold text-theme-text">
                         Invoice
                       </h2>
 
-                      <p className="mt-1 text-sm text-[#6A7282]">
+                      <p className="mt-1 text-sm text-theme-muted">
                         {invoice.invoiceNumber}
                       </p>
                     </div>
@@ -1517,14 +1517,14 @@ const submitCancelOrder = async () => {
                           {invoice.paymentStatus.toUpperCase()}
                         </span>
 
-                        <p className="mt-2 text-sm text-[#6A7282]">
+                        <p className="mt-2 text-sm text-theme-muted">
                           {new Date(invoice.invoiceDate).toLocaleDateString()}
                         </p>
                       </div>
 
                       <button
                         onClick={() => setShowInvoiceModal(false)}
-                        className="text-2xl text-[#64748B] hover:text-black"
+                        className="text-2xl text-theme-muted hover:text-black"
                       >
                         ×
                       </button>
@@ -1532,38 +1532,38 @@ const submitCancelOrder = async () => {
                   </div>
 
                   {/* Invoice Details */}
-                  <div className="mt-6 grid grid-cols-2 gap-4 rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] p-5 text-sm">
+                  <div className="mt-6 grid grid-cols-2 gap-4 rounded-xl border border-theme-border bg-[#FAFAFA] p-5 text-sm">
                     <div>
-                      <p className="text-[#6A7282]">Invoice Number</p>
+                      <p className="text-theme-muted">Invoice Number</p>
                       <p className="font-semibold">{invoice.invoiceNumber}</p>
                     </div>
 
                     <div>
-                      <p className="text-[#6A7282]">Order ID</p>
+                      <p className="text-theme-muted">Order ID</p>
                       <p className="font-semibold">{invoice.orderId}</p>
                     </div>
 
                     <div>
-                      <p className="text-[#6A7282]">Invoice Date</p>
+                      <p className="text-theme-muted">Invoice Date</p>
                       <p className="font-semibold">
                         {new Date(invoice.invoiceDate).toLocaleDateString()}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-[#6A7282]">Status</p>
+                      <p className="text-theme-muted">Status</p>
                       <p className="font-semibold">{invoice.status}</p>
                     </div>
 
                     <div>
-                      <p className="text-[#6A7282]">Payment Method</p>
+                      <p className="text-theme-muted">Payment Method</p>
                       <p className="font-semibold capitalize">
                         {invoice.paymentMethod}
                       </p>
                     </div>
 
                     <div>
-                      <p className="text-[#6A7282]">Payment Status</p>
+                      <p className="text-theme-muted">Payment Status</p>
                       <p className="font-semibold capitalize">
                         {invoice.paymentStatus}
                       </p>
@@ -1573,44 +1573,44 @@ const submitCancelOrder = async () => {
                   {/* Vendor + Customer */}
 
                   <div className="mt-6 grid gap-5 md:grid-cols-2">
-                    <div className="rounded-xl border border-[#E5E7EB] p-5">
+                    <div className="rounded-xl border border-theme-border p-5">
                       <h3 className="mb-4 text-lg font-semibold text-[#009966]">
                         Vendor
                       </h3>
 
-                      <p className="font-semibold text-[#0F172A]">
+                      <p className="font-semibold text-theme-text">
                         {invoice.vendor.name}
                       </p>
 
-                      <p className="mt-1 text-[#6A7282]">
+                      <p className="mt-1 text-theme-muted">
                         {invoice.vendor.phone}
                       </p>
 
-                      <p className="text-[#6A7282]">{invoice.vendor.address}</p>
+                      <p className="text-theme-muted">{invoice.vendor.address}</p>
                     </div>
 
-                    <div className="rounded-xl border border-[#E5E7EB] p-5">
+                    <div className="rounded-xl border border-theme-border p-5">
                       <h3 className="mb-4 text-lg font-semibold text-[#009966]">
                         Bill To
                       </h3>
 
-                      <p className="font-semibold text-[#0F172A]">
+                      <p className="font-semibold text-theme-text">
                         {invoice.customer.name}
                       </p>
 
-                      <p className="mt-1 text-[#6A7282]">
+                      <p className="mt-1 text-theme-muted">
                         {invoice.customer.email}
                       </p>
 
-                      <p className="text-[#6A7282]">{invoice.customer.phone}</p>
+                      <p className="text-theme-muted">{invoice.customer.phone}</p>
                     </div>
                   </div>
 
                   {/* Items */}
 
-                  <div className="mt-8 overflow-hidden rounded-xl border border-[#E5E7EB]">
+                  <div className="mt-8 overflow-hidden rounded-xl border border-theme-border">
                     <table className="w-full">
-                      <thead className="bg-[#F8FAFC]">
+                      <thead className="bg-theme-bg">
                         <tr className="text-sm">
                           <th className="p-4 text-left">Item</th>
 
@@ -1624,7 +1624,7 @@ const submitCancelOrder = async () => {
 
                       <tbody>
                         {invoice.items.map((item, index) => (
-                          <tr key={index} className="border-t border-[#E5E7EB]">
+                          <tr key={index} className="border-t border-theme-border">
                             <td className="p-4">{item.name}</td>
 
                             <td className="p-4 text-center">{item.quantity}</td>
@@ -1665,7 +1665,7 @@ const submitCancelOrder = async () => {
                       <span>{formatPrice(invoice.discount)}</span>
                     </div>
 
-                    <div className="flex justify-between border-t border-[#E5E7EB] pt-3 text-xl font-bold text-[#009966]">
+                    <div className="flex justify-between border-t border-theme-border pt-3 text-xl font-bold text-[#009966]">
                       <span>Grand Total</span>
                       <span>{formatPrice(invoice.total)}</span>
                     </div>
@@ -1674,10 +1674,10 @@ const submitCancelOrder = async () => {
                   {/* Notes */}
 
                   {invoice.notes && (
-                    <div className="mt-8 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] p-4">
+                    <div className="mt-8 rounded-xl border border-theme-border bg-theme-bg p-4">
                       <h3 className="font-semibold">Notes</h3>
 
-                      <p className="mt-2 text-sm text-[#6A7282]">
+                      <p className="mt-2 text-sm text-theme-muted">
                         {invoice.notes}
                       </p>
                     </div>
@@ -1685,7 +1685,7 @@ const submitCancelOrder = async () => {
 
                   {/* Footer */}
 
-                  <div className="mt-8 border-t border-[#E5E7EB] pt-5 text-center text-sm text-[#6A7282]">
+                  <div className="mt-8 border-t border-theme-border pt-5 text-center text-sm text-theme-muted">
                     {invoice.footer}
                   </div>
 
@@ -1715,22 +1715,22 @@ const submitCancelOrder = async () => {
 
       {showTrackModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-semibold text-[#0F172A]">
+              <h2 className="text-xl font-semibold text-theme-text">
                 {tracking ? `Order ${tracking.orderNumber}` : "Track Order"}
               </h2>
 
               <button
                 onClick={() => setShowTrackModal(false)}
-                className="text-[#94A3B8] text-xl"
+                className="text-theme-muted text-xl"
               >
                 ×
               </button>
             </div>
 
             {trackingLoading ? (
-              <p className="text-[#6A7282] text-center py-10">
+              <p className="text-theme-muted text-center py-10">
                 Loading tracking info...
               </p>
             ) : trackingError ? (
@@ -1779,12 +1779,12 @@ const submitCancelOrder = async () => {
                             {step.label}
                           </p>
 
-                          <p className="text-xs text-[#6A7282] mt-0.5">
+                          <p className="text-xs text-theme-muted mt-0.5">
                             {step.description}
                           </p>
 
                           {step.timestamp && (
-                            <p className="text-xs text-[#94A3B8] mt-1">
+                            <p className="text-xs text-theme-muted mt-1">
                               {formatTime(step.timestamp)}
                             </p>
                           )}
@@ -1794,10 +1794,10 @@ const submitCancelOrder = async () => {
                   </div>
                 )}
 
-                <div className="border-t border-[#E5E7EB] pt-4 space-y-3">
+                <div className="border-t border-theme-border pt-4 space-y-3">
                   <div className="flex gap-3">
                     <MapPin className="text-[#009966] shrink-0" size={18} />
-                    <p className="text-sm text-[#6A7282]">
+                    <p className="text-sm text-theme-muted">
                       {tracking.deliveryAddress.street},{" "}
                       {tracking.deliveryAddress.city}
                     </p>
@@ -1805,7 +1805,7 @@ const submitCancelOrder = async () => {
 
                   <div className="flex gap-3">
                     <Truck className="text-[#009966] shrink-0" size={18} />
-                    <p className="text-sm text-[#6A7282]">
+                    <p className="text-sm text-theme-muted">
                       {tracking.deliveryPartner.available
                         ? "Delivery partner assigned"
                         : tracking.deliveryPartner.message ||
@@ -1816,7 +1816,7 @@ const submitCancelOrder = async () => {
                   {tracking.estimatedDelivery && (
                     <div className="flex gap-3">
                       <Clock className="text-[#009966] shrink-0" size={18} />
-                      <p className="text-sm text-[#6A7282]">
+                      <p className="text-sm text-theme-muted">
                         Estimated: {formatTime(tracking.estimatedDelivery)}
                       </p>
                     </div>

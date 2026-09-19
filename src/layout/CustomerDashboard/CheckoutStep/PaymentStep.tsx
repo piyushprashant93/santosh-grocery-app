@@ -279,13 +279,13 @@ const methodMeta: Record<
 };
 
   return (
-    <div className="border border-[#1D293D] rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-[#0F172B80]">
-      <h2 className="font-playfair text-2xl mb-6 text-white">Payment Method</h2>
+    <div className="border border-theme-border rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-theme-surface">
+      <h2 className="font-playfair text-2xl mb-6 text-theme-text">Payment Method</h2>
 
       {fetchError && <p className="text-red-400 text-sm mb-4">{fetchError}</p>}
 
       {loading ? (
-        <div className="flex items-center justify-center gap-2 text-[#94A3B8] py-10">
+        <div className="flex items-center justify-center gap-2 text-theme-muted py-10">
           <Loader2 size={20} className="animate-spin" />
           Loading payment methods...
         </div>
@@ -327,10 +327,10 @@ const methodMeta: Record<
                     </div>
 
                     <div>
-                      <p className="text-white lg:text-lg text-sm">
+                      <p className="text-theme-text lg:text-lg text-sm">
                         {method.label}
                       </p>
-                      <p className="text-[#94A3B8] sm:text-base text-sm">
+                      <p className="text-theme-muted sm:text-base text-sm">
                         {description}
                       </p>
                     </div>
@@ -348,9 +348,9 @@ const methodMeta: Record<
 
                 {/* Saved cards list — shown only when "card" method is selected */}
                 {method.id === "card" && active && (
-                  <div className="ml-4 mt-3 space-y-3 border-l border-[#1E293B] pl-4">
+                  <div className="ml-4 mt-3 space-y-3 border-l border-theme-border pl-4">
                     {cards.length === 0 ? (
-                      <p className="text-[#94A3B8] text-sm py-2">
+                      <p className="text-theme-muted text-sm py-2">
                         No saved cards yet. Add one below.
                       </p>
                     ) : (
@@ -369,7 +369,7 @@ const methodMeta: Record<
                             }`}
                           >
                             <div className="flex items-center lg:gap-4 gap-2">
-                              <div className="w-14 h-10 bg-[#1E293B] rounded-md flex items-center justify-center text-sm font-semibold">
+                              <div className="w-14 h-10 bg-theme-surface rounded-md flex items-center justify-center text-sm font-semibold">
                                 {card.brand === "Visa" ? (
                                   <span className="text-blue-400">VISA</span>
                                 ) : (
@@ -382,18 +382,18 @@ const methodMeta: Record<
 
                               <div>
                                 <div className="flex items-center gap-3">
-                                  <p className="text-white text-sm">
+                                  <p className="text-theme-text text-sm">
                                     {card.brand} •••• {card.last4}
                                   </p>
 
                                   {card.isDefault && (
-                                    <span className="text-xs px-2 py-1 rounded-full bg-[#1E293B] text-[#94A3B8]">
+                                    <span className="text-xs px-2 py-1 rounded-full bg-theme-surface text-theme-muted">
                                       Primary
                                     </span>
                                   )}
                                 </div>
 
-                                <p className="text-[#94A3B8] text-xs">
+                                <p className="text-theme-muted text-xs">
                                   Expires {card.expiryMonth}/{card.expiryYear}
                                 </p>
                               </div>

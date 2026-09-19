@@ -79,7 +79,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
       <div className="flex items-center gap-4 mb-2">
         <button 
           onClick={onBack}
-          className="p-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+          className="p-2 bg-theme-surface border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
         >
           <ArrowLeft size={20} />
         </button>
@@ -92,7 +92,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {MOCK_DOCS.map((doc) => (
-          <div key={doc.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group">
+          <div key={doc.id} className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group">
             
             {/* Image Thumbnail */}
             <div className="relative h-48 w-full bg-gray-100 overflow-hidden">
@@ -137,7 +137,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
             onClick={() => setSelectedDoc(null)}
           ></div>
           
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
+          <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col relative z-10 animate-in zoom-in-95 duration-200">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
@@ -169,7 +169,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-white rounded-b-2xl">
+            <div className="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-theme-surface rounded-b-2xl">
               <button 
                 onClick={() => handleVerifyDocument('Rejected')}
                 disabled={loading}
@@ -181,7 +181,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
               <button 
                 onClick={() => handleVerifyDocument('Verified')}
                 disabled={loading}
-                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-theme-text text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50"
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle2 size={18} />}
                 Approve & Verify

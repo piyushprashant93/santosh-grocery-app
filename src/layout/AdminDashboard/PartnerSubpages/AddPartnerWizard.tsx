@@ -96,7 +96,7 @@ export default function AddPartnerWizard() {
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
+      <div className="bg-theme-surface p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
         
         {/* === STEP 1: Partner Information === */}
         {step === 1 && (
@@ -140,7 +140,7 @@ export default function AddPartnerWizard() {
                   placeholder="e.g. Tasty Bites" 
                   value={formData.businessName}
                   onChange={(e) => setFormData({...formData, businessName: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
@@ -150,7 +150,7 @@ export default function AddPartnerWizard() {
                   placeholder="e.g. John Doe" 
                   value={formData.ownerName}
                   onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
@@ -160,7 +160,7 @@ export default function AddPartnerWizard() {
                   placeholder="partner@hubnepa.com" 
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
@@ -170,7 +170,7 @@ export default function AddPartnerWizard() {
                   placeholder="+1 (555) 000-0000" 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
             </div>
@@ -189,7 +189,7 @@ export default function AddPartnerWizard() {
                 <select 
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                  className="w-full bg-theme-surface border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
                 >
                   <option value="">Select category</option>
                   <option value="asian">Asian Cuisine</option>
@@ -205,7 +205,7 @@ export default function AddPartnerWizard() {
                   placeholder="123 Main St" 
                   value={formData.address}
                   onChange={(e) => setFormData({...formData, address: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
@@ -215,7 +215,7 @@ export default function AddPartnerWizard() {
                   placeholder="Scranton" 
                   value={formData.city}
                   onChange={(e) => setFormData({...formData, city: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
@@ -225,7 +225,7 @@ export default function AddPartnerWizard() {
                   placeholder="18503" 
                   value={formData.zipCode}
                   onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function AddPartnerWizard() {
       <div className="mt-6 flex items-center justify-between">
         <button 
           onClick={step === 1 ? () => navigate('/admin/dashboard/partner-management') : handleBack}
-          className="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+          className="px-6 py-2.5 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
         >
           Back
         </button>
@@ -281,7 +281,7 @@ export default function AddPartnerWizard() {
           <button 
             onClick={handleFinalSubmit}
             disabled={loading}
-            className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2.5 bg-emerald-500 text-theme-text text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50 flex items-center gap-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Create Partner Account
