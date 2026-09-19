@@ -402,8 +402,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
                   className={`border lg:rounded-xl lg:p-6 rounded-lg p-3 flex lg:gap-4 gap-2 cursor-pointer transition
                   ${
                     item.isRead
-                      ? "bg-white border-[#E5E7EB]"
-                      : "bg-[#ECFDF54D] border-[#D0FAE5]"
+                      ? "bg-theme-surface border-theme-border"
+                      : "bg-[#009966]/10 border-[#009966]/30"
                   }`}
                 >
                  <div

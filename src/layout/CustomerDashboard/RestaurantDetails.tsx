@@ -606,10 +606,10 @@ export default function RestaurantMenuDetails() {
               return (
                 <div
                   key={item._id}
-                  className={`border rounded-2xl p-4 flex gap-4 bg-white ${
+                  className={`border rounded-2xl p-4 flex gap-4 border-theme-border bg-theme-surface ${
                     item.isAvailable
-                      ? "border-[#E5E7EB]"
-                      : "border-[#E5E7EB] opacity-60"
+                      ? "border-theme-border"
+                      : "border-theme-border opacity-60"
                   }`}
                 >
                   {item.image ? (

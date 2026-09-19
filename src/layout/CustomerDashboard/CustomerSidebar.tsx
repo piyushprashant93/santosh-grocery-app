@@ -10,8 +10,10 @@ import {
   Utensils,
 } from "lucide-react";
 import Logo from "../../assets/images/logo.svg";
+import LogoLight from "../../assets/images/logo-light.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTheme } from "./ThemeContext";
 
 const menu = [
   { id: "overview", label: "Overview", icon: Home },
@@ -49,6 +51,7 @@ export default function CustomerSidebar({
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }) {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const fullName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
 
@@ -67,7 +70,7 @@ export default function CustomerSidebar({
   return (
     <div className="w-[288px] flex flex-col h-full pb-5">
       <div className="px-6 py-6 cursor-pointer" onClick={() => navigate("/")}>
-        <img src={Logo} alt="Hubnepa Logo" />
+        <img src={theme === 'dark' ? LogoLight : Logo} alt="Hubnepa Logo" />
       </div>
 
       <div className="px-4">

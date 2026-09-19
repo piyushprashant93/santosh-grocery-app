@@ -744,7 +744,9 @@ const submitCancelOrder = async () => {
         ).toLowerCase();
         const itemNames = o.items.map((i) => i.name.toLowerCase()).join(" ");
 
-        if (!partnerName.includes(query) && !itemNames.includes(query)) {
+        const orderId = o.orderId ? o.orderId.toLowerCase() : "";
+
+        if (!partnerName.includes(query) && !itemNames.includes(query) && !orderId.includes(query)) {
           return false;
         }
       }
@@ -784,7 +786,7 @@ const submitCancelOrder = async () => {
               className={`px-4 py-2 rounded-lg border shadow-sm capitalize ${
                 tab === t
                   ? "bg-[#009966] text-white border-[#009966]"
-                  : "bg-white border-[#E5E7EB]"
+                  : "bg-theme-surface text-theme-text border-theme-border"
               }`}
             >
               {t}
@@ -829,7 +831,7 @@ const submitCancelOrder = async () => {
           ${
             status === s
               ? "bg-[#ECFDF5] text-[#009966] border-[#009966]"
-              : "bg-white border-[#E5E7EB] text-[#475569]"
+              : "bg-theme-surface border-theme-border text-theme-text"
           }`}
               >
                 {s}
@@ -865,7 +867,7 @@ const submitCancelOrder = async () => {
                 <div
                   key={o._id}
                   onClick={() => fetchOrderDetails(o._id)}
-                  className={`border border-[#E5E7EB] rounded-xl bg-white p-4 cursor-pointer hover:shadow-md transition
+                  className={`border border-theme-border rounded-xl bg-theme-surface p-4 cursor-pointer hover:shadow-md transition
   ${selectedOrderId === o._id ? "ring-2 ring-[#009966]" : ""}`}
                 >
                   {/* Header */}
@@ -1307,7 +1309,7 @@ const submitCancelOrder = async () => {
                   className={`px-3 py-1.5 rounded-full text-sm border transition ${
                     cancelReason === reason
                       ? "bg-red-50 text-red-600 border-red-300"
-                      : "bg-white border-[#E5E7EB] text-[#475569]"
+                      : "bg-theme-surface border-theme-border text-theme-text"
                   }`}
                 >
                   {reason}
@@ -1421,7 +1423,7 @@ const submitCancelOrder = async () => {
                         className={`px-3 py-1.5 rounded-full text-sm border transition ${
                           refundReason === reason
                             ? "bg-[#ECFDF5] text-[#009966] border-[#009966]"
-                            : "bg-white border-[#E5E7EB] text-[#475569]"
+                            : "bg-theme-surface border-theme-border text-theme-text"
                         }`}
                       >
                         {reason}

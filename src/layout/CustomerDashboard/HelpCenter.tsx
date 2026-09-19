@@ -584,10 +584,10 @@ const [legalModal, setLegalModal] = useState({
               onClick={() =>
                 setActiveCategory(isActive ? null : c.matchCategory)
               }
-              className={`border rounded-lg lg:rounded-xl lg:p-8 p-3 text-center bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] transition ${
+              className={`border rounded-lg lg:rounded-xl lg:p-8 p-3 text-center bg-theme-surface border-theme-border shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] transition ${
                 isActive
                   ? "border-[#009966] ring-1 ring-[#009966]"
-                  : "border-[#E5E7EB]"
+                  : "border-transparent"
               }`}
             >
               <div

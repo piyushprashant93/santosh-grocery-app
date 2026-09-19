@@ -160,7 +160,7 @@ export default function WalletPayments() {
     "px-4 py-2 text-xs flex-1 rounded-lg bg-[#009966] text-white font-medium transition-colors";
 
   const normalClass =
-    "px-4 py-2 text-xs flex-1 rounded-lg border border-[#E5E7EB] bg-white text-[#6A7282] hover:bg-[#F9FAFB] font-medium transition-colors";
+    "px-4 py-2 text-xs flex-1 rounded-lg border border-theme-border bg-theme-surface text-theme-text hover:bg-theme-surface-hover font-medium transition-colors";
 
   const fetchWallet = async () => {
     setWalletLoading(true);
