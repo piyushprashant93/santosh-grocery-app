@@ -18,6 +18,7 @@ export default function AuthSection() {
     email: "",
     password: "",
     phone: "",
+    referralCode: "",
   });
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ export default function AuthSection() {
             email: formData.email,
             password: formData.password,
             phone: formData.phone,
+            referralCode: formData.referralCode,
             role: "customer",
           }),
         }
@@ -68,7 +70,7 @@ export default function AuthSection() {
 
       setSuccess("Account created successfully. Redirecting to sign in...");
       navigate("/role-wise-sign-in?role=customer");
-      setFormData({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+      setFormData({ firstName: "", lastName: "", email: "", password: "", phone: "", referralCode: "" });
       setChecked(false);
 
       window.setTimeout(() => {
@@ -258,6 +260,27 @@ export default function AuthSection() {
                   size={18}
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted cursor-pointer"
+                />
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
+                Referral Code (Optional)
+              </label>
+              <div className="relative">
+                <Sparkles
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
+                />
+                <input
+                  name="referralCode"
+                  value={formData.referralCode}
+                  onChange={handleInputChange}
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Enter referral code"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E] uppercase"
                 />
               </div>
             </div>

@@ -933,12 +933,13 @@ const submitCancelOrder = async () => {
                       </p>
                     </div>
 
-                    <div className="text-right">
-                      <p className="font-bold text-[#009966]">
+                    <div className="text-right flex flex-col items-end">
+                      <p className="text-[10px] text-theme-muted uppercase tracking-wider mb-0.5">Grand Total</p>
+                      <p className="font-bold text-[#009966] leading-none">
                         {formatPrice(o.total)}
                       </p>
 
-                      <p className="text-xs text-theme-muted">
+                      <p className="text-[11px] text-theme-muted mt-1.5">
                         {formatTime(o.createdAt)}
                       </p>
                     </div>

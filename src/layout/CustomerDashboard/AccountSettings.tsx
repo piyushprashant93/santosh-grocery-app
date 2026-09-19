@@ -1097,7 +1097,7 @@ export default function AccountSettings() {
       )}
 
       {tab === "Profile" && (
-        <div className="border border-theme-border dark:border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-theme-border dark:border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface dark:bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
             <h2 className="font-playfair text-xl text-theme-text dark:text-theme-text">
               Personal Information
@@ -1240,7 +1240,7 @@ export default function AccountSettings() {
                   setIsEditing(true);
                 }
               }}
-              className="border border-theme-border dark:border-theme-border px-5 py-2 rounded-lg bg-theme-surface dark:bg-[#0F172A] shadow-sm w-fit"
+              className="border border-theme-border dark:border-theme-border px-5 py-2 rounded-lg bg-theme-surface dark:bg-theme-surface shadow-sm w-fit"
             >
               {isEditing ? "Save Changes" : "Edit Profile"}
             </button>
@@ -1249,7 +1249,7 @@ export default function AccountSettings() {
       )}
 
       {tab === "Security" && (
-        <div className="border border-theme-border dark:border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-theme-border dark:border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface dark:bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
             <h2 className="font-playfair text-xl">Password & Security</h2>
             <p className="text-theme-muted">
@@ -1390,7 +1390,7 @@ export default function AccountSettings() {
 
       {tab === "Preferences" && (
         <div className="space-y-6">
-          <div className="border border-theme-border dark:border-theme-border rounded-lg lg:rounded-xl lg:p-8 p-3 bg-theme-surface dark:bg-[#0F172A] space-y-6">
+          <div className="border border-theme-border dark:border-theme-border rounded-lg lg:rounded-xl lg:p-8 p-3 bg-theme-surface dark:bg-theme-surface space-y-6">
             <div className="flex items-center gap-3">
               <Bell className="text-[#009966]" size={20} />
               <h3 className="font-playfair text-lg">Notifications</h3>
@@ -1416,7 +1416,7 @@ export default function AccountSettings() {
                       : "bg-[#CBD5E1] justify-start"
                   }`}
                 >
-                  <span className="w-5 h-5 bg-theme-surface dark:bg-[#0F172A] rounded-full shadow" />
+                  <span className="w-5 h-5 bg-theme-surface dark:bg-theme-surface rounded-full shadow" />
                 </button>
               </div>
             ))}
@@ -1589,7 +1589,7 @@ export default function AccountSettings() {
           {addresses.map((address, index) => (
             <div
               key={address._id || index}
-              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-theme-surface dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-theme-surface dark:bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
@@ -1673,7 +1673,7 @@ export default function AccountSettings() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowBackupCodesModal(false)}
           />
-          <div className="relative bg-theme-surface dark:bg-[#0F172A] rounded-xl w-full max-w-md p-6 overflow-hidden">
+          <div className="relative bg-theme-surface dark:bg-theme-surface rounded-xl w-full max-w-md p-6 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-playfair text-xl">New Backup Codes</h3>
               <button
@@ -1705,7 +1705,7 @@ export default function AccountSettings() {
 
       {show2FADisableModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-theme-surface dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-sm">
+          <div className="bg-theme-surface dark:bg-theme-surface rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-xl font-semibold text-theme-text dark:text-theme-text">
               Disable Two-Factor Authentication
             </h2>
@@ -1753,7 +1753,7 @@ export default function AccountSettings() {
 
       {show2FAModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-theme-surface dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface dark:bg-theme-surface rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold">
               Enable Two-Factor Authentication
             </h2>
@@ -1829,7 +1829,7 @@ export default function AccountSettings() {
 
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-theme-surface dark:bg-[#0F172A] rounded-xl p-6 w-full max-w-sm">
+          <div className="bg-theme-surface dark:bg-theme-surface rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-xl font-semibold">Delete Address</h2>
 
             <p className="mt-3 text-theme-muted">
@@ -1866,7 +1866,7 @@ export default function AccountSettings() {
 
       {showPasswordSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 !mt-0">
-          <div className="w-full max-w-sm rounded-2xl bg-theme-surface dark:bg-[#0F172A] p-6 text-center shadow-xl">
+          <div className="w-full max-w-sm rounded-2xl bg-theme-surface dark:bg-theme-surface p-6 text-center shadow-xl">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <svg
                 className="h-8 w-8 text-green-600"
@@ -1909,7 +1909,7 @@ export default function AccountSettings() {
 
       {showDeleteAccountModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 !mt-0">
-          <div className="w-full max-w-md rounded-2xl bg-theme-surface dark:bg-[#0F172A] p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl bg-theme-surface dark:bg-theme-surface p-6 shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
                 <AlertTriangle className="text-red-600" size={24} />

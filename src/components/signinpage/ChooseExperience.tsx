@@ -91,7 +91,7 @@ export default function ChooseExperience() {
             return (
               <div
                 key={index}
-                className="relative h-[460px] rounded-[18px] overflow-hidden group bg-[#0F172B99] border border-[#FFFFFF0D] shadow-[0px_8px_10px_-6px_#0000001A,0px_20px_25px_-5px_#0000001A]"
+                className="relative h-[460px] rounded-[18px] overflow-hidden group bg-theme-surface border border-[#FFFFFF0D] shadow-[0px_8px_10px_-6px_#0000001A,0px_20px_25px_-5px_#0000001A]"
               >
 
                 <div

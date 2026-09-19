@@ -206,7 +206,7 @@ export default function FinanceWallet() {
 
         <div className="space-y-6">
 
-          <div className="bg-[#0F172A] text-theme-text rounded-lg lg:rounded-xl p-6 shadow-lg">
+          <div className="bg-theme-surface text-theme-text rounded-lg lg:rounded-xl p-6 shadow-lg">
 
             <h3 className="font-playfair text-xl">
               Payout Method

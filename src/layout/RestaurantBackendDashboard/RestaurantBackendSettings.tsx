@@ -670,7 +670,7 @@ export default function RestaurantBackendSettings({
                 </div>
               </div>
 
-              <button className="mt-5 w-full bg-[#0F172A] text-theme-text py-3 rounded-lg font-medium shadow">
+              <button className="mt-5 w-full bg-theme-surface text-theme-text py-3 rounded-lg font-medium shadow">
                 Update Password
               </button>
             </div>

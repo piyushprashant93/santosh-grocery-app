@@ -506,7 +506,7 @@ export default function TeamManagement({
                 </div>
               </div>
 
-              <button className="bg-[#0F172A] text-theme-text px-6 py-3 rounded-lg font-medium">
+              <button className="bg-theme-surface text-theme-text px-6 py-3 rounded-lg font-medium">
                 Publish Schedule
               </button>
             </div>
@@ -633,7 +633,7 @@ export default function TeamManagement({
           </p>
         </div>
 
-        <button onClick={runPayroll} className="bg-[#0F172A] text-theme-text px-6 py-3 rounded-lg font-medium">
+        <button onClick={runPayroll} className="bg-theme-surface text-theme-text px-6 py-3 rounded-lg font-medium">
           Run Payroll
         </button>
 

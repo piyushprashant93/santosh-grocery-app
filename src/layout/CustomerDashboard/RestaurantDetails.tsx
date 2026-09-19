@@ -705,7 +705,7 @@ export default function RestaurantMenuDetails() {
                 setShowReviewModal(true);
               }
             }}
-            className="bg-[#0F172A] text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
+            className="bg-theme-surface text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
           >
             Write a Review
           </button>

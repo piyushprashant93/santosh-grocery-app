@@ -462,14 +462,14 @@ export default function Checkout() {
                             setPromoError("");
                           }}
                           placeholder="Promo code"
-                          className="w-full h-10 pl-9 pr-3 rounded-lg bg-[#0F172A] border border-theme-border text-sm text-theme-text outline-none focus:border-[#334155]"
+                          className="w-full h-10 pl-9 pr-3 rounded-lg bg-theme-bg border border-theme-border text-sm text-theme-text outline-none focus:border-[#009966]"
                         />
                       </div>
 
                       <button
                         onClick={handleApplyPromo}
                         disabled={promoApplying}
-                        className="px-4 h-10 rounded-lg bg-theme-surface text-sm text-theme-text hover:bg-[#334155] disabled:opacity-60"
+                        className="px-4 h-10 rounded-lg bg-theme-surface border border-theme-border text-sm text-theme-text hover:bg-theme-bg dark:hover:bg-[#334155] disabled:opacity-60"
                       >
                         {promoApplying ? "..." : "Apply"}
                       </button>

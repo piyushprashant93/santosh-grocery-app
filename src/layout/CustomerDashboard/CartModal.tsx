@@ -276,7 +276,7 @@ export default function CartModal({
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative max-w-[448px] w-[96%] max-h-[85vh] bg-theme-bg shadow-[0px_25px_50px_-12px_#000000] text-theme-text flex flex-col"
+        className="relative max-w-[600px] w-[96%] max-h-[90vh] bg-theme-bg shadow-[0px_25px_50px_-12px_#000000] text-theme-text flex flex-col rounded-xl overflow-hidden"
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div className="flex items-center gap-2 text-lg font-medium font-playfair">
@@ -322,7 +322,7 @@ export default function CartModal({
               {items.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-[#0F172A] border border-theme-border rounded-lg lg:rounded-xl lg:p-4 p-2 flex gap-4 items-start"
+                  className="bg-theme-surface border border-theme-border rounded-lg lg:rounded-xl lg:p-4 p-2 flex gap-4 items-start"
                 >
                   {item.image ? (
                     <img
@@ -405,7 +405,7 @@ export default function CartModal({
               ))}
             </div>
 
-            <div className="bg-[#0F172A] lg:p-6 p-3 border-t border-theme-border">
+            <div className="bg-theme-surface lg:p-6 p-3 border-t border-theme-border">
               <div className="space-y-3 text-theme-muted">
                 <div className="flex justify-between">
                   <span>Subtotal</span>

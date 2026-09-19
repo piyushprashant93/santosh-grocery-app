@@ -110,7 +110,7 @@ export default function VoucherSection({
         <button
           onClick={handleApplyClick}
           disabled={loading}
-          className="bg-[#0F172A] text-theme-text px-4 rounded-lg flex items-center justify-center min-w-[80px] disabled:opacity-60"
+          className="bg-theme-surface text-theme-text px-4 rounded-lg flex items-center justify-center min-w-[80px] disabled:opacity-60"
         >
           {loading ? <Loader2 size={16} className="animate-spin" /> : "Apply"}
         </button>

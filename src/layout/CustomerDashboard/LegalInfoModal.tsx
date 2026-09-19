@@ -19,7 +19,7 @@ const LegalInfoModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-      <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-3xl">
+      <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-3xl">
 
         {/* Header */}
         <div className="flex justify-between items-start p-6 border-b border-theme-border">

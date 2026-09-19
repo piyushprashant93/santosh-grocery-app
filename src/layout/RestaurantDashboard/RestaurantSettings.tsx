@@ -870,7 +870,7 @@ export default function RestaurantSettings({
               <button 
                 onClick={handleUpdatePassword}
                 disabled={passwordLoading}
-                className="mt-5 w-full bg-[#0F172A] text-theme-text py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
+                className="mt-5 w-full bg-theme-surface text-theme-text py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {passwordLoading ? "Updating..." : "Update Password"}
               </button>

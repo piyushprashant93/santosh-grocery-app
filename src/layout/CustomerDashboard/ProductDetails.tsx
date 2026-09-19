@@ -596,7 +596,7 @@ const isOutOfStock = !product.inStock;
                 setShowReviewModal(true);
               }
             }}
-            className="bg-[#0F172A] text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
+            className="bg-theme-surface text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
           >
             Write a Review
           </button>
@@ -677,7 +677,7 @@ const isOutOfStock = !product.inStock;
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-theme-border rounded-2xl max-w-lg w-full"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-lg w-full"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-theme-border p-5">
@@ -765,7 +765,7 @@ const isOutOfStock = !product.inStock;
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-theme-border rounded-2xl max-w-sm w-full"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-sm w-full"
           >
             <div className="flex items-center justify-between p-5 border-b border-theme-border">
               <h3 className="font-playfair text-xl font-semibold text-theme-text">

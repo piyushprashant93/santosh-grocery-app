@@ -611,7 +611,7 @@ export default function FinanceWallet() {
                 Maintenance & Repairs
               </h2>
 
-              <button className="flex items-center gap-2 bg-[#0F172A] text-theme-text px-5 py-2.5 rounded-lg shadow">
+              <button className="flex items-center gap-2 bg-theme-surface text-theme-text px-5 py-2.5 rounded-lg shadow">
 
                 <Wrench size={16} />
                 Report Issue

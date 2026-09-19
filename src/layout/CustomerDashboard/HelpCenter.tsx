@@ -910,7 +910,7 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Contact Form Modal ---------- */}
       {showContactForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
             <button
               onClick={() => setShowContactForm(false)}
               className="absolute top-4 right-4 text-theme-muted hover:text-theme-text"
@@ -996,7 +996,7 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Raise Ticket Modal ---------- */}
       {showTicketForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
             <button
               onClick={() => setShowTicketForm(false)}
               className="absolute top-4 right-4 text-theme-muted hover:text-theme-text"
@@ -1102,7 +1102,7 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Ticket Detail Modal ---------- */}
       {selectedTicket && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative">
             {/* Header */}
             <div className="flex items-start justify-between p-5 border-b border-theme-border">
               <div>

@@ -252,7 +252,7 @@ export default function CreateManifest({
         </div>
         <div className="space-y-6">
           
-          <div className="bg-[#0F172A] text-theme-text rounded-xl p-6 shadow-lg">
+          <div className="bg-theme-surface text-theme-text rounded-xl p-6 shadow-lg">
             
             <div className="flex items-center gap-2 mb-6">
               

@@ -65,7 +65,7 @@ export default function AddressModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#0F172A] border border-theme-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+        className="bg-theme-surface border border-theme-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-center justify-between p-5 border-b border-theme-border">
           <h3 className="font-playfair text-xl text-theme-text">
@@ -99,7 +99,7 @@ export default function AddressModal({
                   className={`px-4 py-1.5 rounded-full text-sm border transition ${
                     form.label === opt
                       ? "bg-[#009966] border-[#009966] text-white"
-                      : "border-[#1E293B] text-[#94A3B8] hover:border-[#334155]"
+                      : "border-theme-border text-theme-muted hover:border-gray-400 dark:hover:border-theme-muted"
                   }`}
                 >
                   {opt}

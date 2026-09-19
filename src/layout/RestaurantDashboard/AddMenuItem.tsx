@@ -390,7 +390,7 @@ export default function AddMenuItem({
 
                 <button
                   onClick={addIngredient}
-                  className="mt-4 w-full bg-[#0F172A] text-theme-text py-3 rounded-lg flex items-center justify-center gap-2"
+                  className="mt-4 w-full bg-theme-surface text-theme-text py-3 rounded-lg flex items-center justify-center gap-2"
                 >
                   <Plus size={16} /> Add Ingredient
                 </button>

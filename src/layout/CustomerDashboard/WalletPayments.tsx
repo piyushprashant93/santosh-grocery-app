@@ -959,7 +959,7 @@ export default function WalletPayments() {
 
       {showTopUpModal && (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-[#0F172A] border border-theme-border rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-playfair text-xl text-theme-text">
                 Top Up Wallet
@@ -1033,7 +1033,7 @@ export default function WalletPayments() {
 
       {showWithdrawModal && (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-[#0F172A] border border-theme-border rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-playfair text-xl text-theme-text">
                 Withdraw Funds

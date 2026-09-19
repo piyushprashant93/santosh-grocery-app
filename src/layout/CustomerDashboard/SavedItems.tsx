@@ -314,7 +314,7 @@ export default function SavedItems() {
             return (
               <div
                 key={item._id}
-                className="border border-theme-border dark:border-theme-border rounded-lg lg:rounded-xl bg-theme-surface dark:bg-[#0F172A] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
+                className="border border-theme-border dark:border-theme-border rounded-lg lg:rounded-xl bg-theme-surface dark:bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
               >
                 <div className="relative">
                   {img ? (

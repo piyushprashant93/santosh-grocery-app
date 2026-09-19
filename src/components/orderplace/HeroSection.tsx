@@ -30,7 +30,7 @@ export default function HeroSection() {
           serve or to savor, you've found the right place.
         </p>
 
-        <div className="mt-16 border border-theme-border rounded-[26px] overflow-hidden bg-[#0F172B99] max-w-[805px] mx-auto">
+        <div className="mt-16 border border-theme-border rounded-[26px] overflow-hidden bg-theme-surface max-w-[805px] mx-auto">
           <div className="p-8 relative">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#00BC7D1A] border border-[#00BC7D1A] text-[#00D492] px-3 py-1 rounded-full mb-6">

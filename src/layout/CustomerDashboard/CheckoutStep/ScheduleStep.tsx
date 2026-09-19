@@ -225,7 +225,7 @@ export function ScheduleStep() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-theme-border rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
           >
             <div className="flex items-center justify-between p-5 border-b border-theme-border">
               <h3 className="font-playfair text-xl text-theme-text flex items-center gap-2">

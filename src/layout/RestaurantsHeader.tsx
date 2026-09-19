@@ -8,7 +8,10 @@ export default function RestaurantsHeader() {
     <header className="w-full bg-theme-bg">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3 h-[80px] flex items-center justify-between">
 
-        <div className="flex items-center gap-3">
+        <div 
+          className="flex items-center gap-3 cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <img
             src={Favicon}
             className="w-14 h-14 object-contain"

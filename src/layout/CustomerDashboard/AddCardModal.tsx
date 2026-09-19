@@ -52,7 +52,7 @@ const AddCardModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 !mt-0 px-4">
-      <div className="bg-[#0F172A] border border-theme-border rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-playfair text-xl text-theme-text">

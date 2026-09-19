@@ -352,7 +352,7 @@ export default function HelpSupport() {
                     className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 outline-none shadow-sm"
                   />
                 </div>
-                <button onClick={submitTicket} className="flex items-center justify-center gap-2 bg-[#0F172A] text-theme-text w-full py-4 rounded-xl shadow-lg">
+                <button onClick={submitTicket} className="flex items-center justify-center gap-2 bg-theme-surface text-theme-text w-full py-4 rounded-xl shadow-lg">
                   <Send size={18} /> Send Ticket
                 </button>
               </div>

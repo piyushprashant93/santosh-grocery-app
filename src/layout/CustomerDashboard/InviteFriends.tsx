@@ -322,7 +322,7 @@ export default function InviteFriends() {
             return (
               <div
                 key={step.id}
-                className="bg-[#0F172A] border border-theme-border rounded-xl p-6 relative"
+                className="bg-theme-surface border border-theme-border rounded-xl p-6 relative"
               >
                 <span className="absolute -top-4 -left-4 bg-[#1D293D] border border-[#314158] text-base rounded-full w-9 h-9 text-theme-muted flex items-center justify-center font-bold">
                   {step.id}
@@ -343,7 +343,7 @@ export default function InviteFriends() {
       <div className="max-w-[960px] mx-auto mt-16">
         <h2 className="text-3xl font-playfair mb-8">Your Referrals</h2>
 
-        <div className="bg-[#0F172A] border border-theme-border rounded-xl p-6">
+        <div className="bg-theme-surface border border-theme-border rounded-xl p-6">
           {loading ? (
             <p className="text-theme-muted text-center py-8">
               Loading referrals...

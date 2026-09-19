@@ -64,7 +64,7 @@ export default function MissionSection() {
             className="w-full h-[570px] object-cover rounded-[26px]"
           />
 
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] bg-[#0F172BCC] backdrop-blur-lg border border-theme-border rounded-[18px] px-8 py-6 flex justify-between items-center">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[85%] bg-theme-surface backdrop-blur-lg border border-theme-border rounded-[18px] px-8 py-6 flex justify-between items-center">
             <div>
               <p className="text-theme-text text-3xl font-semibold">500k+</p>
               <p className="text-theme-muted text-sm">
