@@ -12,6 +12,8 @@ import CartModal from "../../layout/CustomerDashboard/CartModal";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const PAGE_LIMIT = 12;
@@ -56,6 +58,8 @@ interface FeaturedProductsProps {
 export default function FeaturedProducts({
   searchQuery = "",
 }: FeaturedProductsProps) {
+  const { formatPrice } = useCurrency();
+
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -265,7 +269,7 @@ export default function FeaturedProducts({
     });
 
   return (
-    <section className="bg-[#020618] py-20 text-white">
+    <section className="bg-theme-bg py-20 text-theme-text">
       <div className="max-w-[1265px] mx-auto px-3 lg:px-6 grid lg:grid-cols-[260px_1fr] gap-10">
         <div className="space-y-6">
           <h3 className="text-[22px] font-medium text-[#CAD5E2] font-playfair">
@@ -297,7 +301,7 @@ export default function FeaturedProducts({
             })}
           </div>
 
-          <div className="bg-[#0F172B] border border-[#1D293D] rounded-2xl p-6 text-center space-y-4 lg:block hidden">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 text-center space-y-4 lg:block hidden">
             <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-orange-500">
               <Truck size={20} />
             </div>
@@ -306,7 +310,7 @@ export default function FeaturedProducts({
               Free Delivery
             </h4>
 
-            <p className="text-base text-[#90A1B9]">
+            <p className="text-base text-theme-muted">
               On all orders above $ 50.00
             </p>
 
@@ -322,9 +326,9 @@ export default function FeaturedProducts({
                 showDeliveryInfo ? "max-h-[220px] mt-4" : "max-h-0"
               }`}
             >
-              <div className="space-y-3 text-left text-sm text-[#CBD5E1] border-t border-[#1D293D] pt-4">
+              <div className="space-y-3 text-left text-sm text-[#CBD5E1] border-t border-theme-border pt-4">
                 <div>
-                  <h5 className="font-semibold text-white">🚚 Free Delivery</h5>
+                  <h5 className="font-semibold text-theme-text">🚚 Free Delivery</h5>
                   <p>
                     Enjoy free delivery on all orders above{" "}
                     <span className="text-orange-400">$50</span>.
@@ -332,12 +336,12 @@ export default function FeaturedProducts({
                 </div>
 
                 <div>
-                  <h5 className="font-semibold text-white">⏱ Delivery Time</h5>
+                  <h5 className="font-semibold text-theme-text">⏱ Delivery Time</h5>
                   <p>Orders are usually delivered within 30–45 minutes.</p>
                 </div>
 
                 <div>
-                  <h5 className="font-semibold text-white">📍 Delivery Area</h5>
+                  <h5 className="font-semibold text-theme-text">📍 Delivery Area</h5>
                   <p>Available within our supported delivery zones.</p>
                 </div>
               </div>
@@ -352,12 +356,12 @@ export default function FeaturedProducts({
             </h2>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-[#94A3B8]">Sort by:</span>
+              <span className="text-sm text-theme-muted">Sort by:</span>
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="bg-[#0F172B] text-sm px-2 py-2 rounded-lg outline-none cursor-pointer"
+              className="bg-theme-surface text-sm px-2 py-2 rounded-lg outline-none cursor-pointer"
             >
               <option value="newest">Newest</option>
               <option value="new-arrival">New Arrival</option>
@@ -378,7 +382,7 @@ export default function FeaturedProducts({
           )}
 
           {!loading && !error && sortedProducts.length === 0 && (
-            <p className="text-[#94A3B8] text-center py-10">
+            <p className="text-theme-muted text-center py-10">
               No products found.
             </p>
           )}
@@ -394,7 +398,7 @@ export default function FeaturedProducts({
                   <div
                     key={product._id}
                     onClick={() => handleProductClick(product._id)}
-                    className="bg-[#0F172B] border border-[#1D293D] rounded-2xl overflow-hidden group cursor-pointer"
+                    className="bg-theme-surface border border-theme-border rounded-2xl overflow-hidden group cursor-pointer"
                   >
                     <div className="relative">
                       {img ? (
@@ -403,10 +407,11 @@ export default function FeaturedProducts({
                           className="w-full h-[282px] object-cover"
                         />
                       ) : (
-                        <div className="w-full h-[282px] bg-[#1E293B] flex flex-col items-center justify-center gap-2 text-[#62748E]">
-                          <ImageOff size={32} />
-                          <span className="text-xs">No Image Available</span>
-                        </div>
+                        <img
+                          src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop"
+                          className="w-full h-[282px] object-cover"
+                          alt="Grocery Fallback"
+                        />
                       )}
 
                       {product.isNewArrival && (
@@ -418,7 +423,7 @@ export default function FeaturedProducts({
                       <button
                         onClick={(e) => handleAddClick(e, product._id)}
                         disabled={isAdding}
-                        className="absolute bottom-3 right-3 w-10 h-10 border rounded-full flex items-center justify-center bg-[#1E293B] disabled:opacity-60"
+                        className="absolute bottom-3 right-3 w-10 h-10 border rounded-full flex items-center justify-center bg-theme-surface disabled:opacity-60"
                       >
                         {isAdding ? (
                           <Loader2 size={16} className="animate-spin" />
@@ -439,13 +444,13 @@ export default function FeaturedProducts({
 
                       <div className="flex items-center justify-between mt-3">
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <p className="font-bold text-lg">
-                              ${(product.discountPrice ?? product.basePrice)?.toFixed(2)}
+                              {formatPrice(product.discountPrice ?? product.basePrice)}
                             </p>
                             {hasDiscount && (
                               <p className="text-sm text-[#62748E] line-through">
-                                ${product.basePrice?.toFixed(2)}
+                                {formatPrice(product.basePrice)}
                               </p>
                             )}
                           </div>
@@ -457,7 +462,7 @@ export default function FeaturedProducts({
                         <button
                           onClick={(e) => handleAddClick(e, product._id)}
                           disabled={isAdding}
-                          className="bg-[#00A63E] text-sm px-4 py-1.5 rounded-full disabled:opacity-60 flex items-center gap-1.5"
+                          className="bg-[#00A63E] text-sm px-4 py-1.5 rounded-full disabled:opacity-60 flex items-center gap-1.5 flex-shrink-0"
                         >
                           {isAdding ? (
                             <Loader2 size={14} className="animate-spin" />
@@ -484,7 +489,7 @@ export default function FeaturedProducts({
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="text-[#94A3B8] hover:text-white transition disabled:opacity-60"
+                className="text-theme-muted hover:text-theme-text transition disabled:opacity-60"
               >
                 {loadingMore ? "Loading..." : "Load More Products →"}
               </button>
@@ -492,14 +497,14 @@ export default function FeaturedProducts({
           )}
         </div>
 
-        <div className="bg-[#0F172B] border border-[#1D293D] rounded-2xl p-6 text-center space-y-4 lg:hidden">
+        <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 text-center space-y-4 lg:hidden">
           <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-orange-500">
             <Truck size={20} />
           </div>
 
           <h4 className="font-bold text-[20px] font-playfair">Free Delivery</h4>
 
-          <p className="text-base text-[#90A1B9]">
+          <p className="text-base text-theme-muted">
             On all orders above $ 50.00
           </p>
 
@@ -515,9 +520,9 @@ export default function FeaturedProducts({
               showDeliveryInfo ? "max-h-[220px] mt-4" : "max-h-0"
             }`}
           >
-            <div className="space-y-3 text-left text-sm text-[#CBD5E1] border-t border-[#1D293D] pt-4">
+            <div className="space-y-3 text-left text-sm text-[#CBD5E1] border-t border-theme-border pt-4">
               <div>
-                <h5 className="font-semibold text-white">🚚 Free Delivery</h5>
+                <h5 className="font-semibold text-theme-text">🚚 Free Delivery</h5>
                 <p>
                   Enjoy free delivery on all orders above{" "}
                   <span className="text-orange-400">$50</span>.
@@ -525,12 +530,12 @@ export default function FeaturedProducts({
               </div>
 
               <div>
-                <h5 className="font-semibold text-white">⏱ Delivery Time</h5>
+                <h5 className="font-semibold text-theme-text">⏱ Delivery Time</h5>
                 <p>Orders are usually delivered within 30–45 minutes.</p>
               </div>
 
               <div>
-                <h5 className="font-semibold text-white">📍 Delivery Area</h5>
+                <h5 className="font-semibold text-theme-text">📍 Delivery Area</h5>
                 <p>Available within our supported delivery zones.</p>
               </div>
             </div>

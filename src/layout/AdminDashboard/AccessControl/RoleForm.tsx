@@ -104,14 +104,14 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button 
             onClick={onCancel}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex-1 sm:flex-none text-center"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex-1 sm:flex-none text-center"
           >
             Cancel
           </button>
           <button 
             onClick={handleSave}
             disabled={loading || success}
-            className="px-5 py-2 bg-emerald-600 text-white font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center flex items-center justify-center gap-2"
+            className="px-5 py-2 bg-emerald-600 text-theme-text font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center flex items-center justify-center gap-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             {success ? "Saved!" : (isEditing ? 'Update Role' : 'Save Role')}
@@ -129,7 +129,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
         
         {/* Left Column: Basic Info */}
         <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4" style={{ fontFamily: 'serif' }}>Role Information</h3>
             
             <div className="space-y-4">
@@ -167,7 +167,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
 
         {/* Right Column: Permissions */}
         <div className="lg:col-span-8 flex flex-col gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Permissions Configuration</h3>
               <button className="text-sm font-medium text-orange-600 hover:text-orange-700 transition">

@@ -30,13 +30,13 @@ export default function PlatformSettingsLayout() {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Platform Settings</h1>
           <p className="text-gray-500 mt-1">Configure global application preferences.</p>
         </div>
-        <button className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition">
+        <button className="px-5 py-2.5 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition">
           Save Changes
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
         <div className="flex gap-8 whitespace-nowrap">
           {tabs.map((tab) => {
             const Icon = tab.icon;

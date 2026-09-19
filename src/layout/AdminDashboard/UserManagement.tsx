@@ -152,7 +152,7 @@ export default function UserManagement() {
           <p className="text-gray-500 mt-1">View, edit, and manage user access and permissions.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
+          <button className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
             <Download size={16} />
             Export Data
           </button>
@@ -167,7 +167,7 @@ export default function UserManagement() {
       </div>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 flex flex-col">
         
         {/* Search & Filter Bar */}
         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -191,7 +191,7 @@ export default function UserManagement() {
                 setRoleFilter(e.target.value);
                 setPage(1);
               }}
-              className="appearance-none bg-white border border-gray-200 text-gray-700 text-sm rounded-lg px-4 py-2 pr-8 focus:outline-none focus:border-orange-500 transition cursor-pointer"
+              className="appearance-none bg-theme-surface border border-gray-200 text-gray-700 text-sm rounded-lg px-4 py-2 pr-8 focus:outline-none focus:border-orange-500 transition cursor-pointer"
             >
               <option value="">All Roles</option>
               <option value="customer">Customer</option>
@@ -202,7 +202,7 @@ export default function UserManagement() {
               <option value="delivery">Delivery</option>
               <option value="admin">Admin</option>
             </select>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+            <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
               <Filter size={16} />
               Filter
             </button>
@@ -219,7 +219,7 @@ export default function UserManagement() {
           ) : error ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center">
               <p className="text-red-500 mb-4">{error}</p>
-              <button onClick={fetchUsers} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+              <button onClick={fetchUsers} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
             </div>
           ) : users.length === 0 ? (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center text-gray-500">
@@ -282,7 +282,7 @@ export default function UserManagement() {
                     {activeDropdown === user._id && (
                       <div 
                         ref={dropdownRef}
-                        className="absolute right-8 top-12 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-20 flex flex-col items-start text-left"
+                        className="absolute right-8 top-12 w-56 bg-theme-surface rounded-xl shadow-lg border border-gray-100 py-2 z-20 flex flex-col items-start text-left"
                       >
                         <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100 w-full mb-1">
                           User Actions

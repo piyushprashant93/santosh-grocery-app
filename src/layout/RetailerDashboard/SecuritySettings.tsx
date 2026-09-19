@@ -53,7 +53,7 @@ export default function SecuritySettings() {
   }
 
   return (
-    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
       <h3 className="font-playfair text-2xl mb-8">
         Account Security
@@ -72,7 +72,7 @@ export default function SecuritySettings() {
             name="currentPassword"
             value={form.currentPassword}
             onChange={handleChange}
-            className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+            className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
           />
         </div>
 
@@ -90,7 +90,7 @@ export default function SecuritySettings() {
               name="newPassword"
               value={form.newPassword}
               onChange={handleChange}
-              className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
             />
           </div>
 
@@ -106,7 +106,7 @@ export default function SecuritySettings() {
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
             />
           </div>
 
@@ -116,7 +116,7 @@ export default function SecuritySettings() {
 
         <button
           onClick={handleSubmit}
-          className="border border-[#E5E7EB] bg-white px-6 py-3 rounded-lg shadow-sm"
+          className="border border-theme-border bg-theme-surface px-6 py-3 rounded-lg shadow-sm"
         >
           Update Password
         </button>

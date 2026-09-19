@@ -57,21 +57,21 @@ export default function PaymentVerify() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-[#020618] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-[#0F172B] border border-[#1E293B] rounded-2xl p-8 text-center text-white shadow-xl">
+    <div className="min-h-screen bg-theme-bg flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-theme-surface border border-theme-border rounded-2xl p-8 text-center text-theme-text shadow-xl">
         {status === "verifying" && (
           <div className="flex flex-col items-center gap-4">
             <Loader2 size={48} className="animate-spin text-[#00BC7D]" />
             <h2 className="text-2xl font-playfair font-medium">Verifying Payment</h2>
-            <p className="text-[#94A3B8]">Please wait while we confirm your payment with Khalti...</p>
+            <p className="text-theme-muted">Please wait while we confirm your payment with Khalti...</p>
           </div>
         )}
 
         {status === "success" && (
           <div className="flex flex-col items-center gap-4">
             <CheckCircle size={56} className="text-[#00BC7D]" />
-            <h2 className="text-2xl font-playfair font-medium text-white">Payment Successful!</h2>
-            <p className="text-[#94A3B8]">Your order has been placed successfully.</p>
+            <h2 className="text-2xl font-playfair font-medium text-theme-text">Payment Successful!</h2>
+            <p className="text-theme-muted">Your order has been placed successfully.</p>
             <button
               onClick={() => {
                 localStorage.setItem("activeTab", "orders");
@@ -87,11 +87,11 @@ export default function PaymentVerify() {
         {status === "error" && (
           <div className="flex flex-col items-center gap-4">
             <XCircle size={56} className="text-red-500" />
-            <h2 className="text-2xl font-playfair font-medium text-white">Payment Failed</h2>
-            <p className="text-[#94A3B8]">{errorMessage}</p>
+            <h2 className="text-2xl font-playfair font-medium text-theme-text">Payment Failed</h2>
+            <p className="text-theme-muted">{errorMessage}</p>
             <button
               onClick={() => navigate("/customer/dashboard/checkout")}
-              className="mt-6 bg-[#1E293B] text-white px-6 py-3 rounded-lg font-medium w-full hover:bg-[#334155] transition-colors"
+              className="mt-6 bg-theme-surface text-theme-text px-6 py-3 rounded-lg font-medium w-full hover:bg-[#334155] transition-colors"
             >
               Return to Checkout
             </button>

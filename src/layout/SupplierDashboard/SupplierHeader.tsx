@@ -30,7 +30,7 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
   }, []);
 
   return (
-    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white border-b border-[#E5E7EB]">
+    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-theme-surface border-b border-theme-border">
 
       <div className="cursor-pointer lg:hidden" onClick={openSidebar}>
         <Menu />
@@ -40,7 +40,7 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
         <div className="relative sm:max-w-[250px] max-w-[150px] w-full">
           <Search
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
           />
 
           <input
@@ -50,8 +50,8 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
         </div>
 
         <div className="flex items-center gap-5 ">
-          <button onClick={() => setActiveTab("notifications")} className=" relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]">
-            <Bell size={18} className="text-[#64748B]" />
+          <button onClick={() => setActiveTab("notifications")} className=" relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-theme-border">
+            <Bell size={18} className="text-theme-muted" />
 
             {unreadCount > 0 && (
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>

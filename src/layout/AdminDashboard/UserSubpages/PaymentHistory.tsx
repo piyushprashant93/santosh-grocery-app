@@ -22,7 +22,7 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
@@ -45,7 +45,7 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
           <p className="text-gray-400 text-sm">Total Lifetime Spend</p>
         </div>
         
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div className="bg-theme-surface rounded-2xl p-6 border border-gray-100 shadow-sm">
           <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center mb-4">
             <span className="text-gray-500 font-medium">$</span>
           </div>
@@ -53,7 +53,7 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
           <p className="text-gray-500 text-sm">Average Order Value</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div className="bg-theme-surface rounded-2xl p-6 border border-gray-100 shadow-sm">
           <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center mb-4">
             <CreditCardIcon />
           </div>
@@ -63,12 +63,12 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
       </div>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 flex flex-col">
         
         {/* Header & Download */}
         <div className="p-5 border-b border-gray-100 flex justify-between items-center">
           <h3 className="font-semibold text-gray-900">Recent Transactions</h3>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
             <Download size={16} />
             Download Statement
           </button>

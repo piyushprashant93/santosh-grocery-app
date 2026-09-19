@@ -52,7 +52,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
   return (
     <div className="grid lg:grid-cols-[320px_1fr] gap-6">
       <div className="space-y-6">
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
             <FileText size={18} className="text-[#F54900]" />
             <h3 className="font-playfair text-xl">Help Categories</h3>
@@ -66,14 +66,14 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
               ))
             )}
             {categories.length === 0 && finalFaqs.length === 0 && (
-              <p className="text-[#94A3B8]">Loading categories...</p>
+              <p className="text-theme-muted">Loading categories...</p>
             )}
           </div>
         </div>
 
         <div className="rounded-lg lg:rounded-xl p-3 lg:p-6 bg-[#FFF7ED] border border-[#FED7AA] shadow-sm">
           <h3 className="font-playfair text-xl mb-2">Still need help?</h3>
-          <p className="text-[#6A7282] mb-4">
+          <p className="text-theme-muted mb-4">
             Our support team is available 24/7 to assist you with any issues.
           </p>
           <button onClick={onStartChat} className="bg-[#F54900] text-white px-5 py-2.5 rounded-lg shadow-sm">
@@ -83,7 +83,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
       </div>
 
       <div className="space-y-8">
-        {finalFaqs.length === 0 && <p className="text-[#94A3B8]">Loading FAQs...</p>}
+        {finalFaqs.length === 0 && <p className="text-theme-muted">Loading FAQs...</p>}
         {finalFaqs.map((section, sIndex) => (
           <div key={sIndex} className="space-y-4">
             <h2 className="font-playfair text-2xl">{section.category}</h2>
@@ -93,11 +93,11 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
               return (
                 <div
                   key={index}
-                  className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 shadow-sm cursor-pointer"
+                  className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 shadow-sm cursor-pointer"
                   onClick={() => setOpen(active ? null : index)}
                 >
                   <div className="flex items-center justify-between">
-                    <p className="font-medium text-[#111827]">
+                    <p className="font-medium text-theme-text">
                       {item.q}
                     </p>
                     <ChevronDown
@@ -106,7 +106,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
                     />
                   </div>
                   {active && (
-                    <p className="text-[#6A7282] mt-3 text-sm">
+                    <p className="text-theme-muted mt-3 text-sm">
                       {item.a}
                     </p>
                   )}

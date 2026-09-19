@@ -2,10 +2,14 @@ import { useState, useEffect } from "react"
 import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import api from "../../lib/api"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
 export default function SalesAndAnalytics() {
+  const { formatPrice } = useCurrency();
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [analyticsData, setAnalyticsData] = useState<any>(null)
@@ -107,7 +111,7 @@ export default function SalesAndAnalytics() {
           <p className="text-gray-500 mt-1">Deep dive into platform performance and user behavior.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
+          <button className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
             <Calendar size={16} className="text-gray-400" />
             Last 30 Days
           </button>
@@ -138,7 +142,7 @@ export default function SalesAndAnalytics() {
         )}
         
         {/* Revenue Growth Chart */}
-        <div className="xl:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
+        <div className="xl:col-span-2 bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
           <div className="mb-6">
             <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Revenue Growth</h2>
             <p className="text-gray-500 text-sm mt-1">Comparison between Retail and Restaurant vendors.</p>
@@ -198,7 +202,7 @@ export default function SalesAndAnalytics() {
         </div>
 
         {/* Sales by Category Chart */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
           <div className="mb-2">
             <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Sales by Category</h2>
             <p className="text-gray-500 text-sm mt-1">Top performing product categories.</p>
@@ -243,7 +247,7 @@ export default function SalesAndAnalytics() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* CAC Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <p className="text-gray-500 font-medium" style={{ fontFamily: 'serif' }}>Customer Acquisition Cost</p>
             <div className="text-gray-400">
@@ -251,13 +255,13 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">${metrics.cac.toFixed(2)}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.cac)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+4% from last month</p>
           </div>
         </div>
 
         {/* AOV Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <p className="text-gray-500 font-medium" style={{ fontFamily: 'serif' }}>Average Order Value</p>
             <div className="text-gray-400">
@@ -265,13 +269,13 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">${metrics.aov.toFixed(2)}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.aov)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+2% from last month</p>
           </div>
         </div>
 
         {/* Retention Rate Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start mb-4">
             <p className="text-gray-500 font-medium" style={{ fontFamily: 'serif' }}>Retention Rate</p>
             <div className="text-gray-400">

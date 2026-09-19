@@ -108,12 +108,14 @@ export default function HelpSupport() {
         headers: authHeaders(),
         body: JSON.stringify(newTicket)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
         alert("Ticket submitted successfully!");
         setNewTicket({ subject: "", priority: "Medium", message: "" });
         fetchTickets();
       } else {
-        alert("Failed to submit ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to submit ticket");
+        alert(errorMsg);
       }
     } catch (err) {
       console.error(err);
@@ -128,7 +130,7 @@ export default function HelpSupport() {
             Help & Support
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Get assistance with your account, orders, and platform features.
           </p>
         </div>
@@ -141,13 +143,13 @@ export default function HelpSupport() {
       
       {showChat && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[90%] max-w-[600px] relative">
+          <div className="bg-theme-surface rounded-xl w-[90%] max-w-[600px] relative">
             <SupportLiveChat onClose={() => setShowChat(false)} />
           </div>
         </div>
       )}
 
-      <div className="bg-[#14213D] text-white rounded-xl p-10 text-center">
+      <div className="bg-[#14213D] text-theme-text rounded-xl p-10 text-center">
         <h2 className="text-2xl font-playfair mb-6">
           How can we help you today?
         </h2>
@@ -171,7 +173,7 @@ export default function HelpSupport() {
               return (
                 <div
                   key={i}
-                  className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 text-center"
+                  className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 text-center"
                 >
                   <div className="bg-[#EFF6FF] w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Icon size={26} className="text-[#155DFC]" />
@@ -179,13 +181,13 @@ export default function HelpSupport() {
 
                   <p className="font-semibold">{c.title}</p>
 
-                  <p className="text-sm text-[#64748B] mt-1">{c.desc}</p>
+                  <p className="text-sm text-theme-muted mt-1">{c.desc}</p>
                 </div>
               );
             })}
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-playfair text-lg font-semibold">
                 Your Support Tickets
@@ -205,8 +207,8 @@ export default function HelpSupport() {
                       className={`w-2.5 h-2.5 mt-2 rounded-full ${t.status === "Open" ? "bg-green-500" : t.status === "Resolved" ? "bg-blue-500" : "bg-gray-400"}`}
                     ></span>
                     <div>
-                      <p className="font-medium text-[#111827]">{t.subject || t.title || "No Subject"}</p>
-                      <p className="text-sm text-[#64748B] mt-1">
+                      <p className="font-medium text-theme-text">{t.subject || t.title || "No Subject"}</p>
+                      <p className="text-sm text-theme-muted mt-1">
                         {t.id ? `#${t.id}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"} • {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                       </p>
                     </div>
@@ -222,24 +224,24 @@ export default function HelpSupport() {
                     >
                       {t.status}
                     </span>
-                    <ChevronRight size={18} className="text-[#94A3B8]" />
+                    <ChevronRight size={18} className="text-theme-muted" />
                   </div>
                 </div>
               ))}
               {ticketsData.length === 0 && (
-                <p className="text-center text-[#64748B] py-8">No support tickets found.</p>
+                <p className="text-center text-theme-muted py-8">No support tickets found.</p>
               )}
             </div>
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             <h3 className="font-playfair text-lg font-semibold mb-10">
               Frequently Asked Questions
             </h3>
 
             <div className="space-y-4">
             {faqData.length === 0 ? (
-              <div className="text-center py-8 text-[#94A3B8]">No FAQs available.</div>
+              <div className="text-center py-8 text-theme-muted">No FAQs available.</div>
             ) : (
               faqData.map((item, i) => (
                 <div key={i} className="border-b pb-3">
@@ -256,7 +258,7 @@ export default function HelpSupport() {
                   </button>
 
                   {open === i && (
-                    <p className="text-sm text-[#64748B] mt-3 leading-relaxed">
+                    <p className="text-sm text-theme-muted mt-3 leading-relaxed">
                       {item.answer}
                     </p>
                   )}
@@ -268,12 +270,12 @@ export default function HelpSupport() {
         </div>
 
         <div>
-          <div className="border border-[#E5E7EB] bg-white lg:rounded-xl rounded-lg p-3 lg:p-6 shadow-sm space-y-8 mb-5">
+          <div className="border border-theme-border bg-theme-surface lg:rounded-xl rounded-lg p-3 lg:p-6 shadow-sm space-y-8 mb-5">
             <div>
-              <h3 className="font-playfair text-lg font-semibold text-[#111827]">
+              <h3 className="font-playfair text-lg font-semibold text-theme-text">
                 Contact Support
               </h3>
-              <p className="text-base text-[#64748B] mt-1 leading-relaxed">
+              <p className="text-base text-theme-muted mt-1 leading-relaxed">
                 Direct channels for urgent issues.
               </p>
             </div>
@@ -313,11 +315,11 @@ export default function HelpSupport() {
             </div>
           </div>
           <div className="space-y-5">
-            <div className="border border-[#E5E7EB] bg-white lg:rounded-xl rounded-lg lg:p-6 p-3 shadow-sm">
-              <h3 className="font-playfair text-lg font-semibold text-[#111827]">
+            <div className="border border-theme-border bg-theme-surface lg:rounded-xl rounded-lg lg:p-6 p-3 shadow-sm">
+              <h3 className="font-playfair text-lg font-semibold text-theme-text">
                 Send a Message
               </h3>
-              <p className="text-base text-[#64748B] mt-1 leading-relaxed">
+              <p className="text-base text-theme-muted mt-1 leading-relaxed">
                 We'll get back to you via email.
               </p>
               <div className="mt-6 space-y-5">
@@ -352,17 +354,17 @@ export default function HelpSupport() {
                     className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 outline-none shadow-sm"
                   />
                 </div>
-                <button onClick={submitTicket} className="flex items-center justify-center gap-2 bg-[#0F172A] text-white w-full py-4 rounded-xl shadow-lg">
+                <button onClick={submitTicket} className="flex items-center justify-center gap-2 bg-theme-surface text-theme-text w-full py-4 rounded-xl shadow-lg">
                   <Send size={18} /> Send Ticket
                 </button>
               </div>
             </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-xl p-6 flex items-center justify-between shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-xl p-6 flex items-center justify-between shadow-sm">
               <div>
-                <h3 className="font-playfair text-xl text-[#111827]">
+                <h3 className="font-playfair text-xl text-theme-text">
                   System Status
                 </h3>
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   All systems functioning normally.
                 </p>
               </div>

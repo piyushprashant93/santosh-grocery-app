@@ -108,14 +108,14 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-0 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] flex flex-col h-[620px]">
+    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-0 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] flex flex-col h-[620px]">
 
       <div className="flex items-center justify-between px-6 py-4 border-b">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gray-200"/>
           <div>
             <p className="font-playfair text-lg">Admin Support</p>
-            <p className="text-sm text-[#6A7282]">
+            <p className="text-sm text-theme-muted">
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"/>
               Online | Typically replies instantly
             </p>
@@ -125,7 +125,7 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
           <button onClick={closeChat} className="text-xs text-red-500 hover:text-red-600 font-medium">
             End Chat
           </button>
-          <button onClick={onClose} className="text-[#6A7282]">
+          <button onClick={onClose} className="text-theme-muted">
             <X size={20} />
           </button>
         </div>
@@ -133,7 +133,7 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
 
       <div className="flex-1 overflow-y-auto scroll-hide px-6 py-6 space-y-6">
         <div className="flex justify-center">
-          <span className="bg-gray-100 text-sm px-4 py-1 rounded-full text-[#6A7282]">
+          <span className="bg-gray-100 text-sm px-4 py-1 rounded-full text-theme-muted">
             Today
           </span>
         </div>
@@ -167,13 +167,13 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
       </div>
 
       <div className="border-t px-4 py-3 flex items-center gap-3">
-        <Paperclip size={20} className="text-[#6A7282] cursor-pointer"/>
+        <Paperclip size={20} className="text-theme-muted cursor-pointer"/>
         <input
           value={message}
           onChange={(e)=>setMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Type your message..."
-          className="flex-1 border border-[#E5E7EB] rounded-full px-4 py-2 outline-none"
+          className="flex-1 border border-theme-border rounded-full px-4 py-2 outline-none"
         />
         <button onClick={sendMessage} className="w-10 h-10 rounded-full bg-[#F54900] flex items-center justify-center text-white shrink-0">
           <Send size={18}/>

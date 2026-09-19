@@ -64,7 +64,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
       
       {/* Metrics Row (Optional based on some screenshots) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
               <Shield size={20} />
@@ -75,7 +75,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center">
               <Users size={20} />
@@ -86,7 +86,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center">
               <Shield size={20} />
@@ -108,7 +108,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
       {/* Role Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {roles.map((role, idx) => (
-          <div key={idx} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between hover:shadow-md transition">
+          <div key={idx} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between hover:shadow-md transition">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${role.iconBg} ${role.iconColor}`}>
@@ -136,7 +136,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             <div className="pt-4 border-t border-gray-100 flex justify-end">
               <button 
                 onClick={() => onEditRole(role)}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm"
               >
                 <Edit size={16} />
                 Edit Permissions
@@ -150,7 +150,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
           onClick={() => onEditRole("New Role")}
           className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 p-5 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition text-gray-500 min-h-[200px]"
         >
-          <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3">
+          <div className="w-12 h-12 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mb-3">
             <span className="text-2xl font-light">+</span>
           </div>
           <h3 className="font-medium text-gray-900">Create New Role</h3>
@@ -159,7 +159,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
       </div>
 
       {/* Global Security Settings */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
             <Shield size={24} />

@@ -15,7 +15,7 @@ import {
   Check,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import VoucherSection from "./VoucherSection";
 import AddCardModal from "./AddCardModal";
 
@@ -160,7 +160,7 @@ export default function WalletPayments() {
     "px-4 py-2 text-xs flex-1 rounded-lg bg-[#009966] text-white font-medium transition-colors";
 
   const normalClass =
-    "px-4 py-2 text-xs flex-1 rounded-lg border border-[#E5E7EB] bg-white text-[#6A7282] hover:bg-[#F9FAFB] font-medium transition-colors";
+    "px-4 py-2 text-xs flex-1 rounded-lg border border-theme-border bg-theme-surface text-theme-text hover:bg-theme-surface-hover font-medium transition-colors";
 
   const fetchWallet = async () => {
     setWalletLoading(true);
@@ -632,10 +632,10 @@ export default function WalletPayments() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-theme-text">
           Wallet & Payments
         </h1>
-        <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+        <p className="text-theme-muted mt-1 lg:text-lg text-base">
           Manage payment methods, view balance, and track transactions.
         </p>
       </div>
@@ -654,18 +654,18 @@ export default function WalletPayments() {
                 HUBNEPA BALANCE
               </p>
 
-              <h2 className="font-playfair text-[32px] lg:text-[52px] text-[#0F172A]">
+              <h2 className="font-playfair text-[32px] lg:text-[52px] text-theme-text">
                 {formattedBalance}
               </h2>
 
               <div className="flex items-center gap-4 mt-3 flex-wrap">
-                <span className="flex items-center gap-1.5 text-sm text-[#6A7282]">
+                <span className="flex items-center gap-1.5 text-sm text-theme-muted">
                   <Star size={14} className="text-[#F59E0B]" />
                   {walletLoading ? "—" : (wallet?.rewardPoints ?? 0)} reward
                   points
                 </span>
 
-                <span className="flex items-center gap-1.5 text-sm text-[#6A7282]">
+                <span className="flex items-center gap-1.5 text-sm text-theme-muted">
                   <Crown size={14} className="text-[#009966]" />
                   {walletLoading
                     ? "—"
@@ -699,16 +699,16 @@ export default function WalletPayments() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="border border-[#E5E7EB] lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+            <div className="border border-theme-border lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
               <div className="flex items-center gap-2 mb-5">
                 <CreditCard size={18} />
-                <h3 className="font-playfair text-xl text-[#0F172A]">
+                <h3 className="font-playfair text-xl text-theme-text">
                   Saved Cards
                 </h3>
               </div>
 
               {cardsLoading ? (
-                <div className="flex items-center justify-center gap-2 text-[#6A7282] py-6">
+                <div className="flex items-center justify-center gap-2 text-theme-muted py-6">
                   <Loader2 size={16} className="animate-spin" />
                   Loading cards...
                 </div>
@@ -717,13 +717,13 @@ export default function WalletPayments() {
                   <p className="text-sm text-red-500">{cardsError}</p>
                   <button
                     onClick={fetchCards}
-                    className="mt-2 text-sm border border-[#E5E7EB] rounded-lg px-4 py-2"
+                    className="mt-2 text-sm border border-theme-border rounded-lg px-4 py-2"
                   >
                     Retry
                   </button>
                 </div>
               ) : cards.length === 0 ? (
-                <p className="text-sm text-[#94A3B8] text-center py-11">
+                <p className="text-sm text-theme-muted text-center py-11">
                   No saved cards yet.
                 </p>
               ) : (
@@ -772,7 +772,7 @@ export default function WalletPayments() {
                       <button
                         onClick={() => handleDeleteCard(card.cardId)}
                         disabled={deletingCardId === card.cardId}
-                        className="text-[#94A3B8] hover:text-red-500 disabled:opacity-50"
+                        className="text-theme-muted hover:text-red-500 disabled:opacity-50"
                         aria-label="Delete card"
                       >
                         {deletingCardId === card._id ? (
@@ -788,7 +788,7 @@ export default function WalletPayments() {
 
               <button
                 onClick={openAddCardModal}
-                className="w-full border border-[#E5E7EB] rounded-lg py-3 text-[#6A7282] mt-1"
+                className="w-full border border-theme-border rounded-lg py-3 text-theme-muted mt-1"
               >
                 + Add New Card
               </button>
@@ -798,10 +798,10 @@ export default function WalletPayments() {
           </div>
         </div>
 
-        <div className="border border-[#E5E7EB] lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+        <div className="border border-theme-border lg:rounded-2xl rounded-lg lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
           <div className="flex items-center gap-2 mb-6">
             <Clock size={18} />
-            <h3 className="font-playfair text-xl text-[#0F172A]">
+            <h3 className="font-playfair text-xl text-theme-text">
               Recent Activity
             </h3>
           </div>
@@ -824,7 +824,7 @@ export default function WalletPayments() {
 
          {activeTab === "wallet" ? (
   transactionsLoading ? (
-    <div className="flex items-center justify-center gap-2 text-[#6A7282] py-10">
+    <div className="flex items-center justify-center gap-2 text-theme-muted py-10">
       <Loader2 size={16} className="animate-spin" />
       Loading transactions...
     </div>
@@ -834,13 +834,13 @@ export default function WalletPayments() {
 
       <button
         onClick={() => fetchTransactions(1, false)}
-        className="mt-3 text-sm border border-[#E5E7EB] rounded-lg px-4 py-2"
+        className="mt-3 text-sm border border-theme-border rounded-lg px-4 py-2"
       >
         Retry
       </button>
     </div>
   ) : transactions.length === 0 ? (
-    <p className="text-sm text-[#94A3B8] text-center py-10">
+    <p className="text-sm text-theme-muted text-center py-10">
       No transactions yet.
     </p>
   ) : (
@@ -870,11 +870,11 @@ export default function WalletPayments() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="text-[#0F172A] truncate">
+                  <p className="text-theme-text truncate">
                     {t.description || formatType(t.type)}
                   </p>
 
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-sm text-theme-muted">
                     {formatDate(t.createdAt)}
                   </p>
                 </div>
@@ -896,7 +896,7 @@ export default function WalletPayments() {
         <button
           onClick={handleLoadMore}
           disabled={loadingMore}
-          className="text-[#6A7282] mt-6 disabled:opacity-60"
+          className="text-theme-muted mt-6 disabled:opacity-60"
         >
           {loadingMore ? "Loading..." : "View Full History"}
         </button>
@@ -904,7 +904,7 @@ export default function WalletPayments() {
     </>
   )
 ) : paymentsLoading ? (
-  <div className="flex items-center justify-center gap-2 text-[#6A7282] py-10">
+  <div className="flex items-center justify-center gap-2 text-theme-muted py-10">
     <Loader2 size={16} className="animate-spin" />
     Loading payment history...
   </div>
@@ -913,7 +913,7 @@ export default function WalletPayments() {
     <p className="text-sm text-red-500">{paymentsError}</p>
   </div>
 ) : payments.length === 0 ? (
-  <p className="text-sm text-[#94A3B8] text-center py-10">
+  <p className="text-sm text-theme-muted text-center py-10">
     No payment history found.
   </p>
 ) : (
@@ -929,25 +929,25 @@ export default function WalletPayments() {
           </div>
 
           <div>
-            <p className="text-[#0F172A]">
+            <p className="text-theme-text">
               {payment.items?.[0]?.name || "Order Payment"}
             </p>
 
-            <p className="text-sm text-[#6A7282]">
+            <p className="text-sm text-theme-muted">
               {payment.orderId}
             </p>
 
-            <p className="text-xs text-[#94A3B8] capitalize">
+            <p className="text-xs text-theme-muted capitalize">
               {payment.paymentMethod} • {payment.paymentStatus}
             </p>
 
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-theme-muted">
               {formatDate(payment.createdAt)}
             </p>
           </div>
         </div>
 
-        <span className="font-semibold text-[#0F172A]">
+        <span className="font-semibold text-theme-text">
           {formatPrice(payment.total)}
         </span>
       </div>
@@ -959,25 +959,25 @@ export default function WalletPayments() {
 
       {showTopUpModal && (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-playfair text-xl text-white">
+              <h2 className="font-playfair text-xl text-theme-text">
                 Top Up Wallet
               </h2>
 
               <button
                 onClick={() => setShowTopUpModal(false)}
                 disabled={topUpLoading}
-                className="text-[#94A3B8] hover:text-white"
+                className="text-theme-muted hover:text-theme-text"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <label className="text-sm text-[#94A3B8]">Amount</label>
+            <label className="text-sm text-theme-muted">Amount</label>
 
             <div className="mt-1 mb-4 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-xs font-semibold">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-muted text-xs font-semibold">
                 {currency}
               </span>
 
@@ -988,19 +988,19 @@ export default function WalletPayments() {
                 placeholder="0.00"
                 value={topUpAmount}
                 onChange={(e) => setTopUpAmount(e.target.value)}
-                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-14 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                className="w-full bg-theme-bg border border-theme-border rounded-lg pl-14 pr-4 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
               />
             </div>
 
-            <label className="text-sm text-[#94A3B8]">Payment Method</label>
+            <label className="text-sm text-theme-muted">Payment Method</label>
 
             <select
               value={topUpMethod}
               onChange={(e) => setTopUpMethod(e.target.value)}
-              className="mt-1 w-full bg-[#020618] border border-[#1E293B] rounded-lg px-4 py-3 text-white outline-none focus:border-[#009966]"
+              className="mt-1 w-full bg-theme-bg border border-theme-border rounded-lg px-4 py-3 text-theme-text outline-none focus:border-[#009966]"
             >
               {PAYMENT_METHODS.map((m) => (
-                <option key={m.value} value={m.value} className="bg-[#020618]">
+                <option key={m.value} value={m.value} className="bg-theme-bg">
                   {m.label}
                 </option>
               ))}
@@ -1014,7 +1014,7 @@ export default function WalletPayments() {
               <button
                 onClick={() => setShowTopUpModal(false)}
                 disabled={topUpLoading}
-                className="border border-[#1E293B] text-[#94A3B8] hover:bg-[#1E293B] px-4 py-2 rounded-lg"
+                className="border border-theme-border text-theme-muted hover:bg-theme-surface px-4 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -1033,30 +1033,30 @@ export default function WalletPayments() {
 
       {showWithdrawModal && (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 !mt-0 px-4">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-playfair text-xl text-white">
+              <h2 className="font-playfair text-xl text-theme-text">
                 Withdraw Funds
               </h2>
 
               <button
                 onClick={() => setShowWithdrawModal(false)}
                 disabled={withdrawLoading}
-                className="text-[#94A3B8] hover:text-white"
+                className="text-theme-muted hover:text-theme-text"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p className="text-sm text-[#94A3B8] mb-4">
+            <p className="text-sm text-theme-muted mb-4">
               Available balance:{" "}
-              <span className="font-medium text-white">{formattedBalance}</span>
+              <span className="font-medium text-theme-text">{formattedBalance}</span>
             </p>
 
-            <label className="text-sm text-[#94A3B8]">Amount</label>
+            <label className="text-sm text-theme-muted">Amount</label>
 
             <div className="mt-1 mb-2 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-xs font-semibold">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-theme-muted text-xs font-semibold">
                 {currency}
               </span>
 
@@ -1067,7 +1067,7 @@ export default function WalletPayments() {
                 placeholder="0.00"
                 value={withdrawAmount}
                 onChange={(e) => setWithdrawAmount(e.target.value)}
-                className="w-full bg-[#020618] border border-[#1E293B] rounded-lg pl-14 pr-4 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                className="w-full bg-theme-bg border border-theme-border rounded-lg pl-14 pr-4 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
               />
             </div>
 
@@ -1079,7 +1079,7 @@ export default function WalletPayments() {
               <button
                 onClick={() => setShowWithdrawModal(false)}
                 disabled={withdrawLoading}
-                className="border border-[#1E293B] text-[#94A3B8] hover:bg-[#1E293B] px-4 py-2 rounded-lg"
+                className="border border-theme-border text-theme-muted hover:bg-theme-surface px-4 py-2 rounded-lg"
               >
                 Cancel
               </button>

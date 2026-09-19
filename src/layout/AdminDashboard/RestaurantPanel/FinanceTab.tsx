@@ -15,7 +15,7 @@ export default function FinanceTab() {
       {/* Finance Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Financial Overview</h2>
-        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
+        <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
           <Download size={16} />
           Download Report
         </button>
@@ -23,7 +23,7 @@ export default function FinanceTab() {
 
       {/* Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
           <p className="text-sm font-medium text-gray-500 mb-2">Total Revenue (This Month)</p>
           <div className="flex items-end gap-3">
             <h3 className="text-4xl font-bold text-gray-900">$12,345.00</h3>
@@ -32,7 +32,7 @@ export default function FinanceTab() {
             </span>
           </div>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
           <p className="text-sm font-medium text-gray-500 mb-2">Pending Payout</p>
           <div className="flex items-end gap-3">
             <h3 className="text-4xl font-bold text-gray-900">$850.00</h3>
@@ -44,7 +44,7 @@ export default function FinanceTab() {
       </div>
 
       {/* Payouts Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
         <div className="px-6 py-4 border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Recent Settlements</h3>
         </div>

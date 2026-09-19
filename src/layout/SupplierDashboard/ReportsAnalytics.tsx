@@ -76,7 +76,7 @@ export default function ReportsAnalytics() {
             Reports & Analytics
           </h1>
 
-          <p className="text-[#6A7282] mt-2">
+          <p className="text-theme-muted mt-2">
             Deep dive into your business performance.
           </p>
 
@@ -84,7 +84,7 @@ export default function ReportsAnalytics() {
 
         <div className="flex gap-3">
 
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white">
+          <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface">
 
             <Calendar size={18} />
 
@@ -92,7 +92,7 @@ export default function ReportsAnalytics() {
 
           </button>
 
-          <button className="flex items-center gap-2 bg-[#2563EB] text-white rounded-lg px-4 py-2">
+          <button className="flex items-center gap-2 bg-[#2563EB] text-theme-text rounded-lg px-4 py-2">
 
             <Download size={18} />
 
@@ -116,7 +116,7 @@ export default function ReportsAnalytics() {
 
             <div
               key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm"
             >
 
               <div className="flex justify-between items-center mb-4">
@@ -131,7 +131,7 @@ export default function ReportsAnalytics() {
 
               </div>
 
-              <p className="text-[#64748B] text-sm">
+              <p className="text-theme-muted text-sm">
                 {s.label}
               </p>
 
@@ -171,13 +171,13 @@ export default function ReportsAnalytics() {
       {activeReportTab === "Sales Analysis" && (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-6 items-start">
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
             <h3 className="font-playfair text-xl">
               Revenue Trends
             </h3>
 
-            <p className="text-[#6A7282] text-sm mb-6">
+            <p className="text-theme-muted text-sm mb-6">
               Daily revenue performance over time
             </p>
 
@@ -210,13 +210,13 @@ export default function ReportsAnalytics() {
 
 
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
             <h3 className="font-playfair text-xl">
               Sales by Category
             </h3>
 
-            <p className="text-[#6A7282] text-sm mb-6">
+            <p className="text-theme-muted text-sm mb-6">
               Revenue distribution by product type
             </p>
 
@@ -262,7 +262,7 @@ export default function ReportsAnalytics() {
 
                     <div className="text-sm">
 
-                      <p className="text-[#111827]">
+                      <p className="text-theme-text">
                         {c.name}
                       </p>
 
@@ -276,7 +276,7 @@ export default function ReportsAnalytics() {
                       {c.amount}
                     </p>
 
-                    <p className="text-[#64748B]">
+                    <p className="text-theme-muted">
                       {c.percent}
                     </p>
 
@@ -294,7 +294,7 @@ export default function ReportsAnalytics() {
       )}
 
       {activeReportTab === "Product Performance" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <div className="flex justify-between items-start mb-6">
 
@@ -304,13 +304,13 @@ export default function ReportsAnalytics() {
                 Top Performing Products
               </h3>
 
-              <p className="text-[#6A7282] text-sm">
+              <p className="text-theme-muted text-sm">
                 Best selling items by volume and revenue
               </p>
 
             </div>
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white">
+            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface">
 
               <Filter size={16} />
 
@@ -326,7 +326,7 @@ export default function ReportsAnalytics() {
 
             <table className="w-full text-left">
 
-              <thead className="bg-[#F8FAFC] text-[#64748B] text-sm">
+              <thead className="bg-theme-bg text-theme-muted text-sm">
 
                 <tr>
 
@@ -362,11 +362,11 @@ export default function ReportsAnalytics() {
                   <tr
                     key={i} className="border-t">
 
-                    <td className="py-5 px-4 text-[#111827] font-medium">
+                    <td className="py-5 px-4 text-theme-text font-medium">
                       {p.name}
                     </td>
 
-                    <td className="py-5 px-4 text-[#64748B]">
+                    <td className="py-5 px-4 text-theme-muted">
                       {p.volume}
                     </td>
 
@@ -407,13 +407,13 @@ export default function ReportsAnalytics() {
         <div>
           <div className="grid lg:grid-cols-[2fr_1fr] gap-5 mb-5">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
               <h3 className="font-playfair text-xl">
                 Client Growth
               </h3>
 
-              <p className="text-[#6A7282] text-sm mb-6">
+              <p className="text-theme-muted text-sm mb-6">
                 New vs Returning Clients over the last 6 months
               </p>
 
@@ -455,13 +455,13 @@ export default function ReportsAnalytics() {
 
             </div>
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
               <h3 className="font-playfair text-xl">
                 Client Status
               </h3>
 
-              <p className="text-[#6A7282] text-sm mb-6">
+              <p className="text-theme-muted text-sm mb-6">
                 Distribution of client engagement
               </p>
 
@@ -498,7 +498,7 @@ export default function ReportsAnalytics() {
                   28
                 </h2>
 
-                <p className="text-sm text-[#6A7282]">
+                <p className="text-sm text-theme-muted">
                   TOTAL CLIENTS
                 </p>
 
@@ -531,7 +531,7 @@ export default function ReportsAnalytics() {
 
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
 
             <div className="flex justify-between items-start mb-6">
 
@@ -541,13 +541,13 @@ export default function ReportsAnalytics() {
                   Top Clients by Revenue
                 </h3>
 
-                <p className="text-[#6A7282] text-sm">
+                <p className="text-theme-muted text-sm">
                   Highest value partnerships and their current status
                 </p>
 
               </div>
 
-              <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg">
+              <button className="border border-theme-border px-4 py-2 rounded-lg">
                 View All Clients
               </button>
 
@@ -555,7 +555,7 @@ export default function ReportsAnalytics() {
 
             <table className="w-full text-left">
 
-              <thead className="bg-[#F8FAFC] text-sm text-[#64748B]">
+              <thead className="bg-theme-bg text-sm text-theme-muted">
 
                 <tr>
 
@@ -580,7 +580,7 @@ export default function ReportsAnalytics() {
                       {c.name}
                     </td>
 
-                    <td className="py-5 px-4 text-[#64748B]">
+                    <td className="py-5 px-4 text-theme-muted">
                       {c.orders}
                     </td>
 
@@ -588,7 +588,7 @@ export default function ReportsAnalytics() {
                       {c.revenue}
                     </td>
 
-                    <td className="py-5 px-4 text-[#64748B]">
+                    <td className="py-5 px-4 text-theme-muted">
                       {c.last}
                     </td>
 
@@ -600,7 +600,7 @@ export default function ReportsAnalytics() {
 
                     </td>
 
-                    <td className="py-5 px-4 text-[#64748B]">
+                    <td className="py-5 px-4 text-theme-muted">
                       •••
                     </td>
 

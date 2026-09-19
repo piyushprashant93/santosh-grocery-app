@@ -8,8 +8,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCurrency } from "./CurrencyContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const CART_STORAGE_KEY = "checkout_cart";
@@ -276,7 +278,7 @@ export default function CartModal({
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative max-w-[448px] w-[96%] max-h-[85vh] bg-[#020618] shadow-[0px_25px_50px_-12px_#000000] text-white flex flex-col"
+        className="relative max-w-[800px] w-[96%] h-[85vh] max-h-[800px] bg-theme-bg shadow-2xl text-theme-text flex flex-col rounded-xl overflow-hidden"
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div className="flex items-center gap-2 text-lg font-medium font-playfair">
@@ -322,15 +324,15 @@ export default function CartModal({
               {items.map((item) => (
                 <div
                   key={item._id}
-                  className="bg-[#0F172A] border border-[#1E293B] rounded-lg lg:rounded-xl lg:p-4 p-2 flex gap-4 items-start"
+                  className="bg-theme-surface border border-theme-border rounded-lg lg:rounded-xl lg:p-4 p-2 flex gap-4 items-start"
                 >
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getImageUrl(item.image)}
                       className="w-16 h-16 rounded-lg object-cover shrink-0"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-[#1E293B] flex items-center justify-center text-[#64748B] text-xs shrink-0">
+                    <div className="w-16 h-16 rounded-lg bg-theme-surface flex items-center justify-center text-theme-muted text-xs shrink-0">
                       No Img
                     </div>
                   )}
@@ -338,11 +340,11 @@ export default function CartModal({
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">
                       <div className="min-w-0">
-                        <h3 className="font-playfair text-lg text-white truncate">
+                        <h3 className="font-playfair text-lg text-theme-text truncate">
                           {item.name}
                         </h3>
 
-                        <p className="text-[#94A3B8] text-sm mt-1">
+                        <p className="text-theme-muted text-sm mt-1">
                           {formatPrice(item.price)} each
                         </p>
                       </div>
@@ -350,7 +352,7 @@ export default function CartModal({
                       <button
                         onClick={() => handleDeleteItem(item._id)}
                         disabled={deletingId === item._id}
-                        className="text-[#94A3B8] hover:text-red-500 disabled:opacity-50 shrink-0"
+                        className="text-theme-muted hover:text-red-500 disabled:opacity-50 shrink-0"
                       >
                         {deletingId === item._id ? (
                           <Loader2 size={16} className="animate-spin" />
@@ -365,7 +367,7 @@ export default function CartModal({
                         {formatPrice(item.subtotal)}
                       </p>
 
-                      <div className="flex items-center border border-[#1E293B] rounded-lg overflow-hidden">
+                      <div className="flex items-center border border-theme-border rounded-lg overflow-hidden">
                         <button
                           onClick={() =>
                             handleUpdateQuantity(item._id, item.quantity - 1)
@@ -373,12 +375,12 @@ export default function CartModal({
                           disabled={
                             updatingId === item._id || item.quantity <= 1
                           }
-                          className="px-3 py-2 text-[#94A3B8] disabled:opacity-40"
+                          className="px-3 py-2 text-theme-muted disabled:opacity-40"
                         >
                           <Minus size={14} />
                         </button>
 
-                        <span className="px-4 text-white min-w-[32px] text-center">
+                        <span className="px-4 text-theme-text min-w-[32px] text-center">
                           {updatingId === item._id ? (
                             <Loader2
                               size={14}
@@ -394,7 +396,7 @@ export default function CartModal({
                             handleUpdateQuantity(item._id, item.quantity + 1)
                           }
                           disabled={updatingId === item._id}
-                          className="px-3 py-2 text-[#94A3B8] disabled:opacity-40"
+                          className="px-3 py-2 text-theme-muted disabled:opacity-40"
                         >
                           <Plus size={14} />
                         </button>
@@ -405,8 +407,8 @@ export default function CartModal({
               ))}
             </div>
 
-            <div className="bg-[#0F172A] lg:p-6 p-3 border-t border-[#1E293B]">
-              <div className="space-y-3 text-[#94A3B8]">
+            <div className="bg-theme-surface lg:p-6 p-3 border-t border-theme-border">
+              <div className="space-y-3 text-theme-muted">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
@@ -423,8 +425,8 @@ export default function CartModal({
                 </div>
               </div>
 
-              <div className="flex justify-between mt-4 pt-4 border-t border-[#1E293B]">
-                <span className="text-white text-lg">Total</span>
+              <div className="flex justify-between mt-4 pt-4 border-t border-theme-border">
+                <span className="text-theme-text text-lg">Total</span>
 
                 <span className="text-[#00BC7D] text-xl font-playfair font-semibold">
                   {formatPrice(total)}
@@ -454,7 +456,7 @@ export default function CartModal({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 text-center p-6">
-            <div className="w-20 h-20 rounded-full bg-[#0F172B] flex items-center justify-center mb-6">
+            <div className="w-20 h-20 rounded-full bg-theme-surface flex items-center justify-center mb-6">
               <ShoppingBag size={30} className="text-[#314158]" />
             </div>
 

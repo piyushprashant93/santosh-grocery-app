@@ -10,8 +10,10 @@ import {
   Utensils,
 } from "lucide-react";
 import Logo from "../../assets/images/logo.svg";
+import LogoLight from "../../assets/images/logo-light.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTheme } from "./ThemeContext";
 
 const menu = [
   { id: "overview", label: "Overview", icon: Home },
@@ -49,6 +51,7 @@ export default function CustomerSidebar({
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }) {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const fullName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
 
@@ -67,11 +70,11 @@ export default function CustomerSidebar({
   return (
     <div className="w-[288px] flex flex-col h-full pb-5">
       <div className="px-6 py-6 cursor-pointer" onClick={() => navigate("/")}>
-        <img src={Logo} alt="Hubnepa Logo" />
+        <img src={theme === 'dark' ? LogoLight : Logo} alt="Hubnepa Logo" />
       </div>
 
       <div className="px-4">
-        <div className="flex items-center gap-3 bg-[#F9FAFB] dark:bg-[#0F172B] rounded-xl p-4 border border-[#F1F5F9] dark:border-[#1E293B]">
+        <div className="flex items-center gap-3 bg-theme-surface rounded-xl p-4 border border-theme-border">
           {user.avatar ? (
             <img
               src={user.avatar}
@@ -85,7 +88,7 @@ export default function CustomerSidebar({
           )}
 
           <div>
-            <div className="font-semibold text-[#111827] dark:text-white">
+            <div className="font-semibold text-theme-text">
               {fullName || "Guest User"}
             </div>
 
@@ -111,8 +114,8 @@ export default function CustomerSidebar({
                 }}
                 className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm transition ${
                   active
-                    ? "bg-[#ECFDF5] dark:bg-[#00BC7D1A] text-[#009966] font-medium"
-                    : "text-[#6A7282] dark:text-[#94A3B8] hover:bg-gray-50 dark:hover:bg-[#1E293B]"
+                    ? "bg-[#ECFDF5] text-[#009966] font-medium"
+                    : "text-theme-muted hover:bg-gray-50"
                 }`}
               >
                 <Icon size={20} />
@@ -121,7 +124,7 @@ export default function CustomerSidebar({
             );
           })}
 
-          <div className="border-t border-[#E5E7EB] dark:border-[#1E293B] my-4"></div>
+          <div className="border-t border-theme-border my-4"></div>
 
           <div className="px-4 text-xs font-semibold text-[#9CA3AF] tracking-wider !mt-5">
             SHOP
@@ -129,14 +132,14 @@ export default function CustomerSidebar({
 
           <button
             onClick={() => navigate("/marketplace")}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] dark:text-[#94A3B8] hover:bg-gray-50 dark:hover:bg-[#1E293B]"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50"
           >
             <ShoppingBag size={20} />
             Marketplace
           </button>
           <button
             onClick={() => navigate("/restaurants")}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] dark:text-[#94A3B8] hover:bg-gray-50 dark:hover:bg-[#1E293B]"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50"
           >
             <Utensils size={20} />
             Restaurants
@@ -146,7 +149,7 @@ export default function CustomerSidebar({
         <button
           onClick={() => setShowLogoutModal(true)}
           disabled={loggingOut}
-          className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 ${loggingOut ? "opacity-70 cursor-not-allowed" : ""}`}
+          className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 ${loggingOut ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <LogOut size={20} />
           {loggingOut ? "Signing out..." : "Sign Out"}

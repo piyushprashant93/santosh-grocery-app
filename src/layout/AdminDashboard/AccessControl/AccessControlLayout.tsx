@@ -39,14 +39,14 @@ export default function AccessControlLayout() {
           </div>
           <button 
             onClick={() => setEditingRole("New Role")}
-            className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition"
+            className="px-5 py-2.5 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition"
           >
             + Add New Role
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2 overflow-x-auto scroll-hide">
           <div className="flex gap-8 whitespace-nowrap">
             {tabs.map((tab) => {
               const Icon = tab.icon;

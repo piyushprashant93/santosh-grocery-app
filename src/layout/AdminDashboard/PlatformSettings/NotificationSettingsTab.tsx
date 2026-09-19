@@ -21,7 +21,7 @@ export default function NotificationSettingsTab() {
       <div className="flex flex-col gap-6 lg:col-span-1">
         
         {/* Channels */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Notification Channels</h2>
           <p className="text-sm text-gray-500 mb-6">Select how users receive updates.</p>
           
@@ -51,7 +51,7 @@ export default function NotificationSettingsTab() {
         </div>
 
         {/* Admin Alerts */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Admin Alerts</h2>
           <p className="text-sm text-gray-500 mb-6">Notify admin on critical events.</p>
           
@@ -76,7 +76,7 @@ export default function NotificationSettingsTab() {
 
       {/* Right Column (2 spans) */}
       <div className="lg:col-span-2">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Event Configuration</h2>
             <p className="text-sm text-gray-500">Configure notifications for specific events.</p>

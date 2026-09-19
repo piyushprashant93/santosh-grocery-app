@@ -70,12 +70,12 @@ export default function Notifications() {
           <h1 className="lg:text-[34px] text-3xl font-playfair font-semibold">
             Notifications
           </h1>
-          <p className="text-[#6A7282] mt-2">
+          <p className="text-theme-muted mt-2">
             Stay updated with your restaurant activities.
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={markAllAsRead} className="border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm hover:bg-gray-50 transition">
+          <button onClick={markAllAsRead} className="border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm hover:bg-gray-50 transition">
             Mark all as read
           </button>
         </div>
@@ -84,7 +84,7 @@ export default function Notifications() {
       <div className="">
        <div className="space-y-5">
           {notifications.length === 0 && (
-              <p className="text-center text-[#94A3B8] py-8">No notifications to show.</p>
+              <p className="text-center text-theme-muted py-8">No notifications to show.</p>
           )}
           {notifications.map((n, i) => {
             const { icon: Icon, color, bg } = getIcon(n.type);
@@ -100,14 +100,14 @@ export default function Notifications() {
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-playfair text-lg text-[#0F172A]">
+                      <h3 className="font-playfair text-lg text-theme-text">
                         {n.title}
                       </h3>
-                      <p className="text-[#64748B] mt-1">
+                      <p className="text-theme-muted mt-1">
                         {n.message || n.desc}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-[#64748B]">
+                    <div className="flex items-center gap-4 text-sm text-theme-muted">
                       <div className="flex items-center gap-1">
                         <Clock size={14}/>
                         {n.createdAt ? new Date(n.createdAt).toLocaleDateString() : "Just now"}
@@ -115,7 +115,7 @@ export default function Notifications() {
                           <span className="w-2.5 h-2.5 bg-[#2563EB] rounded-full ml-1" />
                         )}
                       </div>
-                      <button onClick={() => deleteNotification(n.id || n._id)} className="text-[#94A3B8] hover:text-red-500 transition">
+                      <button onClick={() => deleteNotification(n.id || n._id)} className="text-theme-muted hover:text-red-500 transition">
                         <Trash2 size={16}/>
                       </button>
                     </div>

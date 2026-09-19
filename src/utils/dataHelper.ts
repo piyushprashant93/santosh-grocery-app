@@ -17,3 +17,9 @@ export function extractList(d: any): any[] {
 
   return [];
 }
+
+export function getImageUrl(image: string | undefined | null): string {
+  if (!image) return "https://placehold.co/112x112?text=No+Image";
+  if (image.startsWith("http") || image.startsWith("data:")) return image;
+  return `https://mr-santosh-grocery-backend.onrender.com/api/v1/uploads/${image}`;
+}

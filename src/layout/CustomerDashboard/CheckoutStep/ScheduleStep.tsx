@@ -88,9 +88,9 @@ export function ScheduleStep() {
   const isScheduledActive = selected === "scheduled" && scheduledTime;
 
   return (
-    <div className="border border-[#1D293D] rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-[#0F172B80]">
+    <div className="border border-theme-border rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-theme-surface">
 
-      <h2 className="font-playfair text-2xl mb-6 text-white">
+      <h2 className="font-playfair text-2xl mb-6 text-theme-text">
         Delivery Time
       </h2>
 
@@ -114,15 +114,15 @@ export function ScheduleStep() {
               }}
               className={`flex items-center justify-between lg:p-5 p-3 rounded-lg border cursor-pointer transition
               ${active
-                ? "border-[#00BC7D] bg-[#031F2E]"
-                : "border-[#1E293B] bg-[#0F172B80]"
+                ? "border-[#00BC7D] bg-[#00BC7D]/10"
+                : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
               }`}
             >
 
               <div className="flex items-center lg:gap-4 gap-2">
 
                 <div className={`lg:w-12 w-8 lg:h-12 h-8 rounded-full flex items-center justify-center
-                ${active ? "bg-[#043D34]" : "bg-[#1E293B]"}`}>
+                ${active ? "bg-[#00BC7D]/20" : "bg-theme-bg"}`}>
 
                   <Clock size={20} className={`${active ? "text-[#00BC7D]" : "text-[#94A3B8]"}`} />
 
@@ -130,11 +130,11 @@ export function ScheduleStep() {
 
                 <div>
 
-                  <p className="text-white lg:text-lg text-sm">
+                  <p className="text-theme-text lg:text-lg text-sm">
                     {item.title}
                   </p>
 
-                  <p className="text-[#94A3B8] sm:text-base text-sm">
+                  <p className="text-theme-muted sm:text-base text-sm">
                     {item.time}
                   </p>
 
@@ -144,7 +144,7 @@ export function ScheduleStep() {
 
               <div className="flex items-center gap-6">
 
-                <span className="text-white text-lg">
+                <span className="text-theme-text text-lg">
                   {item.price}
                 </span>
 
@@ -167,25 +167,25 @@ export function ScheduleStep() {
           onClick={openScheduleModal}
           className={`flex items-center justify-between lg:p-5 p-3 rounded-lg lg:rounded-xl border cursor-pointer transition
           ${isScheduledActive
-            ? "border-[#00BC7D] bg-[#031F2E]"
-            : "border-[#1E293B] bg-[#0F172B80]"
+            ? "border-[#00BC7D] bg-[#00BC7D]/10"
+            : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
           }`}
         >
 
           <div className="flex items-center gap-4">
 
             <div className={`lg:w-12 w-8 lg:h-12 h-8 rounded-full flex items-center justify-center
-            ${isScheduledActive ? "bg-[#043D34]" : "bg-[#1E293B]"}`}>
+            ${isScheduledActive ? "bg-[#00BC7D]/20" : "bg-theme-bg"}`}>
               <Clock size={20} className={isScheduledActive ? "text-[#00BC7D]" : "text-[#94A3B8]"} />
             </div>
 
             <div>
 
-              <p className="text-white lg:text-lg text-sm">
+              <p className="text-theme-text lg:text-lg text-sm">
                 Schedule for Later
               </p>
 
-              <p className="text-[#94A3B8] sm:text-base text-sm">
+              <p className="text-theme-muted sm:text-base text-sm">
                 {scheduledTime
                   ? `${scheduledTime.date}, ${scheduledTime.time}`
                   : "Choose a time"}
@@ -200,18 +200,18 @@ export function ScheduleStep() {
               <div className="w-3 h-3 rounded-full bg-[#00BC7D]" />
             </div>
           ) : (
-            <ChevronRight className="text-[#94A3B8]" />
+            <ChevronRight className="text-theme-muted" />
           )}
 
         </div>
 
       </div>
 
-      <div className="mt-6 flex items-center gap-3 border border-[#2B7FFF33] rounded-lg lg:rounded-xl lg:p-4 p-2 text-[#8EC5FF] bg-[#2B7FFF0D]">
+      <div className="mt-6 flex items-center gap-3 border border-[#2B7FFF33] rounded-lg lg:rounded-xl lg:p-4 p-2 text-[#2B7FFF] bg-[#2B7FFF0D]">
 
-        <ShieldCheck size={20} className="min-w-5" />
+        <ShieldCheck size={20} className="min-w-5 text-[#2B7FFF]" />
 
-        <p>
+        <p className="text-sm">
           Contactless delivery is enabled by default. The driver will leave your order at your door.
         </p>
 
@@ -225,16 +225,16 @@ export function ScheduleStep() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-[#1E293B] rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between p-5 border-b border-[#1E293B]">
-              <h3 className="font-playfair text-xl text-white flex items-center gap-2">
+            <div className="flex items-center justify-between p-5 border-b border-theme-border">
+              <h3 className="font-playfair text-xl text-theme-text flex items-center gap-2">
                 <Calendar size={20} className="text-[#00BC7D]" />
                 Schedule Delivery
               </h3>
               <button
                 onClick={() => setShowScheduleModal(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#1E293B] text-[#94A3B8]"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-theme-surface text-theme-muted"
               >
                 <X size={18} />
               </button>
@@ -244,7 +244,7 @@ export function ScheduleStep() {
 
               {/* Date picker */}
               <div>
-                <p className="text-sm text-[#94A3B8] mb-3">Select a date</p>
+                <p className="text-sm text-theme-muted mb-3">Select a date</p>
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {dateOptions.map((d) => (
                     <button
@@ -253,7 +253,7 @@ export function ScheduleStep() {
                       className={`px-4 py-2 rounded-lg text-sm whitespace-nowrap border transition ${
                         tempDate === d
                           ? "bg-[#00BC7D] border-[#00BC7D] text-white"
-                          : "border-[#1E293B] text-[#94A3B8] hover:border-[#334155]"
+                          : "border-theme-border text-theme-muted hover:border-gray-400 dark:hover:border-theme-muted"
                       }`}
                     >
                       {d}
@@ -264,7 +264,7 @@ export function ScheduleStep() {
 
               {/* Time slots */}
               <div>
-                <p className="text-sm text-[#94A3B8] mb-3">Select a time</p>
+                <p className="text-sm text-theme-muted mb-3">Select a time</p>
                 <div className="grid grid-cols-3 gap-2">
                   {timeSlots.map((t) => (
                     <button
@@ -273,7 +273,7 @@ export function ScheduleStep() {
                       className={`flex items-center justify-center gap-1 px-3 py-2.5 rounded-lg text-sm border transition ${
                         tempTime === t
                           ? "bg-[#00BC7D] border-[#00BC7D] text-white"
-                          : "border-[#1E293B] text-[#CAD5E2] hover:border-[#334155]"
+                          : "border-theme-border text-theme-muted hover:border-gray-400 dark:hover:border-theme-muted"
                       }`}
                     >
                       {tempTime === t && <Check size={12} />}

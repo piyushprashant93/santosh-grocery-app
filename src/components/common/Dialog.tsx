@@ -46,7 +46,7 @@ export default function Dialog({
         className={`relative bg-white rounded-2xl shadow-xl w-full max-w-2xl flex flex-col overflow-hidden max-h-[90vh] animate-in fade-in zoom-in-95 duration-200 ${className}`}
       >
         {!hideHeader && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0 bg-white">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0 bg-theme-surface">
             <h2 className="text-xl font-bold text-gray-900">{title}</h2>
             <button 
               onClick={onClose}

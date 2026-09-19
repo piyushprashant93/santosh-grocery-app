@@ -28,7 +28,7 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
   }
 
   return (
-    <div className="space-y-6 border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+    <div className="space-y-6 border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
       <div className="flex items-center justify-between">
 
@@ -37,7 +37,7 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
             Verification Documents
           </h3>
 
-          <p className="text-[#6A7282] mt-1">
+          <p className="text-theme-muted mt-1">
             Upload official documents to verify your business.
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
           <div
             key={i}
-            className="border border-[#E2E8F0] bg-[#F8FAFC] rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+            className="border border-[#E2E8F0] bg-theme-bg rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
           >
 
             <div className="flex items-center justify-between mb-4">
@@ -81,16 +81,16 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
 
 
-            <div className="border border-[#E2E8F0] rounded-lg p-4 bg-white flex items-center gap-3">
+            <div className="border border-[#E2E8F0] rounded-lg p-4 bg-theme-surface flex items-center gap-3">
 
-              <FileText className="text-[#6A7282]" size={28}/>
+              <FileText className="text-theme-muted" size={28}/>
 
               <div>
-                <p className="font-medium text-[#111827]">
+                <p className="font-medium text-theme-text">
                   {d.file}
                 </p>
 
-                <p className="text-sm text-[#6A7282]">
+                <p className="text-sm text-theme-muted">
                   {d.size} • Uploaded on {d.date}
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
 
 
-            <button className="mt-4 w-full border border-[#CAD5E2] rounded-lg py-2 bg-[#F8FAFC]">
+            <button className="mt-4 w-full border border-[#CAD5E2] rounded-lg py-2 bg-theme-bg">
               Re-upload
             </button>
 
@@ -111,22 +111,22 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
 
 
-      <div className="border border-[#E2E8F0] bg-[#F8FAFC] rounded-lg lg:rounded-xl p-10 shadow-sm text-center">
+      <div className="border border-[#E2E8F0] bg-theme-bg rounded-lg lg:rounded-xl p-10 shadow-sm text-center">
 
         <div className="flex justify-center mb-4">
-          <Upload size={28} className="text-[#6A7282]"/>
+          <Upload size={28} className="text-theme-muted"/>
         </div>
 
         <h3 className="font-playfair text-xl mb-2">
           Upload Additional Documents
         </h3>
 
-        <p className="text-[#6A7282] mb-6">
+        <p className="text-theme-muted mb-6">
           Need to submit more info? Drag and drop your files here <br/>
           or click to browse.
         </p>
 
-        <button className="border border-[#E2E8F0] bg-[#F8FAFC] px-5 py-2 rounded-lg">
+        <button className="border border-[#E2E8F0] bg-theme-bg px-5 py-2 rounded-lg">
           Select Files
         </button>
 

@@ -47,14 +47,14 @@ const plans = [
 
 export default function PricingSection() {
   return (
-    <section className="bg-[#020618] py-[60px] text-white">
+    <section className="bg-theme-bg py-[60px] text-theme-text">
       <div className="max-w-[1265px] mx-auto px-4">
 
         <div className="text-center mb-16">
           <h2 className="font-playfair text-[54px] font-medium">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-[#90A1B9] text-[22px] mt-6">
+          <p className="text-theme-muted text-[22px] mt-6">
             Choose the plan that fits your needs. No hidden fees.
           </p>
         </div>
@@ -64,14 +64,14 @@ export default function PricingSection() {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className="bg-[#0F172B80] border border-[#1D293D] rounded-[18px] p-8 flex flex-col justify-between"
+              className="bg-theme-surface border border-theme-border rounded-[18px] p-8 flex flex-col justify-between"
             >
 
               <div className="space-y-8">
                 <div>
                   <p className="mb-2 text-[22px] font-playfair">{plan.title}</p>
                   <h3 className="text-[34px] font-bold">{plan.price}</h3>
-                  <p className="text-[#90A1B9] mt-2">{plan.description}</p>
+                  <p className="text-theme-muted mt-2">{plan.description}</p>
                 </div>
 
                 <ul className="space-y-4">

@@ -133,14 +133,14 @@ export default function CustomersandReviews() {
                         Customers & Reviews
                     </h1>
 
-                    <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+                    <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
                         Manage your customer relationships and monitor feedback.
                     </p>
                 </div>
 
                 <div className="flex gap-3">
 
-                    <button onClick={handleExport} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+                    <button onClick={handleExport} className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface shadow-sm">
                         <Download size={16} />
                         Export CSV
                     </button>
@@ -185,12 +185,12 @@ export default function CustomersandReviews() {
 
 
             {tab === "customers" &&
-                <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+                <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 
-                        <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[300px]">
-                            <Search size={18} className="text-[#6A7282]" />
+                        <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[300px]">
+                            <Search size={18} className="text-theme-muted" />
                             <input
                                 placeholder="Search by name, email..."
                                 className="w-full px-3 py-2 outline-none text-sm"
@@ -199,12 +199,12 @@ export default function CustomersandReviews() {
 
                         <div className="flex gap-3">
 
-                            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+                            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
                                 <Filter size={16} />
                                 Status
                             </button>
 
-                            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+                            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
                                 <Calendar size={16} />
                                 Date Joined
                             </button>
@@ -219,7 +219,7 @@ export default function CustomersandReviews() {
 
                         <table className="w-full text-left min-w-[950px]">
 
-                            <thead className="border-b text-[#6A7282] text-sm">
+                            <thead className="border-b text-theme-muted text-sm">
 
                                 <tr>
 
@@ -282,11 +282,11 @@ export default function CustomersandReviews() {
 
                                                 <div>
 
-                                                    <p className="font-medium text-[#111827]">
+                                                    <p className="font-medium text-theme-text">
                                                         {c.name || "Unknown Customer"}
                                                     </p>
 
-                                                    <p className="text-sm text-[#6A7282]">
+                                                    <p className="text-sm text-theme-muted">
                                                         {c.email || "No email"}
                                                     </p>
 
@@ -305,21 +305,21 @@ export default function CustomersandReviews() {
                                         <td className="py-4 text-[#374151]">
 
                                             <div className="flex items-center gap-2">
-                                                <MapPin size={14} className="text-[#6A7282]" />
+                                                <MapPin size={14} className="text-theme-muted" />
                                                 {c.location || "Online"}
                                             </div>
 
                                         </td>
 
-                                        <td className="py-4 text-[#111827]">
+                                        <td className="py-4 text-theme-text">
                                             {c.orders || c.totalOrders || 0}
                                         </td>
 
-                                        <td className="py-4 font-medium text-[#111827]">
+                                        <td className="py-4 font-medium text-theme-text">
                                             ${typeof c.spent === 'number' ? c.spent.toFixed(2) : (c.totalSpent || "0.00")}
                                         </td>
 
-                                        <td className="py-4 text-[#6A7282]">
+                                        <td className="py-4 text-theme-muted">
                                             {c.joined || (c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "Recently")}
                                         </td>
 
@@ -345,7 +345,7 @@ export default function CustomersandReviews() {
 
 
 
-                    <div className="flex items-center justify-between mt-6 text-sm text-[#6A7282]">
+                    <div className="flex items-center justify-between mt-6 text-sm text-theme-muted">
 
                         <p>
                             Showing 5 of 245 customers
@@ -353,11 +353,11 @@ export default function CustomersandReviews() {
 
                         <div className="flex gap-3">
 
-                            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-gray-100">
+                            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-gray-100">
                                 Previous
                             </button>
 
-                            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-white">
+                            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-theme-surface">
                                 Next
                             </button>
 
@@ -378,7 +378,7 @@ export default function CustomersandReviews() {
 
                             <div
                                 key={i}
-                                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+                                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
                             >
 
                                 <div className="text-center">
@@ -395,7 +395,7 @@ export default function CustomersandReviews() {
                                         </div>
                                     )}
 
-                                    <p className="text-[#6A7282] mt-2">
+                                    <p className="text-theme-muted mt-2">
                                         {s.label}
                                     </p>
 
@@ -415,7 +415,7 @@ export default function CustomersandReviews() {
 
                             <div
                                 key={r._id || i}
-                                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+                                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
                             >
 
                                 <div className="flex items-start justify-between">
@@ -429,11 +429,11 @@ export default function CustomersandReviews() {
 
                                         <div>
 
-                                            <p className="font-medium text-[#111827]">
+                                            <p className="font-medium text-theme-text">
                                                 {r.name || r.userName || "Anonymous"}
                                             </p>
 
-                                            <p className="text-sm text-[#6A7282]">
+                                            <p className="text-sm text-theme-muted">
                                                 purchased <span className="text-[#F54900]">{r.product || r.productName || "a product"}</span>
                                             </p>
 
@@ -441,7 +441,7 @@ export default function CustomersandReviews() {
 
                                     </div>
 
-                                    <span className="text-sm text-[#6A7282]">
+                                    <span className="text-sm text-theme-muted">
                                         {r.time || (r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "Recently")}
                                     </span>
 
@@ -470,7 +470,7 @@ export default function CustomersandReviews() {
 
 
 
-                                <div className="flex items-center gap-4 mt-4 text-sm text-[#6A7282] border-t pt-4">
+                                <div className="flex items-center gap-4 mt-4 text-sm text-theme-muted border-t pt-4">
 
                                     <div className="flex items-center gap-2">
                                         <ThumbsUp size={16} />

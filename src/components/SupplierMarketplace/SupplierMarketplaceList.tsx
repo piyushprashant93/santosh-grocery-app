@@ -47,7 +47,7 @@ export default function SupplierMarketplaceList({
         <h1 className="text-2xl font-bold text-gray-800">Supplier Marketplace</h1>
         <button
           onClick={onGoToCart}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-theme-text rounded-lg hover:bg-orange-700 transition shadow-sm"
         >
           <ShoppingCart size={18} />
           <span>Supply Cart</span>
@@ -77,7 +77,7 @@ export default function SupplierMarketplaceList({
             <div
               key={suppId}
               onClick={() => onSelectSupplier(suppId)}
-              className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg transition group"
+              className="bg-theme-surface rounded-xl border border-gray-200 p-5 cursor-pointer hover:shadow-lg transition group"
             >
               <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600 group-hover:scale-110 transition">
                 <Store size={24} />
@@ -92,7 +92,7 @@ export default function SupplierMarketplaceList({
             </div>
           )})}
           {filteredSuppliers.length === 0 && (
-            <div className="col-span-full py-10 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
+            <div className="col-span-full py-10 text-center text-gray-500 bg-theme-surface rounded-xl border border-gray-100">
               No suppliers found matching "{search}"
             </div>
           )}

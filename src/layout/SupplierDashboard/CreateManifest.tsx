@@ -1,6 +1,8 @@
 import { FileText, MapPin, Package, Truck, ArrowLeft, Calendar, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { extractList } from "../../utils/dataHelper";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -123,7 +125,7 @@ export default function CreateManifest({
           Create Shipping Manifest
         </h1>
 
-        <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+        <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
           Combine multiple orders into a single shipment manifest.
         </p>
       </div>
@@ -131,7 +133,7 @@ export default function CreateManifest({
         
         <div className="space-y-6">
           
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <div className="flex justify-between items-center mb-6">
               
@@ -141,14 +143,14 @@ export default function CreateManifest({
                   
                   Select Orders to Ship
                 </h3>
-                <p className="text-[#64748B] text-sm">
+                <p className="text-theme-muted text-sm">
                   
                   Only "Ready to Ship" orders are shown.
                 </p>
               </div>
               <input
                 placeholder="Search orders..."
-                className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none w-[260px]"
+                className="border border-theme-border rounded-lg h-12 px-4 outline-none w-[260px]"
               />
             </div>
             <div className="space-y-4">
@@ -156,7 +158,7 @@ export default function CreateManifest({
               {ordersData.length > 0 ? ordersData.map((order) => (
                 <div
                   key={order._id}
-                  className="flex items-center justify-between border border-[#E5E7EB] rounded-lg p-4"
+                  className="flex items-center justify-between border border-theme-border rounded-lg p-4"
                 >
                   
                   <div className="flex items-center gap-4">
@@ -168,16 +170,16 @@ export default function CreateManifest({
                       className="w-5 h-5"
                     />
                     <img
-                      src={order.img || order.client?.image || order.restaurant?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?w=200"}
+                      src={getImageUrl(order.img || order.client?.image || order.restaurant?.image)}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
                       
-                      <p className="font-medium text-[#111827]">
+                      <p className="font-medium text-theme-text">
                         
                         {order.client || order.client?.name || order.restaurant?.name || "Unknown"}
                       </p>
-                      <div className="flex gap-4 text-sm text-[#64748B] mt-1">
+                      <div className="flex gap-4 text-sm text-theme-muted mt-1">
                         
                         <span className="flex items-center gap-1">
                           
@@ -196,7 +198,7 @@ export default function CreateManifest({
                   </div>
                   <div className="text-right">
                     
-                    <p className="text-sm text-[#64748B]"> {order.id || order.orderId || order._id?.substring(0,8)} </p>
+                    <p className="text-sm text-theme-muted"> {order.id || order.orderId || order._id?.substring(0,8)} </p>
                     <p className="font-semibold text-lg">
                       
                       {order.weight || order.totalWeight || 0} kg
@@ -208,7 +210,7 @@ export default function CreateManifest({
               )}
             </div>
           </div>
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl mb-6">
               
@@ -220,25 +222,25 @@ export default function CreateManifest({
                 placeholder="Carrier"
                 value={logistics.carrier}
                 onChange={(e) => setLogistics({ ...logistics, carrier: e.target.value })}
-                className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
+                className="border border-theme-border rounded-lg h-12 px-4 outline-none"
               />
               <input
                 placeholder="Vehicle Type"
                 value={logistics.vehicleType}
                 onChange={(e) => setLogistics({ ...logistics, vehicleType: e.target.value })}
-                className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
+                className="border border-theme-border rounded-lg h-12 px-4 outline-none"
               />
               <input
                 type="date"
                 value={logistics.dispatchDate}
                 onChange={(e) => setLogistics({ ...logistics, dispatchDate: e.target.value })}
-                className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
+                className="border border-theme-border rounded-lg h-12 px-4 outline-none"
               />
               <input
                 placeholder="Assign driver..."
                 value={logistics.driver}
                 onChange={(e) => setLogistics({ ...logistics, driver: e.target.value })}
-                className="border border-[#E5E7EB] rounded-lg h-12 px-4 outline-none"
+                className="border border-theme-border rounded-lg h-12 px-4 outline-none"
               />
             </div>
             <textarea
@@ -246,13 +248,13 @@ export default function CreateManifest({
               value={logistics.notes}
               onChange={(e) => setLogistics({ ...logistics, notes: e.target.value })}
               placeholder="Gate codes, handling instructions, loading dock info..."
-              className="border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none w-full mt-4"
+              className="border border-theme-border rounded-lg px-4 py-3 outline-none w-full mt-4"
             />
           </div>
         </div>
         <div className="space-y-6">
           
-          <div className="bg-[#0F172A] text-white rounded-xl p-6 shadow-lg">
+          <div className="bg-theme-surface text-theme-text rounded-xl p-6 shadow-lg">
             
             <div className="flex items-center gap-2 mb-6">
               
@@ -279,7 +281,7 @@ export default function CreateManifest({
               Generate Manifest
             </button>
           </div>
-          <div className="bg-[#EEF2FF] border border-[#E5E7EB] rounded-xl p-6">
+          <div className="bg-[#EEF2FF] border border-theme-border rounded-xl p-6">
             
             <h4 className="font-playfair text-lg mb-3 flex items-center gap-2">
               <Truck size={24} />

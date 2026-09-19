@@ -17,13 +17,13 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className="p-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="p-2 bg-theme-surface border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             <ArrowLeft size={20} />
           </button>
           
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-pink-600 text-white flex items-center justify-center text-xl font-bold">
+            <div className="w-12 h-12 rounded-full bg-pink-600 text-theme-text flex items-center justify-center text-xl font-bold">
               SK
             </div>
             <div>
@@ -43,13 +43,13 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex items-center gap-3">
           <button 
             onClick={() => navigate(`/admin/dashboard/partner-management/${partner.id}/documents`)}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             Verify Documents
           </button>
           <button 
             onClick={() => navigate(`/admin/dashboard/partner-management/${partner.id}/settings`)}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             Settings
           </button>
@@ -59,7 +59,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
       {/* Top Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Stat 1 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
             <ShoppingBag size={20} />
           </div>
@@ -70,7 +70,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         </div>
 
         {/* Stat 2 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
             <DollarSign size={20} />
           </div>
@@ -81,7 +81,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         </div>
 
         {/* Stat 3 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-400 flex items-center justify-center shrink-0">
             <Star size={20} />
           </div>
@@ -92,7 +92,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         </div>
 
         {/* Stat 4 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center shrink-0">
             <Store size={20} />
           </div>
@@ -110,7 +110,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="lg:col-span-2 flex flex-col gap-6">
           
           {/* Business Information Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Business Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
@@ -148,7 +148,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
 
           {/* Recent Orders Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Recent Orders</h2>
               <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition">View All</button>
@@ -181,7 +181,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex flex-col gap-6">
           
           {/* Commission Rate Dark Card */}
-          <div className="bg-[#0F172B] rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden">
+          <div className="bg-theme-surface rounded-2xl p-6 lg:p-8 text-theme-text relative overflow-hidden">
             <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'serif' }}>Commission Rate</h2>
             
             <div className="flex items-baseline gap-2 mb-8">
@@ -202,7 +202,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
 
           {/* Current Status Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Current Status</h2>
             
             <div className="flex flex-col gap-5">

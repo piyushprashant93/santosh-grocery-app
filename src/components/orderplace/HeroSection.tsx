@@ -7,7 +7,7 @@ export default function HeroSection() {
     const { setRole } = useRole();
     const navigate = useNavigate();
   return (
-    <section className="relative w-full bg-cover bg-center bg-[#020618]">
+    <section className="relative w-full bg-cover bg-center bg-theme-bg">
       <img
         src={HeroBg}
         alt=""
@@ -15,7 +15,7 @@ export default function HeroSection() {
       />
       <div className="absolute inset-0 bg-[linear-gradient(0deg,#020618_0%,rgba(2,6,24,0.5)_50%,rgba(0,0,0,0)_100%),linear-gradient(90deg,#020618_0%,rgba(2,6,24,0.8)_50%,rgba(2,6,24,0.4)_100%)]" />
 
-      <div className="relative max-w-[1265px] mx-auto px-3 lg:px-6 py-[90px] text-white text-start overflow-hidden">
+      <div className="relative max-w-[1265px] mx-auto px-3 lg:px-6 py-[90px] text-theme-text text-start overflow-hidden">
         <span className="w-fit mb-8 px-4 py-1.5 rounded-full mx-auto bg-[#00C9501A] flex gap-2 items-center border uppercase border-[#00C95033] text-[#00BC7D] text-xs font-bold">
           <ChefHat size={16} />
           For Food Lovers & Creators
@@ -30,7 +30,7 @@ export default function HeroSection() {
           serve or to savor, you've found the right place.
         </p>
 
-        <div className="mt-16 border border-[#1D293D] rounded-[26px] overflow-hidden bg-[#0F172B99] max-w-[805px] mx-auto">
+        <div className="mt-16 border border-theme-border rounded-[26px] overflow-hidden bg-theme-surface max-w-[805px] mx-auto">
           <div className="p-8 relative">
             <div>
               <div className="inline-flex items-center gap-2 bg-[#00BC7D1A] border border-[#00BC7D1A] text-[#00D492] px-3 py-1 rounded-full mb-6">
@@ -40,11 +40,11 @@ export default function HeroSection() {
                 </span>
               </div>
 
-              <h2 className="font-playfair text-[32px] lg:text-[40px] leading-[1.1] text-white mb-6">
+              <h2 className="font-playfair text-[32px] lg:text-[40px] leading-[1.1] text-theme-text mb-6">
                 Manage your Restaurant?
               </h2>
 
-              <p className="text-[#90A1B9] text-[20px] leading-relaxed max-w-[480px] mb-10">
+              <p className="text-theme-muted text-[20px] leading-relaxed max-w-[480px] mb-10">
                 Streamline operations, track inventory, and grow your customer
                 base with our all-in-one management suite.
               </p>

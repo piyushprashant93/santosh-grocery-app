@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/dataHelper";
 import {
   Shield,
   Bell,
@@ -384,7 +385,7 @@ export default function RestaurantSettings({
             Settings
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Manage your restaurant profile, locations, team, and security.
           </p>
         </div>
@@ -420,76 +421,76 @@ export default function RestaurantSettings({
       {activeSettingTab == "general" && (
         <div className="grid lg:grid-cols-[2fr_1fr] gap-5 items-start">
           <div className="space-y-5">
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="font-playfair text-2xl">Restaurant Details</h2>
 
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   Update your public restaurant information.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Restaurant Name
                   </label>
 
                   <input
                     value={profile.name || "The Golden Spoon"}
                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">Phone Number</label>
+                  <label className="text-sm text-theme-muted">Phone Number</label>
 
                   <input
                     value={profile.phone || "+1 (555) 123-4567"}
                     onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
               </div>
 
               <div className="mt-5">
-                <label className="text-sm text-[#64748B]">Email Address</label>
+                <label className="text-sm text-theme-muted">Email Address</label>
 
                 <input
                   value={profile.email || "contact@goldenspoon.com"}
                   onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
 
               <div className="mt-5">
-                <label className="text-sm text-[#64748B]">Description</label>
+                <label className="text-sm text-theme-muted">Description</label>
 
                 <textarea
                   rows={4}
                   value={profile.description || ""}
                   onChange={(e) => setProfile({ ...profile, description: e.target.value })}
-                  className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                  className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                 />
               </div>
             </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <div className="mb-6">
                 <h2 className="font-playfair text-2xl">Operational Details</h2>
 
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   Configure cuisines, timing, and order rules.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-5 items-start">
                 <div>
-                  <label className="text-sm text-[#64748B]">Cuisine Type</label>
+                  <label className="text-sm text-theme-muted">Cuisine Type</label>
 
                   <input
                     defaultValue="Italian, Continental, Seafood"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                   <span className="text-sm text-[#62748E80]">
                     Separate cuisines with commas.
@@ -497,35 +498,35 @@ export default function RestaurantSettings({
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Average Cost for Two
                   </label>
 
                   <input
                     defaultValue="65.00"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Preparation Time (Avg)
                   </label>
 
                   <input
                     defaultValue="30-45 mins"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Min. Order Value
                   </label>
 
                   <input
                     defaultValue="20.00"
-                    className="w-full mt-1 border border-[#E5E7EB] rounded-lg px-4 py-2.5 outline-none"
+                    className="w-full mt-1 border border-theme-border rounded-lg px-4 py-2.5 outline-none"
                   />
                 </div>
               </div>
@@ -533,16 +534,16 @@ export default function RestaurantSettings({
           </div>
 
           <div className="space-y-5">
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
               <h3 className="font-playfair text-2xl mb-5">Branding</h3>
 
               <div className="flex flex-col items-center">
                 <img
-                  src={profile.logo || "https://randomuser.me/api/portraits/women/44.jpg"}
+                  src={getImageUrl(profile.logo)}
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
 
-                <label className="mt-4 w-full border border-[#E5E7EB] rounded-lg py-2 text-[#0F172A] text-center cursor-pointer block">
+                <label className="mt-4 w-full border border-theme-border rounded-lg py-2 text-theme-text text-center cursor-pointer block">
                   Change Logo
                   <input type="file" className="hidden" accept="image/*" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) handleUpload('logo', e.target.files[0]);
@@ -553,11 +554,11 @@ export default function RestaurantSettings({
               <div className="border-t my-6"></div>
 
               <div>
-                <p className="text-sm text-[#64748B] mb-2">Cover Image</p>
+                <p className="text-sm text-theme-muted mb-2">Cover Image</p>
 
                 <div className="relative rounded-xl overflow-hidden group">
                   <img
-                    src={profile.banner || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
+                    src={getImageUrl(profile.banner)}
                     className="w-full h-40 object-cover"
                   />
 
@@ -572,7 +573,7 @@ export default function RestaurantSettings({
                 </div>
               </div>
             </div>
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm max-w-md">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm max-w-md">
               <h2 className="font-playfair text-2xl mb-6">Operating Hours</h2>
 
               <div className="space-y-5">
@@ -587,20 +588,20 @@ export default function RestaurantSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
 
-                      <span className="text-[#0F172A] font-medium w-10">
+                      <span className="text-theme-text font-medium w-10">
                         {d.day}
                       </span>
                     </div>
 
                     {d.open ? (
-                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-[#475569]">
+                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-theme-muted">
                         {d.time}
                       </span>
                     ) : (
-                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-[#64748B]">
+                      <span className="bg-[#F1F5F9] px-4 py-1.5 rounded-md text-sm text-theme-muted">
                         Closed
                       </span>
                     )}
@@ -621,11 +622,11 @@ export default function RestaurantSettings({
           {locs.map((loc, i) => (
             <div
               key={loc._id || i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+              className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
             >
               <div className="flex justify-between items-start mb-5">
                 <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
-                  <Store size={20} className="text-[#64748B]" />
+                  <Store size={20} className="text-theme-muted" />
                 </div>
 
                 <div className="flex gap-2">
@@ -633,13 +634,13 @@ export default function RestaurantSettings({
                   <MoreHorizontal onClick={() => {
                     setEditingLocation(loc);
                     setShowLocationModal(true);
-                  }} size={18} className="text-[#94A3B8] cursor-pointer hover:text-[#0F172A]" />
+                  }} size={18} className="text-theme-muted cursor-pointer hover:text-theme-text" />
                 </div>
               </div>
 
               <h3 className="font-playfair text-xl mb-3">{loc.name || loc.address}</h3>
 
-              <div className="space-y-2 text-[#64748B] text-sm">
+              <div className="space-y-2 text-theme-muted text-sm">
                 <p className="flex items-start gap-2">
                   <MapPin size={16} className="mt-0.5" />
                   {loc.address}
@@ -660,7 +661,7 @@ export default function RestaurantSettings({
                   {loc.status || "Active"}
                 </span>
 
-                <button className="border border-[#E5E7EB] px-4 py-2 rounded-lg text-[#0F172A] shadow-sm">
+                <button className="border border-theme-border px-4 py-2 rounded-lg text-theme-text shadow-sm">
                   View Dashboard
                 </button>
               </div>
@@ -672,21 +673,21 @@ export default function RestaurantSettings({
             setShowLocationModal(true);
           }} className="border-2 border-dashed border-[#CBD5E1] rounded-xl p-6 flex flex-col items-center justify-center text-center min-h-[260px] cursor-pointer hover:bg-gray-50">
             <div className="w-16 h-16 rounded-full bg-[#F1F5F9] flex items-center justify-center mb-4 shadow-sm">
-              <Plus size={28} className="text-[#64748B]" />
+              <Plus size={28} className="text-theme-muted" />
             </div>
 
-            <h3 className="text-lg font-medium text-[#0F172A]">
+            <h3 className="text-lg font-medium text-theme-text">
               Add New Location
             </h3>
 
-            <p className="text-[#64748B] text-sm mt-1">Expand your business</p>
+            <p className="text-theme-muted text-sm mt-1">Expand your business</p>
           </div>
         </div>
       )}
 
       {showLocationModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
+          <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
             <button onClick={() => setShowLocationModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
               <X size={20} />
             </button>
@@ -718,11 +719,11 @@ export default function RestaurantSettings({
       )}
 
       {activeSettingTab == "notifications" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="mb-6">
             <h2 className="font-playfair text-2xl">Notification Preferences</h2>
 
-            <p className="text-[#64748B] mt-1">
+            <p className="text-theme-muted mt-1">
               Choose how you want to be notified about important updates.
             </p>
           </div>
@@ -735,19 +736,19 @@ export default function RestaurantSettings({
                 <div key={i} className="py-5 flex items-center justify-between">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
-                      <Icon size={20} className="text-[#64748B]" />
+                      <Icon size={20} className="text-theme-muted" />
                     </div>
 
                     <div>
                       <h3 className="font-playfair text-lg">{item.title}</h3>
 
-                      <p className="text-[#64748B] text-sm mt-1">{item.desc}</p>
+                      <p className="text-theme-muted text-sm mt-1">{item.desc}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-xs text-[#94A3B8]">EMAIL</span>
+                      <span className="text-xs text-theme-muted">EMAIL</span>
 
                       <button
                         onClick={() => toggle(i, "email")}
@@ -757,12 +758,12 @@ export default function RestaurantSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
                     </div>
 
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-xs text-[#94A3B8]">SMS</span>
+                      <span className="text-xs text-theme-muted">SMS</span>
 
                       <button
                         onClick={() => toggle(i, "sms")}
@@ -772,7 +773,7 @@ export default function RestaurantSettings({
                             : "bg-gray-300 justify-start"
                         }`}
                       >
-                        <div className="w-4 h-4 bg-white rounded-full" />
+                        <div className="w-4 h-4 bg-theme-surface rounded-full" />
                       </button>
                     </div>
                   </div>
@@ -784,11 +785,11 @@ export default function RestaurantSettings({
       )}
 
       {activeSettingTab == "security" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="mb-6">
             <h2 className="font-playfair text-2xl">Password & Security</h2>
 
-            <p className="text-[#64748B] mt-1">
+            <p className="text-theme-muted mt-1">
               Manage your account security settings.
             </p>
           </div>
@@ -803,21 +804,21 @@ export default function RestaurantSettings({
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Current Password
                   </label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.current ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                     />
 
                     <button
                       onClick={() => toggleShow("current")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.current ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -825,19 +826,19 @@ export default function RestaurantSettings({
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">New Password</label>
+                  <label className="text-sm text-theme-muted">New Password</label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.new ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
 
                     <button
                       onClick={() => toggleShow("new")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.new ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -845,21 +846,21 @@ export default function RestaurantSettings({
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#64748B]">
+                  <label className="text-sm text-theme-muted">
                     Confirm New Password
                   </label>
 
                   <div className="relative mt-1">
                     <input
                       type={show.confirm ? "text" : "password"}
-                      className="w-full border border-[#E5E7EB] text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />
 
                     <button
                       onClick={() => toggleShow("confirm")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
                     >
                       {show.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
@@ -870,7 +871,7 @@ export default function RestaurantSettings({
               <button 
                 onClick={handleUpdatePassword}
                 disabled={passwordLoading}
-                className="mt-5 w-full bg-[#0F172A] text-white py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
+                className="mt-5 w-full bg-theme-surface text-theme-text py-3 rounded-lg font-medium shadow disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {passwordLoading ? "Updating..." : "Update Password"}
               </button>
@@ -886,14 +887,14 @@ export default function RestaurantSettings({
                   </h3>
                 </div>
 
-                <div className="border border-[#E5E7EB] rounded-xl p-4 bg-[#F8FAFC]">
+                <div className="border border-theme-border rounded-xl p-4 bg-theme-bg">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-medium text-[#0F172A]">
+                      <p className="font-medium text-theme-text">
                         SMS Authentication
                       </p>
 
-                      <p className="text-sm text-[#64748B] mt-1 max-w-xs">
+                      <p className="text-sm text-theme-muted mt-1 max-w-xs">
                         Secure your account by requiring a code sent to your
                         phone.
                       </p>
@@ -907,21 +908,21 @@ export default function RestaurantSettings({
                           : "bg-gray-300 justify-start"
                       }`}
                     >
-                      <div className="w-4 h-4 bg-white rounded-full" />
+                      <div className="w-4 h-4 bg-theme-surface rounded-full" />
                     </button>
                   </div>
 
-                  <div className="border-t mt-4 pt-3 text-sm text-[#64748B]">
+                  <div className="border-t mt-4 pt-3 text-sm text-theme-muted">
                     Verified Phone: +1 (555) ***-4567
                   </div>
                 </div>
               </div>
 
-              <div className="border border-[#E5E7EB] rounded-xl p-4 bg-[#F8FAFC] flex items-center justify-between">
+              <div className="border border-theme-border rounded-xl p-4 bg-theme-bg flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-[#0F172A]">Active Sessions</p>
+                  <p className="font-medium text-theme-text">Active Sessions</p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     You are logged in on 2 devices.
                   </p>
                 </div>
@@ -942,12 +943,12 @@ export default function RestaurantSettings({
       )}
 
       {activeSettingTab == "team" && (
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="font-playfair text-2xl">Team Management</h2>
 
-              <p className="text-[#64748B] mt-1">
+              <p className="text-theme-muted mt-1">
                 Control who has access to your restaurant dashboard.
               </p>
             </div>
@@ -963,7 +964,7 @@ export default function RestaurantSettings({
               <div key={i} className="py-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <img
-                    src={m.image}
+                    src={getImageUrl(m.image)}
                     className="w-12 h-12 rounded-full object-cover"
                   />
 
@@ -978,15 +979,15 @@ export default function RestaurantSettings({
                       </span>
                     </div>
 
-                    <p className="text-[#64748B] text-sm">{m.email}</p>
+                    <p className="text-theme-muted text-sm">{m.email}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="text-sm text-[#64748B]">Access Level</p>
+                    <p className="text-sm text-theme-muted">Access Level</p>
 
-                    <p className="text-sm text-[#0F172A]">{m.access}</p>
+                    <p className="text-sm text-theme-text">{m.access}</p>
                   </div>
 
                   <button
@@ -997,12 +998,12 @@ export default function RestaurantSettings({
                         : "bg-gray-300 justify-start"
                     }`}
                   >
-                    <div className="w-4 h-4 bg-white rounded-full" />
+                    <div className="w-4 h-4 bg-theme-surface rounded-full" />
                   </button>
 
                   <Settings
                     size={18}
-                    className="text-[#94A3B8] cursor-pointer"
+                    className="text-theme-muted cursor-pointer"
                   />
                 </div>
               </div>
@@ -1012,10 +1013,10 @@ export default function RestaurantSettings({
       )}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
+          <div className="bg-theme-surface rounded-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-playfair text-2xl font-bold text-[#0F172A]">Invite Team Member</h3>
-              <button onClick={() => setShowInviteModal(false)} className="text-[#64748B] hover:text-[#0F172A]">
+              <h3 className="font-playfair text-2xl font-bold text-theme-text">Invite Team Member</h3>
+              <button onClick={() => setShowInviteModal(false)} className="text-theme-muted hover:text-theme-text">
                 <X size={24} />
               </button>
             </div>

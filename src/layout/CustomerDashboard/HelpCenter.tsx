@@ -371,18 +371,26 @@ const [legalModal, setLegalModal] = useState({
 
     setTicketSubmitting(true);
     try {
+      const payload = {
+        subject: ticketForm.subject,
+        category: ticketForm.category,
+        priority: ticketForm.priority,
+        message: ticketForm.message,
+      };
+
       const res = await fetch(`${BASE_URL}/support`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(ticketForm),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data?.message || "Failed to raise ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to raise ticket");
+        throw new Error(errorMsg);
       }
 
       setTicketSuccess(true);
@@ -545,7 +553,7 @@ const [legalModal, setLegalModal] = useState({
   return (
     <div className="space-y-12">
       <div className="text-center space-y-6">
-        <h1 className="lg:text-[34px] text-[24px] font-playfair text-[#0F172A]">
+        <h1 className="lg:text-[34px] text-[24px] font-playfair text-theme-text">
           How can we help you today?
         </h1>
 
@@ -553,7 +561,7 @@ const [legalModal, setLegalModal] = useState({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for answers, orders, or topics..."
-          className="max-w-xl mx-auto w-full border border-[#E5E7EB] rounded-xl px-5 py-3 shadow-sm outline-none block"
+          className="max-w-xl mx-auto w-full border border-theme-border rounded-xl px-5 py-3 shadow-sm outline-none block"
         />
 
         <button
@@ -576,10 +584,10 @@ const [legalModal, setLegalModal] = useState({
               onClick={() =>
                 setActiveCategory(isActive ? null : c.matchCategory)
               }
-              className={`border rounded-lg lg:rounded-xl lg:p-8 p-3 text-center bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] transition ${
+              className={`border rounded-lg lg:rounded-xl lg:p-8 p-3 text-center bg-theme-surface border-theme-border shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] transition ${
                 isActive
                   ? "border-[#009966] ring-1 ring-[#009966]"
-                  : "border-[#E5E7EB]"
+                  : "border-transparent"
               }`}
             >
               <div
@@ -588,11 +596,11 @@ const [legalModal, setLegalModal] = useState({
                 <Icon size={22} />
               </div>
 
-              <h3 className="font-playfair text-xl text-[#0F172A]">
+              <h3 className="font-playfair text-xl text-theme-text">
                 {c.title}
               </h3>
 
-              <p className="text-[#6A7282] mt-2 text-sm">{c.desc}</p>
+              <p className="text-theme-muted mt-2 text-sm">{c.desc}</p>
             </button>
           );
         })}
@@ -601,13 +609,13 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- My Tickets Section ---------- */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-playfair text-2xl text-[#0F172A]">
+          <h2 className="font-playfair text-2xl text-theme-text">
             My Support Tickets
           </h2>
 
           <button
             onClick={() => fetchTickets(ticketsPage)}
-            className="flex items-center gap-1.5 text-sm text-[#6A7282] hover:text-[#0F172A]"
+            className="flex items-center gap-1.5 text-sm text-theme-muted hover:text-theme-text"
           >
             <RefreshCw size={14} />
             Refresh
@@ -625,7 +633,7 @@ const [legalModal, setLegalModal] = useState({
         )}
 
         {!ticketsLoading && !ticketsError && tickets.length === 0 && (
-          <div className="border border-dashed border-[#E5E7EB] rounded-xl py-10 text-center text-[#6A7282] text-sm">
+          <div className="border border-dashed border-theme-border rounded-xl py-10 text-center text-theme-muted text-sm">
             You haven't raised any support tickets yet.
           </div>
         )}
@@ -637,10 +645,10 @@ const [legalModal, setLegalModal] = useState({
                 <button
                   key={t._id}
                   onClick={() => openTicketDetail(t)}
-                  className="text-left border border-[#E5E7EB] rounded-lg lg:rounded-xl p-4 bg-white hover:border-[#009966] transition"
+                  className="text-left border border-theme-border rounded-lg lg:rounded-xl p-4 bg-theme-surface hover:border-[#009966] transition"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-[#0F172A] font-medium line-clamp-1">
+                    <p className="text-theme-text font-medium line-clamp-1">
                       {t.subject}
                     </p>
                     <span
@@ -655,7 +663,7 @@ const [legalModal, setLegalModal] = useState({
                   <p className="text-xs text-[#99A1AF] mb-3">{t.ticketId}</p>
 
                   <div className="flex items-center gap-2 flex-wrap text-xs">
-                    <span className="px-2 py-1 rounded-full bg-[#F1F5F9] text-[#6A7282]">
+                    <span className="px-2 py-1 rounded-full bg-[#F1F5F9] text-theme-muted">
                       {t.category}
                     </span>
                     <span
@@ -690,17 +698,17 @@ const [legalModal, setLegalModal] = useState({
                 <button
                   onClick={() => fetchTickets(ticketsPage - 1)}
                   disabled={ticketsPage <= 1}
-                  className="px-4 py-2 text-sm border border-[#E5E7EB] rounded-lg disabled:opacity-40"
+                  className="px-4 py-2 text-sm border border-theme-border rounded-lg disabled:opacity-40"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-[#6A7282]">
+                <span className="text-sm text-theme-muted">
                   Page {ticketsPage}
                 </span>
                 <button
                   onClick={() => fetchTickets(ticketsPage + 1)}
                   disabled={!ticketsHasNext}
-                  className="px-4 py-2 text-sm border border-[#E5E7EB] rounded-lg disabled:opacity-40"
+                  className="px-4 py-2 text-sm border border-theme-border rounded-lg disabled:opacity-40"
                 >
                   Next
                 </button>
@@ -712,7 +720,7 @@ const [legalModal, setLegalModal] = useState({
 
       <div className="grid lg:grid-cols-[1fr_380px] gap-6">
         <div>
-          <h2 className="font-playfair text-2xl text-[#0F172A] mb-6">
+          <h2 className="font-playfair text-2xl text-theme-text mb-6">
             Frequently Asked Questions
           </h2>
 
@@ -746,7 +754,7 @@ const [legalModal, setLegalModal] = useState({
 
               <div className="space-y-4">
                 {filteredFaqs.length === 0 && (
-                  <p className="text-[#6A7282] text-sm">
+                  <p className="text-theme-muted text-sm">
                     No matching questions found.
                   </p>
                 )}
@@ -754,13 +762,13 @@ const [legalModal, setLegalModal] = useState({
                 {filteredFaqs.map((f, i) => (
                   <div
                     key={f.id}
-                    className="border border-[#E5E7EB] rounded-lg lg:rounded-xl lg:p-4 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+                    className="border border-theme-border rounded-lg lg:rounded-xl lg:p-4 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
                   >
                     <button
                       onClick={() => setOpen(open === i ? null : i)}
                       className="w-full flex items-center justify-between text-left gap-4"
                     >
-                      <p className="text-[#0F172A] font-medium">{f.question}</p>
+                      <p className="text-theme-text font-medium">{f.question}</p>
 
                       <ChevronDown
                         className={`shrink-0 transition ${open === i ? "rotate-180" : ""}`}
@@ -769,7 +777,7 @@ const [legalModal, setLegalModal] = useState({
                     </button>
 
                     {open === i && (
-                      <p className="text-[#6A7282] text-sm mt-3">{f.answer}</p>
+                      <p className="text-theme-muted text-sm mt-3">{f.answer}</p>
                     )}
                   </div>
                 ))}
@@ -779,9 +787,9 @@ const [legalModal, setLegalModal] = useState({
         </div>
 
         <div className="space-y-6">
-          <h2 className="font-playfair text-2xl text-[#0F172A]">Contact Us</h2>
+          <h2 className="font-playfair text-2xl text-theme-text">Contact Us</h2>
 
-          <div className="border border-[#E5E7EB] rounded-lg lg:rounded-xl bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+          <div className="border border-theme-border rounded-lg lg:rounded-xl bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
             <button
               onClick={() => setShowContactForm(true)}
               className="w-full flex items-center justify-between p-4 border-b text-left"
@@ -792,8 +800,8 @@ const [legalModal, setLegalModal] = useState({
                 </div>
 
                 <div>
-                  <p className="text-[#0F172A]">Live Chat / Message Us</p>
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-theme-text">Live Chat / Message Us</p>
+                  <p className="text-sm text-theme-muted">
                     {contactInfo
                       ? `Response time: ${contactInfo.averageResponseTime}`
                       : "Wait time: ~2 mins"}
@@ -809,8 +817,8 @@ const [legalModal, setLegalModal] = useState({
                 </div>
 
                 <div>
-                  <p className="text-[#0F172A]">Call Support</p>
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-theme-text">Call Support</p>
+                  <p className="text-sm text-theme-muted">
                     {contactInfo ? contactInfo.phone : "Available 24/7"}
                   </p>
                 </div>
@@ -824,8 +832,8 @@ const [legalModal, setLegalModal] = useState({
                 </div>
 
                 <div>
-                  <p className="text-[#0F172A]">Address</p>
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-theme-text">Address</p>
+                  <p className="text-sm text-theme-muted">
                     {contactInfo ? contactInfo.address : "NA"}
                   </p>
                 </div>
@@ -839,8 +847,8 @@ const [legalModal, setLegalModal] = useState({
                 </div>
 
                 <div>
-                  <p className="text-[#0F172A]">Email Us</p>
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-theme-text">Email Us</p>
+                  <p className="text-sm text-theme-muted">
                     {contactInfo ? contactInfo.email : "Response in 24h"}
                   </p>
                 </div>
@@ -848,15 +856,15 @@ const [legalModal, setLegalModal] = useState({
             </div>
 
             {contactInfo?.hours && (
-              <div className="px-4 pb-4 text-xs text-[#6A7282]">
+              <div className="px-4 pb-4 text-xs text-theme-muted">
                 Support hours: {contactInfo.hours}
               </div>
             )}
           </div>
 
-          <div className="border border-[#E5E7EB] rounded-lg lg:rounded-xl lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+          <div className="border border-theme-border rounded-lg lg:rounded-xl lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
             <div className="flex items-center gap-3 mb-3">
-              <FileText size={18} className="text-[#6A7282]" />
+              <FileText size={18} className="text-theme-muted" />
 
               <h3 className="font-playfair text-lg">Policies</h3>
             </div>
@@ -910,25 +918,25 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Contact Form Modal ---------- */}
       {showContactForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl w-full max-w-md p-6 relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
             <button
               onClick={() => setShowContactForm(false)}
-              className="absolute top-4 right-4 text-[#94A3B8] hover:text-white"
+              className="absolute top-4 right-4 text-theme-muted hover:text-theme-text"
             >
               <X size={20} />
             </button>
 
-            <h3 className="font-playfair text-xl text-white mb-4">
+            <h3 className="font-playfair text-xl text-theme-text mb-4">
               Send us a Message
             </h3>
 
             {contactSuccess ? (
               <div className="flex flex-col items-center gap-2 py-8 text-center">
                 <CheckCircle2 size={40} className="text-[#009966]" />
-                <p className="text-white font-medium">
+                <p className="text-theme-text font-medium">
                   Message sent successfully!
                 </p>
-                <p className="text-sm text-[#94A3B8]">
+                <p className="text-sm text-theme-muted">
                   We'll get back to you soon.
                 </p>
               </div>
@@ -940,7 +948,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setContactForm({ ...contactForm, name: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
                 />
 
                 <input
@@ -950,7 +958,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setContactForm({ ...contactForm, email: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
                 />
 
                 <input
@@ -959,7 +967,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setContactForm({ ...contactForm, subject: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
                 />
 
                 <textarea
@@ -969,7 +977,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setContactForm({ ...contactForm, message: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none resize-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none resize-none focus:border-[#009966]"
                 />
 
                 {contactError && (
@@ -996,15 +1004,15 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Raise Ticket Modal ---------- */}
       {showTicketForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl w-full max-w-md p-6 relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-md p-6 relative">
             <button
               onClick={() => setShowTicketForm(false)}
-              className="absolute top-4 right-4 text-[#94A3B8] hover:text-white"
+              className="absolute top-4 right-4 text-theme-muted hover:text-theme-text"
             >
               <X size={20} />
             </button>
 
-            <h3 className="font-playfair text-xl text-white mb-4 flex items-center gap-2">
+            <h3 className="font-playfair text-xl text-theme-text mb-4 flex items-center gap-2">
               <Ticket size={20} className="text-[#009966]" />
               Raise a Support Ticket
             </h3>
@@ -1012,10 +1020,10 @@ const [legalModal, setLegalModal] = useState({
             {ticketSuccess ? (
               <div className="flex flex-col items-center gap-2 py-8 text-center">
                 <CheckCircle2 size={40} className="text-[#009966]" />
-                <p className="text-white font-medium">
+                <p className="text-theme-text font-medium">
                   Ticket raised successfully!
                 </p>
-                <p className="text-sm text-[#94A3B8]">
+                <p className="text-sm text-theme-muted">
                   Our team will get back to you shortly.
                 </p>
               </div>
@@ -1027,7 +1035,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setTicketForm({ ...ticketForm, subject: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
                 />
 
                 <div className="grid grid-cols-2 gap-3">
@@ -1036,13 +1044,13 @@ const [legalModal, setLegalModal] = useState({
                     onChange={(e) =>
                       setTicketForm({ ...ticketForm, category: e.target.value })
                     }
-                    className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white outline-none focus:border-[#009966]"
+                    className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text outline-none focus:border-[#009966]"
                   >
                     {TICKET_CATEGORIES.map((c) => (
                       <option
                         key={c}
                         value={c}
-                        className="bg-[#020618] text-white"
+                        className="bg-theme-bg text-theme-text"
                       >
                         {c}
                       </option>
@@ -1054,13 +1062,13 @@ const [legalModal, setLegalModal] = useState({
                     onChange={(e) =>
                       setTicketForm({ ...ticketForm, priority: e.target.value })
                     }
-                    className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white outline-none focus:border-[#009966]"
+                    className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text outline-none focus:border-[#009966]"
                   >
                     {TICKET_PRIORITIES.map((p) => (
                       <option
                         key={p}
                         value={p}
-                        className="bg-[#020618] text-white"
+                        className="bg-theme-bg text-theme-text"
                       >
                         {p} Priority
                       </option>
@@ -1075,7 +1083,7 @@ const [legalModal, setLegalModal] = useState({
                   onChange={(e) =>
                     setTicketForm({ ...ticketForm, message: e.target.value })
                   }
-                  className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-3 text-white placeholder:text-[#64748B] outline-none resize-none focus:border-[#009966]"
+                  className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-3 text-theme-text placeholder:text-theme-muted outline-none resize-none focus:border-[#009966]"
                 />
 
                 {ticketError && (
@@ -1102,15 +1110,15 @@ const [legalModal, setLegalModal] = useState({
       {/* ---------- Ticket Detail Modal ---------- */}
       {selectedTicket && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 !mt-0">
-          <div className="bg-[#0F172A] border border-[#1E293B] rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative">
+          <div className="bg-theme-surface border border-theme-border rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col relative">
             {/* Header */}
-            <div className="flex items-start justify-between p-5 border-b border-[#1E293B]">
+            <div className="flex items-start justify-between p-5 border-b border-theme-border">
               <div>
-                <p className="text-xs text-[#94A3B8] mb-1">
+                <p className="text-xs text-theme-muted mb-1">
                   {selectedTicket.ticketId}
                 </p>
 
-                <h3 className="font-playfair text-lg text-white">
+                <h3 className="font-playfair text-lg text-theme-text">
                   {selectedTicket.subject}
                 </h3>
 
@@ -1124,7 +1132,7 @@ const [legalModal, setLegalModal] = useState({
                     {selectedTicket.status}
                   </span>
 
-                  <span className="text-xs px-2 py-1 rounded-full bg-[#1E293B] text-[#94A3B8]">
+                  <span className="text-xs px-2 py-1 rounded-full bg-theme-surface text-theme-muted">
                     {selectedTicket.category}
                   </span>
 
@@ -1141,7 +1149,7 @@ const [legalModal, setLegalModal] = useState({
 
               <button
                 onClick={() => setSelectedTicket(null)}
-                className="text-[#94A3B8] hover:text-white shrink-0"
+                className="text-theme-muted hover:text-theme-text shrink-0"
               >
                 <X size={20} />
               </button>
@@ -1174,13 +1182,13 @@ const [legalModal, setLegalModal] = useState({
             </div>
 
             {/* Reply */}
-            <div className="p-4 border-t border-[#1E293B]">
+            <div className="p-4 border-t border-theme-border">
               <div className="flex items-center gap-2">
                 <input
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   placeholder="Type your reply..."
-                  className="flex-1 bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-2 text-white placeholder:text-[#64748B] outline-none focus:border-[#009966]"
+                  className="flex-1 bg-theme-bg border border-theme-border rounded-lg px-3 py-2 text-theme-text placeholder:text-theme-muted outline-none focus:border-[#009966]"
                   onKeyDown={(e) => e.key === "Enter" && submitReply()}
                 />
 
@@ -1203,9 +1211,9 @@ const [legalModal, setLegalModal] = useState({
 
               {/* Rating */}
               {canRate && (
-                <div className="mt-4 pt-4 border-t border-[#1E293B]">
+                <div className="mt-4 pt-4 border-t border-theme-border">
                   {selectedTicket.rating && !ratingSuccess ? (
-                    <div className="flex items-center gap-2 text-sm text-[#94A3B8]">
+                    <div className="flex items-center gap-2 text-sm text-theme-muted">
                       <span>You rated this:</span>
 
                       <div className="flex items-center gap-0.5">
@@ -1224,7 +1232,7 @@ const [legalModal, setLegalModal] = useState({
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm text-white font-medium mb-2">
+                      <p className="text-sm text-theme-text font-medium mb-2">
                         Rate this support experience
                       </p>
 
@@ -1248,7 +1256,7 @@ const [legalModal, setLegalModal] = useState({
                         onChange={(e) => setRatingComment(e.target.value)}
                         placeholder="Add a comment (optional)"
                         rows={2}
-                        className="w-full bg-[#020618] border border-[#1E293B] rounded-lg px-3 py-2 text-white placeholder:text-[#64748B] outline-none resize-none mb-2 focus:border-[#009966]"
+                        className="w-full bg-theme-bg border border-theme-border rounded-lg px-3 py-2 text-theme-text placeholder:text-theme-muted outline-none resize-none mb-2 focus:border-[#009966]"
                       />
 
                       {ratingError && (

@@ -2,6 +2,8 @@ import { Search, Download, Plus, Trash2, Upload } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useDebounce } from "use-debounce"
 import toast from "react-hot-toast"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -138,7 +140,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
           <h1 className="lg:text-[34px] text-3xl font-playfair font-semibold">
             Product Catalog
           </h1>
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Manage your bulk inventory and pricing tiers.
           </p>
         </div>
@@ -151,11 +153,11 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
             ref={fileInputRef}
             onChange={handleImport}
           />
-          <button onClick={() => fileInputRef.current?.click()} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+          <button onClick={() => fileInputRef.current?.click()} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
             <Upload size={16} />
             Import CSV
           </button>
-          <button onClick={handleExport} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+          <button onClick={handleExport} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
             <Download size={16} />
             Export
           </button>
@@ -167,10 +169,10 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
         <div className="flex flex-col lg:flex-row gap-3 mb-6">
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 flex-1">
-            <Search size={18} className="text-[#64748B]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 flex-1">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search by name, SKU, or category..."
               className="w-full px-3 py-2 outline-none text-sm"
@@ -180,7 +182,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
           </div>
 
           <select
-            className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none"
+            className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 text-sm outline-none"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -188,7 +190,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
           </select>
 
           <select
-            className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 text-sm outline-none"
+            className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 text-sm outline-none"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -201,7 +203,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="border-b text-[#64748B] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
               <tr>
                 <th className="py-3">PRODUCT</th>
                 <th className="py-3">SKU / UNIT</th>
@@ -218,18 +220,18 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                 <tr key={p._id || i} className="border-b last:border-none">
                   <td className="py-5">
                     <div className="flex items-center gap-3">
-                      <img src={p.img || p.image || p.imageUrl || "https://picsum.photos/60?1"} className="w-12 h-12 rounded-lg object-cover" />
+                      <img src={getImageUrl(p.img || p.image || p.imageUrl)} className="w-12 h-12 rounded-lg object-cover" />
                       <div>
-                        <p className="font-medium text-[#111827]">{p.name || p.title}</p>
-                        <p className="text-sm text-[#64748B]">{p.category?.name || p.category || "General"}</p>
+                        <p className="font-medium text-theme-text">{p.name || p.title}</p>
+                        <p className="text-sm text-theme-muted">{p.category?.name || p.category || "General"}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-5">
                     <div>
-                      <p className="text-[#111827]">{p.unit || p.quantityUnit || "Unit"}</p>
-                      <p className="text-sm text-[#64748B]">{p.sku || p.barcode || p._id?.substring(0, 8)}</p>
+                      <p className="text-theme-text">{p.unit || p.quantityUnit || "Unit"}</p>
+                      <p className="text-sm text-theme-muted">{p.sku || p.barcode || p._id?.substring(0, 8)}</p>
                     </div>
                   </td>
 
@@ -241,10 +243,10 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                     <div className="space-y-1">
                       {p.tiers?.map((t: any, index: number) => (
                         <div key={index} className="flex gap-2 text-sm">
-                          <span className="text-[#64748B]">{t.label || `${t.minQuantity}+`}:</span>
+                          <span className="text-theme-muted">{t.label || `${t.minQuantity}+`}:</span>
                           <span className="text-green-600 font-medium">${typeof t.price === "number" ? t.price.toFixed(2) : t.price}</span>
                         </div>
-                      )) || <span className="text-[#64748B] text-sm">No tiers</span>}
+                      )) || <span className="text-theme-muted text-sm">No tiers</span>}
                     </div>
                   </td>
 
@@ -260,7 +262,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
                   <td className="py-5">
                     <div className="flex items-center gap-2">
-                      <button className="px-3 py-1 border border-[#E5E7EB] rounded-lg text-sm">
+                      <button className="px-3 py-1 border border-theme-border rounded-lg text-sm">
                         Edit
                       </button>
                       <button onClick={() => deleteProduct(p._id)} className="px-2 py-1 bg-red-50 text-red-600 rounded-lg">

@@ -82,7 +82,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
                             Stock Adjustment
                         </h3>
 
-                        <p className="text-[#64748B] mt-1">
+                        <p className="text-theme-muted mt-1">
                             Manually adjust inventory levels for a product.
                         </p>
 
@@ -90,7 +90,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
                     <button
                         onClick={onClose}
-                        className="text-[#64748B]"
+                        className="text-theme-muted"
                     >
                         ✕
                     </button>
@@ -99,7 +99,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
 
 
-                <div className="p-6 space-y-6 bg-white">
+                <div className="p-6 space-y-6 bg-theme-surface">
 
                     <div>
 
@@ -107,7 +107,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
                             Product
                         </label>
 
-                        <select value={form.productId} onChange={(e) => setForm({...form, productId: e.target.value})} className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none">
+                        <select value={form.productId} onChange={(e) => setForm({...form, productId: e.target.value})} className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none">
                             <option value="">Select product</option>
                             {Array.isArray(products) && products.map(p => (
                                 <option key={p._id} value={p._id}>{p.name || p.title}</option>
@@ -160,7 +160,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
                                 placeholder="0"
                                 value={form.quantity}
                                 onChange={(e) => setForm({...form, quantity: e.target.value})}
-                                className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
+                                className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none"
                             />
 
                         </div>
@@ -175,7 +175,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
                                 placeholder="e.g. A-12-05"
                                 value={form.binLocation}
                                 onChange={(e) => setForm({...form, binLocation: e.target.value})}
-                                className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 mt-1 outline-none"
+                                className="w-full border border-theme-border rounded-lg h-12 px-3 mt-1 outline-none"
                             />
 
                         </div>
@@ -195,7 +195,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
                             placeholder="Explain the reason for this adjustment..."
                             value={form.reason}
                             onChange={(e) => setForm({...form, reason: e.target.value})}
-                            className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
+                            className="w-full border border-theme-border rounded-lg px-3 py-3 mt-1 outline-none"
                         />
 
                     </div>
@@ -208,12 +208,12 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
                     <button
                         onClick={onClose}
-                        className="text-[#64748B]"
+                        className="text-theme-muted"
                     >
                         Cancel
                     </button>
 
-                    <button onClick={handleConfirm} className="bg-[#2563EB] text-white px-6 py-2 rounded-lg shadow">
+                    <button onClick={handleConfirm} className="bg-[#2563EB] text-theme-text px-6 py-2 rounded-lg shadow">
                         Confirm
                     </button>
 

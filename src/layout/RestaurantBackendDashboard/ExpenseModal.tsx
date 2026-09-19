@@ -5,7 +5,7 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-white max-w-[500px] w-[96%] rounded-lg lg:rounded-xl lg:p-6 p-3 relative">
+      <div onClick={(e) => e.stopPropagation()} className="bg-theme-surface max-w-[500px] w-[96%] rounded-lg lg:rounded-xl lg:p-6 p-3 relative">
 
         <button
           onClick={onClose}

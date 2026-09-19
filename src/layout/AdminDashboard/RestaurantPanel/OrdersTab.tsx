@@ -13,7 +13,7 @@ export default function OrdersTab() {
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="relative w-full max-w-md">
           <input 
             type="text"
@@ -23,7 +23,7 @@ export default function OrdersTab() {
           <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center w-full sm:w-auto">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center w-full sm:w-auto">
             <Filter size={16} />
             Filters
           </button>
@@ -31,7 +31,7 @@ export default function OrdersTab() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-100">

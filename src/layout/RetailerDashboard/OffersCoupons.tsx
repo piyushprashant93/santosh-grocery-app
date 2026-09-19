@@ -94,7 +94,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
             Offers & Coupons
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Create and manage discount codes for your customers.
           </p>
         </div>
@@ -107,19 +107,19 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[320px]">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[320px]">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search coupons..."
               className="w-full px-3 py-2 outline-none text-sm"
             />
           </div>
 
-          <button className="border border-[#E5E7EB] bg-white px-4 py-2 rounded-lg shadow-sm">
+          <button className="border border-theme-border bg-theme-surface px-4 py-2 rounded-lg shadow-sm">
             Active Only
           </button>
 
@@ -131,7 +131,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
 
@@ -182,13 +182,13 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                         {c.code}
                       </span>
 
-                      <Copy size={16} className="text-[#6A7282] cursor-pointer" />
+                      <Copy size={16} className="text-theme-muted cursor-pointer" />
 
                     </div>
 
                   </td>
 
-                  <td className="py-5 font-semibold text-[#111827]">
+                  <td className="py-5 font-semibold text-theme-text">
                     {c.discount || c.discountValue || c.value}
                   </td>
                   <td className="py-5 text-[#374151]">
@@ -197,7 +197,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                   <td className="py-5 text-[#374151]">
                     {c.valid || (c.validUntil ? new Date(c.validUntil).toLocaleDateString() : "") || (c.expiryDate ? new Date(c.expiryDate).toLocaleDateString() : "")}
                   </td>
-                  <td className="py-5 text-[#111827]">
+                  <td className="py-5 text-theme-text">
                     {c.usage || c.usageCount || 0}
                   </td>
 
@@ -217,7 +217,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
                       <MoreHorizontal size={18} />
                     </button>
                     {openIndex === (c._id || i) && (
-                      <div className="absolute bottom-12 right-10 mt-2 w-[180px] bg-white rounded-xl shadow-lg border border-[#E5E7EB] overflow-hidden z-50">
+                      <div className="absolute bottom-12 right-10 mt-2 w-[180px] bg-theme-surface rounded-xl shadow-lg border border-theme-border overflow-hidden z-50">
 
                         <button
                           onClick={() => setOpenIndex(null)}

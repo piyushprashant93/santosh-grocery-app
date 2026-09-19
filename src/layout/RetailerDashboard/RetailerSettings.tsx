@@ -21,6 +21,8 @@ const authHeadersForm = () => {
 import KYCDocuments from "./KYCDocuments"
 import NotificationSettings from "./NotificationSettings"
 import SecuritySettings from "./SecuritySettings"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 export default function RetailerSettings() {
   const [activeTab, setActiveTab] = useState("profile")
@@ -142,7 +144,7 @@ export default function RetailerSettings() {
             Settings
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Manage your profile, business details, and preferences.
           </p>
         </div>
@@ -215,7 +217,7 @@ export default function RetailerSettings() {
 
           <div className="space-y-6">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm text-center">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm text-center">
 
               <h3 className="font-playfair text-xl mb-4">
                 Store Logo
@@ -229,12 +231,12 @@ export default function RetailerSettings() {
                   }
                 }} />
                 <img
-                  src={settings.logoUrl}
+                  src={getImageUrl(settings.logoUrl)}
                   className="w-36 h-36 rounded-full mx-auto object-cover"
                 />
               </label>
 
-              <p className="text-[#6A7282] text-sm mt-4">
+              <p className="text-theme-muted text-sm mt-4">
                 Recommended size: 500×500px. <br/> Formats: JPG, PNG.
               </p>
 
@@ -242,7 +244,7 @@ export default function RetailerSettings() {
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm text-center">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm text-center">
 
               <h3 className="font-playfair text-xl mb-4">
                 Store Banner
@@ -250,15 +252,15 @@ export default function RetailerSettings() {
 
               {settings.bannerUrl ? (
                 <div className="h-32 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src={settings.bannerUrl} className="w-full h-full object-cover" />
+                  <img src={getImageUrl(settings.bannerUrl)} className="w-full h-full object-cover" />
                 </div>
               ) : (
-                <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center text-[#6A7282] text-sm">
+                <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center text-theme-muted text-sm">
                   No banner uploaded
                 </div>
               )}
 
-              <label className="mt-4 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white inline-block cursor-pointer">
+              <label className="mt-4 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface inline-block cursor-pointer">
                 Upload Banner
                 <input type="file" className="hidden" accept="image/*" onChange={(e) => {
                   if (e.target.files && e.target.files[0]) {
@@ -274,13 +276,13 @@ export default function RetailerSettings() {
 
 
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
             <h3 className="font-playfair text-xl">
               Business Information
             </h3>
 
-            <p className="text-[#6A7282] text-sm mb-6">
+            <p className="text-theme-muted text-sm mb-6">
               These details will be visible to customers.
             </p>
 
@@ -292,7 +294,7 @@ export default function RetailerSettings() {
                 <label className="text-sm text-[#374151]">Store Name</label>
                 <input
                   name="storeName"
-                  className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                  className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                   value={settings.storeName}
                   onChange={handleChange}
                 />
@@ -302,7 +304,7 @@ export default function RetailerSettings() {
                 <label className="text-sm text-[#374151]">Contact Person</label>
                 <input
                   name="contactPerson"
-                  className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                  className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                   value={settings.contactPerson}
                   onChange={handleChange}
                 />
@@ -312,7 +314,7 @@ export default function RetailerSettings() {
                 <label className="text-sm text-[#374151]">Email Address</label>
                 <input
                   name="email"
-                  className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                  className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                   value={settings.email}
                   onChange={handleChange}
                 />
@@ -322,7 +324,7 @@ export default function RetailerSettings() {
                 <label className="text-sm text-[#374151]">Phone Number</label>
                 <input
                   name="phone"
-                  className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                  className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                   value={settings.phone}
                   onChange={handleChange}
                 />
@@ -340,7 +342,7 @@ export default function RetailerSettings() {
 
               <input
                 name="address"
-                className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                 value={settings.address}
                 onChange={handleChange}
               />
@@ -358,7 +360,7 @@ export default function RetailerSettings() {
               <textarea
                 name="description"
                 rows={4}
-                className="w-full border border-[#E5E7EB] rounded-lg outline-none px-3 py-2 mt-1"
+                className="w-full border border-theme-border rounded-lg outline-none px-3 py-2 mt-1"
                 value={settings.description}
                 onChange={handleChange}
               />

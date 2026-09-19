@@ -80,15 +80,15 @@ export default function Notifications() {
           <h1 className="lg:text-[34px] text-3xl font-playfair font-semibold">
             Notifications
           </h1>
-          <p className="text-[#6A7282] mt-2">
+          <p className="text-theme-muted mt-2">
             Stay updated with important alerts and activities.
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={markAllAsRead} className="border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm hover:bg-gray-50 transition">
+          <button onClick={markAllAsRead} className="border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm hover:bg-gray-50 transition">
             Mark all as read
           </button>
-          <button onClick={clearAll} className="flex items-center gap-2 text-[#64748B] hover:text-red-500 transition">
+          <button onClick={clearAll} className="flex items-center gap-2 text-theme-muted hover:text-red-500 transition">
             <Trash2 size={18} />
             Clear All
           </button>
@@ -96,7 +96,7 @@ export default function Notifications() {
       </div>
 
       <div className="grid lg:grid-cols-[260px_1fr] gap-5 items-start">
-        <div className="border border-[#E5E7EB] bg-white rounded-xl p-4 shadow-sm space-y-2">
+        <div className="border border-theme-border bg-theme-surface rounded-xl p-4 shadow-sm space-y-2">
           {filters.map((f, i) => (
             <div
               key={i}
@@ -117,7 +117,7 @@ export default function Notifications() {
 
         <div className="space-y-5">
           {notifications.length === 0 && (
-              <p className="text-center text-[#94A3B8] py-8">No notifications to show.</p>
+              <p className="text-center text-theme-muted py-8">No notifications to show.</p>
           )}
           {notifications.map((n, i) => {
             const { icon: Icon, color, bg } = getIcon(n.type);
@@ -135,7 +135,7 @@ export default function Notifications() {
                     <h3 className="font-playfair text-lg font-medium">
                       {n.title}
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-[#64748B]">
+                    <div className="flex items-center gap-2 text-sm text-theme-muted">
                       <Clock size={14} />
                       {n.createdAt ? new Date(n.createdAt).toLocaleDateString() : "Just now"}
                       {unread && (
@@ -143,7 +143,7 @@ export default function Notifications() {
                       )}
                     </div>
                   </div>
-                  <p className="text-[#6A7282] mt-1">
+                  <p className="text-theme-muted mt-1">
                     {n.message || n.desc}
                   </p>
                 </div>

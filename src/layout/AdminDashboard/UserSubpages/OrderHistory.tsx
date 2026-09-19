@@ -65,7 +65,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
@@ -95,7 +95,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
       </div>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-[400px] relative">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-[400px] relative">
         
         {/* Search & Filter */}
         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -109,7 +109,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
               className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-orange-500 transition"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition w-full sm:w-auto justify-center">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition w-full sm:w-auto justify-center">
             <Filter size={16} />
             Filter
           </button>
@@ -126,7 +126,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
         {error && !loading && (
           <div className="absolute inset-0 top-[80px] z-10 flex flex-col items-center justify-center p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
           </div>
         )}
 

@@ -80,7 +80,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
             Create New Offer
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Set up a new discount for your products.
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
 
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="grid md:grid-cols-2 gap-6">
 
@@ -107,11 +107,11 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
               value={form.code}
               onChange={handleChange}
               placeholder="E.G. SUMMERSALE"
-              className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+              className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
             />
             {fieldErrors.code && <p className="text-red-500 text-xs mt-1">{fieldErrors.code}</p>}
 
-            <p className="text-[#6A7282] text-sm mt-2">
+            <p className="text-theme-muted text-sm mt-2">
               Customers will enter this code at checkout.
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
               name="type"
               value={form.type}
               onChange={handleChange}
-              className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+              className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
             >
               <option value="percentage">Percentage Off</option>
               <option value="fixed">Fixed Amount</option>
@@ -149,10 +149,10 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
                 value={form.value}
                 onChange={handleChange}
                 placeholder="20"
-                className="w-full border border-[#E5E7EB] outline-none rounded-lg px-4 py-3 pr-10"
+                className="w-full border border-theme-border outline-none rounded-lg px-4 py-3 pr-10"
               />
 
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted">
                 %
               </span>
             </div>
@@ -171,7 +171,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
               value={form.minPurchase}
               onChange={handleChange}
               placeholder="0.00"
-              className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+              className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
             />
             {fieldErrors.minPurchase && <p className="text-red-500 text-xs mt-1">{fieldErrors.minPurchase}</p>}
           </div>
@@ -188,7 +188,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
               name="validFrom"
               value={form.validFrom}
               onChange={handleChange}
-              className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+              className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
             />
             {fieldErrors.validFrom && <p className="text-red-500 text-xs mt-1">{fieldErrors.validFrom}</p>}
           </div>
@@ -205,7 +205,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
               name="validUntil"
               value={form.validUntil}
               onChange={handleChange}
-              className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+              className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
             />
             {fieldErrors.validUntil && <p className="text-red-500 text-xs mt-1">{fieldErrors.validUntil}</p>}
           </div>
@@ -224,7 +224,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
             value={form.usageLimit}
             onChange={handleChange}
             placeholder="Total number of times this coupon can be used"
-            className="w-full mt-2 border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+            className="w-full mt-2 border border-theme-border outline-none rounded-lg px-4 py-3"
           />
           {fieldErrors.usageLimit && <p className="text-red-500 text-xs mt-1">{fieldErrors.usageLimit}</p>}
         </div>
@@ -233,7 +233,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
 
         <div className="border-t mt-8 pt-6 flex justify-end gap-3">
 
-          <button onClick={() => setActiveTab("offers")} className="px-5 py-2 border border-[#E5E7EB] rounded-lg bg-white">
+          <button onClick={() => setActiveTab("offers")} className="px-5 py-2 border border-theme-border rounded-lg bg-theme-surface">
             Cancel
           </button>
 

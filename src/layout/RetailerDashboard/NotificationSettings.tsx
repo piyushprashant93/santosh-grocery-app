@@ -27,26 +27,26 @@ export default function NotificationSettings({ prefs, onChange }: { prefs?: any,
         active ? "bg-[#F54900] justify-end" : "bg-[#CBD5E1] justify-start"
       }`}
     >
-      <span className="w-5 h-5 bg-white rounded-full shadow" />
+      <span className="w-5 h-5 bg-theme-surface rounded-full shadow" />
     </button>
   )
 
   return (
-    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
       <div className="mb-8">
         <h3 className="font-playfair text-2xl">
           Notification Preferences
         </h3>
 
-        <p className="text-[#6A7282] mt-1">
+        <p className="text-theme-muted mt-1">
           Choose how you want to be notified.
         </p>
       </div>
 
 
 
-      <p className="text-[#64748B] tracking-widest text-sm mb-4">
+      <p className="text-theme-muted tracking-widest text-sm mb-4">
         ORDER ALERTS
       </p>
 
@@ -57,11 +57,11 @@ export default function NotificationSettings({ prefs, onChange }: { prefs?: any,
         <div className="flex items-center justify-between pb-6 border-b">
 
           <div>
-            <p className="text-lg font-medium text-[#111827]">
+            <p className="text-lg font-medium text-theme-text">
               New Order Received
             </p>
 
-            <p className="text-[#6A7282] text-sm">
+            <p className="text-theme-muted text-sm">
               Get notified when a customer places an order.
             </p>
           </div>
@@ -78,11 +78,11 @@ export default function NotificationSettings({ prefs, onChange }: { prefs?: any,
         <div className="flex items-center justify-between pb-6 border-b">
 
           <div>
-            <p className="text-lg font-medium text-[#111827]">
+            <p className="text-lg font-medium text-theme-text">
               Order Cancelled
             </p>
 
-            <p className="text-[#6A7282] text-sm">
+            <p className="text-theme-muted text-sm">
               Get notified when a customer cancels an order.
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function NotificationSettings({ prefs, onChange }: { prefs?: any,
 
 
 
-      <p className="text-[#64748B] tracking-widest text-sm mt-10 mb-4">
+      <p className="text-theme-muted tracking-widest text-sm mt-10 mb-4">
         FINANCIAL ALERTS
       </p>
 
@@ -107,11 +107,11 @@ export default function NotificationSettings({ prefs, onChange }: { prefs?: any,
       <div className="flex items-center justify-between">
 
         <div>
-          <p className="text-lg font-medium text-[#111827]">
+          <p className="text-lg font-medium text-theme-text">
             Payout Processed
           </p>
 
-          <p className="text-[#6A7282] text-sm">
+          <p className="text-theme-muted text-sm">
             Get notified when funds are sent to your account.
           </p>
         </div>

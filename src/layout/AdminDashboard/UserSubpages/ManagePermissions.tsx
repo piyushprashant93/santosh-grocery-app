@@ -75,7 +75,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+          className="p-2 bg-theme-surface border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
         >
           <ArrowLeft size={20} />
         </button>
@@ -91,7 +91,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
         <div className="lg:col-span-2 flex flex-col gap-6">
           
           {/* Role Assignment Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Role Assignment</h2>
             <p className="text-sm text-gray-500 mb-6">Determine what this user can access within the platform.</p>
             
@@ -100,7 +100,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
               <select 
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-lg px-4 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+                className="w-full bg-theme-surface border border-gray-200 text-gray-900 text-sm rounded-lg px-4 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
               >
                 <option value="customer">Customer (Standard)</option>
                 <option value="restaurant">Restaurant Manager</option>
@@ -114,7 +114,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
           </div>
 
           {/* Feature Access Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Feature Access</h2>
             <p className="text-sm text-gray-500 mb-6">Granular permission controls.</p>
             
@@ -195,7 +195,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
             <button 
               onClick={handleDeleteUser}
               disabled={actionLoading === 'delete'}
-              className="w-full py-2.5 bg-white text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-2.5 bg-theme-surface text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {actionLoading === 'delete' ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
               Delete Account

@@ -55,18 +55,18 @@ export default function Notifications() {
           <h1 className="lg:text-[34px] text-3xl font-playfair font-semibold">
             Notifications
           </h1>
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Stay updated with important alerts.
           </p>
         </div>
-        <button onClick={markAllAsRead} className="px-4 py-2 border border-[#E5E7EB] rounded-lg shadow-sm bg-white">
+        <button onClick={markAllAsRead} className="px-4 py-2 border border-theme-border rounded-lg shadow-sm bg-theme-surface">
           Mark all as read
         </button>
       </div>
 
       <div className="space-y-4">
         {notifications.length === 0 && (
-            <p className="text-center text-[#94A3B8] py-8">No notifications to show.</p>
+            <p className="text-center text-theme-muted py-8">No notifications to show.</p>
         )}
         {notifications.map((item, i) => {
           const { icon: Icon, color, bg } = getIcon(item.type);
@@ -88,7 +88,7 @@ export default function Notifications() {
                     {item.title}
                   </h3>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-[#64748B]">
+                    <span className="text-sm text-theme-muted">
                       {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "Just now"}
                     </span>
                     {unread && (
@@ -96,7 +96,7 @@ export default function Notifications() {
                     )}
                   </div>
                 </div>
-                <p className="text-[#6A7282] mt-1">
+                <p className="text-theme-muted mt-1">
                   {item.message || item.desc}
                 </p>
               </div>
@@ -105,7 +105,7 @@ export default function Notifications() {
         })}
       </div>
 
-      <p className="text-center text-[#94A3B8] mt-8">
+      <p className="text-center text-theme-muted mt-8">
         Showing recent notifications from the last 30 days.
       </p>
     </div>

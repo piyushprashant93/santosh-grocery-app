@@ -14,6 +14,8 @@ import {
 import ReportChartCard from "./ReportChartCard";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { getImageUrl } from "../../utils/dataHelper";
+
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
 
 
@@ -139,11 +141,11 @@ export default function RestaurantBackendDashboard({
           <h1 className="text-3xl lg:text-[34px] font-semibold font-playfair">
             Dashboard
           </h1>
-          <p className="text-[#64748B]">
+          <p className="text-theme-muted">
             Welcome back! Here's what's happening in your restaurant today.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+        <div className="flex items-center gap-2 text-sm text-theme-muted">
           <Calendar size={16} /> Last updated: Feb 20, 2026, 10:30 AM
         </div>
       </div>
@@ -156,13 +158,13 @@ export default function RestaurantBackendDashboard({
             return (
               <div
                 key={i}
-                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-[#64748B] text-sm">{s.title}</p>
+                    <p className="text-theme-muted text-sm">{s.title}</p>
 
-                    <h3 className="text-[28px] font-playfair mt-2 text-[#0F172A]">
+                    <h3 className="text-[28px] font-playfair mt-2 text-theme-text">
                       {s.value}
                     </h3>
                   </div>
@@ -181,10 +183,10 @@ export default function RestaurantBackendDashboard({
                     {s.change}
                   </span>
 
-                  <span className="text-[#94A3B8] ml-2">vs last month</span>
+                  <span className="text-theme-muted ml-2">vs last month</span>
                 </div>
 
-                <p className="text-[#94A3B8] text-sm mt-3">
+                <p className="text-theme-muted text-sm mt-3">
                   Updated after monthly report generation
                 </p>
               </div>
@@ -193,7 +195,7 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-3">
-          <h2 className="text-2xl font-semibold text-[#0F172A]">
+          <h2 className="text-2xl font-semibold text-theme-text">
             Monthly Restaurant Report
           </h2>
 
@@ -202,7 +204,7 @@ export default function RestaurantBackendDashboard({
               <select
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
-                className="appearance-none border border-[#E5E7EB] bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
+                className="appearance-none border border-theme-border bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
               >
                 {months.map((m) => (
                   <option key={m}>{m}</option>
@@ -211,7 +213,7 @@ export default function RestaurantBackendDashboard({
 
               <ChevronDown
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
               />
             </div>
 
@@ -219,7 +221,7 @@ export default function RestaurantBackendDashboard({
               <select
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                className="appearance-none border border-[#E5E7EB] bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
+                className="appearance-none border border-theme-border bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
               >
                 {branches.map((b) => (
                   <option key={b}>{b}</option>
@@ -228,11 +230,11 @@ export default function RestaurantBackendDashboard({
 
               <ChevronDown
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
               />
             </div>
 
-            <button className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#059669] text-theme-text px-5 py-2.5 rounded-lg shadow">
               <Download size={16} />
               Download Report (PDF)
             </button>
@@ -274,12 +276,12 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-3">
-          <h2 className="text-2xl font-semibold text-[#0F172A]">
+          <h2 className="text-2xl font-semibold text-theme-text">
             Other Expenses Breakdown
           </h2>
 
           <div className="flex flex-wrap items-center gap-3">
-            <button className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#059669] text-theme-text px-5 py-2.5 rounded-lg shadow">
               Overview
             </button>
 
@@ -290,7 +292,7 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5 mb-5">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
             <h3 className="text-lg font-medium mb-4">Expense Distribution</h3>
 
             <div className="h-[260px] flex items-center justify-center">
@@ -313,11 +315,11 @@ export default function RestaurantBackendDashboard({
             </div>
           </div>
 
-          <div className="col-span-2 border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
+          <div className="col-span-2 border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
             <div className="flex justify-between mb-4">
               <h3 className="text-lg font-medium">Expense Categories</h3>
 
-              <p className="text-[#64748B]">Total: ${total.toLocaleString()}</p>
+              <p className="text-theme-muted">Total: ${total.toLocaleString()}</p>
             </div>
 
             <div className="space-y-5">
@@ -330,11 +332,11 @@ export default function RestaurantBackendDashboard({
                         style={{ backgroundColor: COLORS[i] }}
                       />
 
-                      <p className="text-[#0F172A] font-medium">{item.name}</p>
+                      <p className="text-theme-text font-medium">{item.name}</p>
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <p className="text-[#64748B] text-sm">{item.percent}%</p>
+                      <p className="text-theme-muted text-sm">{item.percent}%</p>
 
                       <p className="font-semibold">
                         ${item.value.toLocaleString()}
@@ -358,7 +360,7 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="grid lg:grid-cols-2 gap-5">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-playfair">Recent Orders</h3>
 
@@ -372,7 +374,7 @@ export default function RestaurantBackendDashboard({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="border-b text-xs text-[#64748B] tracking-wide">
+                <thead className="border-b text-xs text-theme-muted tracking-wide">
                   <tr>
                     <th className="py-3">ORDER ID</th>
                     <th className="py-3">CUSTOMER</th>
@@ -390,7 +392,7 @@ export default function RestaurantBackendDashboard({
 
                     return (
                       <tr key={i} className="border-b last:border-none">
-                        <td className="py-5 font-medium text-[#0F172A]">
+                        <td className="py-5 font-medium text-theme-text">
                           <div>
                             <p>{prefix}-</p>
                             <p>{number}</p>
@@ -399,10 +401,10 @@ export default function RestaurantBackendDashboard({
 
                         <td className="py-5">
                           <p className="font-medium">{o.customer}</p>
-                          <p className="text-sm text-[#64748B]">{o.time}</p>
+                          <p className="text-sm text-theme-muted">{o.time}</p>
                         </td>
 
-                        <td className="py-5 text-[#64748B] max-w-[200px]">
+                        <td className="py-5 text-theme-muted max-w-[200px]">
                           {o.items}
                         </td>
 
@@ -423,7 +425,7 @@ export default function RestaurantBackendDashboard({
             </div>
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-playfair">Popular Items</h3>
 
@@ -440,27 +442,27 @@ export default function RestaurantBackendDashboard({
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      src={p.image}
+                      src={getImageUrl(p.image)}
                       className="w-14 h-14 rounded-xl object-cover"
                     />
 
                     <div>
-                      <p className="font-medium text-[#0F172A]">{p.name}</p>
+                      <p className="font-medium text-theme-text">{p.name}</p>
 
-                      <p className="text-sm text-[#64748B]">
+                      <p className="text-sm text-theme-muted">
                         {p.orders} orders today
                       </p>
                     </div>
                   </div>
 
-                  <p className="font-semibold text-[#0F172A]">{p.price}</p>
+                  <p className="font-semibold text-theme-text">{p.price}</p>
                 </div>
               ))}
             </div>
 
             <button
               onClick={() => setActiveTab("reports")}
-              className="mt-6 w-full border border-[#E5E7EB] rounded-lg py-3 font-medium text-[#334155]"
+              className="mt-6 w-full border border-theme-border rounded-lg py-3 font-medium text-[#334155]"
             >
               View Full Report
             </button>

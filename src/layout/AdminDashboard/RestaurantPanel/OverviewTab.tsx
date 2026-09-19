@@ -21,7 +21,7 @@ export default function OverviewTab() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in duration-300">
       
       {/* New Orders */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <ShoppingBag size={20} className="text-gray-900" />
@@ -49,7 +49,7 @@ export default function OverviewTab() {
       </div>
 
       {/* Top Selling Items */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <TrendingUp size={20} className="text-gray-900" />
@@ -65,7 +65,7 @@ export default function OverviewTab() {
           {topItems.map((item, i) => (
             <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center font-bold text-gray-400">
+                <div className="w-10 h-10 rounded-lg bg-theme-surface border border-gray-200 flex items-center justify-center font-bold text-gray-400">
                   #{i + 1}
                 </div>
                 <div>

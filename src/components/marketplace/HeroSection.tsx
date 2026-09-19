@@ -14,7 +14,7 @@ export default function HeroSection({
   };
 
   return (
-    <section className="relative w-full bg-cover bg-center bg-[#020618]">
+    <section className="relative w-full bg-cover bg-center bg-theme-bg">
       <img
         src={HeroBg}
         alt=""
@@ -22,7 +22,7 @@ export default function HeroSection({
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,#0F172B_0%,rgba(15,23,43,0.6)_50%,rgba(0,0,0,0)_100%)]" />
 
-      <div className="relative max-w-[1265px] mx-auto px-3 lg:px-6 py-[128px] text-white text-start overflow-hidden">
+      <div className="relative max-w-[1265px] mx-auto px-3 lg:px-6 py-[128px] text-theme-text text-start overflow-hidden">
         <span className="w-fit mb-8 px-4 py-1.5 rounded-full bg-[#00C9501A] flex gap-2 items-center border uppercase border-[#00C95033] text-[#FF6900] text-xs font-bold">
           <Leaf size={16} />
           100% Organic Certified
@@ -56,7 +56,7 @@ export default function HeroSection({
   }}
   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
   placeholder="Search for organic products..."
-  className="bg-transparent outline-none text-white placeholder-[#90A1B9] font-medium w-full"
+  className="bg-transparent outline-none text-theme-text placeholder-[#90A1B9] font-medium w-full"
 />
           </div>
 

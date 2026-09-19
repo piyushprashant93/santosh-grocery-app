@@ -130,7 +130,7 @@ export default function Notifications() {
     return (
       <div className="flex flex-col h-full items-center justify-center min-h-[400px] text-center">
         <p className="text-red-500 mb-4">{error}</p>
-        <button onClick={fetchNotifications} className="px-5 py-2.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition">Retry</button>
+        <button onClick={fetchNotifications} className="px-5 py-2.5 bg-orange-500 text-theme-text rounded-lg font-medium hover:bg-orange-600 transition">Retry</button>
       </div>
     );
   }
@@ -147,14 +147,14 @@ export default function Notifications() {
         <div className="flex items-center gap-3">
           <button 
             onClick={markAllRead}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 text-sm"
           >
             <Check size={16} />
             Mark all read
           </button>
           <button 
             onClick={clearAll}
-            className="px-4 py-2 bg-white border border-red-200 text-red-600 font-medium rounded-lg shadow-sm hover:bg-red-50 transition flex items-center gap-2 text-sm"
+            className="px-4 py-2 bg-theme-surface border border-red-200 text-red-600 font-medium rounded-lg shadow-sm hover:bg-red-50 transition flex items-center gap-2 text-sm"
           >
             <Trash2 size={16} />
             Clear All
@@ -215,7 +215,7 @@ export default function Notifications() {
         {/* Right Feed */}
         <div className="flex-1 flex flex-col gap-4 w-full">
           {filteredNotifications.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
+            <div className="bg-theme-surface rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
               <Check className="mx-auto text-gray-300 mb-4" size={48} />
               <h3 className="text-lg font-bold text-gray-900 mb-1">All caught up!</h3>
               <p className="text-gray-500">You don't have any notifications in this category.</p>

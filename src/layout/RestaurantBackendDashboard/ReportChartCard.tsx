@@ -19,7 +19,7 @@ export default function ReportChartCard({
 
   return (
 
-    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
+    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
 
       <div className="flex justify-between items-center mb-4">
 

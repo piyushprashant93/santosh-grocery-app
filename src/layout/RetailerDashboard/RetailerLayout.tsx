@@ -52,7 +52,7 @@ export default function RetailerLayout() {
   },[])
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] relative">
+    <div className="flex h-screen bg-theme-bg relative">
       {sidebarOpen && (
         <div
           onClick={()=>setSidebarOpen(false)}
