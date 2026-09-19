@@ -19,7 +19,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
-  const { formatPrice } = useCurrency();
+
 
   const token = localStorage.getItem("authToken");
   return {
@@ -40,6 +40,7 @@ const statusTransStyles: any = {
 }
 
 export default function FinanceWallet() {
+  const { formatPrice } = useCurrency();
   const tabs = ["Transactions", "Invoices", "Finance Settings"];
   const [activeFinance, setActiveFinance] = useState(1);
   const [openInvoice, setOpenInvoice] = useState(false);

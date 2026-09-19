@@ -16,7 +16,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
-  const { formatPrice } = useCurrency();
+
 
   const token = localStorage.getItem("authToken");
   return {
@@ -27,11 +27,10 @@ const authHeaders = () => {
 
 
 
-export default function ShipmentHistory({
-  setActiveTab,
 }: {
   setActiveTab: (tab: string) => void;
 }) {
+  const { formatPrice } = useCurrency();
   const [openRange, setOpenRange] = useState(false);
   const [data, setData] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");

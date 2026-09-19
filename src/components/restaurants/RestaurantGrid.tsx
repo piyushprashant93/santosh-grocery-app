@@ -85,14 +85,11 @@ interface Restaurant {
   badge: string;
 }
 
-function formatRestaurant(r: RestaurantApi): Restaurant {
+const mapRestaurant = (r: APIRestaurant, formatPrice: (price: number) => string): Restaurant => {
   const cuisineList = r.cuisine || [];
   const ratingAvg = r.rating?.average;
   const reviewCount = r.reviewCount ?? r.rating?.count ?? 0;
-  const getBadge = (name: string) => {
-  const { formatPrice } = useCurrency();
-
-  switch (name) {
+  const getBadge = (name: string) => {  switch (name) {
     case "Stella's Rooftop":
       return "Premium";
     case "Nobu Downtown":
@@ -132,7 +129,7 @@ function formatRestaurant(r: RestaurantApi): Restaurant {
     isOpen: r.isOpen ?? false,
     badge: getBadge(r.name),
   };
-}
+};
 
 interface RestaurantGridProps {
   searchQuery?: string;
@@ -143,6 +140,7 @@ export default function RestaurantGrid({
   searchQuery = "",
   onClearSearch,
 }: RestaurantGridProps) {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const { setRole } = useRole();
   const [role] = useState(localStorage.getItem("role"));
@@ -183,15 +181,21 @@ export default function RestaurantGrid({
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
         });
-        const json = await res.json();
+        const data = await res.json();
 
-        if (!json.success) throw new Error(json.message || "Request failed");
+        if (!data.success) throw new Error(data.message || "Request failed");
 
-        const list = searchQuery
-          ? json.data.restaurants || []
-          : json.data.data || [];
+        if (data && data.success && Array.isArray(data.data)) {
+          setRestaurants(data.data.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+        } else if (Array.isArray(data)) {
+          setRestaurants(data.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+        } else {
+          const list = searchQuery
+            ? data.data.restaurants || []
+            : data.data.data || [];
 
-        setRestaurants(list.map(formatRestaurant));
+          setRestaurants(list.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+        }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== "AbortError") {
           setError("Couldn't load restaurants. Please try again.");

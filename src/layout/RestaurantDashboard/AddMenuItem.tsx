@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Upload, Clock, Check, Calculator, Plus, ChartPie } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCurrency } from "../../context/CurrencyContext";
@@ -11,6 +11,8 @@ export default function AddMenuItem({
   activeTab: string;
   setActiveTab: (tab: string) => void;
 }) {
+  const { formatPrice } = useCurrency();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState("details");
   const [chefRate, setChefRate] = useState(16);
   const [prepTime, setPrepTime] = useState(0);
@@ -55,7 +57,6 @@ export default function AddMenuItem({
   const [ingredients, setIngredients] = useState<any[]>([]);
 
   const addIngredient = () => {
-  const { formatPrice } = useCurrency();
 
     if (!form.name || !form.price || !form.bulkQty || !form.usedQty) {
       toast.error("Please fill all ingredient fields");

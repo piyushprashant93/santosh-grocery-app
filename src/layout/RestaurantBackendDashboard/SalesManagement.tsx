@@ -43,11 +43,11 @@ import {
   ResponsiveContainer,
   CartesianGrid,
   Legend
-} from "recharts"
-
-
+} from "recharts";
 
 export default function SalesManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
+  const { formatPrice } = useCurrency();
+  const [salesData, setSalesData] = useState<any>(null);
   const [salesEntries, setSalesEntries] = useState<any[]>([]);
   const [missingDates, setMissingDates] = useState<string[]>([]);
   const [dateStr, setDateStr] = useState<string>(new Date().toISOString().split('T')[0]);

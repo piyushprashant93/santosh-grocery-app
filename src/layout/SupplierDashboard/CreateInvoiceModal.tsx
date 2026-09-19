@@ -6,7 +6,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
-  const { formatPrice } = useCurrency();
+
 
   const token = localStorage.getItem("authToken");
   return {
@@ -16,7 +16,7 @@ const authHeaders = () => {
 };
 
 export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: { open: boolean, onClose: () => void, onInvoiceCreated?: () => void }) {
-
+    const { formatPrice } = useCurrency();
     const [items, setItems] = useState([{ desc: "", qty: 1, price: "" }])
     const [clients, setClients] = useState<any[]>([]);
     const [form, setForm] = useState({
