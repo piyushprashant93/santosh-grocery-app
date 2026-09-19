@@ -85,7 +85,7 @@ interface Restaurant {
   badge: string;
 }
 
-const mapRestaurant = (r: APIRestaurant, formatPrice: (price: number) => string): Restaurant => {
+const mapRestaurant = (r: RestaurantApi, formatPrice: (price: number) => string): Restaurant => {
   const cuisineList = r.cuisine || [];
   const ratingAvg = r.rating?.average;
   const reviewCount = r.reviewCount ?? r.rating?.count ?? 0;
@@ -186,15 +186,15 @@ export default function RestaurantGrid({
         if (!data.success) throw new Error(data.message || "Request failed");
 
         if (data && data.success && Array.isArray(data.data)) {
-          setRestaurants(data.data.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+          setRestaurants(data.data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         } else if (Array.isArray(data)) {
-          setRestaurants(data.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+          setRestaurants(data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         } else {
           const list = searchQuery
             ? data.data.restaurants || []
             : data.data.data || [];
 
-          setRestaurants(list.map((r: APIRestaurant) => mapRestaurant(r, formatPrice)));
+          setRestaurants(list.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== "AbortError") {
