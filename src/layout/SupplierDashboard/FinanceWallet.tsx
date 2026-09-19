@@ -13,10 +13,14 @@ import toast from "react-hot-toast";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import CreateInvoiceModal from "./CreateInvoiceModal";
 import RequestPayoutModal from "./RequestPayoutModal";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -137,7 +141,7 @@ export default function FinanceWallet() {
 
             <p className="text-[#62748E]">{c.title || "Metric"}</p>
 
-            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `$${c.value.toFixed(2)}` : c.value || "-"}</h3>
+            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `${formatPrice(c.value)}` : c.value || "-"}</h3>
 
             <p className="text-theme-muted mt-2 text-sm">{c.desc || ""}</p>
           </div>
@@ -463,7 +467,7 @@ export default function FinanceWallet() {
                       </td>
 
                       <td className="py-4 text-end font-medium text-theme-text">
-                        {typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : (inv.total ? `$${inv.total.toFixed(2)}` : (inv.amount || "-"))}
+                        {typeof inv.amount === "number" ? `${formatPrice(inv.amount)}` : (inv.total ? `${formatPrice(inv.total)}` : (inv.amount || "-"))}
                       </td>
 
                       <td className="py-4 text-end">

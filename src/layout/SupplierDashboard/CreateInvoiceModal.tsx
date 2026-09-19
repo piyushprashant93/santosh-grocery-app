@@ -1,9 +1,13 @@
 import { X, Plus, Trash2 } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -240,17 +244,17 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
 
                             <div className="flex justify-between text-theme-muted">
                                 <span>Subtotal</span>
-                                <span>${subtotal.toFixed(2)}</span>
+                                <span>{formatPrice(subtotal)}</span>
                             </div>
 
                             <div className="flex justify-between text-theme-muted">
                                 <span>Tax (0%)</span>
-                                <span>${tax.toFixed(2)}</span>
+                                <span>{formatPrice(tax)}</span>
                             </div>
 
                             <div className="flex justify-between text-theme-text font-semibold text-lg pt-2">
                                 <span>Total</span>
-                                <span>${total.toFixed(2)}</span>
+                                <span>{formatPrice(total)}</span>
                             </div>
 
                         </div>

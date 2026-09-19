@@ -2,10 +2,14 @@ import { useState, useEffect } from "react"
 import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import api from "../../lib/api"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
 export default function SalesAndAnalytics() {
+  const { formatPrice } = useCurrency();
+
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [analyticsData, setAnalyticsData] = useState<any>(null)
@@ -251,7 +255,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">${metrics.cac.toFixed(2)}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.cac)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+4% from last month</p>
           </div>
         </div>
@@ -265,7 +269,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">${metrics.aov.toFixed(2)}</h3>
+            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.aov)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+2% from last month</p>
           </div>
         </div>

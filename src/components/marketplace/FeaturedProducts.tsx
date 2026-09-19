@@ -12,6 +12,8 @@ import CartModal from "../../layout/CustomerDashboard/CartModal";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const PAGE_LIMIT = 12;
@@ -56,6 +58,8 @@ interface FeaturedProductsProps {
 export default function FeaturedProducts({
   searchQuery = "",
 }: FeaturedProductsProps) {
+  const { formatPrice } = useCurrency();
+
   const navigate = useNavigate();
   const [openCart, setOpenCart] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -442,11 +446,11 @@ export default function FeaturedProducts({
                         <div>
                           <div className="flex items-center gap-2">
                             <p className="font-bold text-lg">
-                              ${(product.discountPrice ?? product.basePrice)?.toFixed(2)}
+                              {formatPrice(product.discountPrice ?? product.basePrice)}
                             </p>
                             {hasDiscount && (
                               <p className="text-sm text-[#62748E] line-through">
-                                ${product.basePrice?.toFixed(2)}
+                                {formatPrice(product.basePrice)}
                               </p>
                             )}
                           </div>

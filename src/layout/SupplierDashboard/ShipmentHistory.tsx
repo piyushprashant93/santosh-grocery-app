@@ -10,10 +10,14 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -284,7 +288,7 @@ export default function ShipmentHistory({
                   </td>
 
                   <td className="py-5 font-semibold text-theme-text">
-                    {typeof s.amount === "number" ? `$${s.amount.toFixed(2)}` : (s.total ? `$${s.total.toFixed(2)}` : (s.amount ? (s.amount.toString().startsWith('$') ? s.amount : `$${s.amount}`) : "$0.00"))}
+                    {typeof s.amount === "number" ? `${formatPrice(s.amount)}` : (s.total ? `${formatPrice(s.total)}` : (s.amount ? (s.amount.toString().startsWith('$') ? s.amount : `$${s.amount}`) : "$0.00"))}
                   </td>
 
                   <td className="py-5">

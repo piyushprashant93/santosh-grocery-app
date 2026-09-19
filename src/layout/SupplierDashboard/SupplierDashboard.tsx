@@ -4,9 +4,12 @@ import mapImage from "../../assets/images/dashboardmap.jpg";
 
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const { formatPrice } = useCurrency();
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [fleetData, setFleetData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -265,7 +268,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
                           <td className="py-5 font-semibold text-theme-text">
-                            {typeof o.amount === "number" ? `$${o.amount.toFixed(2)}` : (o.total ? `$${o.total.toFixed(2)}` : (o.totalAmount ? `$${o.totalAmount.toFixed(2)}` : (o.total_amount ? `$${o.total_amount.toFixed(2)}` : o.amount || "$0.00")))}
+                            {typeof o.amount === "number" ? `${formatPrice(o.amount)}` : (o.total ? `${formatPrice(o.total)}` : (o.totalAmount ? `${formatPrice(o.totalAmount)}` : (o.total_amount ? `${formatPrice(o.total_amount)}` : o.amount || "$0.00")))}
                           </td>
 
                         </tr>

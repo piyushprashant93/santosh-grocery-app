@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Upload, Clock, Check, Calculator, Plus, ChartPie } from "lucide-react";
 import toast from "react-hot-toast";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 export default function AddMenuItem({
   activeTab,
@@ -53,6 +55,8 @@ export default function AddMenuItem({
   const [ingredients, setIngredients] = useState<any[]>([]);
 
   const addIngredient = () => {
+  const { formatPrice } = useCurrency();
+
     if (!form.name || !form.price || !form.bulkQty || !form.usedQty) {
       toast.error("Please fill all ingredient fields");
       return;
@@ -422,11 +426,11 @@ export default function AddMenuItem({
                       <tr key={idx} className="border-t">
                         <td className="px-5 py-3">{i.name}</td>
                         <td className="px-5 py-3 text-center">
-                          ${i.unitCost.toFixed(2)}
+                          {formatPrice(i.unitCost)}
                         </td>
                         <td className="px-5 py-3 text-center">{i.usedQty}</td>
                         <td className="px-5 py-3 text-center font-medium">
-                          ${i.finalCost.toFixed(2)}
+                          {formatPrice(i.finalCost)}
                         </td>
                       </tr>
                     ))}
@@ -436,7 +440,7 @@ export default function AddMenuItem({
                 <div className="p-4 flex justify-between font-medium">
                   <span>Total Ingredients:</span>
                   <span className="text-green-600">
-                    ${totalIngredients.toFixed(2)}
+                    {formatPrice(totalIngredients)}
                   </span>
                 </div>
               </div>
@@ -452,18 +456,18 @@ export default function AddMenuItem({
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Total Ingredients</span>
-                  <span>${totalIngredients.toFixed(2)}</span>
+                  <span>{formatPrice(totalIngredients)}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Labor Cost</span>
-                  <span>${laborCost.toFixed(2)}</span>
+                  <span>{formatPrice(laborCost)}</span>
                 </div>
               </div>
 
               <div className="border-t pt-3 flex justify-between font-semibold text-lg text-[#1C398E]">
                 <span>Total Recipe Cost</span>
-                <span>${totalCost.toFixed(2)}</span>
+                <span>{formatPrice(totalCost)}</span>
               </div>
 
               <div>

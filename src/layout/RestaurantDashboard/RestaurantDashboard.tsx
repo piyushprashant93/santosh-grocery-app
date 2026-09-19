@@ -1,6 +1,8 @@
 import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 
 const statusStyles: any = {
@@ -11,6 +13,7 @@ const statusStyles: any = {
 }
 
 export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const { formatPrice } = useCurrency();
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -295,7 +298,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
 
 
                             <td className="py-5 font-semibold text-theme-text text-end">
-                              {typeof o.totalAmount === 'number' ? `$${o.totalAmount.toFixed(2)}` : (typeof o.total === 'number' ? `$${o.total.toFixed(2)}` : (o.total || `$${o.totalAmount || 0}`))}
+                              {typeof o.totalAmount === 'number' ? `${formatPrice(o.totalAmount)}` : (typeof o.total === 'number' ? `${formatPrice(o.total)}` : (o.total || `$${o.totalAmount || 0}`))}
                             </td>
 
                           </tr>

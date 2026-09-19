@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
 import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -88,6 +90,8 @@ function formatRestaurant(r: RestaurantApi): Restaurant {
   const ratingAvg = r.rating?.average;
   const reviewCount = r.reviewCount ?? r.rating?.count ?? 0;
   const getBadge = (name: string) => {
+  const { formatPrice } = useCurrency();
+
   switch (name) {
     case "Stella's Rooftop":
       return "Premium";
@@ -114,7 +118,7 @@ function formatRestaurant(r: RestaurantApi): Restaurant {
       r.deliveryFee === 0
         ? "Free Delivery"
         : r.deliveryFee != null
-          ? `$${r.deliveryFee.toFixed(2)} Delivery`
+          ? `${formatPrice(r.deliveryFee)} Delivery`
           : null,
     reviews: `${reviewCount}+ ratings`,
     image: r.banner || r.logo || "",

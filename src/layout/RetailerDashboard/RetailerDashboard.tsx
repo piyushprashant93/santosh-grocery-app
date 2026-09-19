@@ -2,6 +2,8 @@ import { DollarSign, Package, ShoppingBag, Clock, TrendingUp, ArrowUpRight, Arro
 import { useState, useEffect, useMemo } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 import ChartsSection from "./ChartsSection"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const statusStyles:any = {
   Pending:"bg-yellow-100 text-yellow-700",
@@ -11,6 +13,7 @@ const statusStyles:any = {
 }
 
 export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const { formatPrice } = useCurrency();
   const [dashboardData, setDashboardData] = useState<any>(null);
 
   useEffect(() => {
@@ -80,7 +83,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
   const activeOrders = useMemo(() => (dashboardData?.recentOrders || []).map((o: any) => ({
     id: o._id ? `#${o._id.substring(o._id.length - 6).toUpperCase()}` : (o.id || "#---"),
     customer: o.customer?.name || o.customer || "Unknown",
-    amount: typeof o.totalAmount === 'number' ? `$${o.totalAmount.toFixed(2)}` : (o.amount || "$0.00"),
+    amount: typeof o.totalAmount === 'number' ? `${formatPrice(o.totalAmount)}` : (o.amount || "$0.00"),
     status: o.status || "Pending",
     date: o.createdAt ? new Date(o.createdAt).toLocaleDateString() : (o.date || "Just now")
   })), [dashboardData]);

@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -31,6 +33,7 @@ const fields = [
 
 
 
+import { useCurrency } from "../../context/CurrencyContext";
 import {
   BarChart,
   Bar,
@@ -181,7 +184,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
             <div>
               <p className="text-theme-muted text-sm">Total Daily Revenue</p>
-              <h3 className="text-2xl font-semibold">${total.toFixed(2)}</h3>
+              <h3 className="text-2xl font-semibold">{formatPrice(total)}</h3>
             </div>
 
             <button onClick={handleSave} className="bg-[#009966] text-white px-6 py-3 rounded-lg font-medium">
@@ -229,11 +232,11 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
                 </td>
 
                 <td className="py-5 px-6 text-theme-muted">
-                  ${inhouse.toFixed(2)}
+                  {formatPrice(inhouse)}
                 </td>
 
                 <td className="py-5 px-6 text-theme-muted">
-                  ${delivery.toFixed(2)}
+                  {formatPrice(delivery)}
                 </td>
 
                 <td className="py-5 px-6 font-semibold text-theme-text">

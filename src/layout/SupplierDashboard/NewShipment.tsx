@@ -1,10 +1,14 @@
 import { User, Truck, Package, Plus, MapPin, ArrowLeft, Trash2 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -247,7 +251,7 @@ export default function CreateShipment({
               <input
                 type="text"
                 readOnly
-                value={`$ ${item.price.toFixed(2)}`}
+                value={`$ {formatPrice(item.price)}`}
                 className="border border-theme-border h-12 rounded-lg px-3 py-2 outline-none bg-gray-50 text-gray-500"
               />
               <button onClick={() => removeItem(i)} className="p-3 text-red-500 bg-red-50 rounded-lg">
@@ -262,7 +266,7 @@ export default function CreateShipment({
             <div className="flex justify-between text-sm text-theme-muted">
               <span>Subtotal</span>
 
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatPrice(subtotal)}</span>
             </div>
 
             <div className="flex justify-between text-sm text-theme-muted">
@@ -274,7 +278,7 @@ export default function CreateShipment({
             <div className="flex justify-between text-lg font-semibold pt-2 border-t">
               <span>Total</span>
 
-              <span>${total.toFixed(2)}</span>
+              <span>{formatPrice(total)}</span>
             </div>
           </div>
         </div>

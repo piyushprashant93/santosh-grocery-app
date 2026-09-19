@@ -2,10 +2,14 @@ import { Download, Wallet, Clock, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+  const { formatPrice } = useCurrency();
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -240,7 +244,7 @@ export default function FinanceWallet() {
                         : "text-[#111827]"
                     }`}
                   >
-                    {typeof t.amount === "number" ? (t.type === "credit" ? `+$${t.amount.toFixed(2)}` : `-$${t.amount.toFixed(2)}`) : t.amount}
+                    {typeof t.amount === "number" ? (t.type === "credit" ? `+${formatPrice(t.amount)}` : `-${formatPrice(t.amount)}`) : t.amount}
                   </td>
 
                   <td className="py-4 text-end">

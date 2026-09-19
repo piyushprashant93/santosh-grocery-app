@@ -409,7 +409,7 @@ export default function FinanceWallet() {
                       <tr key={id} className="border-b last:border-none">
                         <td className="py-6 px-6">
                           <div className="flex items-center gap-3">
-                            <img src={getImageUrl(staff.image || staff.imageUrl || )} className="w-10 h-10 rounded-full object-cover" />
+                            <img src={getImageUrl(staff.image || staff.imageUrl)} className="w-10 h-10 rounded-full object-cover" />
                             <p className="font-medium text-theme-text text-lg">
                               {staff.name || "Unknown"}
                             </p>
