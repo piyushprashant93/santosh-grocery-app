@@ -444,7 +444,7 @@ export default function FeaturedProducts({
 
                       <div className="flex items-center justify-between mt-3">
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <p className="font-bold text-lg">
                               {formatPrice(product.discountPrice ?? product.basePrice)}
                             </p>
@@ -462,7 +462,7 @@ export default function FeaturedProducts({
                         <button
                           onClick={(e) => handleAddClick(e, product._id)}
                           disabled={isAdding}
-                          className="bg-[#00A63E] text-sm px-4 py-1.5 rounded-full disabled:opacity-60 flex items-center gap-1.5"
+                          className="bg-[#00A63E] text-sm px-4 py-1.5 rounded-full disabled:opacity-60 flex items-center gap-1.5 flex-shrink-0"
                         >
                           {isAdding ? (
                             <Loader2 size={14} className="animate-spin" />

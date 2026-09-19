@@ -25,8 +25,8 @@ const authHeaders = () => {
   };
 };
 
-
-
+export default function ShipmentHistory({
+  setActiveTab,
 }: {
   setActiveTab: (tab: string) => void;
 }) {
