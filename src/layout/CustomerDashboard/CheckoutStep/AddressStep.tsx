@@ -200,6 +200,20 @@ export default function AddressStep() {
           <p className="text-[#94A3B8] text-sm">
             No saved addresses yet. Add one to continue.
           </p>
+          <button
+            onClick={() => {
+              setIsEditingAddress(false);
+              setEditingIndex(null);
+              setEditingAddressId(null);
+              setAddressForm(EMPTY_ADDRESS_FORM);
+              setAddressError("");
+              setShowAddressModal(true);
+            }}
+            className="flex items-center justify-center gap-2 text-sm bg-white text-[#000] w-max px-6 py-2.5 rounded-lg border border-[#1E293B] hover:border-[#00BC7D] transition mt-2"
+          >
+            <Plus size={16} />
+            Add New Address
+          </button>
         </div>
       )}
 
