@@ -124,11 +124,9 @@ export default function InviteFriends() {
 
   // Backend sometimes returns "undefined/signup?ref=..." when its base URL
   // env var isn't set — fall back to building the link client-side.
-  const shareLink =
-    referralInfo &&
-    (!referralInfo.referralLink || referralInfo.referralLink.includes("undefined"))
-      ? `${window.location.origin}/signup?ref=${referralInfo.referralCode}`
-      : referralInfo?.referralLink ?? "";
+  const shareLink = referralInfo?.referralCode
+    ? `${window.location.origin}/signup?ref=${referralInfo.referralCode}`
+    : "";
 
   const shareText = "Join me and get $20 off your first order!";
 
