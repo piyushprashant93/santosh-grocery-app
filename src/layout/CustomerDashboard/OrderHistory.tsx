@@ -726,7 +726,8 @@ const submitCancelOrder = async () => {
 
   const filteredOrders = useMemo(() => {
     return orders.filter((o) => {
-      if (tab !== "all" && o.orderType !== tab) return false;
+      const derivedOrderType = o.restaurant ? "food" : (o.retailer ? "grocery" : o.orderType);
+      if (tab !== "all" && derivedOrderType !== tab) return false;
 
       if (status === "active" && !ACTIVE_STATUSES.includes(o.status)) {
         return false;
@@ -869,7 +870,7 @@ const submitCancelOrder = async () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-xs text-theme-muted uppercase">
-                        {o.orderType} Order
+                        {o.restaurant ? "food" : (o.retailer ? "grocery" : o.orderType)} Order
                       </p>
 
                       <h3 className="font-semibold text-theme-text">

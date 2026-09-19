@@ -403,10 +403,11 @@ export default function FeaturedProducts({
                           className="w-full h-[282px] object-cover"
                         />
                       ) : (
-                        <div className="w-full h-[282px] bg-theme-surface flex flex-col items-center justify-center gap-2 text-[#62748E]">
-                          <ImageOff size={32} />
-                          <span className="text-xs">No Image Available</span>
-                        </div>
+                        <img
+                          src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop"
+                          className="w-full h-[282px] object-cover"
+                          alt="Grocery Fallback"
+                        />
                       )}
 
                       {product.isNewArrival && (
