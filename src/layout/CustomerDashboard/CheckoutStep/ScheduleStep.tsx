@@ -114,15 +114,15 @@ export function ScheduleStep() {
               }}
               className={`flex items-center justify-between lg:p-5 p-3 rounded-lg border cursor-pointer transition
               ${active
-                ? "border-[#00BC7D] bg-[#031F2E]"
-                : "border-[#1E293B] bg-[#0F172B80]"
+                ? "border-[#00BC7D] bg-[#00BC7D]/10"
+                : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
               }`}
             >
 
               <div className="flex items-center lg:gap-4 gap-2">
 
                 <div className={`lg:w-12 w-8 lg:h-12 h-8 rounded-full flex items-center justify-center
-                ${active ? "bg-[#043D34]" : "bg-[#1E293B]"}`}>
+                ${active ? "bg-[#00BC7D]/20" : "bg-theme-bg"}`}>
 
                   <Clock size={20} className={`${active ? "text-[#00BC7D]" : "text-[#94A3B8]"}`} />
 
@@ -167,15 +167,15 @@ export function ScheduleStep() {
           onClick={openScheduleModal}
           className={`flex items-center justify-between lg:p-5 p-3 rounded-lg lg:rounded-xl border cursor-pointer transition
           ${isScheduledActive
-            ? "border-[#00BC7D] bg-[#031F2E]"
-            : "border-[#1E293B] bg-[#0F172B80]"
+            ? "border-[#00BC7D] bg-[#00BC7D]/10"
+            : "border-theme-border hover:border-gray-400 dark:hover:border-theme-muted"
           }`}
         >
 
           <div className="flex items-center gap-4">
 
             <div className={`lg:w-12 w-8 lg:h-12 h-8 rounded-full flex items-center justify-center
-            ${isScheduledActive ? "bg-[#043D34]" : "bg-[#1E293B]"}`}>
+            ${isScheduledActive ? "bg-[#00BC7D]/20" : "bg-theme-bg"}`}>
               <Clock size={20} className={isScheduledActive ? "text-[#00BC7D]" : "text-[#94A3B8]"} />
             </div>
 
@@ -207,11 +207,11 @@ export function ScheduleStep() {
 
       </div>
 
-      <div className="mt-6 flex items-center gap-3 border border-[#2B7FFF33] rounded-lg lg:rounded-xl lg:p-4 p-2 text-[#8EC5FF] bg-[#2B7FFF0D]">
+      <div className="mt-6 flex items-center gap-3 border border-[#2B7FFF33] rounded-lg lg:rounded-xl lg:p-4 p-2 text-[#2B7FFF] bg-[#2B7FFF0D]">
 
-        <ShieldCheck size={20} className="min-w-5" />
+        <ShieldCheck size={20} className="min-w-5 text-[#2B7FFF]" />
 
-        <p>
+        <p className="text-sm">
           Contactless delivery is enabled by default. The driver will leave your order at your door.
         </p>
 
@@ -253,7 +253,7 @@ export function ScheduleStep() {
                       className={`px-4 py-2 rounded-lg text-sm whitespace-nowrap border transition ${
                         tempDate === d
                           ? "bg-[#00BC7D] border-[#00BC7D] text-white"
-                          : "border-[#1E293B] text-[#94A3B8] hover:border-[#334155]"
+                          : "border-theme-border text-theme-muted hover:border-gray-400 dark:hover:border-theme-muted"
                       }`}
                     >
                       {d}
@@ -273,7 +273,7 @@ export function ScheduleStep() {
                       className={`flex items-center justify-center gap-1 px-3 py-2.5 rounded-lg text-sm border transition ${
                         tempTime === t
                           ? "bg-[#00BC7D] border-[#00BC7D] text-white"
-                          : "border-[#1E293B] text-[#CAD5E2] hover:border-[#334155]"
+                          : "border-theme-border text-theme-muted hover:border-gray-400 dark:hover:border-theme-muted"
                       }`}
                     >
                       {tempTime === t && <Check size={12} />}
