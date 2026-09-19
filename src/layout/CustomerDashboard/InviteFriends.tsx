@@ -212,7 +212,7 @@ export default function InviteFriends() {
           </p>
         )}
 
-        <div className="mt-16 bg-theme-surface border border-theme-border lg:rounded-2xl rounded-lg lg:p-8 p-3 shadow-[0px_25px_50px_-12px_#000000]">
+        <div className="mt-16 bg-theme-surface border border-theme-border lg:rounded-2xl rounded-lg lg:p-8 p-3 shadow-xl">
           <p className="text-sm text-start tracking-widest text-theme-muted mb-3">
             YOUR REFERRAL CODE
           </p>
@@ -230,7 +230,7 @@ export default function InviteFriends() {
             <button
               onClick={copyCode}
               disabled={loading || !shareLink}
-              className="px-10 h-16 flex items-center gap-2 rounded-lg bg-theme-surface hover:bg-[#334155] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-10 h-16 flex items-center gap-2 rounded-lg bg-gray-100 hover:bg-gray-200 border border-theme-border text-theme-text disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {copied ? <Check size={18} /> : <Copy size={18} />}
               {copied ? "Copied" : "Copy"}
@@ -324,7 +324,7 @@ export default function InviteFriends() {
                 key={step.id}
                 className="bg-theme-surface border border-theme-border rounded-xl p-6 relative"
               >
-                <span className="absolute -top-4 -left-4 bg-[#1D293D] border border-[#314158] text-base rounded-full w-9 h-9 text-theme-muted flex items-center justify-center font-bold">
+                <span className="absolute -top-4 -left-4 bg-theme-surface border border-theme-border text-base rounded-full w-9 h-9 text-theme-text flex items-center justify-center font-bold">
                   {step.id}
                 </span>
 
@@ -350,10 +350,10 @@ export default function InviteFriends() {
             </p>
           ) : referredUsers.length === 0 ? (
             <div className="flex flex-col items-center gap-3 py-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-[#1D293D] flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-theme-surface border border-theme-border flex items-center justify-center">
                 <Users size={24} className="text-theme-muted" />
               </div>
-              <p className="text-[#E2E8F0]">No referrals yet</p>
+              <p className="text-theme-text font-medium">No referrals yet</p>
               <p className="text-theme-muted text-sm max-w-[360px]">
                 Share your code above — friends who join will show up here.
               </p>
@@ -366,7 +366,7 @@ export default function InviteFriends() {
                   className="flex items-center justify-between py-4 first:pt-0 last:pb-0"
                 >
                   <div>
-                    <p className="text-[#E2E8F0]">
+                    <p className="text-theme-text font-medium">
                       {u.fullName || u.name || u.email || "Referred user"}
                     </p>
                     {(u.joinedAt || u.createdAt) && (

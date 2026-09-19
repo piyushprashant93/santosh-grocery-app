@@ -145,7 +145,7 @@ const { setRole } = useRole();
 
   return (
     <ThemeProvider>
-      <div className="flex h-screen bg-theme-surface dark:bg-[#0B1120] text-gray-900 dark:text-theme-text relative">
+      <div className="flex h-screen bg-theme-bg text-theme-text relative">
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -154,7 +154,7 @@ const { setRole } = useRole();
       )}
       <div
         ref={sidebarRef}
-        className={`fixed lg:static z-40 h-full min-h-svh bg-white dark:bg-[#020618] border-r border-[#E5E7EB] dark:border-[#1E293B] transition-transform duration-300
+        className={`fixed lg:static z-40 h-full min-h-svh bg-theme-surface border-r border-theme-border transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <CustomerSidebar

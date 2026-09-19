@@ -813,7 +813,7 @@ const submitCancelOrder = async () => {
       </div>
 
       {showFilter && (
-        <div className="mt-4 border border-theme-border lg:rounded-xl rounded-lg lg:p-6 p-3 bg-[#fff] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+        <div className="mt-4 border border-theme-border lg:rounded-xl rounded-lg lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
           <p className="text-sm font-semibold text-theme-muted mb-4">
             ORDER STATUS
           </p>
@@ -1775,7 +1775,7 @@ const submitCancelOrder = async () => {
                             className={`font-medium ${
                               step.completed || step.active
                                 ? "text-[#0F172A]"
-                                : "text-[#94A3B8]"
+                                : "text-theme-muted"
                             }`}
                           >
                             {step.label}

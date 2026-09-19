@@ -276,7 +276,7 @@ export default function CartModal({
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative max-w-[800px] w-[96%] h-[85vh] max-h-[800px] bg-theme-bg shadow-[0px_25px_50px_-12px_#000000] text-theme-text flex flex-col rounded-xl overflow-hidden"
+        className="relative max-w-[800px] w-[96%] h-[85vh] max-h-[800px] bg-theme-bg shadow-2xl text-theme-text flex flex-col rounded-xl overflow-hidden"
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div className="flex items-center gap-2 text-lg font-medium font-playfair">

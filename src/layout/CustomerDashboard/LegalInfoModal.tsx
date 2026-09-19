@@ -49,7 +49,7 @@ const LegalInfoModal = ({
                 {index + 1}. Section {index + 1}
               </h4>
 
-              <p className="text-[#CBD5E1] leading-8 text-[15px]">
+              <p className="text-theme-text leading-8 text-[15px]">
                 {item}
               </p>
             </div>

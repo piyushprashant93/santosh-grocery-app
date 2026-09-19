@@ -714,7 +714,7 @@ const isOutOfStock = !product.inStock;
                   <button
                     key={item}
                     onClick={() => setQuestion(item)}
-                    className="px-4 py-2 rounded-full border border-theme-border text-sm text-[#CBD5E1] hover:bg-theme-surface"
+                    className="px-4 py-2 rounded-full border border-theme-border text-sm text-theme-text hover:bg-theme-surface"
                   >
                     {item}
                   </button>
@@ -736,7 +736,7 @@ const isOutOfStock = !product.inStock;
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowQuestionModal(false)}
-                  className="px-5 py-2 border border-theme-border text-[#CBD5E1] rounded-lg hover:bg-theme-surface"
+                  className="px-5 py-2 border border-theme-border text-theme-text rounded-lg hover:bg-theme-surface"
                 >
                   Cancel
                 </button>
@@ -792,7 +792,7 @@ const isOutOfStock = !product.inStock;
                 <div className="w-10 h-10 rounded-full bg-[#DCFCE7] flex items-center justify-center">
                   <MessageCircle size={18} className="text-[#25D366]" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">WhatsApp</span>
+                <span className="text-xs text-theme-text">WhatsApp</span>
               </a>
 
               <a
@@ -806,7 +806,7 @@ const isOutOfStock = !product.inStock;
                 <div className="w-10 h-10 rounded-full bg-[#EFF6FF] flex items-center justify-center">
                   <Facebook size={18} className="text-[#1877F2]" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">Facebook</span>
+                <span className="text-xs text-theme-text">Facebook</span>
               </a>
 
               <a
@@ -817,20 +817,20 @@ const isOutOfStock = !product.inStock;
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
-                <div className="w-10 h-10 rounded-full bg-[#334155] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-gray-100 border border-theme-border flex items-center justify-center">
                   <Twitter size={18} className="text-theme-text" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">X / Twitter</span>
+                <span className="text-xs text-theme-text">X / Twitter</span>
               </a>
 
               <button
                 onClick={shareMore}
                 className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
-                <div className="w-10 h-10 rounded-full bg-[#334155] flex items-center justify-center">
-                  <Share2 size={18} className="text-[#CBD5E1]" />
+                <div className="w-10 h-10 rounded-full bg-gray-100 border border-theme-border flex items-center justify-center">
+                  <Share2 size={18} className="text-theme-text" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">More</span>
+                <span className="text-xs text-theme-text">More</span>
               </button>
             </div>
           </div>

@@ -229,8 +229,8 @@ export default function AddressStep() {
                 key={addr._id}
                 className={`rounded-xl border transition ${
                   isSelected
-                    ? "border-[#009966] bg-[#009966]/10"
-                    : "border-[#1E293B] hover:border-[#334155]"
+                    ? "border-[#009966] bg-[#00BC7D0F]"
+                    : "border-theme-border hover:border-gray-400"
                 }`}
               >
                 <div
@@ -247,7 +247,7 @@ export default function AddressStep() {
                 >
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
-                      isSelected ? "bg-[#009966]" : "bg-[#1E293B]"
+                      isSelected ? "bg-[#009966]" : "bg-gray-100 border border-theme-border"
                     }`}
                   >
                     <MapPin size={16} className="text-theme-text" />
