@@ -14,6 +14,8 @@ import {
 import ReportChartCard from "./ReportChartCard";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { getImageUrl } from "../../utils/dataHelper";
+
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
 
 
@@ -440,7 +442,7 @@ export default function RestaurantBackendDashboard({
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      src={p.image}
+                      src={getImageUrl(p.image)}
                       className="w-14 h-14 rounded-xl object-cover"
                     />
 

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Trash2, Plus, Minus, CreditCard, ShoppingBag } from "lucide-react";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 export default function SupplyCart({
   role,
@@ -173,7 +175,7 @@ export default function SupplyCart({
                 <div key={item._id || item.id} className="bg-theme-surface rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm">
                    <div className="w-20 h-20 bg-gray-50 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100">
                       {item.product?.image ? (
-                        <img src={item.product.image} alt={item.product?.name} className="w-full h-full object-cover" />
+                        <img src={getImageUrl(item.product.image)} alt={item.product?.name} className="w-full h-full object-cover" />
                       ) : (
                         <ShoppingBag size={24} className="text-gray-300" />
                       )}

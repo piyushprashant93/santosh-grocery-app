@@ -1,4 +1,6 @@
 import { MapPin, Mail, Clock, Send, LucideBookCopy } from "lucide-react";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const pressArticles = [
   {
@@ -47,7 +49,7 @@ export default function PressSection() {
               >
                 <div className="relative">
   <img
-    src={item.image}
+    src={getImageUrl(item.image)}
     className="w-full h-[220px] object-cover"
   />
 

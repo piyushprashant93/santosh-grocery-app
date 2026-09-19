@@ -1,4 +1,6 @@
 import { Plus, MoreVertical } from "lucide-react"
+import { getImageUrl } from "../../../utils/dataHelper";
+
 
 export default function BannersTab() {
   const banners = [
@@ -34,7 +36,7 @@ export default function BannersTab() {
         {banners.map((banner) => (
           <div key={banner.id} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group hover:shadow-md transition">
             <div className="h-36 w-full relative">
-              <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+              <img src={getImageUrl(banner.image)} alt={banner.title} className="w-full h-full object-cover" />
               <div className="absolute top-2 right-2">
                 <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider backdrop-blur-md ${
                   banner.status === 'Active' ? 'bg-emerald-500/90 text-white' : 'bg-gray-900/70 text-white'

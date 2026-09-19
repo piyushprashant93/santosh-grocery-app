@@ -10,6 +10,8 @@ import {
 import { useCurrency } from "./CurrencyContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const RECENT_KEY = "recentSearches";
@@ -429,7 +431,7 @@ export default function SearchTab() {
                 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] cursor-pointer hover:border-[#00A63E] transition"
               >
                 <img
-                  src={item.img || "https://placehold.co/64x64?text=No+Image"}
+                  src={getImageUrl(item.img)}
                   onError={(e) => { e.currentTarget.src = "https://placehold.co/64x64?text=No+Image"; }}
                   className="w-16 h-16 rounded-lg object-cover"
                 />

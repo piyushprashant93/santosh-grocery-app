@@ -21,6 +21,8 @@ const authHeadersForm = () => {
 import KYCDocuments from "./KYCDocuments"
 import NotificationSettings from "./NotificationSettings"
 import SecuritySettings from "./SecuritySettings"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 export default function RetailerSettings() {
   const [activeTab, setActiveTab] = useState("profile")
@@ -229,7 +231,7 @@ export default function RetailerSettings() {
                   }
                 }} />
                 <img
-                  src={settings.logoUrl}
+                  src={getImageUrl(settings.logoUrl)}
                   className="w-36 h-36 rounded-full mx-auto object-cover"
                 />
               </label>
@@ -250,7 +252,7 @@ export default function RetailerSettings() {
 
               {settings.bannerUrl ? (
                 <div className="h-32 rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src={settings.bannerUrl} className="w-full h-full object-cover" />
+                  <img src={getImageUrl(settings.bannerUrl)} className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center text-theme-muted text-sm">

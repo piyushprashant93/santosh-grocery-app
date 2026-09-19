@@ -3,6 +3,8 @@ import mapImage from "../../assets/images/dashboardmap.jpg";
 
 
 import { useState, useEffect } from "react";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
@@ -320,7 +322,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                     <div className="flex items-center gap-3">
 
                       <img
-                        src={item.image || "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"}
+                        src={getImageUrl(item.image)}
                         className="w-12 h-12 rounded-lg object-cover"
                       />
 

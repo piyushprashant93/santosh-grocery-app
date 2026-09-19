@@ -10,6 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { useCurrency } from "./CurrencyContext";
 import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const CART_STORAGE_KEY = "checkout_cart";
@@ -326,7 +328,7 @@ export default function CartModal({
                 >
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getImageUrl(item.image)}
                       className="w-16 h-16 rounded-lg object-cover shrink-0"
                     />
                   ) : (

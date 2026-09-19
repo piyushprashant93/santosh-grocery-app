@@ -2,6 +2,8 @@ import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filt
 import { useState, useEffect } from "react"
 import { useDebounce } from "use-debounce"
 import { toast } from "react-hot-toast"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -237,7 +239,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                     <div className="flex items-center gap-3">
 
-                      <img src={o.img || o.client?.image || o.restaurant?.image || "https://picsum.photos/40?1"} className="w-10 h-10 rounded-full object-cover" />
+                      <img src={getImageUrl(o.img || o.client?.image || o.restaurant?.image)} className="w-10 h-10 rounded-full object-cover" />
 
                       <div>
                         <p className="font-medium">{o.client || o.client?.name || o.restaurant?.name || "Unknown Client"}</p>

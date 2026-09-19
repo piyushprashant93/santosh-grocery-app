@@ -22,10 +22,13 @@ import { useEffect, useState } from "react";
 import { useCurrency } from "./CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const FALLBACK_HERO_IMAGE =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80";
+
 
 // ---------- Types ----------
 interface Address {
@@ -611,7 +614,7 @@ export default function RestaurantMenuDetails() {
                 >
                   {item.image ? (
                     <img
-                      src={item.image || "https://placehold.co/112x112?text=No+Image"}
+                      src={getImageUrl(item.image)}
                       onError={(e) => { e.currentTarget.src = "https://placehold.co/112x112?text=No+Image"; }}
                       alt={item.name}
                       className="w-28 h-28 object-cover rounded-xl shrink-0"

@@ -3,6 +3,8 @@ import CurateImage from "../../assets/images/curate.jpg"
 import PrepareImage from "../../assets/images/masterful.jpg"
 import DeliverImage from "../../assets/images/delivery.jpg"
 import EnjoyImage from "../../assets/images/savor.jpg"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const steps = [
   {
@@ -59,7 +61,7 @@ export default function HowItWorksSection() {
 
                 <div className="relative">
                   <img
-                    src={step.image}
+                    src={getImageUrl(step.image)}
                     className="w-full h-[320px] md:h-[420px] object-cover rounded-[16px]"
                   />
 

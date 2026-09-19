@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useCurrency } from "../CurrencyContext";
 import { PackageX } from "lucide-react";
+import { getImageUrl } from "../../../utils/dataHelper";
+
 
 const CART_STORAGE_KEY = "checkout_cart";
 const PAYMENT_STORAGE_KEY = "checkout_payment";
@@ -96,7 +98,7 @@ export function ConfirmStep() {
             <div className="flex gap-4">
               {item.image ? (
                 <img
-                  src={item.image}
+                  src={getImageUrl(item.image)}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
               ) : (

@@ -20,7 +20,7 @@ export default function SupportCenter() {
 
   const [ticketsData, setTicketsData] = useState<any[]>([]);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
-  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", description: "" });
+  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", message: "" });
 
   const fetchTickets = async () => {
     try {
@@ -45,13 +45,15 @@ export default function SupportCenter() {
         headers: authHeaders(),
         body: JSON.stringify(newTicket)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
         alert("Ticket created successfully!");
         setShowNewTicketModal(false);
-        setNewTicket({ subject: "", priority: "Medium", description: "" });
+        setNewTicket({ subject: "", priority: "Medium", message: "" });
         fetchTickets();
       } else {
-        alert("Failed to create ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to create ticket");
+        alert(errorMsg);
       }
     } catch(err) { console.error(err); }
   };
@@ -255,7 +257,7 @@ export default function SupportCenter() {
               </div>
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Description</label>
-                <textarea value={newTicket.description} onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
+                <textarea value={newTicket.message} onChange={(e) => setNewTicket({ ...newTicket, message: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
               </div>
               <button onClick={createTicket} className="w-full bg-[#F54900] text-white py-2.5 rounded-lg font-medium">Submit Ticket</button>
             </div>

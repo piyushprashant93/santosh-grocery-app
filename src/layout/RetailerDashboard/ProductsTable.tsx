@@ -1,6 +1,8 @@
 import { Search, Filter, Download, MoreHorizontal } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -133,7 +135,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                     <div className="flex items-center gap-3">
 
                       <img
-                        src={p.img || p.imageUrl || p.image || "https://images.unsplash.com/photo-1580910051074-3eb694886505"}
+                        src={getImageUrl(p.img || p.imageUrl || p.image)}
                         className="w-12 h-12 min-w-12 rounded-lg object-cover"
                       />
                       <span className="text-theme-text font-medium">

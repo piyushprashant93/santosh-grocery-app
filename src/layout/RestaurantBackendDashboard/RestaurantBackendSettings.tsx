@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
+import { getImageUrl } from "../../utils/dataHelper";
+
   Shield,
   Bell,
   Users,
@@ -407,7 +409,7 @@ export default function RestaurantBackendSettings({
 
               <div className="flex flex-col items-center">
                 <img
-                  src={settingsData.logoUrl || "https://randomuser.me/api/portraits/women/44.jpg"}
+                  src={getImageUrl(settingsData.logoUrl)}
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
                 <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
@@ -420,7 +422,7 @@ export default function RestaurantBackendSettings({
                 <p className="text-sm text-theme-muted mb-2">Cover Image</p>
                 <div className="relative rounded-xl overflow-hidden">
                   <img
-                    src={settingsData.bannerUrl || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
+                    src={getImageUrl(settingsData.bannerUrl)}
                     className="w-full h-40 object-cover"
                   />
                   <input type="file" ref={bannerInputRef} className="hidden" accept="image/*" onChange={handleBannerUpload} />
@@ -762,7 +764,7 @@ export default function RestaurantBackendSettings({
               <div key={i} className="py-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <img
-                    src={m.image}
+                    src={getImageUrl(m.image)}
                     className="w-12 h-12 rounded-full object-cover"
                   />
 

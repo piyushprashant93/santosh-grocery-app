@@ -375,7 +375,7 @@ const [legalModal, setLegalModal] = useState({
         subject: ticketForm.subject,
         category: ticketForm.category,
         priority: ticketForm.priority,
-        description: ticketForm.message,
+        message: ticketForm.message,
       };
 
       const res = await fetch(`${BASE_URL}/support`, {
@@ -389,7 +389,8 @@ const [legalModal, setLegalModal] = useState({
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data?.message || "Failed to raise ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to raise ticket");
+        throw new Error(errorMsg);
       }
 
       setTicketSuccess(true);

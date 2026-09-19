@@ -13,6 +13,8 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 // const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80";
@@ -324,7 +326,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                 <div className="relative">
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getImageUrl(item.image)}
                       alt={item.name}
                       className="w-full h-56 object-cover"
                     />

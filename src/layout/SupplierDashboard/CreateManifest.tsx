@@ -1,6 +1,8 @@
 import { FileText, MapPin, Package, Truck, ArrowLeft, Calendar, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { extractList } from "../../utils/dataHelper";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -168,7 +170,7 @@ export default function CreateManifest({
                       className="w-5 h-5"
                     />
                     <img
-                      src={order.img || order.client?.image || order.restaurant?.image || "https://images.unsplash.com/photo-1542838132-92c53300491e?w=200"}
+                      src={getImageUrl(order.img || order.client?.image || order.restaurant?.image)}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+import { getImageUrl } from "../../utils/dataHelper";
+
   Shield,
   Bell,
   Users,
@@ -538,7 +540,7 @@ export default function RestaurantSettings({
 
               <div className="flex flex-col items-center">
                 <img
-                  src={profile.logo || "https://randomuser.me/api/portraits/women/44.jpg"}
+                  src={getImageUrl(profile.logo)}
                   className="w-32 h-32 rounded-full object-cover shadow"
                 />
 
@@ -557,7 +559,7 @@ export default function RestaurantSettings({
 
                 <div className="relative rounded-xl overflow-hidden group">
                   <img
-                    src={profile.banner || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500"}
+                    src={getImageUrl(profile.banner)}
                     className="w-full h-40 object-cover"
                   />
 
@@ -963,7 +965,7 @@ export default function RestaurantSettings({
               <div key={i} className="py-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <img
-                    src={m.image}
+                    src={getImageUrl(m.image)}
                     className="w-12 h-12 rounded-full object-cover"
                   />
 

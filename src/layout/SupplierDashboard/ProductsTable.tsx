@@ -2,6 +2,8 @@ import { Search, Download, Plus, Trash2, Upload } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useDebounce } from "use-debounce"
 import toast from "react-hot-toast"
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -218,7 +220,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
                 <tr key={p._id || i} className="border-b last:border-none">
                   <td className="py-5">
                     <div className="flex items-center gap-3">
-                      <img src={p.img || p.image || p.imageUrl || "https://picsum.photos/60?1"} className="w-12 h-12 rounded-lg object-cover" />
+                      <img src={getImageUrl(p.img || p.image || p.imageUrl)} className="w-12 h-12 rounded-lg object-cover" />
                       <div>
                         <p className="font-medium text-theme-text">{p.name || p.title}</p>
                         <p className="text-sm text-theme-muted">{p.category?.name || p.category || "General"}</p>

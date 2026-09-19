@@ -1,5 +1,7 @@
 import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const statusStyles: any = {
   New: "bg-blue-100 text-blue-600",
@@ -334,7 +336,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
                     <div className="flex items-center gap-3">
 
                       <img
-                        src={p.image}
+                        src={getImageUrl(p.image)}
                         className="w-14 h-14 rounded-xl object-cover"
                       />
 

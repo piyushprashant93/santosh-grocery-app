@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ShoppingCart, Plus, PackageOpen } from "lucide-react";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 export default function SupplierProducts({
   role,
@@ -111,7 +113,7 @@ export default function SupplierProducts({
              <div key={product._id || product.id} className="bg-theme-surface rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
                 <div className="h-48 bg-gray-50 relative border-b border-gray-100">
                    {product.image ? (
-                     <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                     <img src={getImageUrl(product.image)} alt={product.name} className="w-full h-full object-cover" />
                    ) : (
                      <div className="w-full h-full flex items-center justify-center text-gray-300">
                        <PackageOpen size={40} />

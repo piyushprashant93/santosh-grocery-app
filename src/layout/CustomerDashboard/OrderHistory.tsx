@@ -13,6 +13,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useCurrency } from "./CurrencyContext";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 type DeliveryAddress = {
   fullName: string;
@@ -1101,7 +1103,7 @@ const submitCancelOrder = async () => {
                           <div className="w-12 h-12 rounded-lg overflow-hidden bg-theme-bg flex items-center justify-center border border-theme-border">
                             {item.image ? (
                               <img
-                                src={item.image}
+                                src={getImageUrl(item.image)}
                                 alt={item.name}
                                 className="w-full h-full object-cover"
                               />

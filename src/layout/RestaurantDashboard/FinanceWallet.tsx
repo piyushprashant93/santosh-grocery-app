@@ -13,6 +13,8 @@ import {
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const authHeaders = () => {
@@ -504,7 +506,7 @@ export default function FinanceWallet() {
                           <div className="flex items-center gap-3">
 
                             <img
-                              src={e.image}
+                              src={getImageUrl(e.image)}
                               className="w-10 h-10 rounded-full object-cover"
                             />
 

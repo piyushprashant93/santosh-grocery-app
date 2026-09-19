@@ -108,12 +108,14 @@ export default function HelpSupport() {
         headers: authHeaders(),
         body: JSON.stringify(newTicket)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
         alert("Ticket submitted successfully!");
         setNewTicket({ subject: "", priority: "Medium", message: "" });
         fetchTickets();
       } else {
-        alert("Failed to submit ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to submit ticket");
+        alert(errorMsg);
       }
     } catch (err) {
       console.error(err);
