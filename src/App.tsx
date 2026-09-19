@@ -57,6 +57,7 @@ function App() {
 
         <Route path="/customer/payment-verify" element={<PaymentVerify />} />
         <Route path="/auth/google/callback" element={<AuthCallback />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
         <Route path="/customer/dashboard/*" element={<CustomerLayout />} />
         <Route path="/customer/dashboard/checkout" element={<Checkout />} />
