@@ -19,7 +19,36 @@ const icon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+import { useState, useEffect } from "react";
+
 export default function ContactSection() {
+  const [data, setData] = useState({
+    headquarters: {
+      line1: "123 Innovation Drive,",
+      line2: "Tech Valley, CA 94043",
+      country: "United States"
+    },
+    email: {
+      general: "hello@hubnepa.com",
+      support: "support@hubnepa.com"
+    },
+    businessHours: {
+      weekdays: "Mon - Fri: 9:00 AM - 6:00 PM",
+      weekends: "Sat - Sun: 10:00 AM - 4:00 PM"
+    }
+  });
+
+  useEffect(() => {
+    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/contact")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setData({ ...data, ...json.data });
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <section className="bg-theme-bg py-24 text-theme-text">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3">
@@ -41,11 +70,11 @@ export default function ContactSection() {
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Headquarters</h3>
               <p className="text-theme-muted text-base">
-                123 Innovation Drive,
+                {data.headquarters.line1}
                 <br />
-                Tech Valley, CA 94043
+                {data.headquarters.line2}
                 <br />
-                United States
+                {data.headquarters.country}
               </p>
             </div>
 
@@ -55,9 +84,9 @@ export default function ContactSection() {
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Email Us</h3>
               <p className="text-theme-muted text-base">
-                General: hello@hubnepa.com
+                General: {data.email.general}
                 <br />
-                Support: support@hubnepa.com
+                Support: {data.email.support}
               </p>
             </div>
 
@@ -67,9 +96,9 @@ export default function ContactSection() {
               </div>
               <h3 className="font-playfair text-[20px] font-medium mb-2">Business Hours</h3>
               <p className="text-theme-muted text-base">
-                Mon - Fri: 9:00 AM - 6:00 PM
+                {data.businessHours.weekdays}
                 <br />
-                Sat - Sun: 10:00 AM - 4:00 PM
+                {data.businessHours.weekends}
               </p>
             </div>
           </div>

@@ -13,7 +13,7 @@ export default function PaymentSettingsTab() {
       
       {/* Header Info */}
       <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Payment Gateways</h2>
+        <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Payment Gateways</h2>
         <p className="text-sm text-gray-500 mb-6">Configure payment options for your platform.</p>
 
         <div className="space-y-4">
@@ -26,7 +26,7 @@ export default function PaymentSettingsTab() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">Stripe</h3>
+                  <h3 className="font-bold text-theme-text">Stripe</h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wider">Default</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">Credit/Debit Cards, Apple Pay, Google Pay</p>
@@ -49,7 +49,7 @@ export default function PaymentSettingsTab() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">PayPal</h3>
+                  <h3 className="font-bold text-theme-text">PayPal</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">PayPal Balance, Bank Transfers</p>
               </div>
@@ -71,7 +71,7 @@ export default function PaymentSettingsTab() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">Razorpay</h3>
+                  <h3 className="font-bold text-theme-text">Razorpay</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">UPI, Netbanking, Wallets (India focus)</p>
               </div>

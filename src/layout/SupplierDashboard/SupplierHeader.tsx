@@ -45,7 +45,7 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
 
           <input
             placeholder="Search orders..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] text-sm outline-none text-black"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] text-sm outline-none text-theme-text"
           />
         </div>
 

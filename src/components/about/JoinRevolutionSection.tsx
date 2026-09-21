@@ -27,7 +27,7 @@ export default function JoinRevolutionSection() {
 
           <NavLink
             to="#"
-            className="bg-[#E5E7EB] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] text-theme-muted hover:text-black px-8 h-[48px] rounded-lg flex items-center justify-center transition"
+            className="bg-[#E5E7EB] shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] text-theme-muted hover:text-theme-text px-8 h-[48px] rounded-lg flex items-center justify-center transition"
           >
             Become a Partner
           </NavLink>

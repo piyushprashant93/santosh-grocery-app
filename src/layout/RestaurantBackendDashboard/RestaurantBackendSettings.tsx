@@ -620,7 +620,7 @@ export default function RestaurantBackendSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.current ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button
@@ -638,7 +638,7 @@ export default function RestaurantBackendSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.new ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button
@@ -658,7 +658,7 @@ export default function RestaurantBackendSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.confirm ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                     />
 
                     <button

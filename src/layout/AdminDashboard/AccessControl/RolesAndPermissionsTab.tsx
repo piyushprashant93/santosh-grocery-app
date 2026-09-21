@@ -71,7 +71,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
             <div>
               <p className="text-gray-500 text-xs font-medium">Total Roles</p>
-              <h4 className="text-xl font-bold text-gray-900">{roles.length}</h4>
+              <h4 className="text-xl font-bold text-theme-text">{roles.length}</h4>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
             <div>
               <p className="text-gray-500 text-xs font-medium">Active Admins</p>
-              <h4 className="text-xl font-bold text-gray-900">{roles.reduce((acc, r) => acc + (r.admins || 0), 0)}</h4>
+              <h4 className="text-xl font-bold text-theme-text">{roles.reduce((acc, r) => acc + (r.admins || 0), 0)}</h4>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             </div>
             <div>
               <p className="text-gray-500 text-xs font-medium">Security Score</p>
-              <h4 className="text-xl font-bold text-gray-900">92%</h4>
+              <h4 className="text-xl font-bold text-theme-text">92%</h4>
             </div>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-gray-900">{role.name}</h3>
+                    <h3 className="font-bold text-theme-text">{role.name}</h3>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-600 uppercase tracking-wider">
                       {role.type}
                     </span>
@@ -153,7 +153,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
           <div className="w-12 h-12 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mb-3">
             <span className="text-2xl font-light">+</span>
           </div>
-          <h3 className="font-medium text-gray-900">Create New Role</h3>
+          <h3 className="font-medium text-theme-text">Create New Role</h3>
           <p className="text-sm text-center max-w-[200px] mt-1">Define customized access levels for specific people.</p>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
             <Shield size={24} />
           </div>
           <div>
-            <h3 className="font-bold text-gray-900">Global Security Settings</h3>
+            <h3 className="font-bold text-theme-text">Global Security Settings</h3>
             <p className="text-sm text-gray-500 mt-0.5">Require 2FA (Two-Factor Authentication) for all Admin accounts.</p>
           </div>
         </div>

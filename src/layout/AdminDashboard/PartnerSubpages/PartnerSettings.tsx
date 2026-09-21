@@ -23,8 +23,8 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Partner Settings</h1>
-          <p className="text-gray-500 mt-1">Manage access, commissions, and critical settings for <span className="font-bold text-gray-900">Spicy Kitchen</span></p>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Partner Settings</h1>
+          <p className="text-gray-500 mt-1">Manage access, commissions, and critical settings for <span className="font-bold text-theme-text">Spicy Kitchen</span></p>
         </div>
       </div>
 
@@ -32,12 +32,12 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
         
         {/* Financial Configuration Card */}
         <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Financial Configuration</h2>
+          <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Financial Configuration</h2>
           <p className="text-sm text-gray-500 mb-6">Configure commission rates and payout terms.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">Commission Rate (%)</label>
+              <label className="block text-sm font-bold text-theme-text mb-2">Commission Rate (%)</label>
               <div className="relative">
                 <input 
                   type="number" 
@@ -51,11 +51,11 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">Payout Frequency</label>
+              <label className="block text-sm font-bold text-theme-text mb-2">Payout Frequency</label>
               <select 
                 value={payoutFrequency}
                 onChange={(e) => setPayoutFrequency(e.target.value)}
-                className="w-full bg-theme-surface border border-gray-200 text-gray-900 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                className="w-full bg-theme-surface border border-gray-200 text-theme-text text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
               >
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
@@ -87,7 +87,7 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
 
           <div className="mt-6 bg-gray-50 rounded-xl p-5 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Block Partner Access</h3>
+              <h3 className="text-sm font-bold text-theme-text">Block Partner Access</h3>
               <p className="text-xs text-gray-500 mt-0.5">Prevent this partner from logging into their dashboard.</p>
             </div>
             

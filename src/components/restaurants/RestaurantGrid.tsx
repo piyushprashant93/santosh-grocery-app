@@ -172,7 +172,7 @@ export default function RestaurantGrid({
       try {
         let url;
         if (searchQuery) {
-          url = `${API_BASE}/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
+          url = `${API_BASE}/general/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
         } else {
           url = `${API_BASE}/home/food/${encodeURIComponent(activeCuisine)}`;
         }
@@ -371,7 +371,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     )}
                   </div>
 
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-theme-surface text-black text-sm font-bold px-2 py-1 rounded-full">
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-theme-surface text-theme-text text-sm font-bold px-2 py-1 rounded-full">
                     <Star
                       size={12}
                       color="#0F172B"

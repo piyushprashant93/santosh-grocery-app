@@ -44,7 +44,7 @@ export default function SupplierMarketplaceList({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Supplier Marketplace</h1>
+        <h1 className="text-2xl font-bold text-theme-text">Supplier Marketplace</h1>
         <button
           onClick={onGoToCart}
           className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-theme-text rounded-lg hover:bg-orange-700 transition shadow-sm"
@@ -82,7 +82,7 @@ export default function SupplierMarketplaceList({
               <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center mb-4 text-orange-600 group-hover:scale-110 transition">
                 <Store size={24} />
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-1">{supplier.name || 'Unknown Supplier'}</h3>
+              <h3 className="font-semibold text-lg text-theme-text mb-1">{supplier.name || 'Unknown Supplier'}</h3>
               <p className="text-sm text-gray-500 mb-4">{supplier.category || 'General Category'}</p>
               
               <div className="flex items-center justify-between mt-auto">

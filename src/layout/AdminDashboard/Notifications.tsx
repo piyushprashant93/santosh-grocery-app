@@ -141,7 +141,7 @@ export default function Notifications() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Notifications</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Notifications</h1>
           <p className="text-gray-500 mt-1">System alerts, partner requests, and important updates.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -174,7 +174,7 @@ export default function Notifications() {
             }`}
           >
             All Notifications
-            <span className={`px-2.5 py-0.5 rounded-full text-xs ${activeFilter === 'all' ? 'bg-white text-gray-900' : 'bg-gray-200 text-gray-700'}`}>
+            <span className={`px-2.5 py-0.5 rounded-full text-xs ${activeFilter === 'all' ? 'bg-white text-theme-text' : 'bg-gray-200 text-gray-700'}`}>
               {notifications.length}
             </span>
           </button>
@@ -217,7 +217,7 @@ export default function Notifications() {
           {filteredNotifications.length === 0 ? (
             <div className="bg-theme-surface rounded-2xl border border-gray-100 p-12 text-center shadow-sm">
               <Check className="mx-auto text-gray-300 mb-4" size={48} />
-              <h3 className="text-lg font-bold text-gray-900 mb-1">All caught up!</h3>
+              <h3 className="text-lg font-bold text-theme-text mb-1">All caught up!</h3>
               <p className="text-gray-500">You don't have any notifications in this category.</p>
             </div>
           ) : (
@@ -235,7 +235,7 @@ export default function Notifications() {
                   </div>
                   <div className="flex-1 flex flex-col">
                     <div className="flex justify-between items-start gap-4">
-                      <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                      <h3 className="font-bold text-theme-text flex items-center gap-2">
                         {notification.title}
                         {!notification.isRead && <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>}
                       </h3>

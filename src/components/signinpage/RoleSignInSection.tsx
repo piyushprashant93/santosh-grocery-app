@@ -605,7 +605,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
             <div className="flex items-center gap-4">
               <div
-                className={`w-10 h-10 rounded-full flex font-semibold text-black items-center justify-center ${config.quoteColor}`}
+                className={`w-10 h-10 rounded-full flex font-semibold text-theme-text items-center justify-center ${config.quoteColor}`}
               >
                 {config.nameLetter}
               </div>
@@ -624,7 +624,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
             className="w-full max-w-md rounded-2xl bg-theme-surface p-6 border-2"
             style={{ borderColor: config.borderColor }}
           >
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-theme-text">
               {showResetForm ? "Reset Password" : "Forgot Password"}
             </h2>
 
@@ -640,7 +640,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
               disabled={showResetForm}
               onChange={(e) => setForgotEmail(e.target.value)}
               placeholder="Enter email"
-              className={`mt-5 w-full rounded-lg border px-4 py-3 outline-none text-black ${
+              className={`mt-5 w-full rounded-lg border px-4 py-3 outline-none text-theme-text ${
                 showResetForm ? "bg-gray-100 cursor-not-allowed" : ""
               }`}
               style={{ borderColor: config.borderColor }}
@@ -654,7 +654,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                     placeholder="Paste Reset Token"
                     value={resetToken}
                     onChange={(e) => setResetToken(e.target.value)}
-                    className="w-full rounded-lg border px-4 py-3 outline-none text-black"
+                    className="w-full rounded-lg border px-4 py-3 outline-none text-theme-text"
                     style={{ borderColor: config.borderColor }}
                   />
                 </div>
@@ -665,7 +665,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                     placeholder="New Password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full rounded-lg border px-4 py-3 pr-12 outline-none text-black"
+                    className="w-full rounded-lg border px-4 py-3 pr-12 outline-none text-theme-text"
                     style={{ borderColor: config.borderColor }}
                   />
 
@@ -684,7 +684,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
                     placeholder="Confirm Password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full rounded-lg border px-4 py-3 pr-12 outline-none text-black"
+                    className="w-full rounded-lg border px-4 py-3 pr-12 outline-none text-theme-text"
                     style={{ borderColor: config.borderColor }}
                   />
 
@@ -753,7 +753,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
     <div className="bg-theme-surface rounded-xl p-6 w-full max-w-sm">
 
-      <h2 className="text-xl font-semibold text-black">
+      <h2 className="text-xl font-semibold text-theme-text">
         Two-Factor Authentication
       </h2>
 
@@ -762,7 +762,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
       </p>
 
       <input
-        className="w-full border rounded-lg p-3 mt-5 text-black"
+        className="w-full border rounded-lg p-3 mt-5 text-theme-text"
         value={otpCode}
         onChange={(e) => setOtpCode(e.target.value)}
         placeholder="123456"
@@ -778,7 +778,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
         <button
           onClick={() => setShow2FAModal(false)}
-          className="border px-4 py-2 rounded-lg text-black"
+          className="border px-4 py-2 rounded-lg text-theme-text"
         >
           Cancel
         </button>

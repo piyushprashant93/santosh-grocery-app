@@ -151,7 +151,7 @@ export default function AdminDashboard({
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Admin Dashboard</h1>
           <p className="text-gray-500 mt-1">Platform overview and performance metrics.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -187,7 +187,7 @@ export default function AdminDashboard({
           </div>
           <div>
             <p className="text-gray-500 text-sm mb-1" style={{ fontFamily: 'serif' }}>Total Users</p>
-            <h3 className="text-2xl font-bold text-gray-900">{(dData.totalUsers || 0).toLocaleString()}</h3>
+            <h3 className="text-2xl font-bold text-theme-text">{(dData.totalUsers || 0).toLocaleString()}</h3>
           </div>
         </div>
 
@@ -204,7 +204,7 @@ export default function AdminDashboard({
           </div>
           <div>
             <p className="text-gray-500 text-sm mb-1" style={{ fontFamily: 'serif' }}>Total Revenue</p>
-            <h3 className="text-2xl font-bold text-gray-900">${(dData.totalRevenue || 0).toLocaleString()}</h3>
+            <h3 className="text-2xl font-bold text-theme-text">${(dData.totalRevenue || 0).toLocaleString()}</h3>
           </div>
         </div>
 
@@ -221,7 +221,7 @@ export default function AdminDashboard({
           </div>
           <div>
             <p className="text-gray-500 text-sm mb-1" style={{ fontFamily: 'serif' }}>Total Orders</p>
-            <h3 className="text-2xl font-bold text-gray-900">{(dData.totalOrders || 0).toLocaleString()}</h3>
+            <h3 className="text-2xl font-bold text-theme-text">{(dData.totalOrders || 0).toLocaleString()}</h3>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export default function AdminDashboard({
           </div>
           <div>
             <p className="text-gray-500 text-sm mb-1" style={{ fontFamily: 'serif' }}>Total Restaurants</p>
-            <h3 className="text-2xl font-bold text-gray-900">{(dData.totalRestaurants || 0).toLocaleString()}</h3>
+            <h3 className="text-2xl font-bold text-theme-text">{(dData.totalRestaurants || 0).toLocaleString()}</h3>
           </div>
         </div>
       </div>
@@ -249,7 +249,7 @@ export default function AdminDashboard({
         {/* Sales Overview Chart */}
         <div className="lg:col-span-2 bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-full">
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Sales Overview</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Sales Overview</h2>
             <p className="text-gray-500 text-sm mt-1">Weekly revenue performance across all channels.</p>
           </div>
           <div className="flex-1 min-h-0 w-full relative">

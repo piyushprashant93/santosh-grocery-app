@@ -320,6 +320,20 @@ const getNotificationIcon = (type: string, title: string = "") => {
 
   useEffect(() => {
     void fetchNotifications(1, false);
+
+    const handleNewNotification = (e: Event) => {
+      const detail = (e as CustomEvent).detail as NotificationItem;
+      setNotifications((prev) => {
+        // Avoid duplicate additions
+        if (prev.some((n) => n._id === detail._id)) return prev;
+        return [detail, ...prev];
+      });
+    };
+
+    window.addEventListener("new-notification", handleNewNotification);
+    return () => {
+      window.removeEventListener("new-notification", handleNewNotification);
+    };
   }, [fetchNotifications]);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;

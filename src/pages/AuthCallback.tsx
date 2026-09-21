@@ -15,12 +15,50 @@ export default function AuthCallback() {
     // Some backends might pass "token" instead of "accessToken"
     const finalAccessToken = accessToken || queryParams.get("token");
 
+    const establishSession = async (token: string) => {
+      try {
+        const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/me", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          const userObj = data.data.user || data.data;
+          localStorage.setItem("user", JSON.stringify(userObj));
+          const userRole = userObj.role || "customer";
+          localStorage.setItem("role", userRole);
+          
+          // Notify other components
+          window.dispatchEvent(new CustomEvent("user-updated", { detail: userObj }));
+          
+          // Redirect to correct dashboard based on role
+          if (userRole === "restaurant") {
+            navigate("/restaurant/dashboard");
+          } else if (userRole === "supplier") {
+            navigate("/supplier/dashboard");
+          } else if (userRole === "admin") {
+            navigate("/admin/dashboard");
+          } else if (userRole === "retailer") {
+            navigate("/retailer/dashboard");
+          } else {
+            navigate("/customer/dashboard");
+          }
+        } else {
+          throw new Error("Failed to load user profile");
+        }
+      } catch (err) {
+        console.error(err);
+        navigate("/sign-in");
+      }
+    };
+
     if (finalAccessToken) {
       // Store authentication data
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("authToken", finalAccessToken);
-      
-      let userRole = "customer";
       
       if (refreshToken) {
         localStorage.setItem("refreshToken", refreshToken);
@@ -28,38 +66,36 @@ export default function AuthCallback() {
       
       if (userParam) {
         try {
-          // It might be a URL encoded JSON string
           const decodedUser = decodeURIComponent(userParam);
-          // Just verify it's valid JSON (though we'll store it as a string)
           const userObj = JSON.parse(decodedUser);
           localStorage.setItem("user", decodedUser);
+          localStorage.setItem("role", userObj.role || "customer");
           
-          if (userObj.role) {
-            userRole = userObj.role;
+          window.dispatchEvent(new CustomEvent("user-updated", { detail: userObj }));
+          
+          const userRole = userObj.role || "customer";
+          if (userRole === "restaurant") {
+            navigate("/restaurant/dashboard");
+          } else if (userRole === "supplier") {
+            navigate("/supplier/dashboard");
+          } else if (userRole === "admin") {
+            navigate("/admin/dashboard");
+          } else if (userRole === "retailer") {
+            navigate("/retailer/dashboard");
+          } else {
+            navigate("/customer/dashboard");
           }
         } catch (e) {
           console.error("Failed to parse user data from URL", e);
+          establishSession(finalAccessToken);
         }
-      }
-      
-      localStorage.setItem("role", userRole);
-
-      // Redirect to correct dashboard based on role
-      if (userRole === "restaurant") {
-        navigate("/restaurant/dashboard");
-      } else if (userRole === "supplier") {
-        navigate("/supplier/dashboard");
-      } else if (userRole === "admin") {
-        navigate("/admin/dashboard");
-      } else if (userRole === "retailer") {
-        navigate("/retailer/dashboard");
       } else {
-        navigate("/customer/dashboard");
+        establishSession(finalAccessToken);
       }
     } else {
       console.error("No access token found in URL parameters");
       // Redirect back to login if authentication fails or token is missing
-      navigate("/customer");
+      navigate("/sign-in");
     }
   }, [location.search, navigate]);
 

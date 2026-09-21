@@ -101,12 +101,17 @@ export default function FeaturedProducts({
 
     if (searchQuery.trim()) params.set("search", searchQuery.trim());
 
-    // If a category is selected and no search query, use the home/products/:category endpoint
     if (activeCategory && !searchQuery.trim()) {
       return `${API_BASE}/home/products/${encodeURIComponent(activeCategory)}?${params.toString()}`;
     }
 
     if (activeCategory) params.set("category", activeCategory);
+
+    let sortParam = "recommended";
+    if (sortBy === "price-low") sortParam = "price_asc";
+    if (sortBy === "price-high") sortParam = "price_desc";
+    if (sortBy === "new-arrival" || sortBy === "newest") sortParam = "new";
+    params.set("sort", sortParam);
 
     return `${API_BASE}/products?${params.toString()}`;
   };
@@ -143,11 +148,11 @@ export default function FeaturedProducts({
     }
   };
 
-  // refetch whenever category or search changes
+  // refetch whenever category, search, or sort changes
   useEffect(() => {
     fetchProducts(1, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, sortBy]);
 
   // Fetch dynamic categories from the home endpoint
   useEffect(() => {
@@ -244,29 +249,7 @@ export default function FeaturedProducts({
     }
   };
 
-  const sortedProducts = [...products]
-    .filter((product) => {
-      if (featuredOnly && !product.isFeatured) {
-        return false;
-      }
-
-      if (sortBy === "new-arrival") {
-        return product.isNewArrival;
-      }
-
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === "price-low") {
-        return a.discountPrice - b.discountPrice;
-      }
-
-      if (sortBy === "price-high") {
-        return b.discountPrice - a.discountPrice;
-      }
-
-      return 0;
-    });
+  const sortedProducts = [...products];
 
   return (
     <section className="bg-theme-bg py-20 text-theme-text">

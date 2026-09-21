@@ -167,7 +167,7 @@ export default function CouponsTab() {
                 </div>
                 <div>
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Discount Code</p>
-                  <h3 className="font-bold text-lg text-gray-900 tracking-tight">{coupon.code}</h3>
+                  <h3 className="font-bold text-lg text-theme-text tracking-tight">{coupon.code}</h3>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -186,18 +186,18 @@ export default function CouponsTab() {
             </div>
             
             <div className="flex items-baseline gap-1 mb-4 ml-2">
-              <span className="text-2xl font-black text-gray-900" style={{ fontFamily: 'serif' }}>{coupon.discount}</span>
+              <span className="text-2xl font-black text-theme-text" style={{ fontFamily: 'serif' }}>{coupon.discount}</span>
               <span className="text-xs text-gray-500 font-medium">OFF</span>
             </div>
             
             <div className="flex flex-col gap-2 mt-auto ml-2 pt-4 border-t border-gray-100">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-gray-500">Validity:</span>
-                <span className="font-medium text-gray-900">{coupon.validUntil}</span>
+                <span className="font-medium text-theme-text">{coupon.validUntil}</span>
               </div>
               <div className="flex justify-between items-center text-xs">
                 <span className="text-gray-500">Usage:</span>
-                <span className="font-medium text-gray-900">{coupon.uses} / {coupon.maxUses}</span>
+                <span className="font-medium text-theme-text">{coupon.uses} / {coupon.maxUses}</span>
               </div>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function CouponsTab() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
-              <h3 className="font-bold text-lg text-gray-900">Create New Coupon</h3>
+              <h3 className="font-bold text-lg text-theme-text">Create New Coupon</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-700">
                 <X size={20} />
               </button>

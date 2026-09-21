@@ -39,7 +39,7 @@ export default function SecuritySettings() {
             name="currentPassword"
             value={form.currentPassword}
             onChange={handleChange}
-            className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
+            className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
           />
         </div>
 
@@ -57,7 +57,7 @@ export default function SecuritySettings() {
               name="newPassword"
               value={form.newPassword}
               onChange={handleChange}
-              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
             />
           </div>
 
@@ -73,7 +73,7 @@ export default function SecuritySettings() {
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
             />
           </div>
 

@@ -41,7 +41,7 @@ export default function AdminHeader({
 
         <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1.5 pr-3 rounded-full transition">
           <div className="flex flex-col items-end hidden sm:flex">
-            <span className="text-sm font-semibold text-gray-800">Super Admin</span>
+            <span className="text-sm font-semibold text-theme-text">Super Admin</span>
             <span className="text-xs text-gray-500">System Owner</span>
           </div>
           <img

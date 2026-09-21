@@ -109,7 +109,7 @@ export default function Header() {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <img src={Logo} alt="" />
+          <img src={Logo} alt="" className="dark:invert" />
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
@@ -121,7 +121,7 @@ export default function Header() {
                 `relative transition ${
                   isActive
                     ? "text-[#E17100] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#E17100]"
-                    : "text-[#64748B] hover:text-black"
+                    : "text-[#64748B] hover:text-theme-text"
                 }`
               }
             >
@@ -155,7 +155,7 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(`/${role}/dashboard`)}
-                className="flex items-center gap-2 bg-[#F59E0B] text-black px-5 py-2 rounded-lg font-medium"
+                className="flex items-center gap-2 bg-[#F59E0B] text-theme-text px-5 py-2 rounded-lg font-medium"
               >
                 <LayoutGrid size={16} />
                 Dashboard

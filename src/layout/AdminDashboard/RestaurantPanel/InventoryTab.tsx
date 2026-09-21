@@ -40,7 +40,7 @@ export default function InventoryTab() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {lowStock.map((stock, i) => (
               <div key={i} className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3">
-                <p className="font-bold text-gray-900">{stock.item}</p>
+                <p className="font-bold text-theme-text">{stock.item}</p>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-red-600 font-medium">{stock.current}</span>
                   <span className="text-gray-400">/ {stock.threshold}</span>
@@ -60,7 +60,7 @@ export default function InventoryTab() {
         {inventoryCategories.map((category, i) => (
           <div key={i} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>{category.name}</h2>
+              <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>{category.name}</h2>
               <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1">
                 <Plus size={16} /> Add Item
               </button>
@@ -68,7 +68,7 @@ export default function InventoryTab() {
             <div className="space-y-3">
               {category.items.map((item, j) => (
                 <div key={j} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <p className="font-medium text-gray-900">{item.name}</p>
+                  <p className="font-medium text-theme-text">{item.name}</p>
                   <span className="text-sm font-bold text-gray-500">{item.stock}</span>
                 </div>
               ))}

@@ -14,7 +14,7 @@ export default function ProductsTab() {
     <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
       
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Product Inventory</h2>
+        <h2 className="text-xl font-bold text-theme-text">Product Inventory</h2>
         <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
           View Only - Admin Access
         </span>
@@ -34,10 +34,10 @@ export default function ProductsTab() {
           <tbody>
             {products.map((product, idx) => (
               <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">{product.sku}</td>
+                <td className="py-4 px-4 text-sm font-medium text-theme-text">{product.sku}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{product.name}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{product.stock}</td>
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">{formatPrice(product.price)}</td>
+                <td className="py-4 px-4 text-sm font-medium text-theme-text">{formatPrice(product.price)}</td>
                 <td className="py-4 px-4 text-sm">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                     product.status === 'In Stock' ? 'bg-green-100 text-green-700' :

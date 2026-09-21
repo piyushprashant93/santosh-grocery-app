@@ -47,7 +47,7 @@ export default function Dialog({
       >
         {!hideHeader && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0 bg-theme-surface">
-            <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+            <h2 className="text-xl font-bold text-theme-text">{title}</h2>
             <button 
               onClick={onClose}
               className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition"

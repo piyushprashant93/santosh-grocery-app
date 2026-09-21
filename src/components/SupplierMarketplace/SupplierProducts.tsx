@@ -87,7 +87,7 @@ export default function SupplierProducts({
           <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition">
             <ArrowLeft size={20} className="text-gray-600" />
           </button>
-          <h1 className="text-2xl font-bold text-gray-800">{supplierName} Products</h1>
+          <h1 className="text-2xl font-bold text-theme-text">{supplierName} Products</h1>
         </div>
         <button
           onClick={onGoToCart}
@@ -126,9 +126,9 @@ export default function SupplierProducts({
                    )}
                 </div>
                 <div className="p-5 flex flex-col flex-1">
-                   <h3 className="font-semibold text-lg text-gray-800 mb-2">{product.name}</h3>
+                   <h3 className="font-semibold text-lg text-theme-text mb-2">{product.name}</h3>
                    <div className="mb-4">
-                     <span className="text-2xl font-bold text-gray-900">${product.price || product.basePrice || 0}</span>
+                     <span className="text-2xl font-bold text-theme-text">${product.price || product.basePrice || 0}</span>
                      {product.unit && <span className="text-gray-500 text-sm ml-1">/ {product.unit}</span>}
                    </div>
                    

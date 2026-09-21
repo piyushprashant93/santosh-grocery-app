@@ -142,7 +142,7 @@ export default function FeedbackComplaints() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Feedback & Complaints</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Feedback & Complaints</h1>
           <p className="text-gray-500 mt-1">Review customer feedback and resolve complaints efficiently</p>
         </div>
         <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
@@ -158,7 +158,7 @@ export default function FeedbackComplaints() {
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Total Cases</p>
             <BarChart2 size={18} className="text-gray-400" />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900">{stats.total.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-theme-text">{stats.total.toLocaleString()}</h3>
         </div>
 
         <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
@@ -166,7 +166,7 @@ export default function FeedbackComplaints() {
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Open</p>
             <div className="w-3 h-3 rounded-full bg-red-500 mt-1"></div>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900">{stats.open.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-theme-text">{stats.open.toLocaleString()}</h3>
         </div>
 
         <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
@@ -174,7 +174,7 @@ export default function FeedbackComplaints() {
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">In Review</p>
             <SearchIcon size={18} className="text-gray-400" />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900">{stats.inReview.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-theme-text">{stats.inReview.toLocaleString()}</h3>
         </div>
 
         <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
@@ -182,7 +182,7 @@ export default function FeedbackComplaints() {
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Resolved</p>
             <CheckSquare size={18} className="text-emerald-500" />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900">{stats.resolved.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-theme-text">{stats.resolved.toLocaleString()}</h3>
         </div>
 
         <div className="bg-theme-surface border border-gray-100 rounded-2xl p-5 flex flex-col justify-between h-[120px] shadow-sm">
@@ -190,7 +190,7 @@ export default function FeedbackComplaints() {
             <p className="text-gray-500 font-medium text-xs uppercase tracking-wider">Rejected</p>
             <X size={18} className="text-red-500" />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900">{stats.rejected.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-theme-text">{stats.rejected.toLocaleString()}</h3>
         </div>
       </div>
 
@@ -256,7 +256,7 @@ export default function FeedbackComplaints() {
               {complaints.map((item, index) => (
                 <tr key={item._id || index} className="hover:bg-gray-50/50 transition">
                   <td className="px-6 py-4">
-                    <span className="font-bold text-gray-900 text-sm block max-w-[80px]">
+                    <span className="font-bold text-theme-text text-sm block max-w-[80px]">
                       {formatId(item.complaintId || item._id)}
                     </span>
                   </td>
@@ -266,7 +266,7 @@ export default function FeedbackComplaints() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="font-semibold text-gray-900 text-sm">{item.customerName || 'Unknown'}</span>
+                    <span className="font-semibold text-theme-text text-sm">{item.customerName || 'Unknown'}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="text-gray-500 text-sm">{item.vendorName || 'N/A'}</span>
@@ -300,7 +300,7 @@ export default function FeedbackComplaints() {
         {!loading && complaints.length > 0 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between mt-auto">
             <span className="text-sm text-gray-500">
-              Showing page <span className="font-medium text-gray-900">{page}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+              Showing page <span className="font-medium text-theme-text">{page}</span> of <span className="font-medium text-theme-text">{totalPages}</span>
             </span>
             <div className="flex items-center gap-2">
               <button 

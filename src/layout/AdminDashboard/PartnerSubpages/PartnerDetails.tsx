@@ -28,7 +28,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             </div>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+                <h1 className="text-2xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>
                   Spicy Kitchen
                 </h1>
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600">
@@ -65,7 +65,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Orders</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">1,245</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">1,245</p>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Revenue</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">$45,230</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">$45,230</p>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Rating</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">4.8</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">4.8</p>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Outlets</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">2</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">2</p>
           </div>
         </div>
       </div>
@@ -111,27 +111,27 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           
           {/* Business Information Card */}
           <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Business Information</h2>
+            <h2 className="text-lg font-bold text-theme-text mb-6" style={{ fontFamily: 'serif' }}>Business Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Owner Name</p>
-                <p className="text-gray-900 font-medium">Michael Chen</p>
+                <p className="text-theme-text font-medium">Michael Chen</p>
               </div>
               
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</p>
-                <p className="text-gray-900 font-medium">Asian Cuisine • Restaurant</p>
+                <p className="text-theme-text font-medium">Asian Cuisine • Restaurant</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
-                <p className="text-gray-900 font-medium truncate">michael.chen@spicykitchen.com</p>
+                <p className="text-theme-text font-medium truncate">michael.chen@spicykitchen.com</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
+                <p className="text-theme-text font-medium flex items-center gap-2">
                   <Phone size={14} className="text-gray-400" />
                   +1 (555) 123-4567
                 </p>
@@ -139,7 +139,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
               <div className="md:col-span-2">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Address</p>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
+                <p className="text-theme-text font-medium flex items-center gap-2">
                   <MapPin size={14} className="text-gray-400 shrink-0" />
                   123 Culinary Ave, Suite 100, Scranton, PA 18503
                 </p>
@@ -150,7 +150,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           {/* Recent Orders Card */}
           <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Recent Orders</h2>
+              <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Recent Orders</h2>
               <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition">View All</button>
             </div>
 
@@ -160,7 +160,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                   <div className="flex items-center gap-4">
                     <span className="text-lg font-bold text-gray-400">#{orderNum}</span>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">Order #{orderNum}</p>
+                      <p className="text-sm font-bold text-theme-text">Order #{orderNum}</p>
                       <p className="text-xs text-gray-500 mt-0.5">2 items • $45.00</p>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
           {/* Current Status Card */}
           <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Current Status</h2>
+            <h2 className="text-lg font-bold text-theme-text mb-6" style={{ fontFamily: 'serif' }}>Current Status</h2>
             
             <div className="flex flex-col gap-5">
               <div className="flex justify-between items-center text-sm">
@@ -215,7 +215,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
               
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">Last Active</span>
-                <span className="font-medium text-gray-900">5 mins ago</span>
+                <span className="font-medium text-theme-text">5 mins ago</span>
               </div>
 
               <div className="flex justify-between items-center text-sm">

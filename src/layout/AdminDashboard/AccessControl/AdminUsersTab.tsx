@@ -112,7 +112,7 @@ export default function AdminUsersTab() {
                         {user.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900 text-sm">{user.name}</p>
+                        <p className="font-medium text-theme-text text-sm">{user.name}</p>
                         <p className="text-xs text-gray-500">{user.email}</p>
                       </div>
                     </div>

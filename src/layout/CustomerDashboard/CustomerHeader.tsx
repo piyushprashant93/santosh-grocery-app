@@ -16,9 +16,10 @@ export default function CustomerHeader({
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
     const fetchUnreadCount = async () => {
-      const token = localStorage.getItem("authToken");
-      if (!token) return;
 
       try {
         const response = await fetch(
@@ -48,9 +49,25 @@ export default function CustomerHeader({
 
     void fetchUnreadCount();
 
+    const eventSource = new EventSource(`https://mr-santosh-grocery-backend.onrender.com/api/v1/notifications/stream?token=${token}`);
+    eventSource.onmessage = (event) => {
+      try {
+        if (event.data !== "ping") {
+          // New notification received
+          setUnreadCount((prev) => prev + 1);
+          window.dispatchEvent(
+            new CustomEvent("new-notification", { detail: JSON.parse(event.data) })
+          );
+        }
+      } catch (err) {
+        console.error("Error parsing SSE data", err);
+      }
+    };
+
     window.addEventListener("notifications-updated", fetchUnreadCount);
     return () => {
       window.removeEventListener("notifications-updated", fetchUnreadCount);
+      eventSource.close();
     };
   }, []);
 

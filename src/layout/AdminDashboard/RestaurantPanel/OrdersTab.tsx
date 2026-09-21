@@ -47,17 +47,17 @@ export default function OrdersTab() {
             {orders.map((order) => (
               <tr key={order.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="font-bold text-gray-900">{order.id}</span>
+                  <span className="font-bold text-theme-text">{order.id}</span>
                   <p className="text-xs text-gray-500 mt-0.5">{order.time}</p>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-medium text-gray-900">{order.customer}</span>
+                  <span className="text-sm font-medium text-theme-text">{order.customer}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm text-gray-600">{order.items} items</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-gray-900">{order.total}</span>
+                  <span className="text-sm font-bold text-theme-text">{order.total}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
