@@ -55,8 +55,16 @@ export default function FinanceSettlements() {
     setLoading(true)
     setError("")
     try {
-      const response = await api.get('/api/v1/admin/finance')
-      const result = response.data?.data || response.data || {}
+      const [statsRes, historyRes] = await Promise.all([
+        api.get('/api/v1/admin/finance'),
+        api.get('/api/v1/admin/payments').catch(err => {
+          console.warn('Failed to fetch payment history', err);
+          return { data: { data: [] } };
+        })
+      ]);
+      
+      const result = statsRes.data?.data || statsRes.data || {}
+      const historyData = historyRes.data?.data || historyRes.data || [];
       
       setStats({
         totalRevenue: result.totalRevenue || 0,
@@ -65,9 +73,11 @@ export default function FinanceSettlements() {
         totalCommissions: result.totalCommissions || 0
       })
 
-      // Assuming payouts/settlements array comes along with finance data or in a separate endpoint
-      // If it's separate, we can do Promise.all. For now, assuming it's part of the same response:
-      if (Array.isArray(result.settlements)) {
+      if (Array.isArray(historyData)) {
+        setSettlements(historyData);
+      } else if (historyData.data && Array.isArray(historyData.data)) {
+        setSettlements(historyData.data);
+      } else if (Array.isArray(result.settlements)) {
         setSettlements(result.settlements)
       } else if (Array.isArray(result.payouts)) {
         setSettlements(result.payouts)

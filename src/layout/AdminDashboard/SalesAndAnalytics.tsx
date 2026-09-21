@@ -37,7 +37,7 @@ export default function SalesAndAnalytics() {
     try {
       const token = localStorage.getItem("authToken")
       const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com"
-      const response = await fetch(`${baseUrl}/api/v1/admin/reports`, {
+      const response = await fetch(`${baseUrl}/api/v1/admin/reports/export?days=30`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }
@@ -49,7 +49,7 @@ export default function SalesAndAnalytics() {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = "sales-analytics-report.pdf" 
+      a.download = "reports.csv" 
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)

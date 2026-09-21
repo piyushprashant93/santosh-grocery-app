@@ -5,12 +5,13 @@ import PartnerDetails from "./PartnerSubpages/PartnerDetails"
 import PartnerDocuments from "./PartnerSubpages/PartnerDocuments"
 import PartnerSettings from "./PartnerSubpages/PartnerSettings"
 import AddPartnerWizard from "./PartnerSubpages/AddPartnerWizard"
+import VerificationsList from "./VerificationsList"
 import api from "../../lib/api"
 
 function PartnerManagementList() {
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<'restaurants' | 'retailers'>('restaurants');
+  const [activeTab, setActiveTab] = useState<'restaurants' | 'retailers' | 'verifications'>('restaurants');
   const [partners, setPartners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -36,6 +37,7 @@ function PartnerManagementList() {
     setLoading(true);
     setError("");
     try {
+      if (activeTab === 'verifications') return; // VerificationsList fetches its own data
       const endpoint = activeTab === 'restaurants' ? '/api/v1/admin/partners/restaurants' : '/api/v1/admin/partners/retailers';
       const res = await api.get(endpoint);
       const data = res.data?.data?.data || res.data?.data || res.data || [];
@@ -97,6 +99,15 @@ function PartnerManagementList() {
             <ShoppingBag size={18} />
             Retailers (Vendors)
           </button>
+          <button 
+            onClick={() => setActiveTab('verifications')}
+            className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
+              activeTab === 'verifications' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <AlertTriangle size={18} />
+            Pending Verifications
+          </button>
         </div>
       </div>
 
@@ -118,6 +129,9 @@ function PartnerManagementList() {
       </div>
 
       {/* Table Area */}
+      {activeTab === 'verifications' ? (
+        <VerificationsList />
+      ) : (
       <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[300px] relative">
         
         {loading && (
@@ -262,6 +276,7 @@ function PartnerManagementList() {
           </tbody>
         </table>
       </div>
+      )}
     </div>
   )
 }

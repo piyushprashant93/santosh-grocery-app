@@ -1,9 +1,22 @@
-import { ArrowLeft, MapPin, Clock, AlertCircle } from "lucide-react"
+import { ArrowLeft, MapPin, Clock, AlertCircle, Loader2 } from "lucide-react"
+import { useState, useEffect } from "react"
+import api from "../../../lib/api"
 
 interface DeliveryLogsProps {
   user: { id: string; fullName: string; } | null;
   onBack: () => void;
   onViewRoute: (deliveryId: string) => void;
+}
+
+interface DeliveryLog {
+  _id: string;
+  orderId: string;
+  status: string;
+  address: string;
+  timestamp: string;
+  driver: string;
+  duration: string;
+  failedReason?: string;
 }
 
 const mockDeliveries = [
@@ -38,6 +51,39 @@ const mockDeliveries = [
 ];
 
 export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogsProps) {
+  const [deliveries, setDeliveries] = useState<DeliveryLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchLogs = async () => {
+      try {
+        setLoading(true);
+        // The endpoint may accept driverId to filter if applicable
+        const response = await api.get(`/api/v1/admin/delivery/logs?driverId=${user.id}`);
+        const data = response.data?.data || response.data || [];
+        // Map the backend data to our interface
+        const mapped = (Array.isArray(data) ? data : data.data || []).map((item: any) => ({
+          _id: item._id || item.id || Math.random().toString(),
+          orderId: item.order?.orderId || item.orderId || "N/A",
+          status: item.status || "Unknown",
+          address: item.order?.deliveryAddress?.address || item.address || "No address",
+          timestamp: item.createdAt ? new Date(item.createdAt).toLocaleString() : item.timestamp || "N/A",
+          driver: item.driver?.fullName || user.fullName || "Unknown",
+          duration: item.duration || "-",
+          failedReason: item.failedReason
+        }));
+        setDeliveries(mapped);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to load delivery logs.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLogs();
+  }, [user]);
+
   if (!user) return null;
 
   return (
@@ -60,33 +106,51 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
       </div>
 
       {/* Delivery Cards */}
-      <div className="flex flex-col gap-4">
-        {mockDeliveries.map((delivery) => (
+      {loading ? (
+        <div className="flex flex-col items-center justify-center p-12">
+          <Loader2 className="animate-spin text-orange-500 mb-4" size={32} />
+          <p className="text-gray-500">Loading delivery logs...</p>
+        </div>
+      ) : error ? (
+        <div className="p-6 text-center text-red-500 bg-red-50 rounded-xl">
+          {error}
+        </div>
+      ) : deliveries.length === 0 ? (
+        <div className="p-12 text-center text-gray-500 bg-white rounded-xl border border-gray-100">
+          No delivery logs found for this driver.
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {deliveries.map((delivery) => (
           <div 
-            key={delivery.id} 
+            key={delivery._id} 
             className={`bg-white rounded-2xl shadow-sm border p-6 flex flex-col md:flex-row gap-6 relative overflow-hidden transition-all hover:shadow-md ${
-              delivery.status === 'Failed' ? 'border-red-200' : 'border-emerald-200'
+              delivery.status.toLowerCase() === 'failed' ? 'border-red-200' : 'border-emerald-200'
             }`}
           >
             {/* Left Accent Bar */}
             <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-              delivery.status === 'Failed' ? 'bg-red-500' : 'bg-emerald-500'
+              delivery.status.toLowerCase() === 'failed' ? 'bg-red-500' : 'bg-emerald-500'
             }`} />
 
             {/* Left Details */}
             <div className="flex-1 flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold uppercase tracking-wider">
-                  {delivery.id}
+                  {delivery._id.substring(0, 8)}
                 </span>
                 <span className="text-lg font-bold text-theme-text">Order #{delivery.orderId}</span>
-                {delivery.status === 'Delivered' ? (
+                {delivery.status.toLowerCase() === 'delivered' ? (
                   <span className="ml-auto md:ml-2 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
                     Delivered
                   </span>
-                ) : (
+                ) : delivery.status.toLowerCase() === 'failed' ? (
                   <span className="ml-auto md:ml-2 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
                     Failed
+                  </span>
+                ) : (
+                  <span className="ml-auto md:ml-2 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 capitalize">
+                    {delivery.status}
                   </span>
                 )}
               </div>
@@ -129,7 +193,7 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
                 </div>
               </div>
               <button 
-                onClick={() => onViewRoute(delivery.id)}
+                onClick={() => onViewRoute(delivery._id)}
                 className="w-full px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition"
               >
                 View Route Map
@@ -137,8 +201,9 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
             </div>
 
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
