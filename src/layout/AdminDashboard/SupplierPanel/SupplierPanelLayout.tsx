@@ -35,17 +35,17 @@ export default function SupplierPanelLayout() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Supplier Panel</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight">Supplier Panel</h1>
           <p className="text-gray-500 mt-1">Manage bulk orders, inventory, and logistics</p>
         </div>
       </div>
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
-            <h3 className="text-3xl font-bold text-gray-900">$89,240</h3>
+            <h3 className="text-3xl font-bold text-theme-text">$89,240</h3>
           </div>
           <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
             <ArrowUpRight size={16} />
@@ -53,10 +53,10 @@ export default function SupplierPanelLayout() {
           </div>
         </div>
         
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Active Bulk Orders</p>
-            <h3 className="text-3xl font-bold text-gray-900">127</h3>
+            <h3 className="text-3xl font-bold text-theme-text">127</h3>
           </div>
           <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
             <ArrowUpRight size={16} />
@@ -64,10 +64,10 @@ export default function SupplierPanelLayout() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Low Stock Items</p>
-            <h3 className="text-3xl font-bold text-gray-900">18</h3>
+            <h3 className="text-3xl font-bold text-theme-text">18</h3>
           </div>
           <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
             <ArrowUpRight size={16} />
@@ -75,10 +75,10 @@ export default function SupplierPanelLayout() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Active Clients</p>
-            <h3 className="text-3xl font-bold text-gray-900">342</h3>
+            <h3 className="text-3xl font-bold text-theme-text">342</h3>
           </div>
           <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
             <ArrowUpRight size={16} />
@@ -88,7 +88,7 @@ export default function SupplierPanelLayout() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 overflow-x-auto scroll-hide">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-2 overflow-x-auto scroll-hide">
         <div className="flex gap-2 whitespace-nowrap">
           {tabs.map((tab) => {
             const Icon = tab.icon;

@@ -103,13 +103,13 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full bg-white shadow-sm h-20 flex items-center">
+    <header className="w-full bg-theme-surface shadow-sm h-20 flex items-center">
       <div className="max-w-[1265px] lg:px-6 px-3 mx-auto w-full flex items-center justify-between">
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <img src={Logo} alt="" />
+          <img src={Logo} alt="" className="dark:invert" />
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
@@ -121,7 +121,7 @@ export default function Header() {
                 `relative transition ${
                   isActive
                     ? "text-[#E17100] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#E17100]"
-                    : "text-[#64748B] hover:text-black"
+                    : "text-[#64748B] hover:text-theme-text"
                 }`
               }
             >
@@ -135,7 +135,7 @@ export default function Header() {
               onClick={() => navigate(`/${role}/dashboard`)}
               className="flex items-center gap-3 cursor-pointer"
             >
-              <p className="text-sm text-[#64748B] capitalize">
+              <p className="text-sm text-theme-muted capitalize">
                 Hello {firstName || "User"}
               </p>
 
@@ -146,7 +146,7 @@ export default function Header() {
                   className="w-9 h-9 rounded-full object-cover border border-white/20"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-full bg-[#F1F5F9] text-[#0F172A] flex items-center justify-center text-xs font-semibold border border-white/20">
+                <div className="w-9 h-9 rounded-full bg-[#F1F5F9] text-theme-text flex items-center justify-center text-xs font-semibold border border-white/20">
                   {initials || "U"}
                 </div>
               )}
@@ -155,7 +155,7 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(`/${role}/dashboard`)}
-                className="flex items-center gap-2 bg-[#F59E0B] text-black px-5 py-2 rounded-lg font-medium"
+                className="flex items-center gap-2 bg-[#F59E0B] text-theme-text px-5 py-2 rounded-lg font-medium"
               >
                 <LayoutGrid size={16} />
                 Dashboard
@@ -174,21 +174,21 @@ export default function Header() {
           <div className="flex items-center gap-6">
             <button
               onClick={() => navigate("/sign-in")}
-              className="hidden md:block text-sm text-[#64748B] font-medium"
+              className="hidden md:block text-sm text-theme-muted font-medium"
             >
               Sign In
             </button>
 
             <button
               onClick={() => navigate("/sign-up")}
-              className="shadow-[0px_4px_6px_-4px_#D9770633,0px_10px_15px_-3px_#D9770633] flex items-center gap-2 bg-[#D97706] text-white text-sm px-5 py-2.5 rounded-full font-medium hover:opacity-90 transition"
+              className="shadow-[0px_4px_6px_-4px_#D9770633,0px_10px_15px_-3px_#D9770633] flex items-center gap-2 bg-[#D97706] text-theme-text text-sm px-5 py-2.5 rounded-full font-medium hover:opacity-90 transition"
             >
               Sign Up Now
             </button>
 
             <button
               onClick={() => navigate("/admin")}
-              className="hidden md:block text-sm text-[#64748B] font-medium"
+              className="hidden md:block text-sm text-theme-muted font-medium"
             >
               Admin
             </button>
@@ -198,8 +198,8 @@ export default function Header() {
 
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="text-xl font-semibold text-[#111827]">Sign Out</h2>
+          <div className="w-full max-w-md rounded-2xl bg-theme-surface p-6 shadow-xl">
+            <h2 className="text-xl font-semibold text-theme-text">Sign Out</h2>
 
             <p className="mt-3 text-sm text-[#6B7280]">
               Are you sure you want to sign out?

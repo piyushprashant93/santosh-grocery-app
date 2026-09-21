@@ -26,14 +26,14 @@ export default function CoreValuesSection() {
   ];
 
   return (
-    <section className="w-full bg-[#0F172B]">
+    <section className="w-full bg-theme-surface">
       <div className="max-w-[1265px] mx-auto px-3 lg:px-6 py-[80px]">
         
         <div className="text-center mb-16">
-          <h2 className="font-playfair text-[54px] font-medium text-white mb-4">
+          <h2 className="font-playfair text-[54px] font-medium text-theme-text mb-4">
             Our Core Values
           </h2>
-          <p className="text-[#90A1B9] text-lg max-w-2xl mx-auto">
+          <p className="text-theme-muted text-lg max-w-2xl mx-auto">
             Every decision we make is guided by these principles. They define who we are and how we serve you.
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function CoreValuesSection() {
             return (
               <div
                 key={i}
-                className="bg-[#020618] border border-[#1D293D] rounded-[18px] p-8"
+                className="bg-theme-bg border border-theme-border rounded-[18px] p-8"
               >
                 <div
                   className={`w-14 h-14 flex items-center justify-center rounded-full mb-6 ${item.iconBg}`}
@@ -52,11 +52,11 @@ export default function CoreValuesSection() {
                   <Icon className={`w-6 h-6 ${item.iconColor}`} />
                 </div>
 
-                <h3 className="font-playfair text-[27px] font-medium text-white mb-4">
+                <h3 className="font-playfair text-[27px] font-medium text-theme-text mb-4">
                   {item.title}
                 </h3>
 
-                <p className="text-[#90A1B9] text-lg leading-relaxed">
+                <p className="text-theme-muted text-lg leading-relaxed">
                   {item.desc}
                 </p>
               </div>

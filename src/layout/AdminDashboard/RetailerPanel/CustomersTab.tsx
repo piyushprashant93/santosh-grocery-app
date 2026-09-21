@@ -9,10 +9,10 @@ export default function CustomersTab() {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
+    <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
       
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Customer Management</h2>
+        <h2 className="text-xl font-bold text-theme-text">Customer Management</h2>
         <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
           View Only - Admin Access
         </span>
@@ -32,9 +32,9 @@ export default function CustomersTab() {
           <tbody>
             {customers.map((customer, idx) => (
               <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">{customer.name}</td>
+                <td className="py-4 px-4 text-sm font-medium text-theme-text">{customer.name}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{customer.orders}</td>
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">${customer.spent.toLocaleString()}</td>
+                <td className="py-4 px-4 text-sm font-medium text-theme-text">${customer.spent.toLocaleString()}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{customer.lastOrder}</td>
                 <td className="py-4 px-4 text-sm">
                   <div className="flex items-center gap-1 text-gray-700 font-medium">

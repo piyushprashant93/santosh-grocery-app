@@ -12,7 +12,7 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
         >
 
             <div
-                className="bg-white max-w-[620px] w-[95%] rounded-2xl shadow-xl max-h-[95vh] overflow-auto"
+                className="bg-theme-surface max-w-[620px] w-[95%] rounded-2xl shadow-xl max-h-[95vh] overflow-auto"
                 onClick={(e) => e.stopPropagation()}
             >
 
@@ -22,7 +22,7 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
                         Request Payout
                     </h3>
 
-                    <button onClick={onClose} className="text-[#64748B]">
+                    <button onClick={onClose} className="text-theme-muted">
                         <X size={22} />
                     </button>
 
@@ -52,9 +52,9 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
                             Payout Amount
                         </label>
 
-                        <div className="border border-[#E5E7EB] rounded-lg h-12 flex items-center px-3 gap-2">
+                        <div className="border border-theme-border rounded-lg h-12 flex items-center px-3 gap-2">
 
-                            <span className="text-[#94A3B8] text-lg">$</span>
+                            <span className="text-theme-muted text-lg">$</span>
 
                             <input
                                 defaultValue="12450.00"
@@ -73,7 +73,7 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
                             Destination Account
                         </label>
 
-                        <div className="border border-[#E5E7EB] rounded-xl p-4 flex items-center gap-4">
+                        <div className="border border-theme-border rounded-xl p-4 flex items-center gap-4">
 
                             <div className="w-12 h-12 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
 
@@ -83,11 +83,11 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
 
                             <div>
 
-                                <p className="font-medium text-[#0F172A]">
+                                <p className="font-medium text-theme-text">
                                     Chase Business Checking
                                 </p>
 
-                                <p className="text-sm text-[#64748B]">
+                                <p className="text-sm text-theme-muted">
                                     •••• •••• 4589
                                 </p>
 
@@ -103,11 +103,11 @@ export default function RequestPayoutModal({ open, onClose }: { open: boolean; o
 
                 <div className="flex justify-end gap-6 border-t p-6 bg-[#F8FAFC80]">
 
-                    <button onClick={onClose} className="text-[#64748B]">
+                    <button onClick={onClose} className="text-theme-muted">
                         Cancel
                     </button>
 
-                    <button className="bg-[#2563EB] text-white px-6 py-2 rounded-lg shadow">
+                    <button className="bg-[#2563EB] text-theme-text px-6 py-2 rounded-lg shadow">
                         Confirm Request
                     </button>
 

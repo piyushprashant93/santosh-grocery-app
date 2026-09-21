@@ -27,16 +27,16 @@ export function TermsSection({
   icon,
 }: TermsSectionProps) {
   return (
-    <section className="w-full bg-[#020618]">
+    <section className="w-full bg-theme-bg">
       <div className="max-w-[900px] mx-auto px-3 lg:px-6 py-[80px]">
 
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-14 h-14 rounded-xl bg-[#0F172B] border border-[#1D293D] flex items-center justify-center">
+          <div className="w-14 h-14 rounded-xl bg-theme-surface border border-theme-border flex items-center justify-center">
             {icon || <Scale className="text-[#00BC7D]" />}
           </div>
 
           <div>
-            <h1 className="font-playfair text-[36px] text-white font-medium leading-[1] mb-2">
+            <h1 className="font-playfair text-[36px] text-theme-text font-medium leading-[1] mb-2">
               {title}
             </h1>
             <p className="text-[#62748E] text-base">
@@ -45,14 +45,14 @@ export function TermsSection({
           </div>
         </div>
 
-        <p className="text-[#90A1B9] text-[20px] leading-relaxed mb-10">
+        <p className="text-theme-muted text-[20px] leading-relaxed mb-10">
           {intro}
         </p>
 
         <div className="space-y-10">
           {sections.map((item, index) => (
             <div key={index}>
-              <h3 className="font-playfair text-[24px] font-medium text-white mb-4">
+              <h3 className="font-playfair text-[24px] font-medium text-theme-text mb-4">
                 {index + 1}. {item.title}
               </h3>
 
@@ -66,7 +66,7 @@ export function TermsSection({
                 <div className="space-y-3">
                   {item.list.map((listItem, i) => (
                     <p key={i} className="text-[#CAD5E2] text-[16px]">
-                      <span className="font-semibold text-white">
+                      <span className="font-semibold text-theme-text">
                         {listItem.label}:
                       </span>{" "}
                       {listItem.text}

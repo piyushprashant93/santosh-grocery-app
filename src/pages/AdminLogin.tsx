@@ -49,24 +49,24 @@ export default function AdminLogin() {
   }
 
   return (
-    <section className="relative min-h-screen bg-[#020618] flex items-center justify-center px-3 lg:px-6 overflow-hidden">
+    <section className="relative min-h-screen bg-theme-bg flex items-center justify-center px-3 lg:px-6 overflow-hidden">
       
       <div className="absolute top-[-150px] left-10 -translate-x-1/2 w-[504px] h-[500px] bg-[#E171001A] blur-[150px] rounded-full" />
       <div className="absolute bottom-[-150px] right-10 translate-x-1/2 w-[500px] h-[500px] bg-[#155DFC1A] blur-[150px] rounded-full" />
 
       <div className="relative z-10 w-full max-w-[504px] text-center">
         
-        <div className="w-20 h-20 mx-auto mb-8 rounded-2xl bg-[#0F172B] border border-[#1D293D] flex items-center justify-center shadow-[0px_8px_10px_-6px_#0000001A,0px_20px_25px_-5px_#0000001A]">
+        <div className="w-20 h-20 mx-auto mb-8 rounded-2xl bg-theme-surface border border-theme-border flex items-center justify-center shadow-[0px_8px_10px_-6px_#0000001A,0px_20px_25px_-5px_#0000001A]">
           <ShieldCheck size={45} className="text-[#E17100]" />
         </div>
 
-        <div className="bg-[#0F172B] border border-[#1D293D] p-6 rounded-[12px] text-left">
+        <div className="bg-theme-surface border border-theme-border p-6 rounded-[12px] text-left">
           
-          <h2 className="font-playfair text-[28px] font-semibold text-white text-center">
+          <h2 className="font-playfair text-[28px] font-semibold text-theme-text text-center">
             Admin Access
           </h2>
 
-          <p className="text-[#90A1B9] text-center mt-2">
+          <p className="text-theme-muted text-center mt-2">
             Enter your secure credentials to access the control panel
           </p>
 
@@ -77,7 +77,7 @@ export default function AdminLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@hubnepa.com"
-              className="mt-2 w-full bg-[#020618] border border-[#1D293D] rounded-lg px-4 h-[48px] text-white placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
+              className="mt-2 w-full bg-theme-bg border border-theme-border rounded-lg px-4 h-[48px] text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
             />
           </div>
 
@@ -88,7 +88,7 @@ export default function AdminLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="mt-2 w-full bg-[#020618] border border-[#1D293D] rounded-lg px-4 h-[48px] text-white placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
+              className="mt-2 w-full bg-theme-bg border border-theme-border rounded-lg px-4 h-[48px] text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#E17100]"
             />
           </div>
 
@@ -97,7 +97,7 @@ export default function AdminLogin() {
           <button 
             onClick={handleLogin}
             disabled={loading}
-            className="mt-8 w-full bg-[#E17100] rounded-lg h-[48px] text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
+            className="mt-8 w-full bg-[#E17100] rounded-lg h-[48px] text-theme-text font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>

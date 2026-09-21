@@ -12,8 +12,8 @@ export default function PaymentSettingsTab() {
     <div className="flex flex-col gap-6 animate-in fade-in duration-300 max-w-4xl">
       
       {/* Header Info */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Payment Gateways</h2>
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Payment Gateways</h2>
         <p className="text-sm text-gray-500 mb-6">Configure payment options for your platform.</p>
 
         <div className="space-y-4">
@@ -26,7 +26,7 @@ export default function PaymentSettingsTab() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">Stripe</h3>
+                  <h3 className="font-bold text-theme-text">Stripe</h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wider">Default</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">Credit/Debit Cards, Apple Pay, Google Pay</p>
@@ -34,7 +34,7 @@ export default function PaymentSettingsTab() {
             </div>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <ToggleSwitch defaultChecked />
-              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
+              <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
                 <SettingsIcon size={16} />
                 Configure
               </button>
@@ -44,19 +44,19 @@ export default function PaymentSettingsTab() {
           {/* PayPal Card */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border border-gray-200 rounded-xl hover:bg-gray-50/50 transition">
             <div className="flex items-center gap-4 mb-4 sm:mb-0">
-              <div className="w-12 h-12 rounded-lg bg-[#00457C] text-white flex items-center justify-center font-bold text-xl">
+              <div className="w-12 h-12 rounded-lg bg-[#00457C] text-theme-text flex items-center justify-center font-bold text-xl">
                 P
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">PayPal</h3>
+                  <h3 className="font-bold text-theme-text">PayPal</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">PayPal Balance, Bank Transfers</p>
               </div>
             </div>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <ToggleSwitch />
-              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
+              <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
                 <SettingsIcon size={16} />
                 Configure
               </button>
@@ -66,19 +66,19 @@ export default function PaymentSettingsTab() {
           {/* Razorpay Card */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 border border-gray-200 rounded-xl hover:bg-gray-50/50 transition">
             <div className="flex items-center gap-4 mb-4 sm:mb-0">
-              <div className="w-12 h-12 rounded-lg bg-[#02042B] text-white flex items-center justify-center font-bold text-xl">
+              <div className="w-12 h-12 rounded-lg bg-[#02042B] text-theme-text flex items-center justify-center font-bold text-xl">
                 R
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900">Razorpay</h3>
+                  <h3 className="font-bold text-theme-text">Razorpay</h3>
                 </div>
                 <p className="text-sm text-gray-500 mt-0.5">UPI, Netbanking, Wallets (India focus)</p>
               </div>
             </div>
             <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
               <ToggleSwitch />
-              <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
+              <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
                 <SettingsIcon size={16} />
                 Configure
               </button>

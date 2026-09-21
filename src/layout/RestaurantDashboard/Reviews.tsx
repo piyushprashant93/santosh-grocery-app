@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Star, MessageSquare } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -31,7 +32,7 @@ export default function Reviews() {
             const reviewsRes = await fetch(`${API_BASE}/reviews/restaurant/${rId}?page=1`, { headers: authHeaders() });
             if (reviewsRes.ok) {
               const reviewsData = await reviewsRes.json();
-              setReviews(reviewsData.data?.reviews || reviewsData.reviews || reviewsData.data || []);
+              setReviews(extractList(reviewsData));
             }
           }
         }
@@ -51,19 +52,19 @@ export default function Reviews() {
           <h1 className="text-3xl lg:text-[34px] font-playfair font-semibold">
             Customer Reviews
           </h1>
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             See what customers are saying about your restaurant.
           </p>
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm">
         {loading ? (
-          <p className="text-center text-[#64748B] py-8">Loading reviews...</p>
+          <p className="text-center text-theme-muted py-8">Loading reviews...</p>
         ) : reviews.length === 0 ? (
           <div className="text-center py-12 flex flex-col items-center">
             <MessageSquare size={48} className="text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No reviews yet</h3>
+            <h3 className="text-lg font-medium text-theme-text">No reviews yet</h3>
             <p className="text-gray-500">When customers leave reviews, they will appear here.</p>
           </div>
         ) : (
@@ -76,8 +77,8 @@ export default function Reviews() {
                       {(r.user?.name || r.userName || "C")[0]}
                     </div>
                     <div>
-                      <p className="font-medium text-[#0F172A]">{r.user?.name || r.userName || "Customer"}</p>
-                      <p className="text-sm text-[#64748B]">{new Date(r.createdAt || Date.now()).toLocaleDateString()}</p>
+                      <p className="font-medium text-theme-text">{r.user?.name || r.userName || "Customer"}</p>
+                      <p className="text-sm text-theme-muted">{new Date(r.createdAt || Date.now()).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 bg-[#FFF7ED] px-2 py-1 rounded-lg">
@@ -85,7 +86,7 @@ export default function Reviews() {
                     <span className="font-semibold text-[#B45309]">{r.rating || 5}.0</span>
                   </div>
                 </div>
-                <p className="text-[#475569] mt-3">
+                <p className="text-theme-muted mt-3">
                   {r.comment || r.reviewText || "No comment provided."}
                 </p>
               </div>

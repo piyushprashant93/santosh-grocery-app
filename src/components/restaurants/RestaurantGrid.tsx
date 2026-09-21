@@ -13,6 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
+import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 // const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80";
@@ -81,12 +85,11 @@ interface Restaurant {
   badge: string;
 }
 
-function formatRestaurant(r: RestaurantApi): Restaurant {
+const mapRestaurant = (r: RestaurantApi, formatPrice: (price: number) => string): Restaurant => {
   const cuisineList = r.cuisine || [];
   const ratingAvg = r.rating?.average;
   const reviewCount = r.reviewCount ?? r.rating?.count ?? 0;
-  const getBadge = (name: string) => {
-  switch (name) {
+  const getBadge = (name: string) => {  switch (name) {
     case "Stella's Rooftop":
       return "Premium";
     case "Nobu Downtown":
@@ -112,7 +115,7 @@ function formatRestaurant(r: RestaurantApi): Restaurant {
       r.deliveryFee === 0
         ? "Free Delivery"
         : r.deliveryFee != null
-          ? `$${r.deliveryFee.toFixed(2)} Delivery`
+          ? `${formatPrice(r.deliveryFee)} Delivery`
           : null,
     reviews: `${reviewCount}+ ratings`,
     image: r.banner || r.logo || "",
@@ -126,7 +129,7 @@ function formatRestaurant(r: RestaurantApi): Restaurant {
     isOpen: r.isOpen ?? false,
     badge: getBadge(r.name),
   };
-}
+};
 
 interface RestaurantGridProps {
   searchQuery?: string;
@@ -137,6 +140,7 @@ export default function RestaurantGrid({
   searchQuery = "",
   onClearSearch,
 }: RestaurantGridProps) {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const { setRole } = useRole();
   const [role] = useState(localStorage.getItem("role"));
@@ -168,7 +172,7 @@ export default function RestaurantGrid({
       try {
         let url;
         if (searchQuery) {
-          url = `${API_BASE}/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
+          url = `${API_BASE}/general/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
         } else {
           url = `${API_BASE}/home/food/${encodeURIComponent(activeCuisine)}`;
         }
@@ -177,15 +181,21 @@ export default function RestaurantGrid({
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
         });
-        const json = await res.json();
+        const data = await res.json();
 
-        if (!json.success) throw new Error(json.message || "Request failed");
+        if (!data.success) throw new Error(data.message || "Request failed");
 
-        const list = searchQuery
-          ? json.data.restaurants || []
-          : json.data.data || [];
+        if (data && data.success && Array.isArray(data.data)) {
+          setRestaurants(data.data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
+        } else if (Array.isArray(data)) {
+          setRestaurants(data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
+        } else {
+          const list = searchQuery
+            ? data.data.restaurants || []
+            : data.data.data || [];
 
-        setRestaurants(list.map(formatRestaurant));
+          setRestaurants(list.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
+        }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== "AbortError") {
           setError("Couldn't load restaurants. Please try again.");
@@ -256,15 +266,15 @@ const handleCardClick = (restaurant: Restaurant) => {
 };
 
   return (
-    <section className="bg-[#020618] py-16 text-white">
+    <section className="bg-theme-bg py-16 text-theme-text">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3">
         <div className="flex flex-wrap gap-3 items-center mb-10">
           {searchQuery ? (
-            <div className="flex items-center gap-2 px-5 py-2 rounded-full text-sm bg-[#0F172B] text-[#CAD5E2]">
+            <div className="flex items-center gap-2 px-5 py-2 rounded-full text-sm bg-theme-surface text-[#CAD5E2]">
               Results for "{searchQuery}"
               <button
                 onClick={() => onClearSearch?.()}
-                className="ml-1 hover:text-white"
+                className="ml-1 hover:text-theme-text"
               >
                 <X size={14} />
               </button>
@@ -286,7 +296,7 @@ const handleCardClick = (restaurant: Restaurant) => {
             ))
           )}
 
-          <div className="border-l border-[#1D293D] ml-2 pl-5 flex items-center gap-2 text-[#94A3B8]">
+          <div className="border-l border-theme-border ml-2 pl-5 flex items-center gap-2 text-theme-muted">
             <Filter size={16} />
             Filters
           </div>
@@ -297,18 +307,18 @@ const handleCardClick = (restaurant: Restaurant) => {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[420px] rounded-2xl bg-[#0F172B] animate-pulse"
+                className="h-[420px] rounded-2xl bg-theme-surface animate-pulse"
               />
             ))}
           </div>
         )}
 
         {!loading && error && (
-          <p className="text-center text-[#94A3B8] py-16">{error}</p>
+          <p className="text-center text-theme-muted py-16">{error}</p>
         )}
 
         {!loading && !error && restaurants.length === 0 && (
-          <p className="text-center text-[#94A3B8] py-16">
+          <p className="text-center text-theme-muted py-16">
             No restaurants found{searchQuery ? ` for "${searchQuery}"` : ""}.
           </p>
         )}
@@ -319,17 +329,17 @@ const handleCardClick = (restaurant: Restaurant) => {
               <div
                 key={item.id}
                 onClick={() => handleCardClick(item)}
-                className="bg-[#0F172B] cursor-pointer border border-[#1D293D] rounded-2xl overflow-hidden hover:border-[#334155] transition"
+                className="bg-theme-surface cursor-pointer border border-theme-border rounded-2xl overflow-hidden hover:border-[#334155] transition"
               >
                 <div className="relative">
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getImageUrl(item.image)}
                       alt={item.name}
                       className="w-full h-56 object-cover"
                     />
                   ) : (
-                    <div className="w-full h-56 bg-[#1E293B] flex flex-col items-center justify-center text-[#94A3B8]">
+                    <div className="w-full h-56 bg-theme-surface flex flex-col items-center justify-center text-theme-muted">
                       <ImageOff size={36} />
                       <span className="mt-2 text-sm">No Image Available</span>
                     </div>
@@ -361,7 +371,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     )}
                   </div>
 
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-white text-black text-sm font-bold px-2 py-1 rounded-full">
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-theme-surface text-theme-text text-sm font-bold px-2 py-1 rounded-full">
                     <Star
                       size={12}
                       color="#0F172B"
@@ -375,7 +385,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                   <div className="flex justify-between items-center mb-2">
                     <div>
                       <h3 className="font-playfair text-[22px]">{item.name}</h3>
-                      <p className="text-xs text-[#90A1B9] uppercase">
+                      <p className="text-xs text-theme-muted uppercase">
                         {item.type}
                       </p>
                     </div>
@@ -391,7 +401,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     {/* )} */}
                   </div>
 
-                  <div className="text-sm mt-4 text-[#94A3B8] bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
+                  <div className="text-sm mt-4 text-theme-muted bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
                     {item.delivery && (
                       <>
                         <span className="text-sm text-[#CAD5E2] font-medium">
@@ -400,7 +410,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                         •
                       </>
                     )}
-                    <span className="text-sm text-[#90A1B9]">
+                    <span className="text-sm text-theme-muted">
                       {item.reviews}
                     </span>
                   </div>
@@ -410,7 +420,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                       {item.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="text-[10px] text-[#90A1B9] px-3 py-1 bg-[#FFFFFF0D] rounded-full"
+                          className="text-[10px] text-theme-muted px-3 py-1 bg-[#FFFFFF0D] rounded-full"
                         >
                           {tag.toUpperCase()}
                         </span>

@@ -6,10 +6,10 @@ export default function LogisticsTab() {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
+    <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">
       
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Logistics & Fleet</h2>
+        <h2 className="text-xl font-bold text-theme-text">Logistics & Fleet</h2>
         <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
           View Only - Admin Access
         </span>
@@ -28,7 +28,7 @@ export default function LogisticsTab() {
           <tbody>
             {shipments.map((shipment, idx) => (
               <tr key={idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition">
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">{shipment.id}</td>
+                <td className="py-4 px-4 text-sm font-medium text-theme-text">{shipment.id}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{shipment.destination}</td>
                 <td className="py-4 px-4 text-sm text-gray-600">{shipment.driver}</td>
                 <td className="py-4 px-4 text-sm">

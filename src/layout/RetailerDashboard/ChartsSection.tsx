@@ -35,14 +35,14 @@ export default function ChartsSection() {
   return (
     <div className="grid lg:grid-cols-2 gap-6">
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex items-center gap-2 mb-2">
           <TrendingUp size={18}/>
           <h3 className="font-playfair text-xl">Sales Overview</h3>
         </div>
 
-        <p className="text-[#6A7282] text-sm mb-6">
+        <p className="text-theme-muted text-sm mb-6">
           Weekly sales performance
         </p>
 
@@ -85,14 +85,14 @@ export default function ChartsSection() {
       </div>
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex items-center gap-2 mb-2">
           <ShoppingBag size={18}/>
           <h3 className="font-playfair text-xl">Order Volume</h3>
         </div>
 
-        <p className="text-[#6A7282] text-sm mb-6">
+        <p className="text-theme-muted text-sm mb-6">
           Daily order statistics
         </p>
 

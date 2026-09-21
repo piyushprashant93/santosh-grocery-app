@@ -22,14 +22,14 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-theme-text hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Payment History</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Payment History</h1>
           <p className="text-gray-500 mt-1">
-            Transaction log for <span className="font-semibold text-gray-900">{user.fullName}</span>
+            Transaction log for <span className="font-semibold text-theme-text">{user.fullName}</span>
           </p>
         </div>
       </div>
@@ -45,30 +45,30 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
           <p className="text-gray-400 text-sm">Total Lifetime Spend</p>
         </div>
         
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div className="bg-theme-surface rounded-2xl p-6 border border-gray-100 shadow-sm">
           <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center mb-4">
             <span className="text-gray-500 font-medium">$</span>
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">$45.00</h3>
+          <h3 className="text-3xl font-bold text-theme-text mb-1">$45.00</h3>
           <p className="text-gray-500 text-sm">Average Order Value</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+        <div className="bg-theme-surface rounded-2xl p-6 border border-gray-100 shadow-sm">
           <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center mb-4">
             <CreditCardIcon />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-1">2 Cards</h3>
+          <h3 className="text-3xl font-bold text-theme-text mb-1">2 Cards</h3>
           <p className="text-gray-500 text-sm">Saved Payment Methods</p>
         </div>
       </div>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 flex flex-col">
         
         {/* Header & Download */}
         <div className="p-5 border-b border-gray-100 flex justify-between items-center">
-          <h3 className="font-semibold text-gray-900">Recent Transactions</h3>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
+          <h3 className="font-semibold text-theme-text">Recent Transactions</h3>
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition">
             <Download size={16} />
             Download Statement
           </button>
@@ -90,7 +90,7 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
             <tbody className="divide-y divide-gray-100">
               {mockTransactions.map((txn) => (
                 <tr key={txn.id} className="hover:bg-gray-50/50 transition">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{txn.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-theme-text">{txn.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <div className="flex flex-col">
                       <span>{txn.date}</span>
@@ -119,7 +119,7 @@ export default function PaymentHistory({ user, onBack }: PaymentHistoryProps) {
                       </span>
                     )}
                   </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${txn.amount.startsWith('+') ? 'text-emerald-600' : 'text-gray-900'}`}>
+                  <td className={`px-6 py-4 whitespace-nowrap text-right text-sm font-bold ${txn.amount.startsWith('+') ? 'text-emerald-600' : 'text-theme-text'}`}>
                     {txn.amount}
                   </td>
                 </tr>

@@ -14,11 +14,11 @@ export default function LegalSettingsTab() {
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col min-h-[500px]">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex flex-col min-h-[500px]">
         
         {/* Header & Tabs */}
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Legal & Policies Editor</h2>
+          <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Legal & Policies Editor</h2>
           <p className="text-sm text-gray-500 mb-6">Manage terms, privacy policies, and agreements.</p>
           
           <div className="flex flex-wrap gap-2">
@@ -56,7 +56,7 @@ export default function LegalSettingsTab() {
           
           {/* Text Area */}
           <textarea 
-            className="flex-1 w-full p-4 bg-white border border-gray-200 rounded-b-lg text-sm text-gray-700 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition resize-none min-h-[300px]"
+            className="flex-1 w-full p-4 bg-theme-surface border border-gray-200 rounded-b-lg text-sm text-gray-700 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition resize-none min-h-[300px]"
             defaultValue={`1. Introduction\nWelcome to HubNepa. By using our platform, you agree to these ${activePolicy}. Please read them carefully.\n\n2. User Responsibilities\nYou are responsible for maintaining the confidentiality of your account credentials...`}
             key={activePolicy} // Re-renders default value on tab switch
           ></textarea>

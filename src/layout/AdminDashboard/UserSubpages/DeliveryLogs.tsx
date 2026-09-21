@@ -93,14 +93,14 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-theme-text hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Delivery Logs</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Delivery Logs</h1>
           <p className="text-gray-500 mt-1">
-            Track delivery performance for <span className="font-semibold text-gray-900">{user.fullName}</span>
+            Track delivery performance for <span className="font-semibold text-theme-text">{user.fullName}</span>
           </p>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
                 <span className="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold uppercase tracking-wider">
                   {delivery._id.substring(0, 8)}
                 </span>
-                <span className="text-lg font-bold text-gray-900">Order #{delivery.orderId}</span>
+                <span className="text-lg font-bold text-theme-text">Order #{delivery.orderId}</span>
                 {delivery.status.toLowerCase() === 'delivered' ? (
                   <span className="ml-auto md:ml-2 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
                     Delivered
@@ -160,14 +160,14 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
                   <MapPin className="text-gray-400 shrink-0 mt-0.5" size={18} />
                   <div>
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Delivery Address</p>
-                    <p className="text-sm text-gray-800 leading-relaxed max-w-[250px]">{delivery.address}</p>
+                    <p className="text-sm text-theme-text leading-relaxed max-w-[250px]">{delivery.address}</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <Clock className="text-gray-400 shrink-0 mt-0.5" size={18} />
                   <div>
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Timestamp</p>
-                    <p className="text-sm text-gray-800 leading-relaxed">{delivery.timestamp}</p>
+                    <p className="text-sm text-theme-text leading-relaxed">{delivery.timestamp}</p>
                   </div>
                 </div>
               </div>
@@ -185,16 +185,16 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
               <div className="flex flex-col gap-3 mb-6">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Driver</span>
-                  <span className="font-medium text-gray-900">{delivery.driver}</span>
+                  <span className="font-medium text-theme-text">{delivery.driver}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Duration</span>
-                  <span className="font-medium text-gray-900">{delivery.duration}</span>
+                  <span className="font-medium text-theme-text">{delivery.duration}</span>
                 </div>
               </div>
               <button 
                 onClick={() => onViewRoute(delivery._id)}
-                className="w-full px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition"
+                className="w-full px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition"
               >
                 View Route Map
               </button>

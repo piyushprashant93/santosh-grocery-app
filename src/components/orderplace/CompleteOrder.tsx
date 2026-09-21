@@ -7,15 +7,15 @@ export default function CompleteOrder() {
   const [checked, setChecked] = useState(false);
 
   return (
-    <section className="bg-[#0A0E27] text-white min-h-screen py-10">
+    <section className="bg-theme-bg text-theme-text min-h-screen py-10">
 
       <div className="max-w-[1265px] lg:px-6 px-3 mx-auto">
         <div className="mb-12">
-          <p className="text-[#90A1B9] cursor-pointer mb-10" onClick={()=>navigate("/orderplace")}>← Back to pricing</p>
+          <p className="text-theme-muted cursor-pointer mb-10" onClick={()=>navigate("/orderplace")}>← Back to pricing</p>
           <h1 className="text-[32px] lg:text-[48px] mb-2 text-center">
             Complete Your <span className="text-[#10B981]">Order</span>
           </h1>
-          <p className="text-[#90A1B9] text-center">
+          <p className="text-theme-muted text-center">
             You're one step away from unlocking powerful features
           </p>
         </div>
@@ -132,14 +132,14 @@ export default function CompleteOrder() {
                   <input className="commoninput" placeholder="CVV" />
                   </div>
                 </div>
-                <p className="text-[#90A1B9] text-sm flex items-center gap-2">
+                <p className="text-theme-muted text-sm flex items-center gap-2">
                   <Lock size={16} className="text-[#10B981]" /> Your payment information is secure
                 </p>
               </div>
             </div>
 
             <div className="bg-[#111937] border-2 border-[#1E2846] rounded-xl p-6">
-              <label className="flex items-center gap-1 text-sm mb-6 text-[#90A1B9]">
+              <label className="flex items-center gap-1 text-sm mb-6 text-theme-muted">
                 <button
                   type="button"
                   onClick={() => setChecked(!checked)}
@@ -151,7 +151,7 @@ export default function CompleteOrder() {
                 `}
                 >
                   {checked && (
-                    <Check size={14} className="text-white" strokeWidth={3} />
+                    <Check size={14} className="text-theme-text" strokeWidth={3} />
                   )}
                 </button>
                 I agree to the <span className="text-[#10B981]">Terms of Service</span> and <span className="text-[#10B981]">Privacy Policy</span>
@@ -168,15 +168,15 @@ export default function CompleteOrder() {
 
           <div className="bg-[#111937] border border-[#10B981] rounded-xl p-6 h-fit">
             <h3 className="text-lg mb-6 font-semibold">Order Summary</h3>
-            <div className="bg-[#0A0E27] border-2 border-[#1E2846] rounded-lg p-4 mb-6">
+            <div className="bg-theme-bg border-2 border-[#1E2846] rounded-lg p-4 mb-6">
               <div className="flex items-center gap-3 justify-between">
-                <p className="text-sm text-[#90A1B9]">Plan</p>
+                <p className="text-sm text-theme-muted">Plan</p>
                 <p className="text-xl font-semibold">Gold</p>
               </div>
               <p className="text-[#fff] text-[30px] flex items-end leading-[1] justify-end mt-4">$79<span className="text-sm text-[#99A1AF]">/month</span></p>
             </div>
 
-            <div className="space-y-3 text-sm text-[#90A1B9] mb-6">
+            <div className="space-y-3 text-sm text-theme-muted mb-6">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>$79</span>
@@ -191,7 +191,7 @@ export default function CompleteOrder() {
               </div>
             </div>
 
-            <div className="border-t border-[#1D293D] pt-4 flex justify-between items-center">
+            <div className="border-t border-theme-border pt-4 flex justify-between items-center">
               <span className="text-[20px]">Total Due Today</span>
               <span className="text-[#10B981] text-[30px]">$79</span>
             </div>
@@ -202,15 +202,15 @@ export default function CompleteOrder() {
                   💳 <span>Billing starts today</span>
                 </p>
 
-                <p className="text-[#90A1B9] text-sm leading-relaxed">
+                <p className="text-theme-muted text-sm leading-relaxed">
                   You'll be charged $79 monthly. Cancel anytime from your account settings.
                 </p>
               </div>
 
             </div>
 
-            <div className="mt-6 text-sm text-[#90A1B9] border-t border-[#1D293D] pt-6">
-              <p className="mb-2 font-medium text-white">What's Included:</p>
+            <div className="mt-6 text-sm text-theme-muted border-t border-theme-border pt-6">
+              <p className="mb-2 font-medium text-theme-text">What's Included:</p>
               <ul className="space-y-2 list-disc pl-5 marker:text-[#10B981]">
                 <li>Instant account activation</li>
                 <li>30-day money-back guarantee</li>

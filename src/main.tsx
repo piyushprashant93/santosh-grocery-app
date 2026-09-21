@@ -5,10 +5,17 @@ import './index.css'
 import { RoleProvider } from './layout/RoleProvider'
 import { patchFetchForTokenExpiry } from './lib/fetchInterceptor'
 
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { CurrencyProvider } from './context/CurrencyContext'
+
 patchFetchForTokenExpiry()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <RoleProvider>
-    <App />
-  </RoleProvider>
+  <ErrorBoundary>
+    <RoleProvider>
+      <CurrencyProvider>
+        <App />
+      </CurrencyProvider>
+    </RoleProvider>
+  </ErrorBoundary>
 )

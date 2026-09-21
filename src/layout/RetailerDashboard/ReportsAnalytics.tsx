@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Calendar, Download } from "lucide-react"
 import { useState, useEffect, useMemo } from "react"
+import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 export default function ReportsAnalytics() {
@@ -30,6 +31,35 @@ export default function ReportsAnalytics() {
   const activeCategoryData = useMemo(() => reportsData?.categoryBreakdown || [], [reportsData]);
   const activeProducts = useMemo(() => reportsData?.topProducts || [], [reportsData]);
 
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting reports...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/reports/export", {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-reports-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+  };
+
   return (
     <div className="space-y-6">
 
@@ -40,19 +70,19 @@ export default function ReportsAnalytics() {
             Reports & Analytics
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Deep dive into your sales performance and trends.
           </p>
         </div>
 
         <div className="flex gap-3">
 
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white">
+          <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface">
             <Calendar size={18}/>
             Last 7 Days
           </button>
 
-          <button className="flex items-center gap-2 bg-[#F54900] text-white rounded-lg px-4 py-2">
+          <button onClick={handleExport} className="flex items-center gap-2 bg-[#F54900] text-white rounded-lg px-4 py-2">
             <Download size={18}/>
             Export Report
           </button>
@@ -65,10 +95,10 @@ export default function ReportsAnalytics() {
 
       <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <h3 className="font-playfair text-xl">Revenue Overview</h3>
-          <p className="text-[#6A7282] text-sm mb-6">
+          <p className="text-theme-muted text-sm mb-6">
             Daily sales breakdown
           </p>
 
@@ -98,10 +128,10 @@ export default function ReportsAnalytics() {
 
 
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <h3 className="font-playfair text-xl">Sales by Category</h3>
-          <p className="text-[#6A7282] text-sm mb-6">
+          <p className="text-theme-muted text-sm mb-6">
             Distribution of product sales
           </p>
 
@@ -157,7 +187,7 @@ export default function ReportsAnalytics() {
 
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
         <div className="flex items-center justify-between mb-6">
 
@@ -166,7 +196,7 @@ export default function ReportsAnalytics() {
               Best Selling Products
             </h3>
 
-            <p className="text-[#6A7282] text-sm">
+            <p className="text-theme-muted text-sm">
               Top performers by revenue this month
             </p>
           </div>
@@ -183,7 +213,7 @@ export default function ReportsAnalytics() {
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
                 <th className="py-3">PRODUCT NAME</th>

@@ -1,5 +1,7 @@
 import { Upload, Box, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { parseApiError } from "../../lib/apiErrorHandler";
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -30,6 +32,7 @@ export default function AddProduct({
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const value = e.target.type === "checkbox" ? (e.target as HTMLInputElement).checked : e.target.value;
@@ -50,6 +53,7 @@ export default function AddProduct({
   };
 
   const handleSave = async () => {
+    setFieldErrors({});
     try {
       const formData = new FormData();
       Object.keys(form).forEach(key => formData.append(key, (form as any)[key]));
@@ -61,13 +65,35 @@ export default function AddProduct({
         headers: authHeadersForm(),
         body: formData
       });
+      const data = await res.json().catch(() => null);
+
       if (res.ok) {
-        alert("Product added successfully!");
+        toast.success("Product added successfully!");
         setActiveTab("products");
       } else {
-        alert("Failed to add product");
+        if (data && data.errors && Array.isArray(data.errors)) {
+          const newErrors: Record<string, string> = {};
+          data.errors.forEach((err: string) => {
+            const errLower = err.toLowerCase();
+            if (errLower.includes("title") || errLower.includes("name")) newErrors.title = err;
+            if (errLower.includes("category")) newErrors.category = err;
+            if (errLower.includes("sku")) newErrors.sku = err;
+            if (errLower.includes("description")) newErrors.description = err;
+            if (errLower.includes("unit")) newErrors.unit = err;
+            if (errLower.includes("baseprice") || errLower.includes("price")) newErrors.basePrice = err;
+            if (errLower.includes("stock")) newErrors.stockQuantity = err;
+            if (errLower.includes("lowstock")) newErrors.lowStockAlert = err;
+          });
+          setFieldErrors(newErrors);
+          toast.error("Please fix the validation errors.");
+        } else {
+          toast.error(parseApiError(data, "Failed to add product"));
+        }
       }
-    } catch(err) { console.error(err); }
+    } catch(err) {
+      console.error(err);
+      toast.error("An error occurred while adding the product.");
+    }
   };
 
   return (
@@ -81,7 +107,7 @@ export default function AddProduct({
           Add New Product
         </h1>
 
-        <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+        <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
           Create a new product listing for your bulk catalog.
         </p>
       </div>
@@ -90,10 +116,10 @@ export default function AddProduct({
         
         <div className="space-y-6">
           
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl"> Basic Information </h3>
-            <p className="text-[#64748B] mb-6">
+            <p className="text-theme-muted mb-6">
               
               Product name, category and identification.
             </p>
@@ -108,9 +134,10 @@ export default function AddProduct({
                   name="title"
                   value={form.title}
                   onChange={handleChange}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="e.g. Organic Avocados (Hass)"
                 />
+                {fieldErrors.title && <p className="text-red-500 text-xs mt-1">{fieldErrors.title}</p>}
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 
@@ -119,7 +146,7 @@ export default function AddProduct({
                   <label className="text-sm text-[#374151]">
                     Category
                   </label>
-                  <select name="category" value={form.category} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
+                  <select name="category" value={form.category} onChange={handleChange} className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none">
                     
                     <option value="">Select category</option>
                     <option value="Vegetables">Vegetables</option>
@@ -128,6 +155,7 @@ export default function AddProduct({
                     <option value="Meat">Meat</option>
                     <option value="Other">Other</option>
                   </select>
+                  {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                 </div>
                 <div>
                   
@@ -136,9 +164,10 @@ export default function AddProduct({
                     name="sku"
                     value={form.sku}
                     onChange={handleChange}
-                    className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
+                    className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none"
                     placeholder="e.g. AVO-HASS-01"
                   />
+                  {fieldErrors.sku && <p className="text-red-500 text-xs mt-1">{fieldErrors.sku}</p>}
                 </div>
               </div>
               <div>
@@ -151,18 +180,19 @@ export default function AddProduct({
                   value={form.description}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-3 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 py-3 mt-1 outline-none"
                 />
+                {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
               </div>
             </div>
           </div>
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl">
               
               Pricing & Inventory
             </h3>
-            <p className="text-[#64748B] mb-6">
+            <p className="text-theme-muted mb-6">
               
               Manage unit costs and stock levels.
             </p>
@@ -171,7 +201,7 @@ export default function AddProduct({
               <div>
                 
                 <label className="text-sm text-[#374151]">Unit Type</label>
-                <select name="unit" value={form.unit} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none">
+                <select name="unit" value={form.unit} onChange={handleChange} className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none">
                   
                   <option value="">Select unit</option>
                   <option value="kg">kg</option>
@@ -179,6 +209,7 @@ export default function AddProduct({
                   <option value="l">l</option>
                   <option value="ml">ml</option>
                 </select>
+                {fieldErrors.unit && <p className="text-red-500 text-xs mt-1">{fieldErrors.unit}</p>}
               </div>
               <div>
                 
@@ -190,9 +221,10 @@ export default function AddProduct({
                   name="basePrice"
                   value={form.basePrice}
                   onChange={handleChange}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0.00"
                 />
+                {fieldErrors.basePrice && <p className="text-red-500 text-xs mt-1">{fieldErrors.basePrice}</p>}
               </div>
               <div>
                 
@@ -204,9 +236,10 @@ export default function AddProduct({
                   name="stockQuantity"
                   value={form.stockQuantity}
                   onChange={handleChange}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="0"
                 />
+                {fieldErrors.stockQuantity && <p className="text-red-500 text-xs mt-1">{fieldErrors.stockQuantity}</p>}
               </div>
               <div>
                 
@@ -218,9 +251,10 @@ export default function AddProduct({
                   name="lowStockAlert"
                   value={form.lowStockAlert}
                   onChange={handleChange}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1 outline-none"
                   placeholder="10"
                 />
+                {fieldErrors.lowStockAlert && <p className="text-red-500 text-xs mt-1">{fieldErrors.lowStockAlert}</p>}
               </div>
             </div>
             <div className="mt-6">
@@ -234,13 +268,13 @@ export default function AddProduct({
                 </div>
                 <button
                   onClick={addTier}
-                  className="flex items-center gap-2 border border-[#E5E7EB] px-3 py-2 rounded-lg"
+                  className="flex items-center gap-2 border border-theme-border px-3 py-2 rounded-lg"
                 >
                   
                   <Plus size={16} /> Add Tier
                 </button>
               </div>
-              <div className="border border-[#E5E7EB] rounded-lg p-4 space-y-3">
+              <div className="border border-theme-border rounded-lg p-4 space-y-3">
                 
                 {tiers.map((t, i) => (
                   <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-3">
@@ -249,14 +283,14 @@ export default function AddProduct({
                       type="number"
                       value={t.minQuantity}
                       onChange={(e) => updateTier(i, "minQuantity", e.target.value)}
-                      className="border border-[#E5E7EB] rounded-lg px-3 h-12"
+                      className="border border-theme-border rounded-lg px-3 h-12"
                       placeholder="Min Quantity"
                     />
                     <input
                       type="number"
                       value={t.price}
                       onChange={(e) => updateTier(i, "price", e.target.value)}
-                      className="border border-[#E5E7EB] rounded-lg px-3 h-12"
+                      className="border border-theme-border rounded-lg px-3 h-12"
                       placeholder="Unit Price"
                     />
                     <button onClick={() => removeTier(i)}>
@@ -266,7 +300,7 @@ export default function AddProduct({
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-[#64748B] mt-2">
+              <p className="text-sm text-theme-muted mt-2">
                 
                 Add tiers to encourage larger orders (e.g. Buy 10+ for
                 $5/unit)
@@ -276,10 +310,10 @@ export default function AddProduct({
         </div>
         <div className="space-y-6">
           
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl mb-4"> Product Image </h3>
-            <label className="border-2 border-dashed border-[#E5E7EB] rounded-xl p-10 text-center block cursor-pointer">
+            <label className="border-2 border-dashed border-theme-border rounded-xl p-10 text-center block cursor-pointer">
               <input type="file" className="hidden" accept="image/*" onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
                   setImageFile(e.target.files[0]);
@@ -292,14 +326,14 @@ export default function AddProduct({
                 <>
                   <Upload size={28} className="mx-auto text-[#2563EB]" />
                   <p className="mt-3 font-medium"> Click to upload image </p>
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     SVG, PNG, JPG or GIF (max 5MB)
                   </p>
                 </>
               )}
             </label>
           </div>
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
             
             <h3 className="font-playfair text-xl mb-4"> Visibility </h3>
             <div className="space-y-4">
@@ -307,7 +341,7 @@ export default function AddProduct({
               <div>
                 
                 <label className="text-sm text-[#374151]"> Status </label>
-                <select name="status" value={form.status} onChange={handleChange} className="w-full border border-[#E5E7EB] rounded-lg px-3 h-12 mt-1">
+                <select name="status" value={form.status} onChange={handleChange} className="w-full border border-theme-border rounded-lg px-3 h-12 mt-1">
                   
                   <option value="Active">Active</option> 
                   <option value="Draft">Draft</option>
@@ -322,11 +356,11 @@ export default function AddProduct({
           </div>
           <div className="space-y-3">
             
-            <button onClick={handleSave} className="flex items-center justify-center gap-2 bg-[#2563EB] text-white w-full py-3 rounded-lg shadow">
+            <button onClick={handleSave} className="flex items-center justify-center gap-2 bg-[#2563EB] text-theme-text w-full py-3 rounded-lg shadow">
               
               <Save size={18} /> Publish Product
             </button>
-            <button onClick={() => setActiveTab("products")} className="w-full border border-[#E5E7EB] py-3 rounded-lg">
+            <button onClick={() => setActiveTab("products")} className="w-full border border-theme-border py-3 rounded-lg">
               
               Cancel
             </button>

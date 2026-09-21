@@ -10,8 +10,11 @@ import {
   Trash2,
   View
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -23,155 +26,18 @@ const authHeaders = () => {
   };
 };
 
-const cards = [
-  {
-    title: "Total Expenses (Feb)",
-    value: "$7,620.50",
-    icon: <TrendingDown size={20} className="text-[#E7000B]" />,
-    iconBg: "bg-[#FEE2E2]",
-    badge: "+4.5%",
-    badgeColor: "text-red-600 bg-[#FEE2E2]"
-  },
-  {
-    title: "Staff Payroll",
-    value: "$4,200.00",
-    icon: <Users size={20} className="text-[#155DFC]" />,
-    iconBg: "bg-[#E0E7FF]",
-    badge: "Fixed Cost",
-    badgeColor: "text-[#2563EB] bg-[#DBEAFE]"
-  },
-  {
-    title: "Maintenance & Misc",
-    value: "$570.50",
-    icon: <Wrench size={20} className="text-[#F54900]" />,
-    iconBg: "bg-[#FFF7ED]",
-    badge: "Variable",
-    badgeColor: "text-[#F54900] bg-[#FFEAD5]"
-  }
-]
-
-const expenses = [
-  {
-    title: "Monthly Rent",
-    category: "Rent",
-    date: "Feb 01, 2026",
-    amount: "$2,500.00",
-    status: "Paid"
-  },
-  {
-    title: "Staff Salaries",
-    category: "Salary",
-    date: "Feb 01, 2026",
-    amount: "$4,200.00",
-    status: "Paid"
-  },
-  {
-    title: "Vegetable Supply",
-    category: "Inventory",
-    date: "Feb 03, 2026",
-    amount: "$350.50",
-    status: "Pending"
-  },
-  {
-    title: "Kitchen Equipment Repair",
-    category: "Maintenance",
-    date: "Feb 02, 2026",
-    amount: "$150.00",
-    status: "Paid"
-  },
-  {
-    title: "Electricity Bill",
-    category: "Utilities",
-    date: "Feb 05, 2026",
-    amount: "$420.00",
-    status: "Due Soon"
-  }
-]
-
 const statusStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]",
   "Due Soon": "bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]"
 }
 
-const employees = [
-  {
-    name: "John Doe",
-    role: "Head Chef",
-    month: "January 2026",
-    amount: "$3,200.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/men/32.jpg"
-  },
-  {
-    name: "Sarah Smith",
-    role: "Restaurant Manager",
-    month: "January 2026",
-    amount: "$2,800.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/44.jpg"
-  },
-  {
-    name: "Mike Johnson",
-    role: "Sous Chef",
-    month: "January 2026",
-    amount: "$2,100.00",
-    status: "Pending",
-    image: "https://randomuser.me/api/portraits/men/65.jpg"
-  },
-  {
-    name: "Emily Chen",
-    role: "Waitstaff",
-    month: "January 2026",
-    amount: "$1,500.00",
-    status: "Paid",
-    image: "https://randomuser.me/api/portraits/women/68.jpg"
-  }
-]
-
 const statusEmployeeStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
   Pending: "bg-[#FFF7ED] text-[#F54900] border border-[#FED7AA]"
 }
 
-const issues = [
-  {
-    title: "Walk-in Freezer",
-    desc: "Temperature fluctuation",
-    priority: "High",
-    vendor: "CoolTech Services",
-    cost: "$150.00",
-    date: "Feb 02, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "Espresso Machine",
-    desc: "Steam wand leak",
-    priority: "Medium",
-    vendor: "BaristaFix",
-    cost: "$85.00",
-    date: "Jan 28, 2026",
-    status: "Resolved"
-  },
-  {
-    title: "HVAC System",
-    desc: "Filter replacement",
-    priority: "Low",
-    vendor: "AirMasters",
-    cost: "$200.00",
-    date: "Jan 15, 2026",
-    status: "Scheduled"
-  },
-  {
-    title: "Dishwasher",
-    desc: "Drainage blockage",
-    priority: "High",
-    vendor: "QuickPlumb",
-    cost: "$0.00",
-    date: "Feb 05, 2026",
-    status: "In Progress"
-  }
-]
+
 
 const priorityStyles: any = {
   High: "bg-[#FEE2E2] text-[#DC2626]",
@@ -202,7 +68,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setExpenses(data.data?.expenses || data.expenses || data.data || []);
+        setExpenses(extractList(data));
       }
     } catch (err) { console.error(err); }
   };
@@ -212,7 +78,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setEmployees(data.data?.payroll || data.payroll || data.data || []);
+        setEmployees(extractList(data));
       }
     } catch (err) { console.error(err); }
   };
@@ -222,7 +88,7 @@ export default function FinanceWallet() {
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setIssues(data.data?.maintenance || data.maintenance || data.data || []);
+        setIssues(extractList(data));
       }
     } catch (err) { console.error(err); }
   };
@@ -244,6 +110,33 @@ export default function FinanceWallet() {
     } catch (err) { console.error(err); }
   };
 
+  const cards = [
+    {
+      title: "Total Expenses",
+      value: "$14,250.00",
+      icon: <TrendingDown size={24} />,
+      iconBg: "bg-[#FEE2E2] text-[#DC2626]",
+      badge: "+2.4%",
+      badgeColor: "bg-[#FEE2E2] text-[#DC2626]"
+    },
+    {
+      title: "Monthly Payroll",
+      value: "$8,500.00",
+      icon: <Users size={24} />,
+      iconBg: "bg-[#EFF6FF] text-[#2563EB]",
+      badge: "Fixed",
+      badgeColor: "bg-[#F1F5F9] text-[#64748B]"
+    },
+    {
+      title: "Maintenance",
+      value: "$1,200.00",
+      icon: <Wrench size={24} />,
+      iconBg: "bg-[#FFF7ED] text-[#EA580C]",
+      badge: "-5.0%",
+      badgeColor: "bg-[#ECFDF5] text-[#059669]"
+    }
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -252,13 +145,13 @@ export default function FinanceWallet() {
             Expenses & Finance
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Track your spending, salaries, and operational costs.
           </p>
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface shadow-sm">
             <Download size={18} />
             Export Report
           </button>
@@ -279,7 +172,7 @@ export default function FinanceWallet() {
         {cards.map((c, i) => (
           <div
             key={i}
-            className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 shadow-sm"
+            className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 shadow-sm"
           >
 
             <div className="flex items-start justify-between mb-5">
@@ -294,7 +187,7 @@ export default function FinanceWallet() {
 
             </div>
 
-            <p className="text-[#64748B] text-lg">
+            <p className="text-theme-muted text-lg">
               {c.title}
             </p>
 
@@ -327,9 +220,9 @@ export default function FinanceWallet() {
             ))}
 
           </div>
-          <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-10 bg-white w-[200px]">
+          <div className="flex items-center gap-2 border border-theme-border rounded-lg px-3 h-10 bg-theme-surface w-[200px]">
 
-            <Search size={16} className="text-[#94A3B8]" />
+            <Search size={16} className="text-theme-muted" />
 
             <input
               placeholder="Filter records..."
@@ -340,13 +233,13 @@ export default function FinanceWallet() {
         </div>
         {
           activeFinance === 0 &&
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
 
             <div className="overflow-x-auto">
 
               <table className="w-full text-left">
 
-                <thead className="bg-[#F8FAFC] border-b text-sm text-[#64748B]">
+                <thead className="bg-theme-bg border-b text-sm text-theme-muted">
 
                   <tr>
 
@@ -386,7 +279,7 @@ export default function FinanceWallet() {
                     const id = e._id || i.toString();
                     return (
                     <tr key={id} className="border-b last:border-none">
-                      <td className="py-6 px-6 text-[#0F172A] font-medium text-lg">
+                      <td className="py-6 px-6 text-theme-text font-medium text-lg">
                         {e.title}
                       </td>
                       <td className="py-6 px-6">
@@ -394,10 +287,10 @@ export default function FinanceWallet() {
                           {e.category}
                         </span>
                       </td>
-                      <td className="py-6 px-6 text-[#64748B]">
+                      <td className="py-6 px-6 text-theme-muted">
                         {e.date ? new Date(e.date).toLocaleDateString() : "-"}
                       </td>
-                      <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
+                      <td className="py-6 px-6 font-semibold text-theme-text text-lg">
                         ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.amount}
                       </td>
                       <td className="py-6 px-6">
@@ -408,22 +301,22 @@ export default function FinanceWallet() {
                       </td>
                       <td className="py-6 px-6 text-end relative">
                         <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
-                          <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                          <MoreHorizontal size={18} className="text-theme-muted" />
                         </button>
                         {openMenu === id && (
-                          <div className="absolute right-6 top-12 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
+                          <div className="absolute right-6 top-12 w-max bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden z-50">
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
 
-                              <View size={16} className="text-[#64748B]" />
+                              <View size={16} className="text-theme-muted" />
 
                               View Invoice
 
                             </button>
 
-                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
+                            <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
 
-                              <Download size={16} className="text-[#64748B]" />
+                              <Download size={16} className="text-theme-muted" />
 
                               Download Receipt
 
@@ -456,7 +349,7 @@ export default function FinanceWallet() {
                 Payroll Management
               </h2>
 
-              <button className="flex items-center gap-2 border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 shadow-sm">
+              <button className="flex items-center gap-2 border border-theme-border bg-theme-surface rounded-lg px-4 py-2 shadow-sm">
 
                 <Download size={16} />
                 Payroll Summary
@@ -467,13 +360,13 @@ export default function FinanceWallet() {
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm overflow-hidden">
 
               <div className="overflow-x-auto">
 
                 <table className="w-full text-left">
 
-                  <thead className="bg-[#F8FAFC] border-b text-sm text-[#64748B]">
+                  <thead className="bg-theme-bg border-b text-sm text-theme-muted">
 
                     <tr>
 
@@ -516,19 +409,19 @@ export default function FinanceWallet() {
                       <tr key={id} className="border-b last:border-none">
                         <td className="py-6 px-6">
                           <div className="flex items-center gap-3">
-                            <img src={staff.image || staff.imageUrl || "https://randomuser.me/api/portraits/men/32.jpg"} className="w-10 h-10 rounded-full object-cover" />
-                            <p className="font-medium text-[#0F172A] text-lg">
+                            <img src={getImageUrl(staff.image || staff.imageUrl)} className="w-10 h-10 rounded-full object-cover" />
+                            <p className="font-medium text-theme-text text-lg">
                               {staff.name || "Unknown"}
                             </p>
                           </div>
                         </td>
-                        <td className="py-6 px-6 text-[#475569]">
+                        <td className="py-6 px-6 text-theme-muted">
                           {staff.role || "Staff"}
                         </td>
-                        <td className="py-6 px-6 text-[#64748B]">
+                        <td className="py-6 px-6 text-theme-muted">
                           {e.month || e.period || "-"}
                         </td>
-                        <td className="py-6 px-6 font-semibold text-[#0F172A] text-lg">
+                        <td className="py-6 px-6 font-semibold text-theme-text text-lg">
                           ${typeof e.amount === "number" ? e.amount.toFixed(2) : e.totalPay || e.amount || "0.00"}
                         </td>
                         <td className="py-6 px-6">
@@ -541,16 +434,16 @@ export default function FinanceWallet() {
                             <button className="text-[#059669] font-medium">Payslip</button>
                             <div className="relative top-1">
                               <button onClick={() => setOpenMenu(openMenu === id ? null : id)}>
-                                <MoreHorizontal size={18} className="text-[#94A3B8]" />
+                                <MoreHorizontal size={18} className="text-theme-muted" />
                               </button>
                               {openMenu === id && (
-                                <div className="absolute right-3 top-5 w-max bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden z-50">
-                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-                                    <Edit size={16} className="text-[#64748B]" />
+                                <div className="absolute right-3 top-5 w-max bg-theme-surface border border-theme-border rounded-xl shadow-lg overflow-hidden z-50">
+                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
+                                    <Edit size={16} className="text-theme-muted" />
                                     Edit Salary
                                   </button>
-                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-[#F8FAFC]">
-                                    <View size={16} className="text-[#64748B]" />
+                                  <button className="flex items-center gap-3 text-sm px-4 py-3 w-full hover:bg-theme-bg">
+                                    <View size={16} className="text-theme-muted" />
                                     View Profile
                                   </button>
                                 </div>
@@ -583,7 +476,7 @@ export default function FinanceWallet() {
                 Maintenance & Repairs
               </h2>
 
-              <button className="flex items-center gap-2 bg-[#0F172A] text-white px-5 py-2.5 rounded-lg shadow">
+              <button className="flex items-center gap-2 bg-theme-surface text-theme-text px-5 py-2.5 rounded-lg shadow">
 
                 <Wrench size={16} />
                 Report Issue
@@ -597,13 +490,13 @@ export default function FinanceWallet() {
             <div className="grid md:grid-cols-2 gap-6">
 
               {issues.map((item, i) => (
-                <div key={item._id || i} className="border border-[#E5E7EB] bg-white rounded-xl p-6 shadow-sm">
+                <div key={item._id || i} className="border border-theme-border bg-theme-surface rounded-xl p-6 shadow-sm">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="font-playfair text-xl">
                         {item.title}
                       </h3>
-                      <p className="text-[#64748B] mt-1">
+                      <p className="text-theme-muted mt-1">
                         {item.description || item.desc}
                       </p>
                     </div>
@@ -613,19 +506,19 @@ export default function FinanceWallet() {
                   </div>
                   <div className="border-t pt-4 grid grid-cols-2 gap-y-4 text-sm">
                     <div>
-                      <p className="text-[#64748B]">Vendor</p>
-                      <p className="font-medium text-[#0F172A]">{item.vendor || "-"}</p>
+                      <p className="text-theme-muted">Vendor</p>
+                      <p className="font-medium text-theme-text">{item.vendor || "-"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Cost</p>
-                      <p className="font-medium text-[#0F172A]">${typeof item.cost === "number" ? item.cost.toFixed(2) : item.cost || "0.00"}</p>
+                      <p className="text-theme-muted">Cost</p>
+                      <p className="font-medium text-theme-text">${typeof item.cost === "number" ? item.cost.toFixed(2) : item.cost || "0.00"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Date Reported</p>
-                      <p className="font-medium text-[#0F172A]">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</p>
+                      <p className="text-theme-muted">Date Reported</p>
+                      <p className="font-medium text-theme-text">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</p>
                     </div>
                     <div>
-                      <p className="text-[#64748B]">Status</p>
+                      <p className="text-theme-muted">Status</p>
                       <div className={`flex items-center gap-1 font-medium ${statusIssueStyles[item.status || "Scheduled"] || "text-gray-500"}`}>
                         {(item.status === "Resolved" || item.status === "Paid") && <CheckCircle2 size={16} />}
                         {item.status === "In Progress" && <Clock size={16} />}
@@ -634,11 +527,11 @@ export default function FinanceWallet() {
                     </div>
                   </div>
                   <div className="flex gap-4 mt-6">
-                    <button className="flex-1 border border-[#E5E7EB] rounded-lg py-2 bg-[#F8FAFC] text-[#0F172A]">
+                    <button className="flex-1 border border-theme-border rounded-lg py-2 bg-theme-bg text-theme-text">
                       View Details
                     </button>
                     {(item.status !== "Resolved" && item.status !== "Paid") && (
-                      <button onClick={() => markMaintenanceResolved(item._id)} className="flex-1 bg-[#059669] text-white rounded-lg py-2">
+                      <button onClick={() => markMaintenanceResolved(item._id)} className="flex-1 bg-[#059669] text-theme-text rounded-lg py-2">
                         Mark Resolved
                       </button>
                     )}

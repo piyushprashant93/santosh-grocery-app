@@ -20,7 +20,7 @@ export default function SupportCenter() {
 
   const [ticketsData, setTicketsData] = useState<any[]>([]);
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
-  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", description: "" });
+  const [newTicket, setNewTicket] = useState({ subject: "", priority: "Medium", message: "" });
 
   const fetchTickets = async () => {
     try {
@@ -45,13 +45,15 @@ export default function SupportCenter() {
         headers: authHeaders(),
         body: JSON.stringify(newTicket)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success !== false) {
         alert("Ticket created successfully!");
         setShowNewTicketModal(false);
-        setNewTicket({ subject: "", priority: "Medium", description: "" });
+        setNewTicket({ subject: "", priority: "Medium", message: "" });
         fetchTickets();
       } else {
-        alert("Failed to create ticket");
+        const errorMsg = data?.errors?.length ? data.errors[0] : (data?.message || "Failed to create ticket");
+        alert(errorMsg);
       }
     } catch(err) { console.error(err); }
   };
@@ -78,7 +80,7 @@ export default function SupportCenter() {
             Support Center
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Get help with your store and orders.
           </p>
         </div>
@@ -132,10 +134,10 @@ export default function SupportCenter() {
 
       {activeTab === "tickets" && (
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[320px] mb-6">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[320px] mb-6">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search tickets..."
               className="w-full px-3 py-2 outline-none text-sm"
@@ -148,7 +150,7 @@ export default function SupportCenter() {
 
             <table className="w-full text-left">
 
-              <thead className="border-b text-[#6A7282] text-sm">
+              <thead className="border-b text-theme-muted text-sm">
 
                 <tr>
 
@@ -189,7 +191,7 @@ export default function SupportCenter() {
                     <td className="py-5 text-[#62748E]">
                       {t.id ? `#${t.id}` : t.ticketId ? `#${t.ticketId}` : t._id ? `#${t._id.substring(t._id.length - 8).toUpperCase()}` : "#---"}
                     </td>
-                    <td className="py-5 text-[#111827] font-medium">
+                    <td className="py-5 text-theme-text font-medium">
                       {t.subject || t.title || t.issue || "No Subject"}
                     </td>
                     <td className="py-5">
@@ -202,7 +204,7 @@ export default function SupportCenter() {
                         {t.status || "Open"}
                       </span>
                     </td>
-                    <td className="py-5 text-[#6A7282]">
+                    <td className="py-5 text-theme-muted">
                       {t.updated || (t.updatedAt ? new Date(t.updatedAt).toLocaleDateString() : "") || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                     </td>
                     <td className="py-5 text-center text-[#F54900] font-medium cursor-pointer">
@@ -226,7 +228,7 @@ export default function SupportCenter() {
       )}
 
       {activeTab === "chat" && (
-        <SupportLiveChat />
+        <SupportLiveChat onClose={() => setActiveTab("tickets")} />
       )}
 
       {activeTab === "faq" && (
@@ -235,8 +237,8 @@ export default function SupportCenter() {
 
       {showNewTicketModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-[90%] max-w-[500px] p-6 relative">
-            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+          <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
+            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-theme-text">
               <X size={20} />
             </button>
             <h3 className="font-playfair text-xl mb-4">Create New Ticket</h3>
@@ -255,7 +257,7 @@ export default function SupportCenter() {
               </div>
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Description</label>
-                <textarea value={newTicket.description} onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
+                <textarea value={newTicket.message} onChange={(e) => setNewTicket({ ...newTicket, message: e.target.value })} rows={4} className="w-full border rounded-lg px-3 py-2 outline-none"></textarea>
               </div>
               <button onClick={createTicket} className="w-full bg-[#F54900] text-white py-2.5 rounded-lg font-medium">Submit Ticket</button>
             </div>

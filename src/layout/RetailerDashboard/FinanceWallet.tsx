@@ -1,10 +1,15 @@
 import { Download, Wallet, Clock, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -13,6 +18,7 @@ const authHeaders = () => {
 };
 
 export default function FinanceWallet() {
+  const { formatPrice } = useCurrency();
   const [financeData, setFinanceData] = useState<any>(null);
 
   const fetchFinance = async () => {
@@ -44,6 +50,35 @@ export default function FinanceWallet() {
     } catch(err) { console.error(err); }
   };
 
+  const handleDownloadStatement = async () => {
+    try {
+      const toastId = toast.loading("Downloading statement...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API_BASE}/retailer/finance/statement`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-finance-statement-${new Date().toISOString().split('T')[0]}.pdf`; // Assuming PDF or CSV
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Download successful", { id: toastId });
+      } else {
+        toast.error("Download failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Download failed");
+    }
+  };
+
   const resolvedTransactions = financeData?.transactions || [];
 
   const statusStyles: any = {
@@ -61,12 +96,12 @@ export default function FinanceWallet() {
             Finance & Wallet
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Manage your earnings, settlements, and payouts.
           </p>
         </div>
 
-        <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+        <button onClick={handleDownloadStatement} className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface shadow-sm">
           <Download size={18} />
           Download Statement
         </button>
@@ -77,7 +112,7 @@ export default function FinanceWallet() {
 
       <div className="grid lg:grid-cols-3 gap-6">
 
-        <div className="rounded-lg lg:rounded-xl p-3 lg:p-6 bg-[#0F8A5F] text-white shadow-lg flex flex-col justify-between">
+        <div className="rounded-lg lg:rounded-xl p-3 lg:p-6 bg-[#0F8A5F] text-theme-text shadow-lg flex flex-col justify-between">
 
           <div className="flex items-start justify-between">
 
@@ -92,7 +127,7 @@ export default function FinanceWallet() {
 
           </div>
 
-          <button onClick={handleWithdraw} className="mt-6 bg-white text-[#0F8A5F] rounded-lg py-2.5 font-medium">
+          <button onClick={handleWithdraw} className="mt-6 bg-theme-surface text-[#0F8A5F] rounded-lg py-2.5 font-medium">
             Withdraw Funds
           </button>
 
@@ -100,14 +135,14 @@ export default function FinanceWallet() {
 
 
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <div className="flex items-start justify-between">
 
             <div>
-              <p className="text-[#6A7282] text-sm">Pending Payouts</p>
+              <p className="text-theme-muted text-sm">Pending Payouts</p>
               <h2 className="text-[32px] font-playfair mt-2">${(financeData?.pendingPayouts || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</h2>
-              <p className="text-[#6A7282] text-sm mt-6">
+              <p className="text-theme-muted text-sm mt-6">
                 Funds usually clear within 24–48 hours after delivery.
               </p>
             </div>
@@ -122,14 +157,14 @@ export default function FinanceWallet() {
 
 
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <div className="flex items-start justify-between">
 
             <div>
-              <p className="text-[#6A7282] text-sm">Next Payout</p>
+              <p className="text-theme-muted text-sm">Next Payout</p>
               <h2 className="text-[32px] font-playfair mt-2">{financeData?.nextPayoutDate || "TBD"}</h2>
-              <p className="text-[#6A7282] text-sm mt-6">
+              <p className="text-theme-muted text-sm mt-6">
                 Estimated amount: ${(financeData?.nextPayoutAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </p>
             </div>
@@ -146,11 +181,11 @@ export default function FinanceWallet() {
 
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
         <div className="mb-6">
           <h3 className="font-playfair text-xl">Transaction History</h3>
-          <p className="text-[#6A7282] text-sm mt-1">
+          <p className="text-theme-muted text-sm mt-1">
             Recent earnings and deductions
           </p>
         </div>
@@ -161,7 +196,7 @@ export default function FinanceWallet() {
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
                 <th className="py-3 text-sm font-medium text-[#62748E]">
@@ -193,13 +228,13 @@ export default function FinanceWallet() {
 
               {resolvedTransactions.map((t: any, i: number) => (
                 <tr key={t._id || i} className="border-b last:border-none">
-                  <td className="py-4 text-[#6A7282]">
+                  <td className="py-4 text-theme-muted">
                     {t.id || t.transactionId || t._id?.substring(0, 8)}
                   </td>
-                  <td className="py-4 text-[#111827] font-medium">
+                  <td className="py-4 text-theme-text font-medium">
                     {t.desc || t.description}
                   </td>
-                  <td className="py-4 text-[#6A7282]">
+                  <td className="py-4 text-theme-muted">
                     {t.date ? new Date(t.date).toLocaleDateString() : (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "")}
                   </td>
 
@@ -210,13 +245,13 @@ export default function FinanceWallet() {
                         : "text-[#111827]"
                     }`}
                   >
-                    {typeof t.amount === "number" ? (t.type === "credit" ? `+$${t.amount.toFixed(2)}` : `-$${t.amount.toFixed(2)}`) : t.amount}
+                    {typeof t.amount === "number" ? (t.type === "credit" ? `+${formatPrice(t.amount)}` : `-${formatPrice(t.amount)}`) : t.amount}
                   </td>
 
                   <td className="py-4 text-end">
 
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Completed"] || "bg-gray-100 text-gray-800"}`}
+                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Completed"] || "bg-gray-100 text-theme-text"}`}
                     >
                       {t.status || "Completed"}
                     </span>

@@ -65,14 +65,14 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
       <div className="flex items-center gap-4">
         <button 
           onClick={onBack}
-          className="p-2 text-gray-500 hover:text-gray-900 hover:bg-white rounded-full transition"
+          className="p-2 text-gray-500 hover:text-theme-text hover:bg-theme-surface rounded-full transition"
         >
           <ArrowLeft size={24} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Order History</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Order History</h1>
           <p className="text-gray-500 mt-1 flex items-center gap-2">
-            User: <span className="font-semibold text-gray-900">{user.fullName}</span> 
+            User: <span className="font-semibold text-theme-text">{user.fullName}</span> 
             <span className="px-2 py-0.5 bg-gray-100 rounded-md text-xs font-medium text-gray-600 border border-gray-200">ID: {user.id.slice(-6).toUpperCase()}</span>
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
       </div>
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-[400px] relative">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 flex flex-col min-h-[400px] relative">
         
         {/* Search & Filter */}
         <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -109,7 +109,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
               className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-orange-500 transition"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition w-full sm:w-auto justify-center">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition w-full sm:w-auto justify-center">
             <Filter size={16} />
             Filter
           </button>
@@ -126,7 +126,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
         {error && !loading && (
           <div className="absolute inset-0 top-[80px] z-10 flex flex-col items-center justify-center p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
           </div>
         )}
 
@@ -151,10 +151,10 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
             <tbody className="divide-y divide-gray-100">
               {orders.map((order) => (
                 <tr key={order._id || order.id} className="hover:bg-gray-50/50 transition">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{(order._id || order.id || "").slice(-8).toUpperCase()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{order.restaurant?.name || order.store?.name || order.restaurant || "N/A"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-theme-text">{(order._id || order.id || "").slice(-8).toUpperCase()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-theme-text">{order.restaurant?.name || order.store?.name || order.restaurant || "N/A"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt || order.date)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">${(order.totalAmount || order.total || 0).toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-theme-text">${(order.totalAmount || order.total || 0).toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {order.status === 'Delivered' || order.orderStatus === 'Delivered' || order.status === 'Completed' ? (
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">

@@ -23,103 +23,6 @@ const authHeaders = () => {
   };
 };
 
-const stats = [
-  {
-    title: "TOTAL STOCK VALUE",
-    value: "$2.4M",
-    note: "+12% vs last month",
-    icon: Layers,
-    color: "text-green-600",
-  },
-  { title: "SPACE UTILIZATION", value: "72%", progress: 72, icon: Grid2X2 },
-  {
-    title: "ACTIVE BINS",
-    value: "1,240",
-    note: "Out of 1,500 available",
-    icon: MapPin,
-  },
-  {
-    title: "PENDING MOVES",
-    value: "18",
-    note: "Requires attention",
-    icon: Move,
-    color: "text-orange-600",
-  },
-];
-
-const zones = [
-  {
-    name: "Zone A: Cold Storage",
-    temp: "-18°C",
-    util: 85,
-    color: "bg-blue-500",
-  },
-  {
-    name: "Zone B: Dry Goods",
-    temp: "22°C",
-    util: 62,
-    color: "bg-orange-500",
-  },
-  {
-    name: "Zone C: Fresh Produce",
-    temp: "4°C",
-    util: 45,
-    color: "bg-green-500",
-  },
-  { name: "Zone D: Packaging", temp: null, util: 90, color: "bg-red-500" },
-];
-
-const items = [
-  {
-    name: "Organic Avocados (Hass)",
-    sku: "AVO-HASS-01",
-    img: "https://picsum.photos/50?1",
-    location: "C-1-204",
-    zone: "Zone C",
-    onhand: 450,
-    unit: "Crates",
-    allocated: 120,
-    available: 330,
-    status: "In Stock",
-  },
-  {
-    name: "Atlantic Salmon Fillets",
-    sku: "SEA-SAL-05",
-    img: "https://picsum.photos/50?2",
-    location: "A-04-01",
-    zone: "Zone A",
-    onhand: 25,
-    unit: "Boxes",
-    allocated: 20,
-    available: 5,
-    status: "Low Stock",
-  },
-  {
-    name: "Basmati Rice (Premium)",
-    sku: "RIC-BAS-20",
-    img: "https://picsum.photos/50?3",
-    location: "B-2-10",
-    zone: "Zone B",
-    onhand: 1200,
-    unit: "Sacks",
-    allocated: 0,
-    available: 1200,
-    status: "In Stock",
-  },
-  {
-    name: "Paper Takeout Containers",
-    sku: "PKG-BOX-500",
-    img: "https://picsum.photos/50?4",
-    location: "D-05-15",
-    zone: "Zone D",
-    onhand: 2500,
-    unit: "Cartons",
-    allocated: 500,
-    available: 2000,
-    status: "In Stock",
-  },
-];
-
 const statusStyles: any = {
   "In Stock": "bg-green-100 text-green-700",
   "Low Stock": "bg-red-100 text-red-600",
@@ -129,20 +32,53 @@ const statusStyles: any = {
 export default function Warehouse() {
   const [openAdjust, setOpenAdjust] = useState(false);
   const [itemsData, setItemsData] = useState<any[]>([]);
+  const [zonesData, setZonesData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchWarehouse = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/warehouse`, { headers: authHeaders() });
-      if (res.ok) {
-        const data = await res.json();
-        setItemsData(data.data?.items || data.items || data.data || []);
+      setLoading(true);
+      setError(null);
+      const [itemsRes, zonesRes] = await Promise.all([
+        fetch(`${API_BASE}/supplier/warehouse/items`, { headers: authHeaders() }),
+        fetch(`${API_BASE}/supplier/warehouse/zones`, { headers: authHeaders() })
+      ]);
+
+      if (!itemsRes.ok && !zonesRes.ok) {
+         throw new Error("Failed to load warehouse data");
       }
-    } catch(err) { console.error(err); }
+
+      const [itemsJson, zonesJson] = await Promise.all([
+        itemsRes.ok ? itemsRes.json() : { data: [] },
+        zonesRes.ok ? zonesRes.json() : { data: [] }
+      ]);
+
+      const items = itemsJson.data?.items || itemsJson.items || (Array.isArray(itemsJson.data) ? itemsJson.data : []);
+      const zones = zonesJson.data?.zones || zonesJson.zones || (Array.isArray(zonesJson.data) ? zonesJson.data : []);
+      setItemsData(Array.isArray(items) ? items : []);
+      setZonesData(Array.isArray(zones) ? zones : []);
+    } catch(err: any) { 
+      console.error(err); 
+      setError(err.message || "An error occurred while loading warehouse data");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchWarehouse();
   }, []);
+
+  const filteredItems = itemsData.filter(i => {
+    const name = i.name || i.product?.name || i.product?.title || "";
+    const sku = i.sku || i.product?.sku || i._id || "";
+    const location = i.location || i.bin || "";
+    return name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           sku.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           location.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="space-y-6">
@@ -152,18 +88,18 @@ export default function Warehouse() {
             Warehouse
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Manage zones, bin locations, and inventory stock levels.
           </p>
         </div>
 
         <div className="flex gap-3">
-          <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex gap-2 items-center bg-white">
+          <button className="border border-theme-border rounded-lg px-4 py-2 flex gap-2 items-center bg-theme-surface">
             <Clock size={16} />
             Movement History
           </button>
 
-          <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex gap-2 items-center bg-white">
+          <button className="border border-theme-border rounded-lg px-4 py-2 flex gap-2 items-center bg-theme-surface">
             <ArrowLeftRight size={16} />
             Transfer Stock
           </button>
@@ -180,87 +116,68 @@ export default function Warehouse() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-4">
-        {stats.map((s, i) => {
-          const Icon = s.icon;
-
-          return (
-            <div
-              key={i}
-              className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4"
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-[#64748B]">{s.title}</p>
-
-                  <p className="text-2xl font-semibold mt-1">{s.value}</p>
-
-                  {s.note && (
-                    <p className="text-sm text-green-600 mt-1">{s.note}</p>
-                  )}
-                </div>
-
-                <div className="bg-gray-100 p-2 rounded-lg">
-                  <Icon size={18} />
-                </div>
-              </div>
-
-              {s.progress && (
-                <div className="w-full bg-gray-200 h-2 rounded-full mt-4">
-                  <div
-                    style={{ width: `${s.progress}%` }}
-                    className="bg-[#155DFC] h-2 rounded-full"
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="grid lg:grid-cols-4 gap-4">
-        {zones.map((z, i) => (
-          <div
-            key={i}
-            className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4"
-          >
-            <div className="flex justify-between">
-              <div>
-                <p className="font-medium">{z.name}</p>
-
-                {z.temp && <p className="text-sm text-[#64748B]">{z.temp}</p>}
-              </div>
-            </div>
-
-            <p className="text-sm text-[#64748B] mt-4">Utilization</p>
-
-            <div className="w-full bg-gray-200 h-2 rounded-full mt-2">
+      {error ? (
+        <div className="bg-red-50 border border-red-100 text-red-600 rounded-xl p-8 flex flex-col items-center justify-center min-h-[300px]">
+          <h3 className="text-xl font-playfair font-semibold mb-2">Error Loading Data</h3>
+          <p className="mb-4">{error}</p>
+          <button onClick={fetchWarehouse} className="bg-red-600 text-white px-6 py-2 rounded-lg">
+            Try Again
+          </button>
+        </div>
+      ) : loading ? (
+        <div className="py-20 text-center text-theme-muted">
+          <p className="text-lg">Loading warehouse stock...</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid lg:grid-cols-4 gap-4">
+            {zonesData.length > 0 ? zonesData.map((z, i) => (
               <div
-                style={{ width: `${z.util}%` }}
-                className={`${z.color} h-2 rounded-full`}
-              ></div>
-            </div>
+                key={z._id || i}
+                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4"
+              >
+                <div className="flex justify-between">
+                  <div>
+                    <p className="font-medium">{z.name || z.zoneName}</p>
+                    {(z.temp || z.temperature) && <p className="text-sm text-theme-muted">{z.temp || z.temperature}</p>}
+                  </div>
+                </div>
 
-            <p className="text-sm mt-1 text-[#64748B]">{z.util}%</p>
+                <p className="text-sm text-theme-muted mt-4">Utilization</p>
+
+                <div className="w-full bg-gray-200 h-2 rounded-full mt-2">
+                  <div
+                    style={{ width: `${z.utilization || z.util || 0}%` }}
+                    className={`${z.color || 'bg-blue-500'} h-2 rounded-full`}
+                  ></div>
+                </div>
+
+                <p className="text-sm mt-1 text-theme-muted">{z.utilization || z.util || 0}%</p>
+              </div>
+            )) : (
+              <div className="col-span-4 py-8 text-center border border-dashed rounded-xl text-gray-500">
+                No zones configured.
+              </div>
+            )}
           </div>
-        ))}
-      </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-playfair">Stock Level by Bin</h3>
 
           <div className="flex gap-3">
-            <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3">
-              <Search size={16} className="text-[#64748B]" />
+            <div className="flex items-center border border-theme-border rounded-lg px-3">
+              <Search size={16} className="text-theme-muted" />
 
               <input
                 placeholder="Search SKU, Product, or Bin..."
                 className="px-3 py-2 outline-none text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
-            <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex items-center gap-2">
+            <button className="border border-theme-border rounded-lg px-4 py-2 flex items-center gap-2">
               <Filter size={16} />
               Filter
             </button>
@@ -269,7 +186,7 @@ export default function Warehouse() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="border-b text-[#64748B] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
               <tr>
                 <th className="py-3 font-normal">PRODUCT DETAILS</th>
                 <th className="py-3 font-normal">LOCATION</th>
@@ -282,7 +199,7 @@ export default function Warehouse() {
             </thead>
 
             <tbody>
-              {itemsData.length > 0 ? itemsData.map((i, index) => (
+              {filteredItems.length > 0 ? filteredItems.map((i, index) => (
                 <tr key={i._id || index} className="border-b last:border-none">
                   <td className="py-5">
                     <div className="flex items-center gap-3">
@@ -291,7 +208,7 @@ export default function Warehouse() {
                       <div>
                         <p className="font-medium">{i.name || i.product?.name || i.product?.title || "Unknown"}</p>
 
-                        <p className="text-sm text-[#64748B]">{i.sku || i.product?.sku || i._id?.substring(0,8)}</p>
+                        <p className="text-sm text-theme-muted">{i.sku || i.product?.sku || i._id?.substring(0,8)}</p>
                       </div>
                     </div>
                   </td>
@@ -300,14 +217,14 @@ export default function Warehouse() {
                     <div>
                       <p className="font-medium">{i.location || i.bin || "Unassigned"}</p>
 
-                      <p className="text-sm text-[#64748B]">{i.zone || i.zone?.name || "No Zone"}</p>
+                      <p className="text-sm text-theme-muted">{i.zone || i.zone?.name || "No Zone"}</p>
                     </div>
                   </td>
 
                   <td className="py-5">
                     <p className="font-medium">{i.onhand || i.stockQuantity || i.quantity || 0}</p>
 
-                    <p className="text-sm text-[#64748B]">{i.unit || i.product?.unit || "Units"}</p>
+                    <p className="text-sm text-theme-muted">{i.unit || i.product?.unit || "Units"}</p>
                   </td>
 
                   <td className="py-5 text-orange-600 font-medium">
@@ -339,6 +256,8 @@ export default function Warehouse() {
           </table>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

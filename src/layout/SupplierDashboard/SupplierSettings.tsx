@@ -129,6 +129,10 @@ export default function SupplierSettings() {
           phone: profile.phone || profile.phoneNumber || "",
           address: profile.address || profile.businessAddress || ""
         });
+        if (profile.twoFA !== undefined) setTwoFA(profile.twoFA);
+        if (profile.notifications && Array.isArray(profile.notifications)) {
+          setSettings(profile.notifications);
+        }
       }
     } catch (err) { console.error(err); }
   };
@@ -145,6 +149,33 @@ export default function SupplierSettings() {
       } else {
         alert("Failed to update profile");
       }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleSavePreferences = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ notifications: settings })
+      });
+      if (res.ok) {
+        alert("Preferences saved successfully");
+      } else {
+        alert("Failed to save preferences");
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleToggleTwoFA = async () => {
+    const newValue = !twoFA;
+    setTwoFA(newValue);
+    try {
+      await fetch(`${API_BASE}/supplier/settings`, {
+        method: "PUT",
+        headers: authHeaders(),
+        body: JSON.stringify({ twoFA: newValue })
+      });
     } catch (err) { console.error(err); }
   };
 
@@ -181,7 +212,7 @@ export default function SupplierSettings() {
           Settings
         </h1>
 
-        <p className="text-[#64748B] mt-2">
+        <p className="text-theme-muted mt-2">
           Manage your account, company profile, and preferences.
         </p>
 
@@ -221,13 +252,13 @@ export default function SupplierSettings() {
         </div>
 
         {active === "general" &&
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
             <h3 className="font-playfair text-xl">
               Company Profile
             </h3>
 
-            <p className="text-sm text-[#64748B] mb-6">
+            <p className="text-sm text-theme-muted mb-6">
               Update your company information and public profile.
             </p>
 
@@ -237,7 +268,7 @@ export default function SupplierSettings() {
 
               <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center border">
 
-                <Building2 size={28} className="text-[#64748B]" />
+                <Building2 size={28} className="text-theme-muted" />
 
               </div>
 
@@ -247,11 +278,11 @@ export default function SupplierSettings() {
                   Company Logo
                 </p>
 
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-theme-muted">
                   Recommended size 400×400px. JPG or PNG.
                 </p>
 
-                <button className="mt-3 border border-[#E5E7EB] px-4 py-2 rounded-lg flex items-center gap-2 bg-white">
+                <button className="mt-3 border border-theme-border px-4 py-2 rounded-lg flex items-center gap-2 bg-theme-surface">
 
                   <Upload size={16} />
 
@@ -272,7 +303,7 @@ export default function SupplierSettings() {
                 <input
                   value={profileForm.companyName}
                   onChange={(e) => setProfileForm({...profileForm, companyName: e.target.value})}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
                 />
               </div>
 
@@ -282,14 +313,14 @@ export default function SupplierSettings() {
                   placeholder="XX-XXXXXXX"
                   value={profileForm.taxId}
                   onChange={(e) => setProfileForm({...profileForm, taxId: e.target.value})}
-                  className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                  className="w-full border border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
                 />
               </div>
 
               <div>
                 <label className="text-sm text-[#374151]">Contact Email</label>
-                <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 mt-1">
-                  <Mail size={16} className="text-[#64748B]" />
+                <div className="flex items-center border border-theme-border rounded-lg px-3 mt-1">
+                  <Mail size={16} className="text-theme-muted" />
                   <input
                     value={profileForm.email}
                     onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
@@ -300,8 +331,8 @@ export default function SupplierSettings() {
 
               <div>
                 <label className="text-sm text-[#374151]">Phone Number</label>
-                <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 mt-1">
-                  <Phone size={16} className="text-[#64748B]" />
+                <div className="flex items-center border border-theme-border rounded-lg px-3 mt-1">
+                  <Phone size={16} className="text-theme-muted" />
                   <input
                     value={profileForm.phone}
                     onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
@@ -320,9 +351,9 @@ export default function SupplierSettings() {
                 Business Address
               </label>
 
-              <div className="flex items-start border border-[#E5E7EB] rounded-lg px-3 mt-1">
+              <div className="flex items-start border border-theme-border rounded-lg px-3 mt-1">
 
-                <MapPin size={16} className="mt-3 text-[#64748B]" />
+                <MapPin size={16} className="mt-3 text-theme-muted" />
 
                 <textarea
                   rows={3}
@@ -356,13 +387,13 @@ export default function SupplierSettings() {
         {active === "security" &&
           <div className="space-y-5">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
               <h3 className="font-playfair text-xl">
                 Password & Authentication
               </h3>
 
-              <p className="text-sm text-[#64748B] mb-6">
+              <p className="text-sm text-theme-muted mb-6">
                 Manage your account security preferences.
               </p>
 
@@ -379,7 +410,7 @@ export default function SupplierSettings() {
                     type="password"
                     value={passwordForm.currentPassword}
                     onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
-                    className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                    className="w-full border border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
                   />
                 </div>
 
@@ -397,7 +428,7 @@ export default function SupplierSettings() {
                       type="password"
                       value={passwordForm.newPassword}
                       onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
-                      className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                      className="w-full border border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
                     />
 
                   </div>
@@ -412,7 +443,7 @@ export default function SupplierSettings() {
                       type="password"
                       value={passwordForm.confirmPassword}
                       onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
-                      className="w-full border border-[#E5E7EB] rounded-lg px-3 py-2 mt-1 outline-none"
+                      className="w-full border border-theme-border rounded-lg px-3 py-2 mt-1 outline-none"
                     />
 
                   </div>
@@ -423,7 +454,7 @@ export default function SupplierSettings() {
 
                 <div className="flex justify-end">
 
-                  <button onClick={handleUpdatePassword} className="border border-[#E5E7EB] bg-white px-5 py-2 rounded-lg shadow-sm">
+                  <button onClick={handleUpdatePassword} className="border border-theme-border bg-theme-surface px-5 py-2 rounded-lg shadow-sm">
                     Update Password
                   </button>
 
@@ -441,7 +472,7 @@ export default function SupplierSettings() {
                     Two-Factor Authentication
                   </p>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     Add an extra layer of security to your account.
                   </p>
 
@@ -450,7 +481,7 @@ export default function SupplierSettings() {
 
 
                 <button
-                  onClick={() => setTwoFA(!twoFA)}
+                  onClick={handleToggleTwoFA}
                   className={`relative w-12 h-6 rounded-full transition ${twoFA ? "bg-[#155DFC]" : "bg-gray-300"
                     }`}
                 >
@@ -468,19 +499,19 @@ export default function SupplierSettings() {
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
               <h3 className="font-playfair text-xl">
                 Active Sessions
               </h3>
 
-              <p className="text-sm text-[#64748B] mb-6">
+              <p className="text-sm text-theme-muted mb-6">
                 Devices currently logged into your account.
               </p>
 
 
 
-              <div className="bg-[#F8FAFC] rounded-lg p-4 flex items-center justify-between">
+              <div className="bg-theme-bg rounded-lg p-4 flex items-center justify-between">
 
                 <div className="flex items-center gap-4">
 
@@ -496,7 +527,7 @@ export default function SupplierSettings() {
                       Chrome on MacBook Pro
                     </p>
 
-                    <p className="text-sm text-[#64748B]">
+                    <p className="text-sm text-theme-muted">
                       San Francisco, US • Current Session
                     </p>
 
@@ -520,13 +551,13 @@ export default function SupplierSettings() {
         {active === "notifications" &&
           <div className="space-y-5">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6">
 
               <h3 className="font-playfair text-xl">
                 Notification Preferences
               </h3>
 
-              <p className="text-sm text-[#64748B] mb-6">
+              <p className="text-sm text-theme-muted mb-6">
                 Choose how and when you want to be notified.
               </p>
 
@@ -538,11 +569,11 @@ export default function SupplierSettings() {
 
                     <div>
 
-                      <p className="font-medium text-[#111827]">
+                      <p className="font-medium text-theme-text">
                         {item.title}
                       </p>
 
-                      <p className="text-sm text-[#64748B] mt-1">
+                      <p className="text-sm text-theme-muted mt-1">
                         {item.desc}
                       </p>
 
@@ -552,8 +583,18 @@ export default function SupplierSettings() {
 
                     <div className="flex gap-8">
 
-                      <span className="text-sm text-[#64748B] cursor-pointer">Email</span>
-                      <span className="text-sm text-[#64748B] cursor-pointer">SMS</span>
+                      <span 
+                        onClick={() => toggle(i, "email")}
+                        className={`text-sm cursor-pointer ${settings[i]?.email ? "text-[#155DFC] font-medium" : "text-[#64748B]"}`}
+                      >
+                        Email
+                      </span>
+                      <span 
+                        onClick={() => toggle(i, "sms")}
+                        className={`text-sm cursor-pointer ${settings[i]?.sms ? "text-[#155DFC] font-medium" : "text-[#64748B]"}`}
+                      >
+                        SMS
+                      </span>
 
                     </div>
 
@@ -567,7 +608,7 @@ export default function SupplierSettings() {
 
               <div className="flex justify-end mt-8">
 
-                <button className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 shadow">
+                <button onClick={handleSavePreferences} className="bg-[#155DFC] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 shadow">
 
                   <Save size={16} />
 
@@ -583,7 +624,7 @@ export default function SupplierSettings() {
         }
 
         {active === "team" &&
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-6 space-y-5">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-6 space-y-5">
             <div className="flex justify-between items-center">
 
               <div>
@@ -592,7 +633,7 @@ export default function SupplierSettings() {
                   Team Members
                 </h3>
 
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-theme-muted">
                   Manage access to your supplier panel.
                 </p>
 
@@ -612,7 +653,7 @@ export default function SupplierSettings() {
 
                 <div
                   key={i}
-                  className="flex items-center justify-between bg-[#F8FAFC] rounded-xl px-5 py-4"
+                  className="flex items-center justify-between bg-theme-bg rounded-xl px-5 py-4"
                 >
 
                   <div className="flex items-center gap-4">
@@ -625,11 +666,11 @@ export default function SupplierSettings() {
 
                     <div>
 
-                      <p className="font-medium text-[#111827]">
+                      <p className="font-medium text-theme-text">
                         {m.name}
                       </p>
 
-                      <p className="text-sm text-[#64748B]">
+                      <p className="text-sm text-theme-muted">
                         {m.email} • {m.role}
                       </p>
 

@@ -10,8 +10,10 @@ import {
   Utensils,
 } from "lucide-react";
 import Logo from "../../assets/images/logo.svg";
+import LogoLight from "../../assets/images/logo-light.svg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useTheme } from "./ThemeContext";
 
 const menu = [
   { id: "overview", label: "Overview", icon: Home },
@@ -49,6 +51,7 @@ export default function CustomerSidebar({
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }) {
   const navigate = useNavigate();
+  const { theme } = useTheme();
 
   const fullName = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
 
@@ -66,12 +69,17 @@ export default function CustomerSidebar({
   }, []);
   return (
     <div className="w-[288px] flex flex-col h-full pb-5">
-      <div className="px-6 py-6">
-        <img src={Logo} alt="" />
+      <div className="px-6 py-6 border-b border-theme-border flex justify-between items-center">
+        <img 
+          src={theme === 'dark' ? LogoLight : Logo} 
+          alt="Hubnepa Logo" 
+          className="cursor-pointer" 
+          onClick={() => navigate("/")} 
+        />
       </div>
 
       <div className="px-4">
-        <div className="flex items-center gap-3 bg-[#F9FAFB] rounded-xl p-4 border border-[#F1F5F9]">
+        <div className="flex items-center gap-3 bg-theme-surface rounded-xl p-4 border border-theme-border">
           {user.avatar ? (
             <img
               src={user.avatar}
@@ -85,7 +93,7 @@ export default function CustomerSidebar({
           )}
 
           <div>
-            <div className="font-semibold text-[#111827]">
+            <div className="font-semibold text-theme-text">
               {fullName || "Guest User"}
             </div>
 
@@ -112,7 +120,7 @@ export default function CustomerSidebar({
                 className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm transition ${
                   active
                     ? "bg-[#ECFDF5] text-[#009966] font-medium"
-                    : "text-[#6A7282] hover:bg-gray-50"
+                    : "text-theme-muted hover:bg-gray-50"
                 }`}
               >
                 <Icon size={20} />
@@ -121,7 +129,7 @@ export default function CustomerSidebar({
             );
           })}
 
-          <div className="border-t border-[#E5E7EB] my-4"></div>
+          <div className="border-t border-theme-border my-4"></div>
 
           <div className="px-4 text-xs font-semibold text-[#9CA3AF] tracking-wider !mt-5">
             SHOP
@@ -129,14 +137,14 @@ export default function CustomerSidebar({
 
           <button
             onClick={() => navigate("/marketplace")}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] hover:bg-gray-50"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50"
           >
             <ShoppingBag size={20} />
             Marketplace
           </button>
           <button
             onClick={() => navigate("/restaurants")}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-[#6A7282] hover:bg-gray-50"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm text-theme-muted hover:bg-gray-50"
           >
             <Utensils size={20} />
             Restaurants

@@ -52,7 +52,7 @@ export default function PricingPlans() {
   ];
 
   return (
-    <section className="w-full bg-[#020618]">
+    <section className="w-full bg-theme-bg">
       <div className="max-w-[1265px] mx-auto px-3 lg:px-6 pt-16 pb-[120px]">
 
         <div className="text-center mb-16">
@@ -60,7 +60,7 @@ export default function PricingPlans() {
             ✦ Simple & Flexible Pricing
           </p>
 
-          <h2 className="font-playfair text-[54px] font-bold text-white mb-4">
+          <h2 className="font-playfair text-[54px] font-bold text-theme-text mb-4">
             Choose the Perfect Plan
           </h2>
 
@@ -85,7 +85,7 @@ export default function PricingPlans() {
               >
 
                 {plan.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#10B981] text-white text-xs px-4 py-1 rounded-full">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#10B981] text-theme-text text-xs px-4 py-1 rounded-full">
                     Most Popular
                   </span>
                 )}
@@ -95,18 +95,18 @@ export default function PricingPlans() {
                   <Icon className={plan.iconcolor} />
                 </div>
 
-                <h3 className="text-white text-[20px] font-medium mb-3 text-center">
+                <h3 className="text-theme-text text-[20px] font-medium mb-3 text-center">
                   {plan.name}
                 </h3>
 
                 <div className="flex items-end justify-center gap-1 mb-3">
-                  <span className="text-white text-[48px] font-playfair">
+                  <span className="text-theme-text text-[48px] font-playfair">
                     {plan.price}
                   </span>
-                  <span className="text-[#90A1B9] mb-2">/month</span>
+                  <span className="text-theme-muted mb-2">/month</span>
                 </div>
 
-                <p className="text-[#90A1B9] mb-6 text-center text-sm">
+                <p className="text-theme-muted mb-6 text-center text-sm">
                   {plan.description}
                 </p>
                </div>

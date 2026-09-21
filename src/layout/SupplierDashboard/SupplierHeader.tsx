@@ -1,9 +1,36 @@
 import { Search, Bell, Menu } from "lucide-react"
+import { useState, useEffect } from "react";
 import ProfileMenu from "./ProfileMenu";
 
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }: { activeTab: string; setActiveTab: (tab: string) => void; openSidebar: () => void }) {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch(`${API_BASE}/notifications`, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        const data = await res.json();
+        const notifs = data.data || data;
+        if (Array.isArray(notifs)) {
+          setUnreadCount(notifs.filter(n => !n.isRead).length);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchNotifications();
+  }, []);
+
   return (
-    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-white border-b border-[#E5E7EB]">
+    <div className="flex items-center justify-between lg:px-8 px-4 h-[72px] bg-theme-surface border-b border-theme-border">
 
       <div className="cursor-pointer lg:hidden" onClick={openSidebar}>
         <Menu />
@@ -13,20 +40,22 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
         <div className="relative sm:max-w-[250px] max-w-[150px] w-full">
           <Search
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
           />
 
           <input
             placeholder="Search orders..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] text-sm outline-none text-black"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F1F5F9] text-sm outline-none text-theme-text"
           />
         </div>
 
         <div className="flex items-center gap-5 ">
-          <button onClick={() => setActiveTab("notifications")} className=" relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-[#E5E7EB]">
-            <Bell size={18} className="text-[#64748B]" />
+          <button onClick={() => setActiveTab("notifications")} className=" relative w-10 min-w-10 h-10 flex items-center justify-center rounded-lg border border-theme-border">
+            <Bell size={18} className="text-theme-muted" />
 
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+            {unreadCount > 0 && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+            )}
           </button>
           <ProfileMenu setActiveTab={setActiveTab} />
         </div>

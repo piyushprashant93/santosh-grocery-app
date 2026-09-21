@@ -1,4 +1,5 @@
 import { useState } from "react"
+import toast from "react-hot-toast"
 
 export default function SecuritySettings() {
 
@@ -15,12 +16,44 @@ export default function SecuritySettings() {
     })
   }
 
-  const handleSubmit = () => {
-    console.log(form)
+  const handleSubmit = async () => {
+    if (!form.currentPassword || !form.newPassword || !form.confirmPassword) {
+      return toast.error("Please fill in all fields");
+    }
+    if (form.newPassword !== form.confirmPassword) {
+      return toast.error("New passwords do not match");
+    }
+
+    try {
+      const toastId = toast.loading("Updating password...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/change-password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          currentPassword: form.currentPassword,
+          newPassword: form.newPassword
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || "Password updated successfully", { id: toastId });
+        setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        toast.error(data.message || "Failed to update password", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    }
   }
 
   return (
-    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
       <h3 className="font-playfair text-2xl mb-8">
         Account Security
@@ -39,7 +72,7 @@ export default function SecuritySettings() {
             name="currentPassword"
             value={form.currentPassword}
             onChange={handleChange}
-            className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+            className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
           />
         </div>
 
@@ -57,7 +90,7 @@ export default function SecuritySettings() {
               name="newPassword"
               value={form.newPassword}
               onChange={handleChange}
-              className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
             />
           </div>
 
@@ -73,7 +106,7 @@ export default function SecuritySettings() {
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 focus:outline-none text-black"
+              className="w-full border border-theme-border rounded-lg px-4 py-3 focus:outline-none text-theme-text"
             />
           </div>
 
@@ -83,7 +116,7 @@ export default function SecuritySettings() {
 
         <button
           onClick={handleSubmit}
-          className="border border-[#E5E7EB] bg-white px-6 py-3 rounded-lg shadow-sm"
+          className="border border-theme-border bg-theme-surface px-6 py-3 rounded-lg shadow-sm"
         >
           Update Password
         </button>

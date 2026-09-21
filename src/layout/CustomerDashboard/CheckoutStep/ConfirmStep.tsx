@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "../../../context/CurrencyContext";
 import { PackageX } from "lucide-react";
+import { getImageUrl } from "../../../utils/dataHelper";
+
 
 const CART_STORAGE_KEY = "checkout_cart";
 const PAYMENT_STORAGE_KEY = "checkout_payment";
@@ -52,6 +55,7 @@ function readFromStorage<T>(key: string): T | null {
 }
 
 export function ConfirmStep() {
+  const { formatPrice } = useCurrency();
   const [cart, setCart] = useState<CartData | null>(null);
   const [payment, setPayment] = useState<PaymentData | null>(null);
   const [schedule, setSchedule] = useState<ScheduleData | null>(null);
@@ -68,13 +72,13 @@ export function ConfirmStep() {
 
   if (items.length === 0) {
     return (
-      <div className="border border-[#1D293D] rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-[#0F172B80]">
-        <h2 className="font-playfair text-2xl mb-6 text-white">
+      <div className="border border-theme-border rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-theme-surface">
+        <h2 className="font-playfair text-2xl mb-6 text-theme-text">
           Review Order
         </h2>
         <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
-          <PackageX size={32} className="text-[#475569]" />
-          <p className="text-[#94A3B8] text-sm">
+          <PackageX size={32} className="text-theme-muted" />
+          <p className="text-theme-muted text-sm">
             No items found in your cart.
           </p>
         </div>
@@ -83,8 +87,8 @@ export function ConfirmStep() {
   }
 
   return (
-    <div className="border border-[#1D293D] rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-[#0F172B80]">
-      <h2 className="font-playfair text-2xl mb-6 text-white">
+    <div className="border border-theme-border rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-theme-surface">
+      <h2 className="font-playfair text-2xl mb-6 text-theme-text">
         Review Order
       </h2>
 
@@ -94,50 +98,50 @@ export function ConfirmStep() {
             <div className="flex gap-4">
               {item.image ? (
                 <img
-                  src={item.image}
+                  src={getImageUrl(item.image)}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
               ) : (
-                <div className="w-16 h-16 rounded-lg bg-[#1E293B] flex items-center justify-center text-[#64748B] text-xs">
+                <div className="w-16 h-16 rounded-lg bg-theme-surface flex items-center justify-center text-theme-muted text-xs">
                   No Img
                 </div>
               )}
 
               <div>
-                <p className="text-white text-lg font-playfair">
+                <p className="text-theme-text text-lg font-playfair">
                   {item.name}
                 </p>
-                <p className="text-[#94A3B8]">Qty: {item.quantity}</p>
+                <p className="text-theme-muted">Qty: {item.quantity}</p>
               </div>
             </div>
 
-            <span className="text-white text-xl">
-              ${item.subtotal.toFixed(2)}
+            <span className="text-theme-text text-xl">
+              {formatPrice(item.subtotal)}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="border-t border-[#1E293B] my-6"></div>
+      <div className="border-t border-theme-border my-6"></div>
 
       <div className="flex justify-between mb-6">
-        <p className="text-[#94A3B8]">Payment</p>
-        <p className="text-white">
+        <p className="text-theme-muted">Payment</p>
+        <p className="text-theme-text">
           {payment ? payment.display : "Not selected"}
         </p>
       </div>
 
       <div className="flex justify-between mb-6">
-        <p className="text-[#94A3B8]">Delivery</p>
-        <p className="text-white">
+        <p className="text-theme-muted">Delivery</p>
+        <p className="text-theme-text">
           {schedule ? `${schedule.title} • ${schedule.time}` : "Not selected"}
         </p>
       </div>
 
       <div className="flex justify-between">
-        <p className="text-[#94A3B8]">Deliver to</p>
+        <p className="text-theme-muted">Deliver to</p>
 
-        <div className="text-right text-white">
+        <div className="text-right text-theme-text">
           {address ? (
             <>
               <p>{address.fullName}</p>
@@ -147,7 +151,7 @@ export function ConfirmStep() {
               </p>
             </>
           ) : (
-            <p className="text-[#94A3B8]">No address selected</p>
+            <p className="text-theme-muted">No address selected</p>
           )}
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCurrency } from "../../context/CurrencyContext";
 import { Wallet, Package, TrendingUp, Clock, AlertCircle, Loader2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -87,6 +88,7 @@ const FALLBACK_PRODUCT_IMG = "https://images.unsplash.com/photo-1542838132-92c53
 
 export default function Overview({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
@@ -138,7 +140,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
     return "Good Night";
   };
 
-  const formatMoney = (n: number) => `$${n.toFixed(2)}`;
+  const formatMoney = (n: number) => `${formatPrice(n)}`;
 
   const formatEta = (dateStr?: string) => {
     if (!dateStr) return null;
@@ -242,17 +244,17 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
         <div>
-          <h1 className="lg:text-[34px] text-[24px] capitalize font-playfair font-medium text-[#0F172A]">
+          <h1 className="lg:text-[34px] text-[24px] capitalize font-playfair font-medium text-theme-text">
             {getGreeting()}, {firstName}
           </h1>
-          <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+          <p className="text-theme-muted mt-1 lg:text-lg text-base">
             Welcome back to your personal dashboard.
           </p>
         </div>
 
         <div className="flex flex-wrap sm:gap-3 gap-1">
 
-          <button onClick={() => setActiveTab("invite")} className="md:px-4 px-2 py-2 text-sm lg:text-base text-white rounded-lg bg-[#9810FA] shadow-sm">
+          <button onClick={() => setActiveTab("invite")} className="md:px-4 px-2 py-2 text-sm lg:text-base text-theme-text rounded-lg bg-[#9810FA] shadow-sm">
             Invite
           </button>
 
@@ -260,7 +262,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
             Order Food
           </button>
 
-          <button onClick={() => navigate("/marketplace")} className="md:px-4 px-2 py-2 text-sm lg:text-base border rounded-lg border-[#E5E7EB] bg-white shadow-sm">
+          <button onClick={() => navigate("/marketplace")} className="md:px-4 px-2 py-2 text-sm lg:text-base border rounded-lg border-theme-border bg-theme-surface shadow-sm">
             Buy Groceries
           </button>
 
@@ -299,7 +301,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
               </div>
 
               <div>
-                <p className="lg:text-base text-sm mt-6 text-[#6A7282]">{card.title}</p>
+                <p className="lg:text-base text-sm mt-6 text-theme-muted">{card.title}</p>
                 <h2 className="lg:text-[34px] text-[24px] text-[#101828] mt-1 mb-7 font-semibold font-playfair">
                   {card.value}
                 </h2>
@@ -344,7 +346,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
           </div>
 
           {(!dashboard?.recentOrders || dashboard.recentOrders.length === 0) && (
-            <div className="text-center py-10 border border-dashed border-[#E5E7EB] rounded-xl text-[#6A7282] text-sm">
+            <div className="text-center py-10 border border-dashed border-theme-border rounded-xl text-theme-muted text-sm">
               No orders yet.
             </div>
           )}
@@ -387,16 +389,17 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
               <div
                 key={order._id}
                 onClick={() => setActiveTab("orders")}
-                className="cursor-pointer lg:p-4 p-2 border border-[#E5E7EB] rounded-lg lg:rounded-xl shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] flex items-center lg:gap-4 gap-2"
+                className="cursor-pointer lg:p-4 p-2 border border-theme-border rounded-lg lg:rounded-xl shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] flex items-center lg:gap-4 gap-2"
               >
                 {img ? (
                   <img
-                    src={img}
+                    src={img || "https://placehold.co/64x64?text=No+Image"}
+                    onError={(e) => { e.currentTarget.src = "https://placehold.co/64x64?text=No+Image"; }}
                     className="w-16 h-16 rounded-lg object-cover"
                     alt={order.items?.[0]?.name || "Order item"}
                   />
                 ) : (
-                  <div className="w-16 h-16 rounded-lg bg-[#F1F5F9] flex items-center justify-center text-[#6A7282] text-xs shrink-0">
+                  <div className="w-16 h-16 rounded-lg bg-[#F1F5F9] flex items-center justify-center text-theme-muted text-xs shrink-0">
                     No Img
                   </div>
                 )}
@@ -404,11 +407,11 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
                 <div className="flex md:flex-row flex-col md:items-center gap-4 flex-1">
                   <div className="flex-1">
                     <h3 className="font-bold text-lg font-playfair">{restaurantOrStoreName}</h3>
-                    <p className="text-sm text-[#6A7282]">
+                    <p className="text-sm text-theme-muted">
                       {itemsSummary}
                     </p>
 
-                    <p className="text-xs text-[#6A7282] mt-1">
+                    <p className="text-xs text-theme-muted mt-1">
                       {dateLabel} • {formatMoney(order.total)}
                     </p>
                   </div>
@@ -435,7 +438,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
 
           {/* Recommended deals — dynamic from recommendedDeals */}
           {(!dashboard?.recommendedDeals || dashboard.recommendedDeals.length === 0) && (
-            <div className="text-center py-8 border border-dashed border-[#E5E7EB] rounded-xl text-[#6A7282] text-sm">
+            <div className="text-center py-8 border border-dashed border-theme-border rounded-xl text-theme-muted text-sm">
               No recommendations yet.
             </div>
           )}
@@ -447,7 +450,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
             return (
               <div
                 key={deal._id}
-                className="lg:p-6 p-3 border border-[#E5E7EB] lg:rounded-xl rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-[#F9FAFB]"
+                className="lg:p-6 p-3 border border-theme-border lg:rounded-xl rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-[#F9FAFB]"
               >
                 <div className="flex items-center gap-2 flex-wrap">
                   {deal.isNewArrival && (
@@ -456,7 +459,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
                     </span>
                   )}
                   {deal.isFeatured && (
-                    <span className="text-xs bg-[#9810FA] text-white px-3 py-1 rounded-full">
+                    <span className="text-xs bg-[#9810FA] text-theme-text px-3 py-1 rounded-full">
                       Featured
                     </span>
                   )}
@@ -466,17 +469,17 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
                   {deal.name}
                 </h3>
 
-                <p className="text-sm text-[#6A7282] mt-1 line-clamp-2">
+                <p className="text-sm text-theme-muted mt-1 line-clamp-2">
                   {deal.description}
                 </p>
 
                 <div className="flex items-center gap-2 mt-3">
                   <span className="text-[#009966] font-bold text-lg">
-                    ${deal.discountPrice.toFixed(2)}
+                    {formatPrice(deal.discountPrice)}
                   </span>
                   {hasDiscount && (
                     <span className="text-[#99A1AF] line-through text-sm">
-                      ${deal.basePrice.toFixed(2)}
+                      {formatPrice(deal.basePrice)}
                     </span>
                   )}
                 </div>
@@ -491,13 +494,13 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
             );
           })}
 
-          <div className="lg:p-6 p-3 border border-[#E5E7EB] lg:rounded-xl rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-white flex items-start gap-3">
+          <div className="lg:p-6 p-3 border border-theme-border lg:rounded-xl rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-theme-surface flex items-start gap-3">
             <AlertCircle size={20} className="text-[#99A1AF] min-w-5 mt-1" />
             <div>
               <h3 className="font-bold font-playfair flex items-center gap-3">
                 Complete your profile
               </h3>
-              <p className="text-sm text-[#6A7282] mt-2">
+              <p className="text-sm text-theme-muted mt-2">
                 Add your backup phone number to secure your account.
               </p>
 

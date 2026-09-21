@@ -18,6 +18,7 @@ export default function AuthSection() {
     email: "",
     password: "",
     phone: "",
+    referralCode: "",
   });
   const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ export default function AuthSection() {
             email: formData.email,
             password: formData.password,
             phone: formData.phone,
+            referralCode: formData.referralCode,
             role: "customer",
           }),
         }
@@ -68,7 +70,7 @@ export default function AuthSection() {
 
       setSuccess("Account created successfully. Redirecting to sign in...");
       navigate("/role-wise-sign-in?role=customer");
-      setFormData({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+      setFormData({ firstName: "", lastName: "", email: "", password: "", phone: "", referralCode: "" });
       setChecked(false);
 
       window.setTimeout(() => {
@@ -86,7 +88,7 @@ export default function AuthSection() {
   };
 
   return (
-    <section className="min-h-[851px] bg-[#020618] ">
+    <section className="min-h-[851px] bg-theme-bg ">
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3 flex">
         <div
           className="hidden lg:flex w-1/2 relative"
@@ -98,7 +100,7 @@ export default function AuthSection() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-[#020618]/90 via-[#020618]/60 to-transparent" />
 
-          <div className="relative z-10 px-10 py-16 flex flex-col justify-end text-white">
+          <div className="relative z-10 px-10 py-16 flex flex-col justify-end text-theme-text">
             <div className="w-16 h-1 bg-[#00BC7D] mb-6 rounded-full" />
             <h2 className="font-playfair text-[48px] font-medium">
               "The most exclusive dining club in the city."
@@ -119,24 +121,30 @@ export default function AuthSection() {
               </span>
 
               <div className="flex items-center gap-5">
-                <span className="text-xs text-[#90A1B9]">
+                <span className="text-xs text-theme-muted">
                   Already a member?
                 </span>
-                <button onClick={()=>navigate("/sign-in")} className="text-[#64748B] text-xs bg-[#1E2939] border border-[#1D293D] px-3 py-1 rounded-full font-medium hover:text-white transition">
+                <button onClick={()=>navigate("/sign-in")} className="text-theme-muted text-xs bg-[#1E2939] border border-theme-border px-3 py-1 rounded-full font-medium hover:text-theme-text transition">
                   SIGN IN
                 </button>
               </div>
             </div>
 
-            <h3 className="font-playfair text-[36px] font-medium text-white">
+            <h3 className="font-playfair text-[36px] font-medium text-theme-text">
               Join the Inner Circle
             </h3>
 
-            <p className="mt-2 text-[#90A1B9] text-lg">
+            <p className="mt-2 text-theme-muted text-lg">
               Create your account to unlock premium access.
             </p>
 
-            <button className="mt-8 w-full bg-white text-[#0F172B] font-bold py-3 rounded-[12px] hover:bg-gray-200 transition flex items-center gap-3 justify-center">
+            <button 
+              onClick={() => {
+                const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+                window.location.href = `${baseUrl}/api/v1/auth/google`;
+              }}
+              className="mt-8 w-full bg-theme-surface text-[#0F172B] font-bold py-3 rounded-[12px] hover:bg-gray-200 transition flex items-center gap-3 justify-center"
+            >
               <img src={GoogleIcon} alt="" />
               Continue with Google
             </button>
@@ -165,7 +173,7 @@ export default function AuthSection() {
                 <div className="relative">
                   <User
                     size={18}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
                   />
                   <input
                     name="firstName"
@@ -173,7 +181,7 @@ export default function AuthSection() {
                     onChange={handleInputChange}
                     type="text"
                     placeholder="John"
-                    className="w-full bg-[#0F172B80] border border-[#1D293D] rounded-[12px] pl-10 pr-4 py-3 text-white placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                   />
                 </div>
               </div>
@@ -189,7 +197,7 @@ export default function AuthSection() {
                     onChange={handleInputChange}
                     type="text"
                     placeholder="Doe"
-                    className="w-full bg-[#0F172B80] border border-[#1D293D] rounded-[12px] px-4 py-3 text-white placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                   />
                 </div>
               </div>
@@ -201,7 +209,7 @@ export default function AuthSection() {
               <div className="relative">
                 <Mail
                   size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
                 />
                 <input
                   name="email"
@@ -210,7 +218,7 @@ export default function AuthSection() {
                   type="email"
                   placeholder="name@example.com"
                   autoComplete="off"
-                  className="w-full bg-[#0F172B80] border border-[#1D293D] rounded-[12px] pl-10 pr-4 py-3 text-white placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
               </div>
             </div>
@@ -226,7 +234,7 @@ export default function AuthSection() {
                   type="tel"
                   placeholder="e.g. +919645299758"
                   autoComplete="off"
-                  className="w-full bg-[#0F172B80] border border-[#1D293D] rounded-[12px] px-4 py-3 text-white placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
               </div>
             </div>
@@ -237,7 +245,7 @@ export default function AuthSection() {
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
                 />
                 <input
                   name="password"
@@ -246,12 +254,33 @@ export default function AuthSection() {
                   type={showPassword ? "text" : "password"}
                   autoComplete="off"
                   placeholder="Create a strong password"
-                  className="w-full bg-[#0F172B80] border border-[#1D293D] rounded-[12px] pl-10 pr-10 py-3 text-white placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-10 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
                 <Eye
                   size={18}
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted cursor-pointer"
+                />
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
+                Referral Code (Optional)
+              </label>
+              <div className="relative">
+                <Sparkles
+                  size={18}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-muted"
+                />
+                <input
+                  name="referralCode"
+                  value={formData.referralCode}
+                  onChange={handleInputChange}
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Enter referral code"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E] uppercase"
                 />
               </div>
             </div>
@@ -269,10 +298,10 @@ export default function AuthSection() {
                 `}
               >
                 {checked && (
-                  <Check size={14} className="text-white" strokeWidth={3} />
+                  <Check size={14} className="text-theme-text" strokeWidth={3} />
                 )}
               </button>
-              <p className="text-sm text-[#90A1B9] leading-relaxed">
+              <p className="text-sm text-theme-muted leading-relaxed">
                 I agree to the{" "}
                 <span className="text-[#00BC7D]">Terms of Service</span> and{" "}
                 <span className="text-[#00BC7D]">Privacy Policy</span>, and I

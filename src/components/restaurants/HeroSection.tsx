@@ -31,7 +31,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   };
 
   return (
-    <section className="relative w-full bg-cover bg-center bg-[#020618]">
+    <section className="relative w-full bg-cover bg-center bg-theme-bg">
       <img
         src={HeroBg}
         alt=""
@@ -39,7 +39,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(2,6,24,0.5)_50%,#020618_100%)] " />
 
-      <div className="relative max-w-[1265px] mx-auto text-center px-3 lg:px-6 py-[128px] text-white overflow-hidden">
+      <div className="relative max-w-[1265px] mx-auto text-center px-3 lg:px-6 py-[128px] text-theme-text overflow-hidden">
         <h1 className="text-4xl md:text-6xl font-semibold leading-tight font-playfair flex items-center gap-3 justify-center">
           <span className="font-playfair">The</span>
           <span className="text-[#00C950] font-playfair italic">
@@ -65,13 +65,13 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   setQuery(e.target.value)
 }
               placeholder="Search for 'Sushi', 'Pizza', or 'Mezze'..."
-              className="bg-transparent outline-none text-white placeholder-[#90A1B9] font-medium w-full"
+              className="bg-transparent outline-none text-theme-text placeholder-[#90A1B9] font-medium w-full"
             />
           </div>
 
           <button
             type="submit"
-            className="bg-[#00A63E] hover:opacity-90 transition text-white px-6 py-3 shadow-[0px_4px_6px_-4px_#00A63E33,0px_10px_15px_-3px_#00A63E33] rounded-full font-semibold whitespace-nowrap"
+            className="bg-[#00A63E] hover:opacity-90 transition text-theme-text px-6 py-3 shadow-[0px_4px_6px_-4px_#00A63E33,0px_10px_15px_-3px_#00A63E33] rounded-full font-semibold whitespace-nowrap"
           >
             Find Table
           </button>

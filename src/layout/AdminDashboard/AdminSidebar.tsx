@@ -51,7 +51,7 @@ export default function AdminSidebar({
     <div className="w-[288px] flex flex-col h-full pb-5 bg-gray-900 text-gray-300">
 
       <div className="px-6 py-6 flex justify-between items-center">
-        <div className="flex items-center gap-2 font-bold text-[21px] text-white">
+        <div className="flex items-center gap-2 font-bold text-[21px] text-theme-text">
           <Shield size={24} className="text-orange-500" />
           <span>HUBNEPA <span className="text-orange-500 text-sm ml-1">ADMIN</span></span>
         </div>
@@ -96,7 +96,7 @@ export default function AdminSidebar({
             localStorage.clear();
             navigate("/admin")
           }}  
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[15px] text-gray-400 hover:bg-gray-800 hover:text-white transition"
+          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[15px] text-gray-400 hover:bg-gray-800 hover:text-theme-text transition"
         >
           <LogOut size={20} />
           Logout

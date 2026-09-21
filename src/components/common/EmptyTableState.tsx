@@ -7,7 +7,7 @@ export default function EmptyTableState({
 }) {
   return (
     <tr>
-      <td colSpan={colSpan} className="py-12 text-center text-[#6A7282]">
+      <td colSpan={colSpan} className="py-12 text-center text-theme-muted">
         {message}
       </td>
     </tr>

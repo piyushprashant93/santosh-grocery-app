@@ -42,11 +42,11 @@ export default function OverviewTab() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in duration-300">
       
       {/* New Orders */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <ShoppingBag size={20} className="text-gray-900" />
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>New Orders</h2>
+            <ShoppingBag size={20} className="text-theme-text" />
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>New Orders</h2>
           </div>
           <button className="text-sm font-medium text-orange-600 hover:text-orange-700 transition">View All</button>
         </div>
@@ -55,11 +55,11 @@ export default function OverviewTab() {
           {newOrders.map((order, i) => (
             <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
               <div>
-                <p className="font-bold text-gray-900">{order.id}</p>
+                <p className="font-bold text-theme-text">{order.id}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{order.time}</p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-gray-900">{order.amount}</p>
+                <p className="font-bold text-theme-text">{order.amount}</p>
                 <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">
                   {order.status}
                 </span>
@@ -70,11 +70,11 @@ export default function OverviewTab() {
       </div>
 
       {/* Top Selling Items */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <TrendingUp size={20} className="text-gray-900" />
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Top Selling Items</h2>
+            <TrendingUp size={20} className="text-theme-text" />
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Top Selling Items</h2>
           </div>
           <select className="bg-gray-50 border border-gray-200 text-xs text-gray-600 rounded-lg px-3 py-1.5 focus:outline-none">
             <option>This Week</option>
@@ -86,11 +86,11 @@ export default function OverviewTab() {
           {topItems.map((item, i) => (
             <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center font-bold text-gray-400">
+                <div className="w-10 h-10 rounded-lg bg-theme-surface border border-gray-200 flex items-center justify-center font-bold text-gray-400">
                   #{i + 1}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">{item.name}</p>
+                  <p className="font-bold text-theme-text">{item.name}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{item.orders} orders</p>
                 </div>
               </div>

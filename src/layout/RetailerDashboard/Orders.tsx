@@ -1,5 +1,6 @@
 import { Search, Filter, Download, Eye, ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
@@ -35,7 +36,7 @@ export default function Orders() {
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/orders/${id}`, {
+      const res = await fetch(`${API_BASE}/retailer/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -43,8 +44,42 @@ export default function Orders() {
       if (res.ok) {
         fetchOrders();
         setOpenStatusMenu(null);
+      } else {
+        toast.error("Failed to update order status");
       }
-    } catch(err) { console.error(err); }
+    } catch(err) { 
+        console.error(err); 
+        toast.error("An error occurred while updating order status.");
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting orders...");
+      const token = localStorage.getItem("authToken");
+      const res = await fetch(`${API_BASE}/retailer/orders/export`, {
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `retailer-orders-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
   };
 
   const statusStyles: any = {
@@ -64,7 +99,7 @@ export default function Orders() {
             Orders
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Track and manage customer orders.
           </p>
         </div>
@@ -72,12 +107,12 @@ export default function Orders() {
       </div>
 
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full lg:w-[340px]">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full lg:w-[340px]">
+            <Search size={18} className="text-theme-muted" />
             <input
               placeholder="Search by Order ID or Customer..."
               className="w-full px-3 py-2 outline-none text-sm"
@@ -86,12 +121,12 @@ export default function Orders() {
 
           <div className="flex gap-3">
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+            <button className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
               <Filter size={16} />
               Status: All
             </button>
 
-            <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 shadow-sm bg-white">
+            <button onClick={handleExport} className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 shadow-sm bg-theme-surface">
               <Download size={16} />
               Export CSV
             </button>
@@ -105,7 +140,7 @@ export default function Orders() {
 
           <table className="w-full text-left">
 
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
 
               <tr>
 
@@ -146,15 +181,15 @@ export default function Orders() {
               {ordersData.map((o, i) => (
                 <tr key={o._id || i} className="border-b last:border-none">
 
-                  <td className="py-6 font-medium text-[#111827]">
+                  <td className="py-6 font-medium text-theme-text">
                     {o.id || o.orderId || o._id?.substring(0, 8)}
                   </td>
                   <td className="py-6">
                     <div>
-                      <p className="text-[#111827] font-medium">
+                      <p className="text-theme-text font-medium">
                         {o.name || o.customer?.name || "Unknown"}
                       </p>
-                      <p className="text-sm text-[#6A7282]">
+                      <p className="text-sm text-theme-muted">
                         {o.email || o.customer?.email || "Unknown"}
                       </p>
                     </div>
@@ -162,9 +197,9 @@ export default function Orders() {
 
                   <td className="py-6 text-[#374151]">
                     <p>{o.date ? new Date(o.date).toLocaleDateString() : o.date}</p>
-                    <p className="text-sm text-[#6A7282]">at {o.time || (o.date ? new Date(o.date).toLocaleTimeString() : "")}</p>
+                    <p className="text-sm text-theme-muted">at {o.time || (o.date ? new Date(o.date).toLocaleTimeString() : "")}</p>
                   </td>
-                  <td className="py-6 font-medium text-[#111827]">
+                  <td className="py-6 font-medium text-theme-text">
                     ${typeof o.total === "number" ? o.total.toFixed(2) : o.total}
                   </td>
                   <td className="py-6 text-[#374151]">
@@ -177,7 +212,7 @@ export default function Orders() {
                       <ChevronDown size={14} />
                     </button>
                     {openStatusMenu === (o._id || i) && (
-                      <div className="absolute top-12 left-6 bg-white border border-[#E5E7EB] rounded-lg shadow-lg z-10 w-32 py-1">
+                      <div className="absolute top-12 left-6 bg-theme-surface border border-theme-border rounded-lg shadow-lg z-10 w-32 py-1">
                         {["Pending", "Processing", "Delivered", "Cancelled"].map(s => (
                           <button key={s} onClick={() => updateOrderStatus(o._id, s)} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">{s}</button>
                         ))}
@@ -187,7 +222,7 @@ export default function Orders() {
 
                   <td className="py-6 text-center">
                     <button className="p-2 hover:bg-gray-100 rounded-lg">
-                      <Eye size={18} className="text-[#6A7282]" />
+                      <Eye size={18} className="text-theme-muted" />
                     </button>
                   </td>
 
@@ -206,7 +241,7 @@ export default function Orders() {
         </div>
 
 
-        <div className="flex items-center justify-between mt-6 text-sm text-[#6A7282]">
+        <div className="flex items-center justify-between mt-6 text-sm text-theme-muted">
 
           <p>
             Showing 4 of 124 orders
@@ -214,11 +249,11 @@ export default function Orders() {
 
           <div className="flex gap-3">
 
-            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-gray-100">
+            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-gray-100">
               Previous
             </button>
 
-            <button className="border border-[#E5E7EB] px-4 py-1.5 rounded-lg bg-white">
+            <button className="border border-theme-border px-4 py-1.5 rounded-lg bg-theme-surface">
               Next
             </button>
 

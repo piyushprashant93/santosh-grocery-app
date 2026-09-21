@@ -5,6 +5,7 @@ import CustomerHeader from "./CustomerHeader";
 import CustomerChild from "./CustomerChild";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRole } from "../RoleProvider";
+import { ThemeProvider } from "./ThemeContext";
 
 const customerTabToPath = (tab: string) => {
   if (tab === "overview") return "";
@@ -143,7 +144,8 @@ const { setRole } = useRole();
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] relative">
+    <ThemeProvider>
+      <div className="flex h-screen bg-theme-bg text-theme-text relative">
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
@@ -152,7 +154,7 @@ const { setRole } = useRole();
       )}
       <div
         ref={sidebarRef}
-        className={`fixed lg:static z-40 h-full min-h-svh bg-white border-r border-[#E5E7EB] transition-transform duration-300
+        className={`fixed lg:static z-40 h-full min-h-svh bg-theme-surface border-r border-theme-border transition-transform duration-300
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <CustomerSidebar
@@ -169,8 +171,8 @@ const { setRole } = useRole();
 
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="text-xl font-semibold text-[#111827]">Sign Out</h2>
+          <div className="w-full max-w-md rounded-2xl bg-theme-surface p-6 shadow-xl">
+            <h2 className="text-xl font-semibold text-theme-text">Sign Out</h2>
 
             <p className="mt-3 text-sm text-[#6B7280]">
               Are you sure you want to sign out?
@@ -210,6 +212,7 @@ const { setRole } = useRole();
           <CustomerChild setActiveTab={handleTabChange} activeTab={activeTab} />
         </div>
       </div>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }

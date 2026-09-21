@@ -8,77 +8,120 @@ import {
   XCircle,
   ArrowLeft,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { useCurrency } from "../../context/CurrencyContext";
 
-const shipments = [
-  {
-    id: "SHIP-8921",
-    date: "Jan 15, 2026",
-    client: "Fresh Market NYC",
-    items: "Organic Avocados, Bananas",
-    amount: "$4,250.00",
-    vehicle: "Van 04",
-    driver: "Mike Ross",
-    status: "Delivered",
-  },
-  {
-    id: "SHIP-8920",
-    date: "Jan 12, 2026",
-    client: "Bistro 55",
-    items: "Premium Steak Cuts (20)",
-    amount: "$8,900.50",
-    vehicle: "Truck 02",
-    driver: "Harvey Specter",
-    status: "Delivered",
-  },
-  {
-    id: "SHIP-8919",
-    date: "Jan 10, 2026",
-    client: "Sushi Zen",
-    items: "Fresh Salmon, Tuna, Wasabi",
-    amount: "$12,400.00",
-    vehicle: "Refrigerated 01",
-    driver: "Louis Litt",
-    status: "Delivered",
-  },
-  {
-    id: "SHIP-8918",
-    date: "Jan 08, 2026",
-    client: "Green Grocers",
-    items: "Seasonal Fruits Mix",
-    amount: "$1,200.00",
-    vehicle: "-",
-    driver: "-",
-    status: "Cancelled",
-  },
-  {
-    id: "SHIP-8917",
-    date: "Jan 05, 2026",
-    client: "Daily Mart",
-    items: "Dairy Products Bulk",
-    amount: "$3,150.00",
-    vehicle: "Truck 05",
-    driver: "Donna Paulsen",
-    status: "Delivered",
-  },
-  {
-    id: "SHIP-8916",
-    date: "Jan 02, 2026",
-    client: "Urban Bistro Group",
-    items: "Cooking Oil, Flour, Rice",
-    amount: "$5,600.00",
-    vehicle: "Van 03",
-    driver: "Rachel Zane",
-    status: "Delivered",
-  },
-];
+
+const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
+const authHeaders = () => {
+
+
+  const token = localStorage.getItem("authToken");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {})
+  };
+};
 
 export default function ShipmentHistory({
   setActiveTab,
 }: {
   setActiveTab: (tab: string) => void;
 }) {
+  const { formatPrice } = useCurrency();
   const [openRange, setOpenRange] = useState(false);
+  const [data, setData] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  const [tempStartDate, setTempStartDate] = useState("");
+  const [tempEndDate, setTempEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
+      if (res.ok) {
+        const json = await res.json();
+        const logs = json.data?.manifests || json.data?.deliveries || (Array.isArray(json.data) ? json.data : (json.data?.data || []));
+        setData(Array.isArray(logs) ? logs : []);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const handleExport = async () => {
+    try {
+      const params = new URLSearchParams({
+        view: 'history',
+      });
+      if (searchQuery) params.append('search', searchQuery);
+      if (statusFilter !== 'All') params.append('status', statusFilter);
+      if (startDate) params.append('dateFrom', startDate);
+      if (endDate) params.append('dateTo', endDate);
+      
+      const res = await fetch(`${API_BASE}/supplier/logistics/export?${params.toString()}`, { headers: authHeaders() });
+      if (!res.ok) throw new Error("Export failed");
+      
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `shipment_history_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success("Exported successfully!");
+    } catch(err) {
+      toast.error("Failed to export CSV");
+    }
+  };
+
+  const filteredData = data.filter(s => {
+    const id = String(s.id || s.manifestId || s._id || "");
+    const client = String(s.client || s.clientName || s.restaurant?.name || "");
+    const driver = String(s.driver || s.driverName || "");
+    const status = String(s.status || "Pending");
+
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = 
+      id.toLowerCase().includes(searchLower) || 
+      client.toLowerCase().includes(searchLower) ||
+      driver.toLowerCase().includes(searchLower);
+    
+    const matchesStatus = statusFilter === "All" || status.toLowerCase() === statusFilter.toLowerCase();
+    
+    let matchesDate = true;
+    if (startDate || endDate) {
+      const itemDate = s.date ? new Date(s.date) : (s.createdAt ? new Date(s.createdAt) : null);
+      if (itemDate) {
+        if (startDate) {
+          const start = new Date(startDate);
+          start.setHours(0, 0, 0, 0);
+          if (itemDate < start) matchesDate = false;
+        }
+        if (endDate) {
+          const end = new Date(endDate);
+          end.setHours(23, 59, 59, 999);
+          if (itemDate > end) matchesDate = false;
+        }
+      }
+    }
+    
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+
+  const activeShipments = filteredData;
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -91,7 +134,7 @@ export default function ShipmentHistory({
             Shipment History
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Archive of all completed and cancelled shipments.
           </p>
         </div>
@@ -100,47 +143,69 @@ export default function ShipmentHistory({
           <div className="relative">
             <button
               onClick={() => setOpenRange(true)}
-              className="flex items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm"
+              className="flex items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm"
             >
               <Calendar size={18} />
-              Select Range
+              {startDate && endDate 
+                ? `${new Date(startDate).toLocaleDateString()} - ${new Date(endDate).toLocaleDateString()}`
+                : startDate 
+                ? `From ${new Date(startDate).toLocaleDateString()}`
+                : endDate 
+                ? `Until ${new Date(endDate).toLocaleDateString()}`
+                : "Select Range"
+              }
             </button>
             {openRange && (
                 <>
              <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setOpenRange(false)}></div>   
-              <div className="absolute z-50 right-0 mt-2 w-[380px] bg-white rounded-xl p-6 shadow-xl border border-[#E5E7EB]">
+              <div className="absolute z-50 right-0 mt-2 w-[380px] bg-theme-surface rounded-xl p-6 shadow-xl border border-theme-border">
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-[#475569] mb-2">
+                    <label className="block text-theme-muted mb-2">
                       Start Date
                     </label>
 
                     <input
                       type="date"
+                      value={tempStartDate}
+                      onChange={(e) => setTempStartDate(e.target.value)}
                       className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[#475569] mb-2">
+                    <label className="block text-theme-muted mb-2">
                       End Date
                     </label>
 
                     <input
                       type="date"
+                      value={tempEndDate}
+                      onChange={(e) => setTempEndDate(e.target.value)}
                       className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 outline-none"
                     />
                   </div>
 
                   <div className="flex gap-3 pt-3">
                     <button
-                      onClick={() => setOpenRange(false)}
-                      className="flex-1 border border-[#E5E7EB] py-3 rounded-lg"
+                      onClick={() => {
+                        setTempStartDate(startDate);
+                        setTempEndDate(endDate);
+                        setOpenRange(false);
+                      }}
+                      className="flex-1 border border-theme-border py-3 rounded-lg hover:bg-gray-50"
                     >
                       Cancel
                     </button>
 
-                    <button className="flex-1 bg-[#2563EB] text-white py-3 rounded-lg shadow">
+                    <button 
+                      onClick={() => {
+                        setStartDate(tempStartDate);
+                        setEndDate(tempEndDate);
+                        setOpenRange(false);
+                      }}
+                      className="flex-1 bg-[#2563EB] text-white py-3 rounded-lg shadow hover:bg-blue-700"
+                    >
                       Apply Filter
                     </button>
                   </div>
@@ -150,33 +215,42 @@ export default function ShipmentHistory({
             )}
           </div>
 
-          <button className="flex items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export CSV
           </button>
         </div>
       </div>
 
-      <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+      <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
-          <div className="flex items-center border border-[#E5E7EB] rounded-lg px-3 w-full">
-            <Search size={18} className="text-[#6A7282]" />
+          <div className="flex items-center border border-theme-border rounded-lg px-3 w-full">
+            <Search size={18} className="text-theme-muted" />
 
             <input
               placeholder="Search by ID, Client, or Driver..."
               className="w-full px-3 py-2 outline-none text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <button className="flex min-w-max items-center gap-2 border border-[#E5E7EB] px-4 py-2 rounded-lg bg-white shadow-sm">
-            <Filter size={18} />
-            Status: All
-          </button>
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="flex min-w-max items-center gap-2 border border-theme-border px-4 py-2 rounded-lg bg-theme-surface shadow-sm outline-none cursor-pointer"
+          >
+            <option value="All">Status: All</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Pending">Pending</option>
+            <option value="In Transit">In Transit</option>
+          </select>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[900px]">
-            <thead className="border-b text-[#6A7282] text-sm">
+            <thead className="border-b text-theme-muted text-sm">
               <tr>
                 <th className="py-4 font-normal text-[#62748E]">SHIPMENT ID</th>
                 <th className="py-4 font-normal text-[#62748E]">DATE</th>
@@ -191,35 +265,44 @@ export default function ShipmentHistory({
             </thead>
 
             <tbody>
-              {shipments.map((s, i) => (
-                <tr key={i} className="border-b last:border-none">
-                  <td className="py-5 font-medium text-[#111827]">{s.id}</td>
+              {activeShipments.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-theme-muted">
+                    No shipments found.
+                  </td>
+                </tr>
+              ) : (
+                activeShipments.map((s, i) => (
+                <tr key={s._id || i} className="border-b last:border-none">
+                  <td className="py-5 font-medium text-theme-text">{s.id || s.manifestId || s._id?.substring(0,8)}</td>
 
-                  <td className="py-5 text-[#64748B]">{s.date}</td>
+                  <td className="py-5 text-theme-muted">{s.date ? new Date(s.date).toLocaleDateString() : (s.createdAt ? new Date(s.createdAt).toLocaleDateString() : "")}</td>
 
-                  <td className="py-5 font-medium text-[#111827]">
-                    {s.client}
+                  <td className="py-5 font-medium text-theme-text">
+                    {s.client || s.clientName || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "Unknown")}
                   </td>
 
-                  <td className="py-5 text-[#64748B]">{s.items}</td>
+                  <td className="py-5 text-theme-muted">
+                    {Array.isArray(s.items) ? `${s.items.length} Items` : (typeof s.items === 'object' && s.items !== null ? (s.items.productName || s.items.name || "1 Item") : (s.items || (s.orders?.length > 0 ? `${s.orders.length} Orders` : "-")))}
+                  </td>
 
-                  <td className="py-5 font-semibold text-[#111827]">
-                    {s.amount}
+                  <td className="py-5 font-semibold text-theme-text">
+                    {typeof s.amount === "number" ? `${formatPrice(s.amount)}` : (s.total ? `${formatPrice(s.total)}` : (s.amount ? (s.amount.toString().startsWith('$') ? s.amount : `$${s.amount}`) : "$0.00"))}
                   </td>
 
                   <td className="py-5">
-                    <div className="flex items-start gap-2 text-[#64748B]">
+                    <div className="flex items-start gap-2 text-theme-muted">
                       <Truck size={14} />
 
                       <div className="-mt-1 text-sm">
-                        <p>{s.vehicle}</p>
-                        <p className="text-sm">{s.driver}</p>
+                        <p>{s.vehicle || s.carrier || "-"}</p>
+                        <p className="text-sm">{s.driver || s.driverName || "-"}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-5">
-                    {s.status === "Delivered" && (
+                    {(s.status === "Delivered" || s.status === "Completed") && (
                       <span className="flex items-center gap-2 text-green-700 bg-green-100 px-3 py-1 rounded-full w-fit text-sm">
                         <CheckCircle2 size={16} />
                         Delivered
@@ -232,9 +315,15 @@ export default function ShipmentHistory({
                         Cancelled
                       </span>
                     )}
+                    
+                    {(s.status !== "Delivered" && s.status !== "Completed" && s.status !== "Cancelled") && (
+                      <span className="flex items-center gap-2 text-gray-700 bg-gray-100 px-3 py-1 rounded-full w-fit text-sm">
+                        {s.status || "Pending"}
+                      </span>
+                    )}
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

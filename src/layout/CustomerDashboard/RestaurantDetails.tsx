@@ -19,12 +19,16 @@ import {
   Twitter,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const FALLBACK_HERO_IMAGE =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80";
+
 
 // ---------- Types ----------
 interface Address {
@@ -108,6 +112,7 @@ interface Review {
 
 // ---------- Component ----------
 export default function RestaurantMenuDetails() {
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const restaurantId = searchParams.get("id");
@@ -403,7 +408,7 @@ export default function RestaurantMenuDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gap-2 text-[#6A7282]">
+      <div className="min-h-screen flex items-center justify-center gap-2 text-theme-muted">
         <Loader2 size={20} className="animate-spin" />
         Loading restaurant...
       </div>
@@ -416,7 +421,7 @@ export default function RestaurantMenuDetails() {
         <p className="text-red-500">{error || "Restaurant not found."}</p>
         <button
           onClick={() => navigate(-1)}
-          className="px-4 py-2 border border-[#E5E7EB] rounded-lg bg-white"
+          className="px-4 py-2 border border-theme-border rounded-lg bg-theme-surface"
         >
           Go Back
         </button>
@@ -447,11 +452,12 @@ export default function RestaurantMenuDetails() {
   };
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen">
+    <div className="bg-theme-bg min-h-screen">
       {/* Hero */}
       <div className="relative h-[420px] w-full">
         <img
-          src={heroImage}
+          src={heroImage || "https://placehold.co/1200x420?text=No+Image"}
+          onError={(e) => { e.currentTarget.src = "https://placehold.co/1200x420?text=No+Image"; }}
           alt={restaurant.name}
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -461,7 +467,7 @@ export default function RestaurantMenuDetails() {
         <div className="relative z-10 flex items-center justify-between p-6">
           <button
             onClick={() => navigate(-1)}
-            className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-white hover:bg-[#00000099] transition"
+            className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-theme-text hover:bg-[#00000099] transition"
           >
             <ArrowLeft size={18} />
           </button>
@@ -469,7 +475,7 @@ export default function RestaurantMenuDetails() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowShareModal(true)}
-              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-white hover:bg-[#00000099] transition"
+              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-theme-text hover:bg-[#00000099] transition"
             >
               <Share2 size={16} />
             </button>
@@ -478,7 +484,7 @@ export default function RestaurantMenuDetails() {
             <button
               onClick={handleAddToWishlist}
               disabled={isWishlisting}
-              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-white hover:bg-[#00000099] transition disabled:opacity-70"
+              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-theme-text hover:bg-[#00000099] transition disabled:opacity-70"
             >
               {isWishlisting ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -492,7 +498,7 @@ export default function RestaurantMenuDetails() {
 
             <button
               onClick={() => setShowInfoModal(true)}
-              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-white hover:bg-[#00000099] transition"
+              className="w-10 h-10 rounded-full bg-[#00000066] flex items-center justify-center text-theme-text hover:bg-[#00000099] transition"
             >
               <Info size={16} />
             </button>
@@ -500,7 +506,7 @@ export default function RestaurantMenuDetails() {
         </div>
 
         {/* Bottom info */}
-        <div className="absolute bottom-6 left-6 right-6 z-10 text-white">
+        <div className="absolute bottom-6 left-6 right-6 z-10 text-theme-text">
           {restaurant.isExclusivePartner && (
             <span className="inline-block bg-[#00A63E] text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
               HubNepa Exclusive
@@ -520,21 +526,21 @@ export default function RestaurantMenuDetails() {
 
             {restaurant.cuisine.length > 0 && (
               <>
-                <span className="text-white/70">•</span>
-                <span className="text-white/90">
+                <span className="text-theme-text/70">•</span>
+                <span className="text-theme-text/90">
                   {restaurant.cuisine.join(" • ")}
                 </span>
               </>
             )}
 
-            <span className="text-white/70">•</span>
-            <span className="flex items-center gap-1 text-white/90">
+            <span className="text-theme-text/70">•</span>
+            <span className="flex items-center gap-1 text-theme-text/90">
               <Clock size={14} />
               {restaurant.deliveryTime.min}-{restaurant.deliveryTime.max} min
             </span>
 
             {!restaurant.isOpen && (
-              <span className="bg-[#62748E] text-white text-xs font-semibold px-3 py-1 rounded-full ml-1">
+              <span className="bg-[#62748E] text-theme-text text-xs font-semibold px-3 py-1 rounded-full ml-1">
                 Closed
               </span>
             )}
@@ -544,7 +550,7 @@ export default function RestaurantMenuDetails() {
 
       {/* Tabs */}
       {categories.length > 0 && (
-        <div className="bg-white border-b border-[#E5E7EB] sticky top-0 z-20">
+        <div className="bg-theme-surface border-b border-theme-border sticky top-0 z-20">
           <div className="max-w-[1100px] mx-auto px-6 flex items-center gap-8 overflow-x-auto">
             {categories.map((tab) => (
               <button
@@ -569,10 +575,10 @@ export default function RestaurantMenuDetails() {
       {/* Menu section */}
       <div className="max-w-[1100px] mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-playfair text-3xl font-semibold text-[#0F172A]">
+          <h2 className="font-playfair text-3xl font-semibold text-theme-text">
             {activeTab || "Menu"}
           </h2>
-          <span className="text-[#94A3B8] text-sm">{items.length} items</span>
+          <span className="text-theme-muted text-sm">{items.length} items</span>
         </div>
 
         {cartError && (
@@ -588,7 +594,7 @@ export default function RestaurantMenuDetails() {
         )}
 
         {items.length === 0 ? (
-          <div className="text-center py-16 text-[#94A3B8]">
+          <div className="text-center py-16 text-theme-muted">
             No items in this category yet.
           </div>
         ) : (
@@ -600,27 +606,28 @@ export default function RestaurantMenuDetails() {
               return (
                 <div
                   key={item._id}
-                  className={`border rounded-2xl p-4 flex gap-4 bg-white ${
+                  className={`border rounded-2xl p-4 flex gap-4 border-theme-border bg-theme-surface ${
                     item.isAvailable
-                      ? "border-[#E5E7EB]"
-                      : "border-[#E5E7EB] opacity-60"
+                      ? "border-theme-border"
+                      : "border-theme-border opacity-60"
                   }`}
                 >
                   {item.image ? (
                     <img
-                      src={item.image}
+                      src={getImageUrl(item.image)}
+                      onError={(e) => { e.currentTarget.src = "https://placehold.co/112x112?text=No+Image"; }}
                       alt={item.name}
                       className="w-28 h-28 object-cover rounded-xl shrink-0"
                     />
                   ) : (
-                    <div className="w-28 h-28 rounded-xl shrink-0 bg-[#F1F5F9] flex flex-col items-center justify-center text-[#94A3B8]">
+                    <div className="w-28 h-28 rounded-xl shrink-0 bg-[#F1F5F9] flex flex-col items-center justify-center text-theme-muted">
                       <ImageOff size={22} />
                     </div>
                   )}
 
                   <div className="flex-1 flex flex-col min-w-0">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-playfair text-lg font-semibold text-[#0F172A] flex items-center gap-2">
+                      <h3 className="font-playfair text-lg font-semibold text-theme-text flex items-center gap-2">
                         {item.isVeg && (
                           <Leaf size={14} className="text-[#00A63E] shrink-0" />
                         )}
@@ -631,26 +638,26 @@ export default function RestaurantMenuDetails() {
                         {item.discountPrice != null ? (
                           <>
                             <span className="text-[#00A63E] font-semibold">
-                              ${item.discountPrice.toFixed(2)}
+                              {formatPrice(item.discountPrice)}
                             </span>
-                            <span className="text-[#94A3B8] text-xs line-through ml-1">
-                              ${item.price.toFixed(2)}
+                            <span className="text-theme-muted text-xs line-through ml-1">
+                              {formatPrice(item.price)}
                             </span>
                           </>
                         ) : (
                           <span className="text-[#00A63E] font-semibold">
-                            ${item.price.toFixed(2)}
+                            {formatPrice(item.price)}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    <p className="text-sm text-[#6A7282] mt-1 flex-1">
+                    <p className="text-sm text-theme-muted mt-1 flex-1">
                       {item.description}
                     </p>
 
                     {!item.isAvailable ? (
-                      <span className="self-end mt-3 text-xs font-medium text-[#94A3B8] px-4 py-1.5">
+                      <span className="self-end mt-3 text-xs font-medium text-theme-muted px-4 py-1.5">
                         Currently unavailable
                       </span>
                     ) : (
@@ -690,9 +697,9 @@ export default function RestaurantMenuDetails() {
       </div>
 
       {/* Reviews Section */}
-      <div className="max-w-[1100px] mx-auto px-6 py-10 border-t border-[#E5E7EB]">
-        <div className="flex items-center justify-between mb-8 border-b border-[#E5E7EB] pb-4">
-          <h2 className="text-2xl font-playfair font-medium text-[#0F172A]">Customer Reviews</h2>
+      <div className="max-w-[1100px] mx-auto px-6 py-10 border-t border-theme-border">
+        <div className="flex items-center justify-between mb-8 border-b border-theme-border pb-4">
+          <h2 className="text-2xl font-playfair font-medium text-theme-text">Customer Reviews</h2>
           <button 
             onClick={() => {
               if(!localStorage.getItem("authToken")) {
@@ -701,7 +708,7 @@ export default function RestaurantMenuDetails() {
                 setShowReviewModal(true);
               }
             }}
-            className="bg-[#0F172A] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1E293B]"
+            className="bg-theme-surface text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
           >
             Write a Review
           </button>
@@ -712,7 +719,7 @@ export default function RestaurantMenuDetails() {
             <Loader2 size={24} className="animate-spin text-[#00A63E]" />
           </div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-10 text-[#6A7282]">
+          <div className="text-center py-10 text-theme-muted">
             <p>No reviews yet. Be the first to review this restaurant!</p>
           </div>
         ) : (
@@ -720,14 +727,14 @@ export default function RestaurantMenuDetails() {
             {reviews.map((review) => {
               const name = review.user?.fullName || (review.user?.firstName ? `${review.user.firstName} ${review.user.lastName || ""}` : "Anonymous User");
               return (
-                <div key={review._id} className="border-b border-[#E5E7EB] pb-6">
+                <div key={review._id} className="border-b border-theme-border pb-6">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#E5E7EB] flex items-center justify-center font-bold text-[#0F172A]">
+                      <div className="w-10 h-10 rounded-full bg-[#E5E7EB] flex items-center justify-center font-bold text-theme-text">
                         {name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium text-[#0F172A]">{name}</p>
+                        <p className="font-medium text-theme-text">{name}</p>
                         <p className="text-xs text-[#99A1AF]">
                           {new Date(review.createdAt).toLocaleDateString()}
                         </p>
@@ -739,19 +746,19 @@ export default function RestaurantMenuDetails() {
                       ))}
                     </div>
                   </div>
-                  <p className="text-[#6A7282] text-sm mt-3 leading-relaxed">{review.comment}</p>
+                  <p className="text-theme-muted text-sm mt-3 leading-relaxed">{review.comment}</p>
                   
                   {review.reply && (
-                    <div className="mt-4 bg-[#F8FAFC] p-4 rounded-lg border border-[#E5E7EB]">
-                      <p className="text-xs font-bold text-[#0F172A] mb-1">Response from Restaurant</p>
-                      <p className="text-sm text-[#6A7282]">{review.reply}</p>
+                    <div className="mt-4 bg-theme-bg p-4 rounded-lg border border-theme-border">
+                      <p className="text-xs font-bold text-theme-text mb-1">Response from Restaurant</p>
+                      <p className="text-sm text-theme-muted">{review.reply}</p>
                     </div>
                   )}
 
                   <div className="mt-4 flex items-center gap-4">
                     <button 
                       onClick={() => handleMarkHelpful(review._id)}
-                      className="text-xs text-[#6A7282] flex items-center gap-1 hover:text-[#00A63E]"
+                      className="text-xs text-theme-muted flex items-center gap-1 hover:text-[#00A63E]"
                     >
                       <Plus size={12} />
                       Helpful ({review.helpfulCount || 0})
@@ -766,7 +773,7 @@ export default function RestaurantMenuDetails() {
                 <button 
                   onClick={() => fetchReviews(reviewsPage + 1, true)}
                   disabled={reviewsLoading}
-                  className="text-sm text-[#00A63E] font-medium border border-[#00A63E] rounded-lg px-6 py-2 hover:bg-[#00A63E] hover:text-white transition"
+                  className="text-sm text-[#00A63E] font-medium border border-[#00A63E] rounded-lg px-6 py-2 hover:bg-[#00A63E] hover:text-theme-text transition"
                 >
                   {reviewsLoading ? "Loading..." : "Load More Reviews"}
                 </button>
@@ -784,15 +791,15 @@ export default function RestaurantMenuDetails() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
+            className="bg-theme-surface rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between p-5 border-b border-[#E5E7EB]">
-              <h3 className="font-playfair text-xl font-semibold text-[#0F172A]">
+            <div className="flex items-center justify-between p-5 border-b border-theme-border">
+              <h3 className="font-playfair text-xl font-semibold text-theme-text">
                 About {restaurant.name}
               </h3>
               <button
                 onClick={() => setShowInfoModal(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-[#94A3B8]"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-theme-muted"
               >
                 <X size={18} />
               </button>
@@ -812,10 +819,10 @@ export default function RestaurantMenuDetails() {
                     className="text-[#00A63E] shrink-0 mt-0.5"
                   />
                   <div>
-                    <p className="text-sm font-medium text-[#0F172A]">
+                    <p className="text-sm font-medium text-theme-text">
                       Address
                     </p>
-                    <p className="text-sm text-[#6A7282]">
+                    <p className="text-sm text-theme-muted">
                       {restaurant.address.street}, {restaurant.address.city},{" "}
                       {restaurant.address.state} {restaurant.address.zipCode},{" "}
                       {restaurant.address.country}
@@ -828,8 +835,8 @@ export default function RestaurantMenuDetails() {
                 <div className="flex gap-3">
                   <Phone size={18} className="text-[#00A63E] shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-[#0F172A]">Phone</p>
-                    <p className="text-sm text-[#6A7282]">{restaurant.phone}</p>
+                    <p className="text-sm font-medium text-theme-text">Phone</p>
+                    <p className="text-sm text-theme-muted">{restaurant.phone}</p>
                   </div>
                 </div>
               )}
@@ -837,22 +844,22 @@ export default function RestaurantMenuDetails() {
               <div className="flex gap-3">
                 <Truck size={18} className="text-[#00A63E] shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-[#0F172A]">
+                  <p className="text-sm font-medium text-theme-text">
                     Delivery details
                   </p>
-                  <p className="text-sm text-[#6A7282]">
-                    Delivery fee: ${restaurant.deliveryFee.toFixed(2)}
+                  <p className="text-sm text-theme-muted">
+                    Delivery fee: {formatPrice(restaurant.deliveryFee)}
                   </p>
-                  <p className="text-sm text-[#6A7282]">
-                    Minimum order: ${restaurant.minimumOrder.toFixed(2)}
+                  <p className="text-sm text-theme-muted">
+                    Minimum order: {formatPrice(restaurant.minimumOrder)}
                   </p>
                   {restaurant.freeDeliveryAbove != null && (
-                    <p className="text-sm text-[#6A7282]">
+                    <p className="text-sm text-theme-muted">
                       Free delivery on orders above $
                       {restaurant.freeDeliveryAbove.toFixed(2)}
                     </p>
                   )}
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-sm text-theme-muted">
                     Estimated time: {restaurant.deliveryTime.min}-
                     {restaurant.deliveryTime.max} min
                   </p>
@@ -862,8 +869,8 @@ export default function RestaurantMenuDetails() {
               <div className="flex gap-3">
                 <Star size={18} className="text-[#00A63E] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-[#0F172A]">Rating</p>
-                  <p className="text-sm text-[#6A7282]">
+                  <p className="text-sm font-medium text-theme-text">Rating</p>
+                  <p className="text-sm text-theme-muted">
                     {restaurant.rating.average.toFixed(1)} average from{" "}
                     {restaurant.rating.count}{" "}
                     {restaurant.rating.count === 1 ? "review" : "reviews"}
@@ -873,7 +880,7 @@ export default function RestaurantMenuDetails() {
 
               {restaurant.cuisine.length > 0 && (
                 <div>
-                  <p className="text-sm font-medium text-[#0F172A] mb-2">
+                  <p className="text-sm font-medium text-theme-text mb-2">
                     Cuisine
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -901,15 +908,15 @@ export default function RestaurantMenuDetails() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl max-w-sm w-full"
+            className="bg-theme-surface rounded-2xl max-w-sm w-full"
           >
-            <div className="flex items-center justify-between p-5 border-b border-[#E5E7EB]">
-              <h3 className="font-playfair text-xl font-semibold text-[#0F172A]">
+            <div className="flex items-center justify-between p-5 border-b border-theme-border">
+              <h3 className="font-playfair text-xl font-semibold text-theme-text">
                 Share {restaurant.name}
               </h3>
               <button
                 onClick={() => setShowShareModal(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-[#94A3B8]"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-theme-muted"
               >
                 <X size={18} />
               </button>
@@ -920,7 +927,7 @@ export default function RestaurantMenuDetails() {
                 href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] transition"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-bg transition"
               >
                 <div className="w-10 h-10 rounded-full bg-[#DCFCE7] flex items-center justify-center">
                   <MessageCircle size={18} className="text-[#25D366]" />
@@ -932,7 +939,7 @@ export default function RestaurantMenuDetails() {
                 href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] transition"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-bg transition"
               >
                 <div className="w-10 h-10 rounded-full bg-[#EFF6FF] flex items-center justify-center">
                   <Facebook size={18} className="text-[#1877F2]" />
@@ -944,10 +951,10 @@ export default function RestaurantMenuDetails() {
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] transition"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-bg transition"
               >
                 <div className="w-10 h-10 rounded-full bg-[#F1F5F9] flex items-center justify-center">
-                  <Twitter size={18} className="text-[#0F172A]" />
+                  <Twitter size={18} className="text-theme-text" />
                 </div>
                 <span className="text-xs text-[#4A5565]">X / Twitter</span>
               </a>
@@ -955,10 +962,10 @@ export default function RestaurantMenuDetails() {
               <button
                 onClick={shareMore}
                 disabled={loading || !shareUrl}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E5E7EB] hover:bg-[#F8FAFC] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-bg transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="w-10 h-10 rounded-full bg-[#F1F5F9] flex items-center justify-center">
-                  <Share2 size={18} className="text-[#6A7282]" />
+                  <Share2 size={18} className="text-theme-muted" />
                 </div>
 
                 <span className="text-xs text-[#4A5565]">More</span>
@@ -977,16 +984,16 @@ export default function RestaurantMenuDetails() {
       {/* Review Modal */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowReviewModal(false)}>
-          <div onClick={e => e.stopPropagation()} className="bg-white rounded-2xl max-w-lg w-full p-6">
+          <div onClick={e => e.stopPropagation()} className="bg-theme-surface rounded-2xl max-w-lg w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-playfair text-xl font-semibold text-[#0F172A]">Write a Review</h3>
-              <button onClick={() => setShowReviewModal(false)} className="text-[#6A7282] hover:bg-gray-100 p-1 rounded-full">
+              <h3 className="font-playfair text-xl font-semibold text-theme-text">Write a Review</h3>
+              <button onClick={() => setShowReviewModal(false)} className="text-theme-muted hover:bg-gray-100 p-1 rounded-full">
                 <X size={20} />
               </button>
             </div>
             
             <div className="mb-6">
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Overall Rating</label>
+              <label className="block text-sm font-medium text-theme-text mb-2">Overall Rating</label>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button key={star} onClick={() => setReviewRating(star)}>
@@ -997,27 +1004,27 @@ export default function RestaurantMenuDetails() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Your Review</label>
+              <label className="block text-sm font-medium text-theme-text mb-2">Your Review</label>
               <textarea 
                 rows={4}
                 value={reviewComment}
                 onChange={e => setReviewComment(e.target.value)}
                 placeholder="How was the food? How was the service?"
-                className="w-full border border-[#E5E7EB] rounded-lg p-3 text-sm outline-none focus:border-[#00A63E] resize-none"
+                className="w-full border border-theme-border rounded-lg p-3 text-sm outline-none focus:border-[#00A63E] resize-none"
               />
             </div>
 
             <div className="flex justify-end gap-3">
               <button 
                 onClick={() => setShowReviewModal(false)}
-                className="px-5 py-2 border border-[#E5E7EB] text-[#6A7282] rounded-lg font-medium hover:bg-gray-50"
+                className="px-5 py-2 border border-theme-border text-theme-muted rounded-lg font-medium hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button 
                 onClick={handleSubmitReview}
                 disabled={submittingReview || !reviewComment.trim()}
-                className="px-5 py-2 bg-[#00A63E] text-white rounded-lg font-medium disabled:opacity-60 flex items-center gap-2"
+                className="px-5 py-2 bg-[#00A63E] text-theme-text rounded-lg font-medium disabled:opacity-60 flex items-center gap-2"
               >
                 {submittingReview ? <Loader2 size={16} className="animate-spin" /> : null}
                 Submit Review

@@ -1,84 +1,87 @@
-import { DollarSign, Package, Users, AlertTriangle, Truck } from "lucide-react";
+import { DollarSign, Package, Users, AlertTriangle, Truck, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 import mapImage from "../../assets/images/dashboardmap.jpg";
 
-const stats = [
-  {
-    title: "Total Revenue",
-    value: "$124,592",
-    change: "+12.5%",
-    icon: DollarSign,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#155DFC]",
-    trend: "up"
-  },
-  {
-    title: "Active Orders",
-    value: "48",
-    change: "+4",
-    icon: Package,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up"
-  },
-  {
-    title: "Low Stock Items",
-    value: "12",
-    change: "-2",
-    icon: AlertTriangle,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
-    trend: "down"
-  },
-  {
-    title: "Active Clients",
-    value: "156",
-    change: "+8",
-    icon: Users,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    trend: "up"
-  }
-]
 
-const orders = [
-  {
-    id: "#ORD-7782",
-    client: "Fresh Market NYC",
-    item: "Organic Avocados (50 crates)",
-    amount: "$4,250",
-    image: "https://picsum.photos/40?1"
-  },
-  {
-    id: "#ORD-7781",
-    client: "Bistro 55",
-    item: "Premium Steak Cuts (200kg)",
-    amount: "$8,900",
-    image: "https://picsum.photos/40?2"
-  },
-  {
-    id: "#ORD-7780",
-    client: "Green Grocers",
-    item: "Seasonal Fruits Mix",
-    amount: "$1,200",
-    image: "https://picsum.photos/40?3"
-  },
-  {
-    id: "#ORD-7779",
-    client: "Sushi Zen",
-    item: "Fresh Salmon (Imported)",
-    amount: "$12,400",
-    image: "https://picsum.photos/40?4"
-  },
-  {
-    id: "#ORD-7778",
-    client: "Daily Mart",
-    item: "Dairy Products Bulk",
-    amount: "$3,150",
-    image: "https://picsum.photos/40?5"
-  }
-]
+import { useState, useEffect } from "react";
+import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
+
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
+  const { formatPrice } = useCurrency();
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [fleetData, setFleetData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/dashboard", {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        const json = await res.json();
+        if (res.ok) {
+          let data = json.data || json;
+          if (!data.recentOrders || data.recentOrders.length === 0) {
+            // Fallback to fetch pending orders
+            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/orders?page=1", {
+              headers: {
+                "Content-Type": "application/json",
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+              }
+            });
+            if (ordersRes.ok) {
+              const ordersJson = await ordersRes.json();
+              const recentOrds = ordersJson.data?.orders || (Array.isArray(ordersJson.data) ? ordersJson.data : []);
+              data.recentOrders = (Array.isArray(recentOrds) ? recentOrds : []).slice(0, 5);
+            }
+          }
+          setDashboardData(data);
+        } else {
+          setError(json.message || "Failed to load dashboard.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Network error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+
+    // SSE for Fleet Tracking
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
+    const es = new EventSource(`https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/logistics/fleet/stream?token=${token}`);
+    
+    es.addEventListener('message', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data) {
+          setFleetData(data);
+        }
+      } catch (err) {
+        console.error("SSE parse error", err);
+      }
+    });
+
+    es.addEventListener('closed', () => {
+      es.close();
+    });
+
+    return () => {
+      es.close();
+    };
+  }, []);
+
+  const activeOrders = dashboardData?.recentOrders || [];
 
   return (
 
@@ -90,14 +93,14 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
           <h1 className="text-3xl lg:text-[34px] font-semibold font-playfair">
             Dashboard
           </h1>
-          <p className="text-[#64748B]">
+          <p className="text-theme-muted">
             Overview of your supply chain operations
           </p>
         </div>
 
         <div className="flex gap-3">
 
-          <button onClick={() => setActiveTab("shipment-history")} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2">
+          <button onClick={() => setActiveTab("shipment-history")} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2">
             History
           </button>
 
@@ -111,53 +114,69 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
       <div className="">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-5 mb-5">
-
-          {stats.map((s, i) => {
-
-            const Icon = s.icon
-
-            return (
-
-              <div
-                key={i}
-                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
-              >
-
-                <div className="flex justify-between">
-
-                  <div>
-
-                    <p className="text-sm text-[#64748B]">
-                      {s.title}
-                    </p>
-
-                    <h3 className="text-xl font-semibold mt-2">
-                      {s.value}
-                    </h3>
-
-                  </div>
-
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${s.iconBg}`}>
-                    <Icon className={s.iconColor} size={18} />
-                  </div>
-
-                </div>
-
-                <p className={`text-sm mt-3 text-gray-400`}>
-                  <span className={`text-sm mt-3 ${s.trend === "up" ? "text-green-600" : "text-red-600"}`}>{s.change}</span> vs last month
-                </p>
-
+        {dashboardData && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-theme-muted">Revenue</p>
+                <h3 className="text-2xl font-semibold mt-1">${dashboardData.totalRevenue?.toFixed(2) || "0.00"}</h3>
               </div>
-
-            )
-          })}
-
+              <DollarSign className="text-green-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +12.5% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-theme-muted">Active Orders</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.activeOrders || 0}</h3>
+              </div>
+              <Package className="text-blue-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +5.2% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-theme-muted">Low Stock Items</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.lowStock || 0}</h3>
+              </div>
+              <AlertCircle className="text-red-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${false ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingDown size={16} className="mr-1" />
+              -2.4% vs last month
+            </p>
+          </div>
+          
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-theme-muted">Active Clients</p>
+                <h3 className="text-2xl font-semibold mt-1">{dashboardData.activeClients || 0}</h3>
+              </div>
+              <Users className="text-purple-600" size={24} />
+            </div>
+            <p className={`text-sm mt-4 flex items-center ${true ? 'text-green-600' : 'text-red-600'}`}>
+              <TrendingUp size={16} className="mr-1" />
+              +8.1% vs last month
+            </p>
+          </div>
         </div>
+      )}
 
         <div className="grid lg:grid-cols-3 gap-5 grid-cols-1">
           <div className="lg:col-span-2">
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 mb-5">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 mb-5">
 
               <div className="flex justify-between items-center mb-6">
 
@@ -166,7 +185,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                     Recent Bulk Orders
                   </h3>
 
-                  <p className="text-sm text-[#64748B]">
+                  <p className="text-sm text-theme-muted">
                     Orders from restaurants and retailers
                   </p>
                 </div>
@@ -182,7 +201,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
                 <table className="w-full text-left">
 
-                  <thead className="text-sm text-[#94A3B8] border-b">
+                  <thead className="text-sm text-theme-muted border-b">
 
                     <tr>
                       <th className="py-3 font-medium">ORDER ID</th>
@@ -195,19 +214,27 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
                   <tbody>
 
-                    {orders.map((o, i) => {
+                    {activeOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-12 text-center text-theme-muted">
+                          No recent orders found.
+                        </td>
+                      </tr>
+                    ) : (
+                      activeOrders.map((o: any, i: number) => {
 
-                      const orderPrefix = o.id.split("-")[0] + "-"
-                      const orderNumber = o.id.split("-")[1]
+                        const idString = o.id || o.orderId || o._id || `#ORD-88${20-i}`;
+                        const orderPrefix = idString.includes("-") ? idString.split("-")[0] + "-" : "#ORD-";
+                        const orderNumber = idString.includes("-") ? idString.split("-")[1] : idString.substring(0, 4);
 
-                      return (
+                        return (
 
                         <tr
                           key={i}
                           className="border-b border-[#F1F5F9] last:border-none"
                         >
 
-                          <td className="py-5 font-medium text-[#0F172A]">
+                          <td className="py-5 font-medium text-theme-text">
 
                             <div className="leading-5">
                               <p>{orderPrefix}</p>
@@ -222,12 +249,12 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                             <div className="flex items-center gap-3">
 
                               <img
-                                src={o.image}
+                                src={o.image || o.img || o.client?.image || o.restaurant?.image || "https://picsum.photos/40?1"}
                                 className="w-10 h-10 min-w-10 rounded-full object-cover"
                               />
 
                               <p className="font-medium text-[#334155]">
-                                {o.client}
+                                {o.client?.name || o.client?.fullName || o.restaurant?.name || (typeof o.client === 'string' ? o.client : "Unknown Client")}
                               </p>
 
                             </div>
@@ -235,21 +262,20 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                           </td>
 
 
-                          <td className="py-5 text-[#64748B] max-w-[220px]">
-                            {o.item}
+                          <td className="py-5 text-theme-muted max-w-[220px]">
+                            {typeof o.item === "object" ? o.item?.name || o.item?.productName || "Item N/A" : o.item || (Array.isArray(o.items) ? o.items.map((it: any) => typeof it === "string" ? it : it.name || it.productName).join(", ") : (o.items?.length ? `${o.items.length} Items` : (o.totalItems ? `${o.totalItems} Items` : "Items N/A")))}
                           </td>
 
 
-                          <td className="py-5 font-semibold text-[#0F172A]">
-                            {o.amount}
+                          <td className="py-5 font-semibold text-theme-text">
+                            {typeof o.amount === "number" ? `${formatPrice(o.amount)}` : (o.total ? `${formatPrice(o.total)}` : (o.totalAmount ? `${formatPrice(o.totalAmount)}` : (o.total_amount ? `${formatPrice(o.total_amount)}` : o.amount || "$0.00")))}
                           </td>
 
                         </tr>
 
-                      )
-
-                    })}
-
+                      );
+                    })
+                    )}
                   </tbody>
 
                 </table>
@@ -258,8 +284,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
             </div>
 
-
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
               <h3 className="text-xl font-playfair mb-4">
                 Live Fleet Tracking
@@ -272,18 +297,21 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
                   className="rounded-lg w-full h-[300px] object-cover"
                 />
 
-                <div className="absolute right-4 top-4 bg-white rounded-lg shadow px-4 py-2 flex items-center gap-2">
+                <div className="absolute right-4 top-4 bg-theme-surface rounded-lg shadow px-4 py-2 flex items-center gap-2">
                   <Truck size={16} />
-                  <span className="text-sm">12 Vehicles Active</span>
+                  <span className="text-sm">
+                    {fleetData?.summary?.activeVehicles || fleetData?.vehicles?.filter((v: any) => v.isOnline).length || 0} Vehicles Active
+                  </span>
                 </div>
 
               </div>
 
             </div>
+
           </div>
           <div className="space-y-5">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
               <h3 className="text-xl font-playfair mb-5">
                 Low Stock Alerts
@@ -291,79 +319,35 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
               <div className="space-y-4">
 
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
+                {(dashboardData?.lowStockItems || []).map((item: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
 
-                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
 
-                    <img
-                      src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
+                      <img
+                        src={getImageUrl(item.image)}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
 
-                    <div>
-                      <p className="font-medium">Organic Rice 50kg</p>
-                      <p className="text-sm text-[#64748B]">
-                        5 units remaining
-                      </p>
+                      <div>
+                        <p className="font-medium">{item.name || item.productName}</p>
+                        <p className="text-sm text-theme-muted">
+                          {item.stock} units remaining
+                        </p>
+                      </div>
+
                     </div>
 
-                  </div>
-
-                  <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-md">
-                    Critical
-                  </span>
-
-                </div>
-
-
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
-
-                  <div className="flex items-center gap-3">
-
-                    <img
-                      src="https://images.unsplash.com/photo-1600788907416-456578634209?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-
-                    <div>
-                      <p className="font-medium">Almond Milk Bulk</p>
-                      <p className="text-sm text-[#64748B]">
-                        12 crates remaining
-                      </p>
-                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-md ${item.stock <= 5 ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}>
+                      {item.stock <= 5 ? "Critical" : "Low"}
+                    </span>
 
                   </div>
+                ))}
 
-                  <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-md">
-                    Low
-                  </span>
-
-                </div>
-
-
-                <div className="flex items-center justify-between bg-[#F3F4F6] rounded-xl p-3">
-
-                  <div className="flex items-center gap-3">
-
-                    <img
-                      src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200"
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-
-                    <div>
-                      <p className="font-medium">Frozen Berries</p>
-                      <p className="text-sm text-[#64748B]">
-                        8 boxes remaining
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-md">
-                    Low
-                  </span>
-
-                </div>
+                {(!dashboardData?.lowStockItems || dashboardData.lowStockItems.length === 0) && (
+                  <p className="text-theme-muted text-sm py-4">No low stock items.</p>
+                )}
 
               </div>
 
@@ -375,7 +359,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
 
               <h3 className="text-xl font-playfair mb-5">
                 Top Clients
@@ -383,84 +367,36 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
 
               <div className="space-y-5">
 
-                <div className="flex items-center justify-between">
+                {(dashboardData?.topClients || []).map((client: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between">
 
-                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
 
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      U
+                      <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
+                        {client.initial || (client.clientName || client.name || "C").charAt(0).toUpperCase()}
+                      </div>
+
+                      <div>
+                        <p className="font-medium">
+                          {client.clientName || client.name}
+                        </p>
+                        <p className="text-sm text-theme-muted">
+                          Vol: {client.volumeLabel || client.volume || "$0/mo"}
+                        </p>
+                      </div>
+
                     </div>
 
-                    <div>
-                      <p className="font-medium">
-                        Urban Bistro Group
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $45k/mo
-                      </p>
-                    </div>
+                    <span className={`${client.trendDirection === 'down' || (client.growth && client.growth.startsWith("-")) ? 'text-red-500' : 'text-green-600'} text-sm font-medium`}>
+                      {client.trendPercent !== undefined ? `${client.trendDirection === 'down' ? '-' : '+'}${client.trendPercent}%` : (client.growth || "+0%")}
+                    </span>
 
                   </div>
+                ))}
 
-                  <span className="text-green-600 text-sm font-medium">
-                    +5%
-                  </span>
-
-                </div>
-
-
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      W
-                    </div>
-
-                    <div>
-                      <p className="font-medium">
-                        Whole Foods Local
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $32k/mo
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-green-600 text-sm font-medium">
-                    +12%
-                  </span>
-
-                </div>
-
-
-
-                <div className="flex items-center justify-between">
-
-                  <div className="flex items-center gap-3">
-
-                    <div className="w-9 h-9 bg-[#E5EDFF] text-[#155DFC] flex items-center justify-center rounded-full font-medium">
-                      F
-                    </div>
-
-                    <div>
-                      <p className="font-medium">
-                        Fresh Eats Chain
-                      </p>
-                      <p className="text-sm text-[#64748B]">
-                        Vol: $28k/mo
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <span className="text-red-500 text-sm font-medium">
-                    -2%
-                  </span>
-
-                </div>
+                {(!dashboardData?.topClients || dashboardData.topClients.length === 0) && (
+                  <p className="text-theme-muted text-sm py-2">No top clients data available.</p>
+                )}
 
               </div>
 

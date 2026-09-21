@@ -1,11 +1,57 @@
 import { X } from 'lucide-react'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
 
-export default function ExpenseModal({ open, onClose }: { open: boolean, onClose: () => void }) {
+export default function ExpenseModal({ open, onClose, onSuccess }: { open: boolean, onClose: () => void, onSuccess?: () => void }) {
+  const [form, setForm] = useState({
+    title: '',
+    amount: '',
+    category: 'Inventory',
+    date: '',
+    status: 'Pending',
+    type: 'Variable'
+  })
+  const [saving, setSaving] = useState(false)
+
   if (!open) return null
+
+  const handleSave = async () => {
+    if (!form.title || !form.amount || !form.date) return toast.error("Please fill required fields")
+    setSaving(true)
+    try {
+      const token = localStorage.getItem("authToken")
+      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/expenses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          category: form.category,
+          type: form.type,
+          amount: Number(form.amount),
+          description: form.title,
+          date: form.date
+        })
+      })
+      if (res.ok) {
+        toast.success("Expense recorded!")
+        onSuccess?.()
+        onClose()
+      } else {
+        const data = await res.json()
+        toast.error(data.message || "Failed to record expense")
+      }
+    } catch (err) {
+      toast.error("Network error")
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="bg-white max-w-[500px] w-[96%] rounded-lg lg:rounded-xl lg:p-6 p-3 relative">
+      <div onClick={(e) => e.stopPropagation()} className="bg-theme-surface max-w-[500px] w-[96%] rounded-lg lg:rounded-xl lg:p-6 p-3 relative">
 
         <button
           onClick={onClose}
@@ -24,6 +70,8 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
           <div>
             <label className="text-sm font-medium">Expense Title</label>
             <input
+              value={form.title}
+              onChange={e => setForm({...form, title: e.target.value})}
               placeholder="e.g. Weekly Veg Supply"
               className="mt-1 w-full border rounded-lg px-3 py-2 outline-none"
             />
@@ -32,6 +80,9 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
           <div>
             <label className="text-sm font-medium">Amount ($)</label>
             <input
+              type="number"
+              value={form.amount}
+              onChange={e => setForm({...form, amount: e.target.value})}
               placeholder="0.00"
               className="mt-1 w-full border rounded-lg px-3 py-2 outline-none"
             />
@@ -39,10 +90,12 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
 
           <div>
             <label className="text-sm font-medium">Category</label>
-            <select className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
+            <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
               <option>Inventory</option>
               <option>Utilities</option>
               <option>Salary</option>
+              <option>Rent</option>
+              <option>Maintenance</option>
             </select>
           </div>
 
@@ -50,13 +103,15 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
             <label className="text-sm font-medium">Date</label>
             <input
               type="date"
+              value={form.date}
+              onChange={e => setForm({...form, date: e.target.value})}
               className="mt-1 w-full border rounded-lg px-3 py-2 outline-none"
             />
           </div>
 
           <div>
             <label className="text-sm font-medium">Status</label>
-            <select className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
+            <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
               <option>Pending</option>
               <option>Paid</option>
             </select>
@@ -64,7 +119,7 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
 
           <div>
             <label className="text-sm font-medium">Type</label>
-            <select className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
+            <select value={form.type} onChange={e => setForm({...form, type: e.target.value})} className="mt-1 w-full border rounded-lg px-3 py-2 outline-none">
               <option>Variable</option>
               <option>Fixed</option>
             </select>
@@ -80,8 +135,8 @@ export default function ExpenseModal({ open, onClose }: { open: boolean, onClose
             Cancel
           </button>
 
-          <button className="px-4 py-2 rounded-lg bg-[#009966] text-white">
-            Record Expense
+          <button disabled={saving} onClick={handleSave} className="px-4 py-2 rounded-lg bg-[#009966] text-white disabled:opacity-50">
+            {saving ? "Saving..." : "Record Expense"}
           </button>
         </div>
 

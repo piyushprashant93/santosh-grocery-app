@@ -8,6 +8,7 @@ import {
   PackageX,
   AlertTriangle,
 } from "lucide-react";
+import { useCurrency } from "../../context/CurrencyContext";
 import CartModal from "./CartModal";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +44,7 @@ interface WishlistItem {
 }
 
 export default function SavedItems() {
+  const { formatPrice } = useCurrency();
   const [openCart, setOpenCart] = useState(false);
   const navigate = useNavigate();
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -177,11 +179,11 @@ export default function SavedItems() {
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+          <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-theme-text dark:text-theme-text">
             Saved Items
           </h1>
 
-          <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+          <p className="text-theme-muted dark:text-theme-muted mt-1 lg:text-lg text-base">
             Keep track of products you love.
           </p>
         </div>
@@ -191,7 +193,7 @@ export default function SavedItems() {
             <button
               onClick={() => setShowClearConfirm(true)}
               disabled={clearing}
-              className="flex items-center gap-2 border border-red-200 text-red-600 rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white shadow-sm hover:bg-red-50 disabled:opacity-60"
+              className="flex items-center gap-2 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-theme-surface dark:bg-theme-bg shadow-sm hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
             >
               {clearing ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -202,7 +204,7 @@ export default function SavedItems() {
             </button>
           )}
 
-          <button onClick={()=>navigate("/customer/dashboard")} className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-white shadow-sm">
+          <button onClick={()=>navigate("/customer/dashboard")} className="flex items-center gap-2 border border-theme-border dark:border-theme-border rounded-lg w-fit lg:rounded-xl px-4 py-2 bg-theme-surface dark:bg-theme-bg dark:text-theme-text shadow-sm">
             <ShoppingBag size={18} />
             Continue Shopping
           </button>
@@ -228,14 +230,14 @@ export default function SavedItems() {
       {/* clear all confirm popover/banner */}
       {showClearConfirm && (
         <div className="bg-[#FFF7ED] border border-[#FDBA74] rounded-lg px-4 py-3 flex items-center justify-between gap-4">
-          <p className="text-sm text-[#0F172A]">
+          <p className="text-sm text-theme-text">
             Are you sure you want to remove all saved items? This cannot be
             undone.
           </p>
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowClearConfirm(false)}
-              className="px-3 py-1.5 text-sm rounded-lg border border-[#E5E7EB] bg-white"
+              className="px-3 py-1.5 text-sm rounded-lg border border-theme-border bg-theme-surface"
             >
               Cancel
             </button>
@@ -261,10 +263,10 @@ export default function SavedItems() {
       {!loading && items.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <PackageX size={40} className="text-[#99A1AF]" />
-          <h3 className="text-lg font-playfair text-[#0F172A]">
+          <h3 className="text-lg font-playfair text-theme-text dark:text-theme-text">
             No saved items yet
           </h3>
-          <p className="text-[#6A7282] text-sm">
+          <p className="text-theme-muted dark:text-theme-muted text-sm">
             Items you save will show up here.
           </p>
         </div>
@@ -274,10 +276,10 @@ export default function SavedItems() {
       {!loading && items.length > 0 && validItems.length === 0 && !error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
           <PackageX size={40} className="text-[#99A1AF]" />
-          <h3 className="text-lg font-playfair text-[#0F172A]">
+          <h3 className="text-lg font-playfair text-theme-text dark:text-theme-text">
             These items are no longer available
           </h3>
-          <p className="text-[#6A7282] text-sm">
+          <p className="text-theme-muted dark:text-theme-muted text-sm">
             Clear your saved list and start fresh.
           </p>
         </div>
@@ -312,13 +314,13 @@ export default function SavedItems() {
             return (
               <div
                 key={item._id}
-                className="border border-[#E5E7EB] rounded-lg lg:rounded-xl bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
+                className="border border-theme-border dark:border-theme-border rounded-lg lg:rounded-xl bg-theme-surface dark:bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] overflow-hidden flex flex-col"
               >
                 <div className="relative">
                   {img ? (
                     <img src={img} className="w-full h-52 object-cover" />
                   ) : (
-                    <div className="w-full h-52 bg-[#F1F5F9] flex items-center text-xs justify-center text-[#99A1AF]">
+                    <div className="w-full h-52 bg-[#F1F5F9] dark:bg-theme-bg flex items-center text-xs justify-center text-[#99A1AF]">
                       No image available
                     </div>
                   )}
@@ -332,7 +334,7 @@ export default function SavedItems() {
                   <button
                     onClick={() => removeItem(item._id)}
                     disabled={isRemoving}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow disabled:opacity-60"
+                    className="absolute top-3 right-3 w-8 h-8 bg-theme-surface dark:bg-theme-bg dark:text-theme-text rounded-full flex items-center justify-center shadow disabled:opacity-60"
                   >
                     {isRemoving ? (
                       <Loader2 size={14} className="animate-spin" />
@@ -344,11 +346,11 @@ export default function SavedItems() {
 
                 <div className="lg:p-5 p-2 flex flex-col gap-3 flex-1">
                   <div>
-                    <h3 className="font-playfair text-lg text-[#0F172A]">
+                    <h3 className="font-playfair text-lg text-theme-text dark:text-theme-text">
                       {product.name}
                     </h3>
                     {product.category && (
-                      <p className="text-xs text-[#94A3B8] uppercase mt-0.5">
+                      <p className="text-xs text-theme-muted uppercase mt-0.5">
                         {product.category}
                       </p>
                     )}
@@ -356,12 +358,12 @@ export default function SavedItems() {
 
                   <div className="flex items-center gap-3">
                     <span className="text-[#009966] text-xl font-bold">
-                      ${discountPrice.toFixed(2)}
+                      {formatPrice(discountPrice)}
                     </span>
 
                     {hasDiscount && (
                       <span className="text-[#99A1AF] line-through">
-                        ${basePrice.toFixed(2)}
+                        {formatPrice(basePrice)}
                       </span>
                     )}
                   </div>
@@ -370,10 +372,10 @@ export default function SavedItems() {
                     <span
                       className={`px-3 py-1 font-semibold text-sm rounded-full ${
                         isOutOfStock
-                          ? "bg-[#FEF2F2] text-[#DC2626]"
+                          ? "bg-[#FEF2F2] dark:bg-red-900/30 text-[#DC2626] dark:text-red-400"
                           : isLowStock
-                            ? "bg-[#FFF7ED] text-[#F54900]"
-                            : "bg-[#ECFDF5] text-[#009966]"
+                            ? "bg-[#FFF7ED] dark:bg-orange-900/30 text-[#F54900] dark:text-orange-400"
+                            : "bg-[#ECFDF5] dark:bg-green-900/30 text-[#009966] dark:text-[#00b377]"
                       }`}
                     >
                       {stockLabel}

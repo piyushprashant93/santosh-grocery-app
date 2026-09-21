@@ -21,28 +21,28 @@ export default function NotificationSettingsTab() {
       <div className="flex flex-col gap-6 lg:col-span-1">
         
         {/* Channels */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Notification Channels</h2>
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Notification Channels</h2>
           <p className="text-sm text-gray-500 mb-6">Select how users receive updates.</p>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">Email Notifications</p>
+                <p className="text-sm font-semibold text-theme-text">Email Notifications</p>
                 <p className="text-xs text-gray-500">Send updates via email.</p>
               </div>
               <ToggleSwitch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">SMS Notifications</p>
+                <p className="text-sm font-semibold text-theme-text">SMS Notifications</p>
                 <p className="text-xs text-gray-500">Send updates via text message.</p>
               </div>
               <ToggleSwitch />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">Push Notifications</p>
+                <p className="text-sm font-semibold text-theme-text">Push Notifications</p>
                 <p className="text-xs text-gray-500">Send updates to mobile app.</p>
               </div>
               <ToggleSwitch defaultChecked />
@@ -51,21 +51,21 @@ export default function NotificationSettingsTab() {
         </div>
 
         {/* Admin Alerts */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Admin Alerts</h2>
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Admin Alerts</h2>
           <p className="text-sm text-gray-500 mb-6">Notify admin on critical events.</p>
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">System Errors</p>
+                <p className="text-sm font-semibold text-theme-text">System Errors</p>
                 <p className="text-xs text-gray-500">Alert on critical failures.</p>
               </div>
               <ToggleSwitch defaultChecked />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">Large Transactions</p>
+                <p className="text-sm font-semibold text-theme-text">Large Transactions</p>
                 <p className="text-xs text-gray-500">Alert on orders over $500.</p>
               </div>
               <ToggleSwitch defaultChecked />
@@ -76,9 +76,9 @@ export default function NotificationSettingsTab() {
 
       {/* Right Column (2 spans) */}
       <div className="lg:col-span-2">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Event Configuration</h2>
+            <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Event Configuration</h2>
             <p className="text-sm text-gray-500">Configure notifications for specific events.</p>
           </div>
           
@@ -95,7 +95,7 @@ export default function NotificationSettingsTab() {
               {events.map((event, i) => (
                 <tr key={i} className="hover:bg-gray-50/50 transition">
                   <td className="px-6 py-4 whitespace-nowrap sm:whitespace-normal">
-                    <p className="font-semibold text-gray-900 text-sm">{event.name}</p>
+                    <p className="font-semibold text-theme-text text-sm">{event.name}</p>
                     <p className="text-xs text-gray-500 mt-0.5 hidden sm:block">{event.desc}</p>
                   </td>
                   <td className="px-6 py-4 text-center">

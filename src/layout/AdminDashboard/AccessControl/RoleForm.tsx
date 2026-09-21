@@ -90,12 +90,12 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
         <div className="flex items-center gap-3">
           <button 
             onClick={onCancel}
-            className="p-2 -ml-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 -ml-2 text-gray-400 hover:text-theme-text hover:bg-gray-100 rounded-lg transition"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>
+            <h1 className="text-2xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>
               {isEditing ? 'Edit Role' : 'Add New Role'}
             </h1>
             <p className="text-gray-500 text-sm mt-0.5">Define access levels and permissions for this role.</p>
@@ -104,14 +104,14 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button 
             onClick={onCancel}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex-1 sm:flex-none text-center"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex-1 sm:flex-none text-center"
           >
             Cancel
           </button>
           <button 
             onClick={handleSave}
             disabled={loading || success}
-            className="px-5 py-2 bg-emerald-600 text-white font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center flex items-center justify-center gap-2"
+            className="px-5 py-2 bg-emerald-600 text-theme-text font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition flex-1 sm:flex-none text-center flex items-center justify-center gap-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             {success ? "Saved!" : (isEditing ? 'Update Role' : 'Save Role')}
@@ -129,8 +129,8 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
         
         {/* Left Column: Basic Info */}
         <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4" style={{ fontFamily: 'serif' }}>Role Information</h3>
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 className="text-lg font-bold text-theme-text mb-4" style={{ fontFamily: 'serif' }}>Role Information</h3>
             
             <div className="space-y-4">
               <div>
@@ -167,9 +167,9 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
 
         {/* Right Column: Permissions */}
         <div className="lg:col-span-8 flex flex-col gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Permissions Configuration</h3>
+              <h3 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Permissions Configuration</h3>
               <button className="text-sm font-medium text-orange-600 hover:text-orange-700 transition">
                 Select All
               </button>
@@ -180,7 +180,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
                 <div key={idx} className="border border-gray-100 rounded-xl overflow-hidden">
                   <div className="bg-gray-50/50 px-5 py-3 border-b border-gray-100 flex justify-between items-center">
                     <div>
-                      <h4 className="font-bold text-gray-900 text-sm">{mod.name}</h4>
+                      <h4 className="font-bold text-theme-text text-sm">{mod.name}</h4>
                       <p className="text-xs text-gray-500">{mod.desc}</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">

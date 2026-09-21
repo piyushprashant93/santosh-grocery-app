@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
 
@@ -62,6 +63,7 @@ export default function ProductDetails({
   setActiveTab: (tab: string) => void;
 }) {
   const navigate = useNavigate();
+  const { formatPrice } = useCurrency();
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("id");
   const [showQuestionModal, setShowQuestionModal] = useState(false);
@@ -390,7 +392,7 @@ const isOutOfStock = !product.inStock;
     <div className="">
       <button
         onClick={() => navigate("/customer/dashboard")}
-        className="mb-3 text-[#6A7282]"
+        className="mb-3 text-theme-muted"
       >
         ← Back to Dashboard
       </button>
@@ -405,7 +407,8 @@ const isOutOfStock = !product.inStock;
         <div>
           <div className="relative">
             <img
-              src={activeImg}
+              src={activeImg || "https://placehold.co/400x400?text=No+Image"}
+              onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400?text=No+Image"; }}
               className="w-full aspect-square rounded-2xl object-cover"
             />
 
@@ -418,7 +421,7 @@ const isOutOfStock = !product.inStock;
             <button
               onClick={handleAddToWishlist}
               disabled={wishlistLoading}
-              className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow disabled:opacity-60"
+              className="absolute top-4 right-4 w-10 h-10 bg-theme-surface rounded-full flex items-center justify-center shadow disabled:opacity-60"
             >
               <Heart
                 size={18}
@@ -431,7 +434,8 @@ const isOutOfStock = !product.inStock;
             {images.map((img, i) => (
               <img
                 key={i}
-                src={img}
+                src={img || "https://placehold.co/400x400?text=No+Image"}
+                onError={(e) => { e.currentTarget.src = "https://placehold.co/400x400?text=No+Image"; }}
                 onClick={() => setActiveImg(img)}
                 className={`aspect-square rounded-lg object-cover cursor-pointer border ${
                   activeImg === img ? "border-[#009966]" : "border-[#E5E7EB]"
@@ -448,7 +452,7 @@ const isOutOfStock = !product.inStock;
               {product.rating?.average || 0}
             </div>
 
-            <span className="text-[#6A7282] list-disc list-item ml-0">
+            <span className="text-theme-muted list-disc list-item ml-0">
               {product.rating?.count || 0} Reviews
             </span>
 
@@ -468,11 +472,11 @@ const isOutOfStock = !product.inStock;
           </h1>
 
           <p className="lg:text-[32px] text-xl text-[#101828] mb-4">
-           ${product.salePrice.toFixed(2)}
+           {formatPrice(product.salePrice)}
 
 {hasDiscount && (
   <span className="text-[#99A1AF] line-through text-lg ml-3">
-    ${product.originalPrice.toFixed(2)}
+    {formatPrice(product.originalPrice)}
   </span>
 )}
 
@@ -483,22 +487,22 @@ const isOutOfStock = !product.inStock;
 )}
           </p>
 
-          <p className="text-[#6A7282] lg:text-[20px] text-base leading-relaxed mb-10">
+          <p className="text-theme-muted lg:text-[20px] text-base leading-relaxed mb-10">
             {product.description}
           </p>
 
           <div className="grid grid-cols-2 gap-4 mb-16">
-            <div className="border border-[#E5E7EB] bg-[#F9FAFB] rounded-lg lg:rounded-xl xl:p-5 p-2 flex gap-3 sm:flex-row flex-col">
+            <div className="border border-theme-border bg-[#F9FAFB] rounded-lg lg:rounded-xl xl:p-5 p-2 flex gap-3 sm:flex-row flex-col">
               <ShoppingBag className="text-[#009966] min-w-4" />
 <div>
   <p className="font-medium">Availability</p>
-  <p className="text-sm text-[#6A7282]">
+  <p className="text-sm text-theme-muted">
     {product.stockQuantity} items available in stock.
   </p>
 </div>
             </div>
 
-            <div className="border border-[#E5E7EB] bg-[#F9FAFB] rounded-lg lg:rounded-xl xl:p-5 p-2 flex gap-3 sm:flex-row flex-col">
+            <div className="border border-theme-border bg-[#F9FAFB] rounded-lg lg:rounded-xl xl:p-5 p-2 flex gap-3 sm:flex-row flex-col">
               <Truck className="text-[#2563EB] min-w-4" />
 
               <div>
@@ -506,7 +510,7 @@ const isOutOfStock = !product.inStock;
   {product.isFreeShipping ? "Free Delivery" : product.shippingClass}
 </p>
 
-<p className="text-sm text-[#6A7282]">
+<p className="text-sm text-theme-muted">
  {product.isFreeShipping ? "Eligible for free shipping" : "Shipping charges apply at checkout"}
 </p>
               </div>
@@ -560,7 +564,7 @@ const isOutOfStock = !product.inStock;
               onClose={() => setOpenCart(false)}
             />
 
-          <div className="flex gap-6 text-[#6A7282]">
+          <div className="flex gap-6 text-theme-muted">
             <button
               onClick={() => setShowShareModal(true)}
               className="flex items-center gap-2"
@@ -582,8 +586,8 @@ const isOutOfStock = !product.inStock;
       
       {/* Reviews Section */}
       <div className="mt-16 max-w-4xl">
-        <div className="flex items-center justify-between mb-8 border-b border-[#E5E7EB] pb-4">
-          <h2 className="text-2xl font-playfair font-medium text-[#0F172A]">Customer Reviews</h2>
+        <div className="flex items-center justify-between mb-8 border-b border-theme-border pb-4">
+          <h2 className="text-2xl font-playfair font-medium text-theme-text">Customer Reviews</h2>
           <button 
             onClick={() => {
               if(!localStorage.getItem("authToken")) {
@@ -592,7 +596,7 @@ const isOutOfStock = !product.inStock;
                 setShowReviewModal(true);
               }
             }}
-            className="bg-[#0F172A] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#1E293B]"
+            className="bg-theme-surface text-theme-text px-5 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface"
           >
             Write a Review
           </button>
@@ -603,7 +607,7 @@ const isOutOfStock = !product.inStock;
             <Loader2 size={24} className="animate-spin text-[#009966]" />
           </div>
         ) : reviews.length === 0 ? (
-          <div className="text-center py-10 text-[#6A7282]">
+          <div className="text-center py-10 text-theme-muted">
             <p>No reviews yet. Be the first to review this product!</p>
           </div>
         ) : (
@@ -611,14 +615,14 @@ const isOutOfStock = !product.inStock;
             {reviews.map((review) => {
               const name = review.user?.fullName || (review.user?.firstName ? `${review.user.firstName} ${review.user.lastName || ""}` : "Anonymous User");
               return (
-                <div key={review._id} className="border-b border-[#E5E7EB] pb-6">
+                <div key={review._id} className="border-b border-theme-border pb-6">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#E5E7EB] flex items-center justify-center font-bold text-[#0F172A]">
+                      <div className="w-10 h-10 rounded-full bg-[#E5E7EB] flex items-center justify-center font-bold text-theme-text">
                         {name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium text-[#0F172A]">{name}</p>
+                        <p className="font-medium text-theme-text">{name}</p>
                         <p className="text-xs text-[#99A1AF]">
                           {new Date(review.createdAt).toLocaleDateString()}
                         </p>
@@ -630,19 +634,19 @@ const isOutOfStock = !product.inStock;
                       ))}
                     </div>
                   </div>
-                  <p className="text-[#6A7282] text-sm mt-3 leading-relaxed">{review.comment}</p>
+                  <p className="text-theme-muted text-sm mt-3 leading-relaxed">{review.comment}</p>
                   
                   {review.reply && (
-                    <div className="mt-4 bg-[#F9FAFB] p-4 rounded-lg border border-[#E5E7EB]">
-                      <p className="text-xs font-bold text-[#0F172A] mb-1">Response from Seller</p>
-                      <p className="text-sm text-[#6A7282]">{review.reply}</p>
+                    <div className="mt-4 bg-[#F9FAFB] p-4 rounded-lg border border-theme-border">
+                      <p className="text-xs font-bold text-theme-text mb-1">Response from Seller</p>
+                      <p className="text-sm text-theme-muted">{review.reply}</p>
                     </div>
                   )}
 
                   <div className="mt-4 flex items-center gap-4">
                     <button 
                       onClick={() => handleMarkHelpful(review._id)}
-                      className="text-xs text-[#6A7282] flex items-center gap-1 hover:text-[#009966]"
+                      className="text-xs text-theme-muted flex items-center gap-1 hover:text-[#009966]"
                     >
                       <Plus size={12} />
                       Helpful ({review.helpfulCount || 0})
@@ -673,30 +677,30 @@ const isOutOfStock = !product.inStock;
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-[#1E293B] rounded-2xl max-w-lg w-full"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-lg w-full"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-[#1E293B] p-5">
+            <div className="flex items-center justify-between border-b border-theme-border p-5">
               <div>
-                <h3 className="font-playfair text-2xl text-white">
+                <h3 className="font-playfair text-2xl text-theme-text">
                   Ask a Question
                 </h3>
 
-                <p className="text-sm text-[#94A3B8] mt-1">
+                <p className="text-sm text-theme-muted mt-1">
                   Ask anything about this product.
                 </p>
               </div>
 
               <button
                 onClick={() => setShowQuestionModal(false)}
-                className="w-8 h-8 rounded-full hover:bg-[#1E293B] flex items-center justify-center text-[#94A3B8]"
+                className="w-8 h-8 rounded-full hover:bg-theme-surface flex items-center justify-center text-theme-muted"
               >
                 <X size={18} />
               </button>
             </div>
 
             <div className="p-5">
-              <p className="text-sm font-medium text-white mb-3">
+              <p className="text-sm font-medium text-theme-text mb-3">
                 Frequently Asked
               </p>
 
@@ -710,14 +714,14 @@ const isOutOfStock = !product.inStock;
                   <button
                     key={item}
                     onClick={() => setQuestion(item)}
-                    className="px-4 py-2 rounded-full border border-[#1E293B] text-sm text-[#CBD5E1] hover:bg-[#1E293B]"
+                    className="px-4 py-2 rounded-full border border-theme-border text-sm text-theme-text hover:bg-theme-surface"
                   >
                     {item}
                   </button>
                 ))}
               </div>
 
-              <label className="text-sm font-medium text-white">
+              <label className="text-sm font-medium text-theme-text">
                 Your Question
               </label>
 
@@ -726,13 +730,13 @@ const isOutOfStock = !product.inStock;
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Write your question..."
-                className="mt-2 w-full bg-[#020618] border border-[#1E293B] rounded-xl p-4 text-white placeholder:text-[#64748B] resize-none outline-none focus:border-[#009966]"
+                className="mt-2 w-full bg-theme-bg border border-theme-border rounded-xl p-4 text-theme-text placeholder:text-theme-muted resize-none outline-none focus:border-[#009966]"
               />
 
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   onClick={() => setShowQuestionModal(false)}
-                  className="px-5 py-2 border border-[#1E293B] text-[#CBD5E1] rounded-lg hover:bg-[#1E293B]"
+                  className="px-5 py-2 border border-theme-border text-theme-text rounded-lg hover:bg-theme-surface"
                 >
                   Cancel
                 </button>
@@ -761,16 +765,16 @@ const isOutOfStock = !product.inStock;
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#0F172A] border border-[#1E293B] rounded-2xl max-w-sm w-full"
+            className="bg-theme-surface border border-theme-border rounded-2xl max-w-sm w-full"
           >
-            <div className="flex items-center justify-between p-5 border-b border-[#1E293B]">
-              <h3 className="font-playfair text-xl font-semibold text-white">
+            <div className="flex items-center justify-between p-5 border-b border-theme-border">
+              <h3 className="font-playfair text-xl font-semibold text-theme-text">
                 Share {product?.name}
               </h3>
 
               <button
                 onClick={() => setShowShareModal(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#1E293B] text-[#94A3B8]"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-theme-surface text-theme-muted"
               >
                 <X size={18} />
               </button>
@@ -783,12 +787,12 @@ const isOutOfStock = !product.inStock;
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#1E293B] hover:bg-[#1E293B]"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
                 <div className="w-10 h-10 rounded-full bg-[#DCFCE7] flex items-center justify-center">
                   <MessageCircle size={18} className="text-[#25D366]" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">WhatsApp</span>
+                <span className="text-xs text-theme-text">WhatsApp</span>
               </a>
 
               <a
@@ -797,12 +801,12 @@ const isOutOfStock = !product.inStock;
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#1E293B] hover:bg-[#1E293B]"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
                 <div className="w-10 h-10 rounded-full bg-[#EFF6FF] flex items-center justify-center">
                   <Facebook size={18} className="text-[#1877F2]" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">Facebook</span>
+                <span className="text-xs text-theme-text">Facebook</span>
               </a>
 
               <a
@@ -811,22 +815,22 @@ const isOutOfStock = !product.inStock;
                 )}&url=${encodeURIComponent(shareUrl)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#1E293B] hover:bg-[#1E293B]"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
-                <div className="w-10 h-10 rounded-full bg-[#334155] flex items-center justify-center">
-                  <Twitter size={18} className="text-white" />
+                <div className="w-10 h-10 rounded-full bg-gray-100 border border-theme-border flex items-center justify-center">
+                  <Twitter size={18} className="text-theme-text" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">X / Twitter</span>
+                <span className="text-xs text-theme-text">X / Twitter</span>
               </a>
 
               <button
                 onClick={shareMore}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#1E293B] hover:bg-[#1E293B]"
+                className="flex flex-col items-center gap-2 p-4 rounded-xl border border-theme-border hover:bg-theme-surface"
               >
-                <div className="w-10 h-10 rounded-full bg-[#334155] flex items-center justify-center">
-                  <Share2 size={18} className="text-[#CBD5E1]" />
+                <div className="w-10 h-10 rounded-full bg-gray-100 border border-theme-border flex items-center justify-center">
+                  <Share2 size={18} className="text-theme-text" />
                 </div>
-                <span className="text-xs text-[#CBD5E1]">More</span>
+                <span className="text-xs text-theme-text">More</span>
               </button>
             </div>
           </div>
@@ -836,16 +840,16 @@ const isOutOfStock = !product.inStock;
       {/* Review Modal */}
       {showReviewModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowReviewModal(false)}>
-          <div onClick={e => e.stopPropagation()} className="bg-white rounded-2xl max-w-lg w-full p-6">
+          <div onClick={e => e.stopPropagation()} className="bg-theme-surface rounded-2xl max-w-lg w-full p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-playfair text-xl font-semibold text-[#0F172A]">Write a Review</h3>
-              <button onClick={() => setShowReviewModal(false)} className="text-[#6A7282] hover:bg-gray-100 p-1 rounded-full">
+              <h3 className="font-playfair text-xl font-semibold text-theme-text">Write a Review</h3>
+              <button onClick={() => setShowReviewModal(false)} className="text-theme-muted hover:bg-gray-100 p-1 rounded-full">
                 <X size={20} />
               </button>
             </div>
             
             <div className="mb-6">
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Overall Rating</label>
+              <label className="block text-sm font-medium text-theme-text mb-2">Overall Rating</label>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button key={star} onClick={() => setReviewRating(star)}>
@@ -856,20 +860,20 @@ const isOutOfStock = !product.inStock;
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-[#0F172A] mb-2">Your Review</label>
+              <label className="block text-sm font-medium text-theme-text mb-2">Your Review</label>
               <textarea 
                 rows={4}
                 value={reviewComment}
                 onChange={e => setReviewComment(e.target.value)}
                 placeholder="What did you like or dislike? What is this product best for?"
-                className="w-full border border-[#E5E7EB] rounded-lg p-3 text-sm outline-none focus:border-[#009966] resize-none"
+                className="w-full border border-theme-border rounded-lg p-3 text-sm outline-none focus:border-[#009966] resize-none"
               />
             </div>
 
             <div className="flex justify-end gap-3">
               <button 
                 onClick={() => setShowReviewModal(false)}
-                className="px-5 py-2 border border-[#E5E7EB] text-[#6A7282] rounded-lg font-medium hover:bg-gray-50"
+                className="px-5 py-2 border border-theme-border text-theme-muted rounded-lg font-medium hover:bg-gray-50"
               >
                 Cancel
               </button>

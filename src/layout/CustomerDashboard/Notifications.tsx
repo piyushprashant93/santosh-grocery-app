@@ -189,6 +189,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to mark as read.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       // Revert optimistic update on failure
@@ -225,6 +227,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to mark all as read.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);
@@ -258,6 +262,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
         const data = await response.json().catch(() => null);
         throw new Error(data?.message || "Failed to delete notification.");
       }
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);
@@ -298,6 +304,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
 
       setHasMore(false);
       setPage(1);
+      
+      window.dispatchEvent(new CustomEvent("notifications-updated"));
     } catch (err) {
       console.log(err);
       setNotifications(previous);
@@ -312,6 +320,20 @@ const getNotificationIcon = (type: string, title: string = "") => {
 
   useEffect(() => {
     void fetchNotifications(1, false);
+
+    const handleNewNotification = (e: Event) => {
+      const detail = (e as CustomEvent).detail as NotificationItem;
+      setNotifications((prev) => {
+        // Avoid duplicate additions
+        if (prev.some((n) => n._id === detail._id)) return prev;
+        return [detail, ...prev];
+      });
+    };
+
+    window.addEventListener("new-notification", handleNewNotification);
+    return () => {
+      window.removeEventListener("new-notification", handleNewNotification);
+    };
   }, [fetchNotifications]);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -324,7 +346,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
             Notifications
           </h1>
 
-          <p className="text-[#6A7282] mt-2">
+          <p className="text-theme-muted mt-2">
             Stay updated with your orders and exclusive offers.
           </p>
         </div>
@@ -333,7 +355,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
           <button
             onClick={markAllAsRead}
             disabled={markAllLoading || unreadCount === 0}
-            className="px-4 py-2 border border-[#E5E7EB] rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-white disabled:opacity-60"
+            className="px-4 py-2 border border-theme-border rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-theme-surface disabled:opacity-60"
           >
             {markAllLoading ? "Updating..." : "Mark all as read"}
           </button>
@@ -341,7 +363,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
           <button
             onClick={clearAllNotifications}
             disabled={clearAllLoading || notifications.length === 0}
-            className="px-4 py-2 border border-red-200 text-red-600 rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-white hover:bg-red-50 disabled:opacity-60"
+            className="px-4 py-2 border border-red-200 text-red-600 rounded-lg shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] bg-theme-surface hover:bg-red-50 disabled:opacity-60"
           >
             {clearAllLoading ? "Clearing..." : "Clear all"}
           </button>
@@ -349,7 +371,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center gap-2 text-[#6A7282] py-16">
+        <div className="flex items-center justify-center gap-2 text-theme-muted py-16">
           <Loader2 size={18} className="animate-spin" />
           Loading notifications...
         </div>
@@ -358,7 +380,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
           <p className="text-red-500">{loadError}</p>
           <button
             onClick={() => fetchNotifications(1, false)}
-            className="mt-4 px-4 py-2 border border-[#E5E7EB] rounded-lg bg-white"
+            className="mt-4 px-4 py-2 border border-theme-border rounded-lg bg-theme-surface"
           >
             Retry
           </button>
@@ -366,10 +388,10 @@ const getNotificationIcon = (type: string, title: string = "") => {
       ) : notifications.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
           <div className="w-14 h-14 rounded-full bg-[#F1F5F9] flex items-center justify-center">
-            <Bell size={24} className="text-[#94A3B8]" />
+            <Bell size={24} className="text-theme-muted" />
           </div>
-          <p className="text-[#0F172A] font-medium">No notifications yet</p>
-          <p className="text-[#94A3B8] text-sm max-w-[320px]">
+          <p className="text-theme-text font-medium">No notifications yet</p>
+          <p className="text-theme-muted text-sm max-w-[320px]">
             Order updates and offers will show up here.
           </p>
         </div>
@@ -394,8 +416,8 @@ const getNotificationIcon = (type: string, title: string = "") => {
                   className={`border lg:rounded-xl lg:p-6 rounded-lg p-3 flex lg:gap-4 gap-2 cursor-pointer transition
                   ${
                     item.isRead
-                      ? "bg-white border-[#E5E7EB]"
-                      : "bg-[#ECFDF54D] border-[#D0FAE5]"
+                      ? "bg-theme-surface border-theme-border"
+                      : "bg-[#009966]/10 border-[#009966]/30"
                   }`}
                 >
                  <div
@@ -411,7 +433,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
                       </h3>
 
                       <div className="flex items-center gap-3">
-                        <span className="text-sm text-[#6A7282] flex items-center gap-1">
+                        <span className="text-sm text-theme-muted flex items-center gap-1">
                           <Clock size={14} />
                           {new Date(item.createdAt).toLocaleString()}
                         </span>
@@ -426,7 +448,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
                             deleteNotification(item._id);
                           }}
                           disabled={deletingId === item._id}
-                          className="text-[#94A3B8] hover:text-red-500 disabled:opacity-50 p-1"
+                          className="text-theme-muted hover:text-red-500 disabled:opacity-50 p-1"
                           aria-label="Delete notification"
                         >
                           {deletingId === item._id ? (
@@ -438,7 +460,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
                       </div>
                     </div>
 
-                    <p className="text-[#6A7282] mt-1">{item.message}</p>
+                    <p className="text-theme-muted mt-1">{item.message}</p>
                   </div>
                 </div>
               );
@@ -450,7 +472,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
               <button
                 onClick={loadMore}
                 disabled={loadingMore}
-                className="px-6 py-2 border border-[#E5E7EB] rounded-lg bg-white shadow-sm disabled:opacity-60"
+                className="px-6 py-2 border border-theme-border rounded-lg bg-theme-surface shadow-sm disabled:opacity-60"
               >
                 {loadingMore ? "Loading..." : "Load more"}
               </button>
@@ -458,7 +480,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
           )}
 
           {!hasMore && (
-            <p className="text-center text-[#94A3B8] mt-8">
+            <p className="text-center text-theme-muted mt-8">
               You have reached the end of your notifications.
             </p>
           )}

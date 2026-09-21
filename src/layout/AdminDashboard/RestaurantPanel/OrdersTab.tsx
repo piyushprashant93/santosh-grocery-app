@@ -13,7 +13,7 @@ export default function OrdersTab() {
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="relative w-full max-w-md">
           <input 
             type="text"
@@ -23,7 +23,7 @@ export default function OrdersTab() {
           <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center w-full sm:w-auto">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center w-full sm:w-auto">
             <Filter size={16} />
             Filters
           </button>
@@ -31,7 +31,7 @@ export default function OrdersTab() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-100">
@@ -47,17 +47,17 @@ export default function OrdersTab() {
             {orders.map((order) => (
               <tr key={order.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="font-bold text-gray-900">{order.id}</span>
+                  <span className="font-bold text-theme-text">{order.id}</span>
                   <p className="text-xs text-gray-500 mt-0.5">{order.time}</p>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-medium text-gray-900">{order.customer}</span>
+                  <span className="text-sm font-medium text-theme-text">{order.customer}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm text-gray-600">{order.items} items</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-gray-900">{order.total}</span>
+                  <span className="text-sm font-bold text-theme-text">{order.total}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${

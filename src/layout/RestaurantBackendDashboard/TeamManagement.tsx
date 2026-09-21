@@ -9,13 +9,19 @@ import {
   MessageSquare,
   DollarSign,
   Search,
+  Plus,
   Filter,
   MoreHorizontal,
   Key,
   CheckCircle,
+  XCircle,
   Trash2,
 } from "lucide-react";
+import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { getImageUrl } from "../../utils/dataHelper";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -205,6 +211,39 @@ export default function TeamManagement({
   setActiveTab: (tab: string) => void;
 }) {
   const [tab, setTab] = useState("directory");
+  const [isAddStaffOpen, setIsAddStaffOpen] = useState(false);
+  const [isAddingStaff, setIsAddingStaff] = useState(false);
+  const [staffForm, setStaffForm] = useState({
+    name: "",
+    email: "",
+    role: "Staff"
+  });
+
+  const handleAddStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddingStaff(true);
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify(staffForm)
+      });
+      if (res.ok) {
+        toast.success("Staff member added! Login code sent via email.");
+        setIsAddStaffOpen(false);
+        setStaffForm({ name: "", email: "", role: "Staff" });
+        fetchStaff();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to add staff member");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setIsAddingStaff(false);
+    }
+  };
 
   const [staff, setStaff] = useState<any[]>([]);
   const [schedule, setSchedule] = useState<any[]>([]);
@@ -216,7 +255,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setStaff(data.data?.staff || data.staff || data.data || []);
+        setStaff(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -226,7 +265,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setSchedule(data.data?.schedule || data.schedule || data.data || []);
+        setSchedule(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -236,7 +275,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setRequests(data.data?.requests || data.requests || data.data || []);
+        setRequests(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -246,7 +285,7 @@ export default function TeamManagement({
       const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        setPayroll(data.data?.payroll || data.payroll || data.data || []);
+        setPayroll(extractList(data));
       }
     } catch(err) { console.error(err); }
   };
@@ -325,18 +364,18 @@ export default function TeamManagement({
             Team Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track daily revenue across all delivery platforms and in-house
             dining.
           </p>
         </div>
 
         <div className="flex gap-3 items-center">
-          <button className="border border-[#E5E7EB] rounded-lg px-4 py-2 flex gap-2 items-center bg-white">
+          <button className="border border-theme-border rounded-lg px-4 py-2 flex gap-2 items-center bg-theme-surface">
             <FileText size={16} />
             Export Payroll
           </button>
-          <button className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+          <button onClick={() => setIsAddStaffOpen(true)} className="bg-[#009966] text-white px-4 py-2 rounded-lg flex items-center gap-2">
             <UserPlus size={16} />
             Add Staff Member
           </button>
@@ -365,17 +404,17 @@ export default function TeamManagement({
         </div>
 
         {tab === "directory" && (
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm">
             <div className="p-6 flex items-center justify-between border-b">
               <div className="flex items-center gap-3 border rounded-lg px-3 w-[320px]">
-                <Search size={16} className="text-[#64748B]" />
+                <Search size={16} className="text-theme-muted" />
                 <input
                   placeholder="Search staff by name or role..."
                   className="w-full py-2 outline-none text-sm"
                 />
               </div>
 
-              <button className="flex items-center gap-2 text-[#64748B]">
+              <button className="flex items-center gap-2 text-theme-muted">
                 <Filter size={16} />
                 Filter
               </button>
@@ -383,7 +422,7 @@ export default function TeamManagement({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[900px]">
-                <thead className="bg-[#F8FAFC] text-sm text-[#64748B]">
+                <thead className="bg-theme-bg text-sm text-theme-muted">
                   <tr>
                     <th className="py-4 px-6">NAME</th>
                     <th>ROLE</th>
@@ -401,14 +440,14 @@ export default function TeamManagement({
                       <td className="py-5 px-6">
                         <div className="flex items-center gap-3">
                           <img
-                            src={s.imageUrl || s.image || "https://randomuser.me/api/portraits/men/32.jpg"}
+                            src={getImageUrl(s.imageUrl || s.image)}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                           <div>
-                            <p className="font-medium text-[#0F172A]">
+                            <p className="font-medium text-theme-text">
                               {s.name}
                             </p>
-                            <p className="text-sm text-[#64748B]">{s.employmentType || s.type || "Full-time"}</p>
+                            <p className="text-sm text-theme-muted">{s.employmentType || s.type || "Full-time"}</p>
                           </div>
                         </div>
                       </td>
@@ -424,14 +463,14 @@ export default function TeamManagement({
                           {s.status || "Active"}
                         </span>
                       </td>
-                      <td className="text-[#64748B]">{s.branch || "Downtown HQ"}</td>
-                      <td className="text-[#64748B]">{s.hiredDate ? new Date(s.hiredDate).toLocaleDateString() : (s.date || "-")}</td>
+                      <td className="text-theme-muted">{s.branch || "Downtown HQ"}</td>
+                      <td className="text-theme-muted">{s.hiredDate ? new Date(s.hiredDate).toLocaleDateString() : (s.date || "-")}</td>
                       <td>
                         <div className="flex gap-2 items-center">
                           <span className="bg-[#F1F5F9] px-3 py-1 rounded-md">
                             {s.loginCode || s.code || "****"}
                           </span>
-                          <Key size={14} className="text-[#64748B]" />
+                          <Key size={14} className="text-theme-muted" />
                         </div>
                       </td>
                       <td className="text-center">
@@ -439,7 +478,7 @@ export default function TeamManagement({
                           <MoreHorizontal
                             onClick={() => updatePermissions(s._id)}
                             size={18}
-                            className="text-[#94A3B8] cursor-pointer hover:text-[#0F172A]"
+                            className="text-theme-muted cursor-pointer hover:text-theme-text"
                           />
                         </div>
                       </td>
@@ -469,7 +508,7 @@ export default function TeamManagement({
                 </div>
               </div>
 
-              <button className="bg-[#0F172A] text-white px-6 py-3 rounded-lg font-medium">
+              <button className="bg-theme-surface text-theme-text px-6 py-3 rounded-lg font-medium">
                 Publish Schedule
               </button>
             </div>
@@ -478,11 +517,11 @@ export default function TeamManagement({
               {schedule.map((day, i) => (
                 <div
                   key={i}
-                  className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm overflow-hidden"
+                  className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm overflow-hidden"
                 >
                   <div className="flex justify-between items-center p-5 border-b">
                     <h3 className="font-playfair text-lg">{day.day}</h3>
-                    <p className="text-[#64748B]">{day.date}</p>
+                    <p className="text-theme-muted">{day.date}</p>
                   </div>
 
                   <div className="p-5 space-y-4">
@@ -510,7 +549,7 @@ export default function TeamManagement({
                       </div>
                     ))}
 
-                    <button className="w-full flex items-center justify-center gap-2 border rounded-lg py-3 text-[#64748B]">
+                    <button className="w-full flex items-center justify-center gap-2 border rounded-lg py-3 text-theme-muted">
                       <UserPlus size={16} />
                       Add Shift
                     </button>
@@ -522,11 +561,11 @@ export default function TeamManagement({
         )}
 
         {tab === "requests" && (
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm">
 
               <div className="p-6 border-b">
                 <h3 className="font-playfair text-xl">Staff Requests</h3>
-                <p className="text-[#64748B] mt-1">
+                <p className="text-theme-muted mt-1">
                   Manage time-off requests and shift swaps.
                 </p>
               </div>
@@ -540,14 +579,14 @@ export default function TeamManagement({
                         <Calendar size={20} className={r.iconColor || 'text-gray-600'} />
                       </div>
                       <div>
-                        <p className="font-semibold text-[#0F172A]">
+                        <p className="font-semibold text-theme-text">
                           {(r.staffId?.name || r.name)} • {r.requestType || r.type}
                         </p>
-                        <p className="text-[#64748B] mt-1">
+                        <p className="text-theme-muted mt-1">
                           {r.dateRange || r.subtitle || "-"}
                         </p>
                         {(r.reason || r.note) && (
-                          <p className="text-[#94A3B8] italic mt-1">
+                          <p className="text-theme-muted italic mt-1">
                             "{r.reason || r.note}"
                           </p>
                         )}
@@ -585,18 +624,18 @@ export default function TeamManagement({
           )}
 
         {tab === "payroll" && (
-              <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl shadow-sm">
+              <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl shadow-sm">
 
       <div className="p-6 flex items-center justify-between border-b">
 
         <div>
           <h3 className="font-playfair text-xl">Payroll Overview</h3>
-          <p className="text-[#64748B] mt-1">
+          <p className="text-theme-muted mt-1">
             Salary period: Feb 1 - Feb 14
           </p>
         </div>
 
-        <button onClick={runPayroll} className="bg-[#0F172A] text-white px-6 py-3 rounded-lg font-medium">
+        <button onClick={runPayroll} className="bg-theme-surface text-theme-text px-6 py-3 rounded-lg font-medium">
           Run Payroll
         </button>
 
@@ -606,7 +645,7 @@ export default function TeamManagement({
 
         <table className="w-full text-left min-w-[800px]">
 
-          <thead className="bg-[#F8FAFC] text-sm text-[#64748B]">
+          <thead className="bg-theme-bg text-sm text-theme-muted">
             <tr>
               <th className="py-4 px-6 font-medium">EMPLOYEE</th>
               <th>ROLE</th>
@@ -622,16 +661,16 @@ export default function TeamManagement({
               const staff = p.staffId || p;
               return (
               <tr key={p._id || i} className="border-t">
-                <td className="py-5 px-6 font-medium text-[#0F172A]">
+                <td className="py-5 px-6 font-medium text-theme-text">
                   {staff.name || p.name}
                 </td>
-                <td className="text-[#64748B]">
+                <td className="text-theme-muted">
                   {staff.role || p.role}
                 </td>
-                <td className="text-[#0F172A]">
+                <td className="text-theme-text">
                   {p.hoursWorked || p.hours} hrs
                 </td>
-                <td className="text-[#64748B]">
+                <td className="text-theme-muted">
                   ${p.hourlyRate || p.rate || "0.00"}/hr
                 </td>
                 <td className="py-5 px-6 text-end font-semibold text-[#009966]">
@@ -654,6 +693,39 @@ export default function TeamManagement({
     </div>
         )}
       </div>
+      {isAddStaffOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-md">
+            <h2 className="text-2xl font-playfair mb-4">Add Staff Member</h2>
+            <form onSubmit={handleAddStaff} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input required type="text" value={staffForm.name} onChange={e => setStaffForm({...staffForm, name: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#009966]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email (for login code)</label>
+                <input required type="email" value={staffForm.email} onChange={e => setStaffForm({...staffForm, email: e.target.value})} className="w-full border rounded-lg p-2 outline-none focus:border-[#009966]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <select value={staffForm.role} onChange={e => setStaffForm({...staffForm, role: e.target.value})} className="w-full border rounded-lg p-2 bg-theme-surface outline-none focus:border-[#009966]">
+                  <option>Manager</option>
+                  <option>Head Chef</option>
+                  <option>Chef</option>
+                  <option>Front Staff</option>
+                  <option>Staff</option>
+                </select>
+              </div>
+              <div className="flex gap-3 justify-end mt-6">
+                <button type="button" onClick={() => setIsAddStaffOpen(false)} className="px-4 py-2 rounded-lg border">Cancel</button>
+                <button type="submit" disabled={isAddingStaff} className="px-4 py-2 rounded-lg bg-[#009966] text-white disabled:opacity-50">
+                  {isAddingStaff ? "Adding..." : "Add Staff"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

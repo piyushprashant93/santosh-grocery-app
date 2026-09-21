@@ -75,12 +75,12 @@ export default function AddPartnerWizard() {
         <div className="flex items-start gap-4">
           <button 
             onClick={() => navigate('/admin/dashboard/partner-management')}
-            className="mt-1 p-1.5 text-gray-900 hover:text-gray-600 transition"
+            className="mt-1 p-1.5 text-theme-text hover:text-gray-600 transition"
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+            <h1 className="text-2xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>
               Add New Partner
             </h1>
             <p className="text-sm text-gray-500 mt-1">
@@ -121,12 +121,12 @@ export default function AddPartnerWizard() {
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
+      <div className="bg-theme-surface p-6 lg:p-8 rounded-2xl shadow-sm border border-gray-100 min-h-[400px] flex flex-col">
         
         {/* === STEP 1: Partner Information === */}
         {step === 1 && (
           <div className="flex-1 flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Partner Information</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Partner Information</h2>
             <p className="text-sm text-gray-500 mb-8">Select partner type and basic details.</p>
 
             {/* Type Toggles */}
@@ -159,43 +159,43 @@ export default function AddPartnerWizard() {
             {/* Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Business Name</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Business Name</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Tasty Bites" 
                   value={formData.businessName}
                   onChange={(e) => setFormData({...formData, businessName: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Owner Name</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Owner Name</label>
                 <input 
                   type="text" 
                   placeholder="e.g. John Doe" 
                   value={formData.ownerName}
                   onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Email Address</label>
                 <input 
                   type="email" 
                   placeholder="partner@hubnepa.com" 
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Phone Number</label>
                 <input 
                   type="tel" 
                   placeholder="+1 (555) 000-0000" 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
             </div>
@@ -205,16 +205,16 @@ export default function AddPartnerWizard() {
         {/* === STEP 2: Location & Details === */}
         {step === 2 && (
           <div className="flex-1 flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Location & Details</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Location & Details</h2>
             <p className="text-sm text-gray-500 mb-8">Address and business categorization.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Category</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Category</label>
                 <select 
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                  className="w-full bg-theme-surface border border-gray-200 text-gray-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
                 >
                   <option value="">Select category</option>
                   <option value="asian">Asian Cuisine</option>
@@ -224,33 +224,33 @@ export default function AddPartnerWizard() {
                 </select>
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Street Address</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Street Address</label>
                 <input 
                   type="text" 
                   placeholder="123 Main St" 
                   value={formData.address}
                   onChange={(e) => setFormData({...formData, address: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">City</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">City</label>
                 <input 
                   type="text" 
                   placeholder="Scranton" 
                   value={formData.city}
                   onChange={(e) => setFormData({...formData, city: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">Zip Code</label>
+                <label className="block text-sm font-semibold text-theme-text mb-2">Zip Code</label>
                 <input 
                   type="text" 
                   placeholder="18503" 
                   value={formData.zipCode}
                   onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
-                  className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
+                  className="w-full px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition" 
                 />
               </div>
             </div>
@@ -260,7 +260,7 @@ export default function AddPartnerWizard() {
         {/* === STEP 3: Verification Documents === */}
         {step === 3 && (
           <div className="flex-1 flex flex-col animate-in slide-in-from-right-4 fade-in duration-300">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Verification Documents</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Verification Documents</h2>
             <p className="text-sm text-gray-500 mb-8">Upload required business licenses.</p>
 
             <div className="flex flex-col gap-6 mb-8">
@@ -279,7 +279,7 @@ export default function AddPartnerWizard() {
                 <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                   {licenseFile ? <Check size={20} /> : <UploadCloud size={20} />}
                 </div>
-                <p className="font-bold text-gray-900 mt-2">
+                <p className="font-bold text-theme-text mt-2">
                   {licenseFile ? licenseFile.name : "Upload Business License"}
                 </p>
                 <p className="text-xs text-gray-400">PDF, JPG, or PNG (Max 5MB)</p>
@@ -300,7 +300,7 @@ export default function AddPartnerWizard() {
                 <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                   {taxIdFile ? <Check size={20} /> : <UploadCloud size={20} />}
                 </div>
-                <p className="font-bold text-gray-900 mt-2">
+                <p className="font-bold text-theme-text mt-2">
                   {taxIdFile ? taxIdFile.name : "Upload Tax ID / EIN"}
                 </p>
                 <p className="text-xs text-gray-400">PDF, JPG, or PNG (Max 5MB)</p>
@@ -314,7 +314,7 @@ export default function AddPartnerWizard() {
       <div className="mt-6 flex items-center justify-between">
         <button 
           onClick={step === 1 ? () => navigate('/admin/dashboard/partner-management') : handleBack}
-          className="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+          className="px-6 py-2.5 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
         >
           Back
         </button>
@@ -330,7 +330,7 @@ export default function AddPartnerWizard() {
           <button 
             onClick={handleFinalSubmit}
             disabled={loading}
-            className="px-6 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2.5 bg-emerald-500 text-theme-text text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50 flex items-center gap-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             Create Partner Account

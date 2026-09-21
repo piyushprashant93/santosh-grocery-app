@@ -61,7 +61,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex items-center gap-4">
           <button 
             onClick={onBack}
-            className="p-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="p-2 bg-theme-surface border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             <ArrowLeft size={20} />
           </button>
@@ -72,7 +72,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             </div>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+                <h1 className="text-2xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>
                   {name}
                 </h1>
                 {partnerData.isActive ? (
@@ -93,13 +93,13 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex items-center gap-3">
           <button 
             onClick={() => navigate(`/admin/dashboard/partner-management/${partner.id}/documents`)}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             Verify Documents
           </button>
           <button 
             onClick={() => navigate(`/admin/dashboard/partner-management/${partner.id}/settings`)}
-            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
+            className="px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg shadow-sm hover:bg-gray-50 transition"
           >
             Settings
           </button>
@@ -109,46 +109,46 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
       {/* Top Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Stat 1 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center shrink-0">
             <ShoppingBag size={20} />
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Orders</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.totalOrders || 0}</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">{partnerData.totalOrders || 0}</p>
           </div>
         </div>
 
         {/* Stat 2 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
             <DollarSign size={20} />
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Revenue</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">${(partnerData.totalRevenue || 0).toLocaleString()}</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">${(partnerData.totalRevenue || 0).toLocaleString()}</p>
           </div>
         </div>
 
         {/* Stat 3 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-orange-50 text-orange-400 flex items-center justify-center shrink-0">
             <Star size={20} />
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Rating</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.rating || "N/A"}</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">{partnerData.rating || "N/A"}</p>
           </div>
         </div>
 
         {/* Stat 4 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-fuchsia-50 text-fuchsia-500 flex items-center justify-center shrink-0">
             <Store size={20} />
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Outlets / Locations</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.outletsCount || 1}</p>
+            <p className="text-2xl font-bold text-theme-text mt-0.5">{partnerData.outletsCount || 1}</p>
           </div>
         </div>
       </div>
@@ -160,28 +160,28 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="lg:col-span-2 flex flex-col gap-6">
           
           {/* Business Information Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Business Information</h2>
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+            <h2 className="text-lg font-bold text-theme-text mb-6" style={{ fontFamily: 'serif' }}>Business Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Owner Name</p>
-                <p className="text-gray-900 font-medium">{partnerData.ownerName || partnerData.firstName + ' ' + partnerData.lastName || "N/A"}</p>
+                <p className="text-theme-text font-medium">{partnerData.ownerName || partnerData.firstName + ' ' + partnerData.lastName || "N/A"}</p>
               </div>
               
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</p>
-                <p className="text-gray-900 font-medium">{partnerData.category || "Restaurant"}</p>
+                <p className="text-theme-text font-medium">{partnerData.category || "Restaurant"}</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
-                <p className="text-gray-900 font-medium truncate">{partnerData.email || "N/A"}</p>
+                <p className="text-theme-text font-medium truncate">{partnerData.email || "N/A"}</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
+                <p className="text-theme-text font-medium flex items-center gap-2">
                   <Phone size={14} className="text-gray-400" />
                   {partnerData.phone || partnerData.phoneNumber || "N/A"}
                 </p>
@@ -189,7 +189,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
 
               <div className="md:col-span-2">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Address</p>
-                <p className="text-gray-900 font-medium flex items-center gap-2">
+                <p className="text-theme-text font-medium flex items-center gap-2">
                   <MapPin size={14} className="text-gray-400 shrink-0" />
                   {partnerData.address || "No address provided"}
                 </p>
@@ -198,9 +198,9 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
 
           {/* Recent Orders Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Recent Orders</h2>
+              <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Recent Orders</h2>
               <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700 transition">View All</button>
             </div>
 
@@ -210,7 +210,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                   <div className="flex items-center gap-4">
                     <span className="text-lg font-bold text-gray-400">#{orderNum}</span>
                     <div>
-                      <p className="text-sm font-bold text-gray-900">Order #{orderNum}</p>
+                      <p className="text-sm font-bold text-theme-text">Order #{orderNum}</p>
                       <p className="text-xs text-gray-500 mt-0.5">2 items • $45.00</p>
                     </div>
                   </div>
@@ -231,7 +231,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         <div className="flex flex-col gap-6">
           
           {/* Commission Rate Dark Card */}
-          <div className="bg-[#0F172B] rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden">
+          <div className="bg-theme-surface rounded-2xl p-6 lg:p-8 text-theme-text relative overflow-hidden">
             <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'serif' }}>Commission Rate</h2>
             
             <div className="flex items-baseline gap-2 mb-8">
@@ -252,8 +252,8 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
 
           {/* Current Status Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6" style={{ fontFamily: 'serif' }}>Current Status</h2>
+          <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+            <h2 className="text-lg font-bold text-theme-text mb-6" style={{ fontFamily: 'serif' }}>Current Status</h2>
             
             <div className="flex flex-col gap-5">
               <div className="flex justify-between items-center text-sm">
@@ -271,7 +271,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
               
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">Last Active</span>
-                <span className="font-medium text-gray-900">Recently</span>
+                <span className="font-medium text-theme-text">Recently</span>
               </div>
 
               <div className="flex justify-between items-center text-sm">

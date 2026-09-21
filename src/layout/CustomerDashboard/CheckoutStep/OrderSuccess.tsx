@@ -39,32 +39,32 @@ export default function OrderSuccess() {
         </div>
       </div>
 
-      <h1 className="font-playfair text-4xl text-white mb-3">
+      <h1 className="font-playfair text-4xl text-theme-text mb-3">
         Order Confirmed!
       </h1>
 
-      <p className="text-[#94A3B8] mb-8">
+      <p className="text-theme-muted mb-8">
         Your order{" "}
-        <span className="text-white">#{order?.orderId || "—"}</span> has been
+        <span className="text-theme-text">#{order?.orderId || "—"}</span> has been
         placed successfully.
       </p>
 
-      <div className="w-full max-w-[520px] border border-[#1D293D] rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-[#0F172B80] text-left mb-8">
+      <div className="w-full max-w-[520px] border border-theme-border rounded-lg lg:rounded-2xl lg:p-6 p-3 bg-theme-surface text-left mb-8">
         <div className="flex items-center gap-3 mb-4">
           <Truck className="text-[#60A5FA]" size={20} />
 
           <div>
-            <p className="text-white">Estimated Delivery</p>
+            <p className="text-theme-text">Estimated Delivery</p>
 
-            <p className="text-[#94A3B8] text-sm">{formattedDelivery}</p>
+            <p className="text-theme-muted text-sm">{formattedDelivery}</p>
           </div>
         </div>
 
-        <div className="w-full h-1.5 bg-[#1E293B] rounded-full mb-4">
+        <div className="w-full h-1.5 bg-theme-surface rounded-full mb-4">
           <div className="w-[35%] h-full bg-[#00BC7D] rounded-full" />
         </div>
 
-        <p className="text-[#94A3B8] text-sm">
+        <p className="text-theme-muted text-sm">
           We've sent a confirmation email to your inbox.
         </p>
       </div>
@@ -78,7 +78,7 @@ export default function OrderSuccess() {
 
       <button
         onClick={() => navigate("/customer/dashboard")}
-        className="text-[#94A3B8]"
+        className="text-theme-muted"
       >
         Back to Home
       </button>

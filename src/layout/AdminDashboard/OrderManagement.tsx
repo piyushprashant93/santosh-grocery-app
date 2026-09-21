@@ -150,10 +150,10 @@ export default function OrderManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Order Management</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Order Management</h1>
           <p className="text-gray-500 mt-1">Track and manage all customer orders across the platform.</p>
         </div>
-        <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
+        <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
           <Download size={18} />
           Export Orders
         </button>
@@ -203,9 +203,9 @@ export default function OrderManagement() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative min-h-[400px]">
+      <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col relative min-h-[400px]">
         {/* Table Controls */}
-        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-white z-10">
+        <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-theme-surface z-10">
           <div className="relative w-full sm:w-[400px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
@@ -219,7 +219,7 @@ export default function OrderManagement() {
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-gray-50/50 text-sm"
             />
           </div>
-          <button className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
+          <button className="px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
             <Filter size={16} />
             Filter
           </button>
@@ -235,7 +235,7 @@ export default function OrderManagement() {
         {!loading && error && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-16 p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+            <button onClick={fetchOrders} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
           </div>
         )}
         {!loading && !error && orders.length === 0 && (
@@ -269,7 +269,7 @@ export default function OrderManagement() {
                 return (
                   <tr key={order._id || index} className="hover:bg-gray-50/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="font-bold text-gray-900 text-sm">
+                      <span className="font-bold text-theme-text text-sm">
                         {formatId(order.orderId || order._id)}
                       </span>
                     </td>
@@ -280,7 +280,7 @@ export default function OrderManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="font-semibold text-gray-900 text-sm">{customerName}</span>
+                      <span className="font-semibold text-theme-text text-sm">{customerName}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-gray-500 text-sm">{vendorName}</span>
@@ -292,7 +292,7 @@ export default function OrderManagement() {
                       {getStatusBadge(order.orderStatus)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="font-bold text-gray-900">${(order.totalAmount || 0).toFixed(2)}</span>
+                      <span className="font-bold text-theme-text">${(order.totalAmount || 0).toFixed(2)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition inline-flex">
@@ -310,7 +310,7 @@ export default function OrderManagement() {
         {!loading && orders.length > 0 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between mt-auto">
             <span className="text-sm text-gray-500">
-              Showing page <span className="font-medium text-gray-900">{page}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+              Showing page <span className="font-medium text-theme-text">{page}</span> of <span className="font-medium text-theme-text">{totalPages}</span>
             </span>
             <div className="flex items-center gap-2">
               <button 

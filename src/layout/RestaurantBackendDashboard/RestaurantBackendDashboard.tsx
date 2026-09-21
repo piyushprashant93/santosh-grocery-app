@@ -14,143 +14,22 @@ import {
 import ReportChartCard from "./ReportChartCard";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { getImageUrl } from "../../utils/dataHelper";
+
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
-const monthlyData = [
-  { name: "Jan", value: 40000 },
-  { name: "Feb", value: 35000 },
-  { name: "Mar", value: 45000 },
-  { name: "Apr", value: 48000 },
-  { name: "May", value: 52000 },
-  { name: "Jun", value: 45000 },
-];
 
-const expensesData = [
-  { name: "Jan", value: 28000 },
-  { name: "Feb", value: 25000 },
-  { name: "Mar", value: 31000 },
-  { name: "Apr", value: 27000 },
-  { name: "May", value: 29500 },
-  { name: "Jun", value: 28000 },
-];
 
-const maintenanceData = [
-  { name: "Jan", value: 3200 },
-  { name: "Feb", value: 2800 },
-  { name: "Mar", value: 4000 },
-  { name: "Apr", value: 3400 },
-  { name: "May", value: 2900 },
-  { name: "Jun", value: 3300 },
-];
 
-const salaryData = [
-  { name: "Jan", value: 18000 },
-  { name: "Feb", value: 18000 },
-  { name: "Mar", value: 18500 },
-  { name: "Apr", value: 18500 },
-  { name: "May", value: 19200 },
-  { name: "Jun", value: 18700 },
-];
 
-const stats = [
-  {
-    title: "Sales – This Month",
-    value: "$45,250",
-    change: "+12.5%",
-    icon: DollarSign,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    trend: "up",
-  },
-  {
-    title: "Expenses – This Month",
-    value: "$28,150",
-    change: "+8.2%",
-    icon: TrendingUp,
-    iconBg: "bg-blue-100",
-    iconColor: "text-[#2563EB]",
-    trend: "up",
-  },
-  {
-    title: "Total Staff – This Month",
-    value: "24",
-    change: "+2",
-    icon: Users,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    trend: "up",
-  },
-  {
-    title: "Salary – This Month",
-    value: "$18,500",
-    change: "+5.7%",
-    icon: Wallet,
-    iconBg: "bg-orange-100",
-    iconColor: "text-orange-600",
-    trend: "up",
-  },
-];
 
-const orders = [
-  {
-    id: "#ORD-8821",
-    customer: "John Doe",
-    time: "2 min ago",
-    items: "2x Chicken Burger, 1x Coke",
-    amount: "$28.50",
-    status: "New",
-  },
-  {
-    id: "#ORD-8820",
-    customer: "Alice Smith",
-    time: "15 min ago",
-    items: "1x Veg Pizza, 1x Garlic Bread",
-    amount: "$32.00",
-    status: "Cooking",
-  },
-  {
-    id: "#ORD-8819",
-    customer: "Bob Wilson",
-    time: "25 min ago",
-    items: "3x Pasta Alfredo",
-    amount: "$45.00",
-    status: "Ready",
-  },
-  {
-    id: "#ORD-8818",
-    customer: "Emma Davis",
-    time: "1 hour ago",
-    items: "1x Caesar Salad",
-    amount: "$15.50",
-    status: "Delivered",
-  },
-];
 
-const popularItems = [
-  {
-    name: "Spicy Chicken Burger",
-    orders: 24,
-    price: "$12.99",
-    image: "https://images.unsplash.com/photo-1608039755401-742074f0548d?w=200",
-  },
-  {
-    name: "Margherita Pizza",
-    orders: 18,
-    price: "$15.99",
-    image: "https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=200",
-  },
-  {
-    name: "Caesar Salad",
-    orders: 16,
-    price: "$9.99",
-    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=200",
-  },
-  {
-    name: "Pasta Alfredo",
-    orders: 14,
-    price: "$13.99",
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200",
-  },
-];
+
+
+
+
+
+
+
 
 const statusStyles: any = {
   New: "bg-blue-100 text-blue-600",
@@ -166,72 +45,81 @@ export default function RestaurantBackendDashboard({
 }) {
   const [dashboardData, setDashboardData] = useState<any>(null);
 
+  
   useEffect(() => {
-    const fetchDashboard = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", {
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          }
+        const headers = {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        };
+
+        const [dashRes, reportsRes] = await Promise.all([
+          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", { headers }),
+          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/reports?days=7", { headers })
+        ]);
+
+        const dashData = dashRes.ok ? await dashRes.json() : {};
+        const reportsData = reportsRes.ok ? await reportsRes.json() : {};
+
+        setDashboardData({
+          ...dashData.data,
+          reports: reportsData.data
         });
-        if (res.ok) {
-          const json = await res.json();
-          setDashboardData(json.data || json);
-        }
       } catch (err) {
         console.error(err);
       }
     };
-    fetchDashboard();
+    fetchData();
   }, []);
+
 
   const activeStats = [
     {
       title: "Sales – This Month",
-      value: dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : stats[0].value,
-      change: dashboardData?.salesChange || stats[0].change,
+      value: dashboardData?.totalSales ? `$${dashboardData.totalSales.toLocaleString()}` : "$0",
+      change: dashboardData?.salesChange || "0%",
       icon: DollarSign,
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
-      trend: dashboardData?.salesTrend || stats[0].trend,
+      trend: dashboardData?.salesTrend || "up",
     },
     {
       title: "Expenses – This Month",
-      value: dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : stats[1].value,
-      change: dashboardData?.expensesChange || stats[1].change,
+      value: dashboardData?.totalExpenses ? `$${dashboardData.totalExpenses.toLocaleString()}` : "$0",
+      change: dashboardData?.expensesChange || "0%",
       icon: TrendingUp,
       iconBg: "bg-blue-100",
       iconColor: "text-[#2563EB]",
-      trend: dashboardData?.expensesTrend || stats[1].trend,
+      trend: dashboardData?.expensesTrend || "up",
     },
     {
       title: "Total Staff – This Month",
-      value: dashboardData?.totalStaff || stats[2].value,
-      change: dashboardData?.staffChange || stats[2].change,
+      value: dashboardData?.totalStaff || "0",
+      change: dashboardData?.staffChange || "0",
       icon: Users,
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
-      trend: dashboardData?.staffTrend || stats[2].trend,
+      trend: dashboardData?.staffTrend || "up",
     },
     {
       title: "Salary – This Month",
-      value: dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : stats[3].value,
-      change: dashboardData?.salaryChange || stats[3].change,
+      value: dashboardData?.totalSalary ? `$${dashboardData.totalSalary.toLocaleString()}` : "$0",
+      change: dashboardData?.salaryChange || "0%",
       icon: Wallet,
       iconBg: "bg-orange-100",
       iconColor: "text-orange-600",
-      trend: dashboardData?.salaryTrend || stats[3].trend,
+      trend: dashboardData?.salaryTrend || "up",
     },
   ];
 
-  const activeOrders = dashboardData?.recentOrders || orders;
-  const activePopularItems = dashboardData?.popularItems || popularItems;
-  const activeMonthlyData = dashboardData?.monthlyData || monthlyData;
-  const activeExpensesData = dashboardData?.expensesData || expensesData;
-  const activeMaintenanceData = dashboardData?.maintenanceData || maintenanceData;
-  const activeSalaryData = dashboardData?.salaryData || salaryData;
+  const activeOrders = dashboardData?.recentOrders || [];
+  const activePopularItems = dashboardData?.popularItems || [];
+  const activeMonthlyData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: d.revenue })) || [];
+  const activeExpensesData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: d.expenses || 0 })) || [];
+  const activeMaintenanceData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: 0 })) || [];
+  const activeSalaryData = dashboardData?.reports?.dailyRevenue?.map((d: any) => ({ name: d.date, value: dashboardData?.expenses?.salary || 0 })) || [];
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
   const branches = ["All Branches", "Branch 1", "Branch 2"];
@@ -253,11 +141,11 @@ export default function RestaurantBackendDashboard({
           <h1 className="text-3xl lg:text-[34px] font-semibold font-playfair">
             Dashboard
           </h1>
-          <p className="text-[#64748B]">
+          <p className="text-theme-muted">
             Welcome back! Here's what's happening in your restaurant today.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-[#64748B]">
+        <div className="flex items-center gap-2 text-sm text-theme-muted">
           <Calendar size={16} /> Last updated: Feb 20, 2026, 10:30 AM
         </div>
       </div>
@@ -270,13 +158,13 @@ export default function RestaurantBackendDashboard({
             return (
               <div
                 key={i}
-                className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+                className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-[#64748B] text-sm">{s.title}</p>
+                    <p className="text-theme-muted text-sm">{s.title}</p>
 
-                    <h3 className="text-[28px] font-playfair mt-2 text-[#0F172A]">
+                    <h3 className="text-[28px] font-playfair mt-2 text-theme-text">
                       {s.value}
                     </h3>
                   </div>
@@ -295,10 +183,10 @@ export default function RestaurantBackendDashboard({
                     {s.change}
                   </span>
 
-                  <span className="text-[#94A3B8] ml-2">vs last month</span>
+                  <span className="text-theme-muted ml-2">vs last month</span>
                 </div>
 
-                <p className="text-[#94A3B8] text-sm mt-3">
+                <p className="text-theme-muted text-sm mt-3">
                   Updated after monthly report generation
                 </p>
               </div>
@@ -307,7 +195,7 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-3">
-          <h2 className="text-2xl font-semibold text-[#0F172A]">
+          <h2 className="text-2xl font-semibold text-theme-text">
             Monthly Restaurant Report
           </h2>
 
@@ -316,7 +204,7 @@ export default function RestaurantBackendDashboard({
               <select
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
-                className="appearance-none border border-[#E5E7EB] bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
+                className="appearance-none border border-theme-border bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
               >
                 {months.map((m) => (
                   <option key={m}>{m}</option>
@@ -325,7 +213,7 @@ export default function RestaurantBackendDashboard({
 
               <ChevronDown
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
               />
             </div>
 
@@ -333,7 +221,7 @@ export default function RestaurantBackendDashboard({
               <select
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
-                className="appearance-none border border-[#E5E7EB] bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
+                className="appearance-none border border-theme-border bg-[#fff] px-4 pr-10 py-3 rounded-lg text-sm outline-none"
               >
                 {branches.map((b) => (
                   <option key={b}>{b}</option>
@@ -342,11 +230,11 @@ export default function RestaurantBackendDashboard({
 
               <ChevronDown
                 size={16}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-theme-muted"
               />
             </div>
 
-            <button className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#059669] text-theme-text px-5 py-2.5 rounded-lg shadow">
               <Download size={16} />
               Download Report (PDF)
             </button>
@@ -388,23 +276,23 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-3">
-          <h2 className="text-2xl font-semibold text-[#0F172A]">
+          <h2 className="text-2xl font-semibold text-theme-text">
             Other Expenses Breakdown
           </h2>
 
           <div className="flex flex-wrap items-center gap-3">
-            <button className="flex items-center gap-2 bg-[#059669] text-white px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#059669] text-theme-text px-5 py-2.5 rounded-lg shadow">
               Overview
             </button>
 
-            <button className="flex items-center gap-2 bg-[#fff] text-black px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#fff] text-theme-text px-5 py-2.5 rounded-lg shadow">
               Detailed View
             </button>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5 mb-5">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
             <h3 className="text-lg font-medium mb-4">Expense Distribution</h3>
 
             <div className="h-[260px] flex items-center justify-center">
@@ -427,11 +315,11 @@ export default function RestaurantBackendDashboard({
             </div>
           </div>
 
-          <div className="col-span-2 border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
+          <div className="col-span-2 border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-4 lg:p-6 shadow-sm">
             <div className="flex justify-between mb-4">
               <h3 className="text-lg font-medium">Expense Categories</h3>
 
-              <p className="text-[#64748B]">Total: ${total.toLocaleString()}</p>
+              <p className="text-theme-muted">Total: ${total.toLocaleString()}</p>
             </div>
 
             <div className="space-y-5">
@@ -444,11 +332,11 @@ export default function RestaurantBackendDashboard({
                         style={{ backgroundColor: COLORS[i] }}
                       />
 
-                      <p className="text-[#0F172A] font-medium">{item.name}</p>
+                      <p className="text-theme-text font-medium">{item.name}</p>
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <p className="text-[#64748B] text-sm">{item.percent}%</p>
+                      <p className="text-theme-muted text-sm">{item.percent}%</p>
 
                       <p className="font-semibold">
                         ${item.value.toLocaleString()}
@@ -472,7 +360,7 @@ export default function RestaurantBackendDashboard({
         </div>
 
         <div className="grid lg:grid-cols-2 gap-5">
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-playfair">Recent Orders</h3>
 
@@ -486,7 +374,7 @@ export default function RestaurantBackendDashboard({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="border-b text-xs text-[#64748B] tracking-wide">
+                <thead className="border-b text-xs text-theme-muted tracking-wide">
                   <tr>
                     <th className="py-3">ORDER ID</th>
                     <th className="py-3">CUSTOMER</th>
@@ -504,7 +392,7 @@ export default function RestaurantBackendDashboard({
 
                     return (
                       <tr key={i} className="border-b last:border-none">
-                        <td className="py-5 font-medium text-[#0F172A]">
+                        <td className="py-5 font-medium text-theme-text">
                           <div>
                             <p>{prefix}-</p>
                             <p>{number}</p>
@@ -513,10 +401,10 @@ export default function RestaurantBackendDashboard({
 
                         <td className="py-5">
                           <p className="font-medium">{o.customer}</p>
-                          <p className="text-sm text-[#64748B]">{o.time}</p>
+                          <p className="text-sm text-theme-muted">{o.time}</p>
                         </td>
 
-                        <td className="py-5 text-[#64748B] max-w-[200px]">
+                        <td className="py-5 text-theme-muted max-w-[200px]">
                           {o.items}
                         </td>
 
@@ -537,7 +425,7 @@ export default function RestaurantBackendDashboard({
             </div>
           </div>
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-playfair">Popular Items</h3>
 
@@ -554,27 +442,27 @@ export default function RestaurantBackendDashboard({
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img
-                      src={p.image}
+                      src={getImageUrl(p.image)}
                       className="w-14 h-14 rounded-xl object-cover"
                     />
 
                     <div>
-                      <p className="font-medium text-[#0F172A]">{p.name}</p>
+                      <p className="font-medium text-theme-text">{p.name}</p>
 
-                      <p className="text-sm text-[#64748B]">
+                      <p className="text-sm text-theme-muted">
                         {p.orders} orders today
                       </p>
                     </div>
                   </div>
 
-                  <p className="font-semibold text-[#0F172A]">{p.price}</p>
+                  <p className="font-semibold text-theme-text">{p.price}</p>
                 </div>
               ))}
             </div>
 
             <button
               onClick={() => setActiveTab("reports")}
-              className="mt-6 w-full border border-[#E5E7EB] rounded-lg py-3 font-medium text-[#334155]"
+              className="mt-6 w-full border border-theme-border rounded-lg py-3 font-medium text-[#334155]"
             >
               View Full Report
             </button>

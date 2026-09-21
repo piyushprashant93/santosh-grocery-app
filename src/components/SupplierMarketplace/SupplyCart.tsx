@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Trash2, Plus, Minus, CreditCard, ShoppingBag } from "lucide-react";
+import { getImageUrl } from "../../utils/dataHelper";
+import { useCurrency } from "../../context/CurrencyContext";
+
+
 
 export default function SupplyCart({
   role,
@@ -8,6 +12,7 @@ export default function SupplyCart({
   role: "retailer" | "restaurant-panel";
   onBack: () => void;
 }) {
+  const { formatPrice } = useCurrency();
   const [cart, setCart] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -15,7 +20,7 @@ export default function SupplyCart({
   const fetchCart = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -44,7 +49,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/items/${itemId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +73,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/items/${itemId}`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -91,7 +96,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/clear`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -113,7 +118,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/supply-cart/checkout`, {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/checkout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`
@@ -144,7 +149,7 @@ export default function SupplyCart({
         <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition">
           <ArrowLeft size={20} className="text-gray-600" />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800">Supply Cart</h1>
+        <h1 className="text-2xl font-bold text-theme-text">Supply Cart</h1>
       </div>
 
       {loading ? (
@@ -152,10 +157,10 @@ export default function SupplyCart({
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
         </div>
       ) : !cart || !cart.items || cart.items.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
+        <div className="bg-theme-surface rounded-xl border border-gray-200 p-12 flex flex-col items-center justify-center text-gray-500 shadow-sm">
            <ShoppingBag size={48} className="text-gray-300 mb-4" />
            <p className="text-lg font-medium">Your supply cart is empty.</p>
-           <button onClick={onBack} className="mt-6 px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition shadow-md shadow-orange-200">
+           <button onClick={onBack} className="mt-6 px-6 py-2.5 bg-orange-600 text-theme-text rounded-lg hover:bg-orange-700 transition shadow-md shadow-orange-200">
               Browse Suppliers
            </button>
         </div>
@@ -163,24 +168,24 @@ export default function SupplyCart({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
            <div className={`col-span-1 lg:col-span-2 space-y-4 ${processing ? 'opacity-50 pointer-events-none' : ''}`}>
              <div className="flex justify-between items-center mb-4">
-               <h2 className="text-lg font-semibold text-gray-800">Items ({cart.items.length})</h2>
+               <h2 className="text-lg font-semibold text-theme-text">Items ({cart.items.length})</h2>
                <button onClick={clearCart} className="text-red-500 hover:text-red-700 text-sm font-medium transition">
                  Clear Cart
                </button>
              </div>
              
              {cart.items.map((item: any) => (
-                <div key={item._id || item.id} className="bg-white rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm">
+                <div key={item._id || item.id} className="bg-theme-surface rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center shadow-sm">
                    <div className="w-20 h-20 bg-gray-50 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100">
                       {item.product?.image ? (
-                        <img src={item.product.image} alt={item.product?.name} className="w-full h-full object-cover" />
+                        <img src={getImageUrl(item.product.image)} alt={item.product?.name} className="w-full h-full object-cover" />
                       ) : (
                         <ShoppingBag size={24} className="text-gray-300" />
                       )}
                    </div>
                    
                    <div className="flex-1 min-w-0">
-                     <h3 className="font-semibold text-gray-800 truncate">{item.product?.name || "Product Name"}</h3>
+                     <h3 className="font-semibold text-theme-text truncate">{item.product?.name || "Product Name"}</h3>
                      <p className="text-sm text-gray-500 mb-2">{item.product?.supplier?.name || "Supplier"}</p>
                      <div className="text-orange-600 font-bold">${item.price || item.product?.price || 0} <span className="text-gray-400 text-xs font-normal">/ unit</span></div>
                    </div>
@@ -190,13 +195,13 @@ export default function SupplyCart({
                         <button onClick={() => updateQuantity(item._id || item.id, (item.quantity || 1) - 1)} className="p-2 hover:bg-gray-200 text-gray-600 transition">
                            <Minus size={16} />
                         </button>
-                        <span className="w-10 text-center font-medium text-gray-800">{item.quantity}</span>
+                        <span className="w-10 text-center font-medium text-theme-text">{item.quantity}</span>
                         <button onClick={() => updateQuantity(item._id || item.id, (item.quantity || 1) + 1)} className="p-2 hover:bg-gray-200 text-gray-600 transition">
                            <Plus size={16} />
                         </button>
                       </div>
                       
-                      <div className="font-bold text-gray-800 w-20 text-right">
+                      <div className="font-bold text-theme-text w-20 text-right">
                          ${((item.price || item.product?.price || 0) * (item.quantity || 1)).toFixed(2)}
                       </div>
 
@@ -209,37 +214,37 @@ export default function SupplyCart({
            </div>
 
            <div className="col-span-1">
-             <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm sticky top-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h2>
+             <div className="bg-theme-surface rounded-xl border border-gray-200 p-6 shadow-sm sticky top-6">
+                <h2 className="text-lg font-semibold text-theme-text mb-4">Order Summary</h2>
                 
                 <div className="space-y-3 mb-6">
                    <div className="flex justify-between text-gray-600">
                       <span>Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>{formatPrice(subtotal)}</span>
                    </div>
                    {cart.discount && cart.discount > 0 ? (
                    <div className="flex justify-between text-gray-600">
                       <span>Bulk Discount</span>
-                      <span className="text-green-600">-${cart.discount.toFixed(2)}</span>
+                      <span className="text-green-600">-{formatPrice(cart.discount)}</span>
                    </div>
                    ) : null}
                    {cart.tax && cart.tax > 0 ? (
                    <div className="flex justify-between text-gray-600">
                       <span>Taxes & Fees</span>
-                      <span>${cart.tax.toFixed(2)}</span>
+                      <span>{formatPrice(cart.tax)}</span>
                    </div>
                    ) : null}
                    
-                   <div className="pt-3 mt-3 border-t border-gray-100 flex justify-between font-bold text-xl text-gray-900">
+                   <div className="pt-3 mt-3 border-t border-gray-100 flex justify-between font-bold text-xl text-theme-text">
                       <span>Total</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>{formatPrice(total)}</span>
                    </div>
                 </div>
 
                 <button
                   onClick={handleCheckout}
                   disabled={processing || cart.items.length === 0}
-                  className="w-full py-3.5 rounded-xl bg-orange-600 text-white font-semibold text-lg hover:bg-orange-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-orange-200"
+                  className="w-full py-3.5 rounded-xl bg-orange-600 text-theme-text font-semibold text-lg hover:bg-orange-700 transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-orange-200"
                 >
                    {processing ? (
                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

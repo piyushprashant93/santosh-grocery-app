@@ -1,5 +1,6 @@
-import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar } from "lucide-react"
+import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 const authHeaders = () => {
@@ -10,108 +11,7 @@ const authHeaders = () => {
   };
 };
 
-const orders = [
-  {
-    id: "#ORD-8821",
-    date: "Today, 10:30 AM",
-    customer: "John Doe",
-    initial: "J",
-    type: "Delivery",
-    items: "2x Chicken Burger, 1x Coke",
-    total: "$24.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8820",
-    date: "Yesterday, 8:15 PM",
-    customer: "Alice Johnson",
-    initial: "A",
-    type: "Dine-in",
-    items: "1x Caesar Salad, 1x Water",
-    total: "$14.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8819",
-    date: "Yesterday, 7:45 PM",
-    customer: "Robert Smith",
-    initial: "R",
-    type: "Dine-in",
-    items: "2x Steak, 1x Red Wine",
-    total: "$85.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8818",
-    date: "Yesterday, 6:30 PM",
-    customer: "Emily Davis",
-    initial: "E",
-    type: "Pickup",
-    items: "1x Veggie Pizza",
-    total: "$16.00",
-    status: "Cancelled"
-  },
-  {
-    id: "#ORD-8817",
-    date: "Yesterday, 1:00 PM",
-    customer: "Michael Wilson",
-    initial: "M",
-    type: "Delivery",
-    items: "3x Tacos, 2x Soda",
-    total: "$22.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8816",
-    date: "Feb 10, 12:30 PM",
-    customer: "Sarah Brown",
-    initial: "S",
-    type: "Dine-in",
-    items: "1x Pasta Alfredo",
-    total: "$18.50",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8815",
-    date: "Feb 10, 11:45 AM",
-    customer: "David Miller",
-    initial: "D",
-    type: "Delivery",
-    items: "1x Burger Meal",
-    total: "$15.00",
-    status: "Refunded"
-  },
-  {
-    id: "#ORD-8814",
-    date: "Feb 09, 8:15 PM",
-    customer: "Jennifer Wu",
-    initial: "J",
-    type: "Delivery",
-    items: "1x Sushi Platter, 2x Miso Soup",
-    total: "$42.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8813",
-    date: "Feb 09, 7:30 PM",
-    customer: "Tom Harris",
-    initial: "T",
-    type: "Pickup",
-    items: "1x Pepperoni Pizza, 1x Coke",
-    total: "$21.00",
-    status: "Completed"
-  },
-  {
-    id: "#ORD-8812",
-    date: "Feb 09, 1:15 PM",
-    customer: "Emma Wilson",
-    initial: "E",
-    type: "Delivery",
-    items: "2x Vegan Wrap, 1x Smoothie",
-    total: "$28.50",
-    status: "Completed"
-  }
-]
+
 
 const statusStyles: any = {
   Completed: "bg-green-100 text-green-700",
@@ -128,6 +28,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const [end, setEnd] = useState("")
   const [openFilter, setOpenFilter] = useState(false)
   const [types, setTypes] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
   const [historyOrders, setHistoryOrders] = useState<any[]>([])
   const [historyPage, setHistoryPage] = useState(1)
   const [historyTotal, setHistoryTotal] = useState(0)
@@ -140,93 +41,79 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       setTypes([...types, type])
     }
   }
-  const [newOrders, setNewOrders] = useState([
-    {
-      id: "#ORD-8825",
-      time: "Just now",
-      type: "Delivery",
-      name: "Michael Brown",
-      items: ["2x Beef Burger", "1x French Fries", "2x Coke"],
-      price: "$32.50"
-    },
-    {
-      id: "#ORD-8824",
-      time: "5 min ago",
-      type: "Pickup",
-      name: "Sarah Connor",
-      items: ["1x Margherita Pizza", "1x Garlic Bread"],
-      price: "$18.00"
-    }
-  ])
+  const [newOrders, setNewOrders] = useState<any[]>([])
+  const [cooking, setCooking] = useState<any[]>([])
+  const [ready, setReady] = useState<any[]>([])
 
-  const [cooking, setCooking] = useState([
-    {
-      id: "#ORD-8823",
-      time: "15 min ago",
-      type: "Dine-in",
-      name: "James Wilson",
-      items: ["3x Chicken Wings", "2x Beer"],
-      price: "$45.00"
-    }
-  ])
-
-  const [ready, setReady] = useState([
-    {
-      id: "#ORD-8822",
-      time: "25 min ago",
-      type: "Delivery",
-      name: "Emily Clark",
-      items: ["1x Pasta Carbonara"],
-      price: "$16.50"
-    }
-  ])
+  const [loadingOrderId, setLoadingOrderId] = useState<string | null>(null);
 
   const updateOrderStatus = async (orderId: string, status: string, callback?: () => void) => {
+    if (!orderId) {
+      toast.error("Invalid Order ID");
+      return;
+    }
+    setLoadingOrderId(orderId);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${orderId}/status`, {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
       });
       if (res.ok) {
+        toast.success(`Order marked as ${status}`);
         if (callback) callback();
+      } else {
+        const data = await res.json();
+        toast.error(data.message || "Failed to update order status");
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setLoadingOrderId(null);
     }
   };
 
   const acceptOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "cooking", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "preparing", () => {
       setNewOrders(prev => prev.filter((_, i) => i !== index))
-      setCooking(prev => [...prev, { ...order, status: "cooking" }])
+      setCooking(prev => [...prev, { ...order, status: "preparing" }])
     });
   }
 
+  const [acceptingAll, setAcceptingAll] = useState(false);
+
   const acceptAllOrders = async () => {
+    setAcceptingAll(true);
     try {
       const res = await fetch(`${API_BASE}/restaurant-panel/orders/accept-all`, {
         method: "PUT",
         headers: authHeaders()
       });
       if (res.ok) {
-        setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "cooking" }))])
+        toast.success("All new orders accepted");
+        setCooking(prev => [...prev, ...newOrders.map(o => ({ ...o, status: "preparing" }))])
         setNewOrders([])
+      } else {
+        toast.error("Failed to accept all orders");
       }
     } catch (err) {
       console.error(err);
+      toast.error("An error occurred");
+    } finally {
+      setAcceptingAll(false);
     }
   }
 
   const markReady = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "ready", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "ready", () => {
       setCooking(prev => prev.filter((_, i) => i !== index))
       setReady(prev => [...prev, { ...order, status: "ready" }])
     });
   }
 
   const completeOrder = (order: any, index: number) => {
-    updateOrderStatus(order._id || order.id, "completed", () => {
+    updateOrderStatus(order._id || order.id || order.orderId, "delivered", () => {
       setReady(prev => prev.filter((_, i) => i !== index))
     });
   }
@@ -236,12 +123,11 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       const res = await fetch(`${API_BASE}/restaurant-panel/orders/live`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
-        const live = data.data?.orders || data.orders || data.data || [];
-        if (live.length > 0) {
-          setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New"));
-          setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking"));
-          setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
-        }
+        const liveRaw = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
+        const live = Array.isArray(liveRaw) ? liveRaw : [];
+        setNewOrders(live.filter((o: any) => o.status === "pending" || o.status === "New" || o.status === "confirmed"));
+        setCooking(live.filter((o: any) => o.status === "cooking" || o.status === "Cooking" || o.status === "preparing"));
+        setReady(live.filter((o: any) => o.status === "ready" || o.status === "Ready"));
       }
     } catch (err) {
       console.error(err);
@@ -251,16 +137,23 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const fetchHistoryOrders = async (page = 1) => {
     setHistoryLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?page=${page}`, { headers: authHeaders() });
+      const queryParams = new URLSearchParams({ page: page.toString() });
+      if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
+      if (start) queryParams.append("dateFrom", start);
+      if (end) queryParams.append("dateTo", end);
+      if (searchQuery) queryParams.append("search", searchQuery);
+      if (types.length > 0) queryParams.append("type", types.join(","));
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
-        setHistoryOrders(historyList.length > 0 ? historyList : orders); // Fallback to mock data if empty
-        setHistoryTotal(data.data?.total || data.total || orders.length);
+        setHistoryOrders(historyList);
+        setHistoryTotal(data.data?.total || data.total || 0);
       }
     } catch (err) {
       console.error(err);
-      setHistoryOrders(orders);
+      setHistoryOrders([]);
     } finally {
       setHistoryLoading(false);
     }
@@ -272,52 +165,62 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   useEffect(() => {
     if (tab === "history") {
-      fetchHistoryOrders(historyPage);
+      const delayDebounceFn = setTimeout(() => {
+        fetchHistoryOrders(historyPage);
+      }, 500);
+      return () => clearTimeout(delayDebounceFn);
     }
-  }, [tab, historyPage]);
+  }, [tab, historyPage, status, start, end, searchQuery]);
 
-  const Card = ({ order, action, actionLabel, color }: { order: any, action?: () => void, actionLabel?: string, color?: string }) => (
-    <div className="bg-white rounded-xl p-5 border border-[#E5E7EB] shadow-sm">
+  const Card = ({ order, action, actionLabel, color, isLoading }: { order: any, action?: () => void, actionLabel?: string, color?: string, isLoading?: boolean }) => (
+    <div className="bg-theme-surface rounded-xl p-5 border border-theme-border shadow-sm">
 
       <div className="flex justify-between items-start">
 
-        <h3 className="font-playfair text-lg">{order.id}</h3>
+        <h3 className="font-playfair text-lg">{order.id || order._id || `#ORD-8800`}</h3>
 
-        <MoreHorizontal size={18} className="text-[#94A3B8]" />
+        <MoreHorizontal size={18} className="text-theme-muted" />
 
       </div>
 
-      <p className="text-sm text-[#64748B] flex items-center gap-2 mt-1">
+      <p className="text-sm text-theme-muted flex items-center gap-2 mt-1">
         <Clock size={14} />
-        {order.time} • {order.type}
+        {order.time || "Just now"} • {order.type || "Pickup"}
       </p>
 
-      <p className="font-medium text-[#0F172A] mt-4">
-        {order.name}
+      <p className="font-medium text-theme-text mt-4">
+        {order.name || order.customer || "Walk-in Customer"}
       </p>
 
-      <ul className="mt-3 space-y-1 text-[#64748B]">
+      <ul className="mt-3 space-y-1 text-theme-muted">
 
-        {order.items.map((item: string, i: number) => (
+        {Array.isArray(order.items) ? order.items.map((item: string, i: number) => (
           <li key={i} className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full" />
             {item}
           </li>
-        ))}
+        )) : typeof order.items === 'string' ? order.items.split(',').map((item: string, i: number) => (
+          <li key={i} className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-[#94A3B8] rounded-full" />
+            {item.trim()}
+          </li>
+        )) : null}
 
       </ul>
 
       <div className="flex justify-between items-center mt-5">
 
         <p className="font-semibold text-lg">
-          {order.price}
+          {order.price || order.total || "$0.00"}
         </p>
 
         {action && (
           <button
             onClick={action}
-            className={`px-4 py-2 rounded-lg text-white ${color}`}
+            disabled={isLoading}
+            className={`px-4 py-2 rounded-lg text-white flex items-center justify-center gap-2 ${color} ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
+            {isLoading && <Loader2 size={16} className="animate-spin" />}
             {actionLabel}
           </button>
         )}
@@ -326,6 +229,58 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
     </div>
   )
+
+  const handleExport = async () => {
+    try {
+      const queryParams = new URLSearchParams();
+      if (status && status !== "All Status") queryParams.append("status", status.toLowerCase());
+      if (start) queryParams.append("dateFrom", start);
+      if (end) queryParams.append("dateTo", end);
+      if (searchQuery) queryParams.append("search", searchQuery);
+      if (types.length > 0) queryParams.append("type", types.join(","));
+
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history/export?${queryParams.toString()}`, { 
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        toast.success("Export successful!");
+      } else {
+        toast.error("Failed to export orders");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error exporting orders");
+    }
+  };
+
+  const handleViewReceipt = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, {
+        headers: authHeaders()
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `invoice-${id}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        toast.error("Failed to download receipt");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error downloading receipt");
+    }
+  };
 
   return (
 
@@ -338,7 +293,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
             Order Management
           </h1>
 
-          <p className="text-[#64748B] mt-2">
+          <p className="text-theme-muted mt-2">
             Track and manage your restaurant orders in real-time.
           </p>
         </div>
@@ -348,7 +303,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
             tab === "live" ? <>
               <div className="relative">
 
-                <button onClick={() => setOpenFilter(prev => !prev)} className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+                <button onClick={() => setOpenFilter(prev => !prev)} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
                   <Filter size={16} />
                   Filter
                 </button>
@@ -360,7 +315,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                   >
 
                     <div
-                      className="bg-white w-[320px] rounded-xl p-6 shadow-xl"
+                      className="bg-theme-surface w-[320px] rounded-xl p-6 shadow-xl"
                       onClick={(e) => e.stopPropagation()}
                     >
 
@@ -369,7 +324,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                       </h3>
 
 
-                      <p className="text-sm text-[#64748B] mb-3 tracking-wider">
+                      <p className="text-sm text-theme-muted mb-3 tracking-wider">
                         ORDER TYPE
                       </p>
 
@@ -400,14 +355,14 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                         <button
                           onClick={() => setTypes([])}
-                          className="text-[#64748B]"
+                          className="text-theme-muted"
                         >
                           Clear
                         </button>
 
                         <button
                           onClick={() => setOpenFilter(false)}
-                          className="bg-[#059669] text-white px-5 py-2 rounded-lg shadow"
+                          className="bg-[#059669] text-theme-text px-5 py-2 rounded-lg shadow"
                         >
                           Apply
                         </button>
@@ -423,12 +378,13 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                 )}
               </div>
 
-              <button onClick={acceptAllOrders} className="bg-[#009966] text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm ">
+              <button onClick={acceptAllOrders} disabled={acceptingAll} className={`bg-[#009966] text-white rounded-lg px-4 py-2 flex items-center justify-center gap-2 shadow-sm ${acceptingAll ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                {acceptingAll && <Loader2 size={16} className="animate-spin" />}
                 Accept All New
               </button>
 
             </> : <>
-              <button className="border border-[#E5E7EB] bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+              <button onClick={handleExport} className="border border-theme-border bg-theme-surface rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm hover:bg-gray-50">
                 <Download size={16} />
                 Export History
               </button>
@@ -487,6 +443,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     action={() => acceptOrder(o, i)}
                     actionLabel="Accept Order"
                     color="bg-[#2563EB]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
@@ -510,7 +467,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     order={o}
                     action={() => markReady(o, i)}
                     actionLabel="Mark Ready"
-                    color="bg-[#F54900]"
+                    color="bg-[#EA580C]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
@@ -520,9 +478,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
 
 
-            <div className="bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl p-4">
+            <div className="bg-[#F0FDF4] border border-[#BBF7D0] rounded-xl p-4">
 
-              <h3 className="font-playfair text-lg mb-4 text-[#065F46]">
+              <h3 className="font-playfair text-lg mb-4 text-[#15803D]">
                 ● Ready for Pickup ({ready.length})
               </h3>
 
@@ -534,7 +492,8 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                     order={o}
                     action={() => completeOrder(o, i)}
                     actionLabel="Complete"
-                    color="bg-[#059669]"
+                    color="bg-[#16A34A]"
+                    isLoading={loadingOrderId === ((o as any)._id || o.id)}
                   />
                 ))}
 
@@ -546,17 +505,19 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
         )}
 
         {tab === "history" && (
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl overflow-hidden">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl overflow-hidden">
 
             <div className="flex flex-wrap gap-4 items-center justify-between p-4">
 
-              <div className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-3 h-11 w-[320px]">
+              <div className="flex items-center gap-2 border border-theme-border rounded-lg px-3 h-11 w-[320px]">
 
-                <Search size={16} className="text-[#94A3B8]" />
+                <Search size={16} className="text-theme-muted" />
 
                 <input
                   placeholder="Search by Order ID or Customer..."
-                  className="outline-none w-full"
+                  className="outline-none w-full bg-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
 
               </div>
@@ -567,7 +528,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                   <button
                     onClick={() => setOpenStatus(v => !v)}
-                    className="flex items-center gap-2 border border-[#E5E7EB] px-4 h-11 rounded-lg bg-white"
+                    className="flex items-center gap-2 border border-theme-border px-4 h-11 rounded-lg bg-theme-surface"
                   >
                     {status}
                     <ChevronDown size={16} />
@@ -575,7 +536,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                   {openStatus && (
 
-                    <div className="absolute right-0 mt-2 w-44 bg-white border border-[#E5E7EB] rounded-lg shadow z-20">
+                    <div className="absolute right-0 mt-2 w-44 bg-theme-surface border border-theme-border rounded-lg shadow z-20">
 
                       {["All Status", "Completed", "Cancelled", "Refunded"].map(s => (
                         <button
@@ -584,7 +545,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                             setStatus(s)
                             setOpenStatus(false)
                           }}
-                          className="block w-full text-left px-4 py-2 hover:bg-[#F8FAFC]"
+                          className="block w-full text-left px-4 py-2 hover:bg-theme-bg"
                         >
                           {s}
                         </button>
@@ -602,15 +563,15 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                   <button
                     onClick={() => setOpenDate(v => !v)}
-                    className="flex items-center gap-2 border border-[#E5E7EB] px-4 h-11 rounded-lg bg-white"
+                    className="flex items-center gap-2 border border-theme-border px-4 h-11 rounded-lg bg-theme-surface whitespace-nowrap"
                   >
                     <Calendar size={16} />
-                    Date Range
+                    {start && end ? `${start} to ${end}` : "Date Range"}
                   </button>
 
                   {openDate && (
 
-                    <div className="absolute right-0 mt-2 w-[280px] bg-white border border-[#E5E7EB] rounded-xl p-4 shadow z-20">
+                    <div className="absolute right-0 mt-2 w-[280px] bg-theme-surface border border-theme-border rounded-xl p-4 shadow z-20">
 
                       <div className="space-y-3">
 
@@ -618,19 +579,19 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                           type="date"
                           value={start}
                           onChange={(e) => setStart(e.target.value)}
-                          className="w-full border border-[#E5E7EB] rounded-lg px-3 h-10"
+                          className="w-full border border-theme-border rounded-lg px-3 h-10"
                         />
 
                         <input
                           type="date"
                           value={end}
                           onChange={(e) => setEnd(e.target.value)}
-                          className="w-full border border-[#E5E7EB] rounded-lg px-3 h-10"
+                          className="w-full border border-theme-border rounded-lg px-3 h-10"
                         />
 
                         <button
                           onClick={() => setOpenDate(false)}
-                          className="w-full bg-[#2563EB] text-white py-2 rounded-lg"
+                          className="w-full bg-[#2563EB] text-theme-text py-2 rounded-lg"
                         >
                           Apply
                         </button>
@@ -653,7 +614,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
               <table className="w-full min-w-[1000px] text-left">
 
-                <thead className="border-y bg-[#F8FAFC] text-sm text-[#64748B]">
+                <thead className="border-y bg-theme-bg text-sm text-theme-muted">
 
                   <tr>
 
@@ -676,7 +637,13 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                   {historyLoading ? (
                     <tr>
-                      <td colSpan={8} className="py-8 text-center text-[#64748B]">Loading history...</td>
+                      <td colSpan={8} className="py-8 text-center text-theme-muted">Loading history...</td>
+                    </tr>
+                  ) : historyOrders.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-12 text-center text-theme-muted">
+                        No order history found.
+                      </td>
                     </tr>
                   ) : historyOrders.map((o, i) => (
 
@@ -686,7 +653,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                         {o.id || o._id}
                       </td>
 
-                      <td className="py-5 px-4 text-[#64748B]">
+                      <td className="py-5 px-4 text-theme-muted">
                         {o.date || new Date(o.createdAt || Date.now()).toLocaleString()}
                       </td>
 
@@ -698,7 +665,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                             {o.customer?.name?.[0] || o.initial || "C"}
                           </div>
 
-                          <p className="font-medium text-[#0F172A]">
+                          <p className="font-medium text-theme-text">
                             {o.customer?.name || o.customer || "Customer"}
                           </p>
 
@@ -708,17 +675,17 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                       <td className="py-5 px-4">
 
-                        <span className="px-3 py-1 text-sm rounded-full border border-[#E5E7EB] bg-[#F8FAFC]">
+                        <span className="px-3 py-1 text-sm rounded-full border border-theme-border bg-theme-bg">
                           {o.orderType || o.type || "Delivery"}
                         </span>
 
                       </td>
 
-                      <td className="py-5 px-4 text-[#64748B] max-w-[240px]">
+                      <td className="py-5 px-4 text-theme-muted max-w-[240px]">
                         {Array.isArray(o.items) ? o.items.map((it:any) => `${it.quantity}x ${it.name || it.menuItem?.name}`).join(", ") : o.items}
                       </td>
 
-                      <td className="py-5 px-4 font-semibold text-[#0F172A]">
+                      <td className="py-5 px-4 font-semibold text-theme-text">
                         ${o.totalAmount || (o.total && o.total.replace ? o.total.replace('$', '') : o.total)}
                       </td>
 
@@ -730,7 +697,10 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
                       </td>
 
-                      <td className="py-5 px-4 text-gray-500 cursor-pointer hover:text-[#0F172A]">
+                      <td 
+                        className="py-5 px-4 text-blue-500 cursor-pointer hover:text-blue-700 font-medium"
+                        onClick={() => handleViewReceipt(o.id || o._id)}
+                      >
                         View Receipt
                       </td>
 
@@ -746,7 +716,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
 
 
-            <div className="flex items-center justify-between p-4 text-sm text-[#64748B] border-t">
+            <div className="flex items-center justify-between p-4 text-sm text-theme-muted border-t">
 
               <p>
                 Showing <b>{(historyPage - 1) * 10 + 1}-{Math.min(historyPage * 10, historyTotal)}</b> of <b>{historyTotal}</b> orders
@@ -757,7 +727,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                 <button 
                   onClick={() => setHistoryPage(p => Math.max(1, p - 1))}
                   disabled={historyPage === 1}
-                  className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg disabled:opacity-50"
+                  className="border border-theme-border px-3 py-1.5 rounded-lg disabled:opacity-50"
                 >
                   Previous
                 </button>
@@ -765,7 +735,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
                 <button 
                   onClick={() => setHistoryPage(p => p + 1)}
                   disabled={historyPage * 10 >= historyTotal}
-                  className="border border-[#E5E7EB] px-3 py-1.5 rounded-lg disabled:opacity-50"
+                  className="border border-theme-border px-3 py-1.5 rounded-lg disabled:opacity-50"
                 >
                   Next
                 </button>

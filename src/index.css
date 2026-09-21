@@ -3,6 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --theme-bg: #F8FAFC;
+    --theme-surface: #ffffff;
+    --theme-text: #0F172A;
+    --theme-muted: #64748B;
+    --theme-border: #E5E7EB;
+  }
+  .dark {
+    --theme-bg: #020618;
+    --theme-surface: #0F172B;
+    --theme-text: #ffffff;
+    --theme-muted: #94A3B8;
+    --theme-border: #1E293B;
+  }
+}
+
+@layer utilities {
+  .bg-theme-bg { background-color: var(--theme-bg); }
+  .bg-theme-surface { background-color: var(--theme-surface); }
+  .text-theme-text { color: var(--theme-text); }
+  .text-theme-muted { color: var(--theme-muted); }
+  .border-theme-border { border-color: var(--theme-border); }
+}
+
 *{
   font-family: "Inter", sans-serif;
 }

@@ -9,13 +9,18 @@ import {
   Filter, Info
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import CreateInvoiceModal from "./CreateInvoiceModal";
 import RequestPayoutModal from "./RequestPayoutModal";
+import { useCurrency } from "../../context/CurrencyContext";
+
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 const authHeaders = () => {
+
+
   const token = localStorage.getItem("authToken");
   return {
     "Content-Type": "application/json",
@@ -23,138 +28,11 @@ const authHeaders = () => {
   };
 };
 
-const data = [
-  { month: "Jan", revenue: 45000, profit: 12000 },
-  { month: "Feb", revenue: 52000, profit: 15000 },
-  { month: "Mar", revenue: 48000, profit: 13000 },
-  { month: "Apr", revenue: 61000, profit: 18000 },
-  { month: "May", revenue: 58000, profit: 16500 },
-  { month: "Jun", revenue: 75000, profit: 22000 },
-  { month: "Jul", revenue: 84000, profit: 26000 }
-]
-
-const invoices = [
-  {
-    id: "INV-2024-001",
-    client: "Urban Bistro Group",
-    issued: "Oct 20, 2024",
-    due: "Nov 20, 2024",
-    status: "Paid",
-    amount: "$1,250.00"
-  },
-  {
-    id: "INV-2024-002",
-    client: "Whole Foods Local",
-    issued: "Oct 18, 2024",
-    due: "Nov 18, 2024",
-    status: "Paid",
-    amount: "$4,500.00"
-  },
-  {
-    id: "INV-2024-003",
-    client: "Green Grocers",
-    issued: "Oct 25, 2024",
-    due: "Nov 25, 2024",
-    status: "Unpaid",
-    amount: "$2,100.00"
-  },
-  {
-    id: "INV-2024-004",
-    client: "Sushi Zen",
-    issued: "Oct 26, 2024",
-    due: "Nov 26, 2024",
-    status: "Overdue",
-    amount: "$840.50"
-  }
-]
-
 const statusStyles: any = {
   Paid: "bg-green-100 text-green-700",
   Unpaid: "bg-orange-100 text-orange-700",
   Overdue: "bg-red-100 text-red-700"
 }
-
-const cards = [
-  {
-    title: "Total Balance",
-    value: "$124,592.00",
-    desc: "Total earnings across all channels",
-    icon: <DollarSign size={20} />,
-    iconBg: "bg-[#EEF2FF]",
-    badge: "+12.5%",
-    badgeColor: "text-green-700 bg-green-100",
-  },
-  {
-    title: "Pending Payout",
-    value: "$12,450.00",
-    desc: "Scheduled for Oct 31, 2024",
-    icon: <Clock size={20} />,
-    iconBg: "bg-[#FFF7ED]",
-    badge: "Pending",
-    badgeColor: "text-[#F54900] bg-[#FFF1E6]",
-  },
-  {
-    title: "Last Payout",
-    value: "$8,500.00",
-    desc: "Processed on Oct 24, 2024",
-    icon: <CheckCircle2 size={20} />,
-    iconBg: "bg-[#ECFDF5]",
-    badge: "Paid",
-    badgeColor: "text-[#64748B] bg-[#F1F5F9]",
-  },
-  {
-    title: "Net Profit Margin",
-    value: "24.8%",
-    desc: "Higher than industry average",
-    icon: <BarChart3 size={20} />,
-    iconBg: "bg-[#EEF2FF]",
-    badge: "+2.1%",
-    badgeColor: "text-green-700 bg-green-100",
-  },
-];
-
-const transactions = [
-  {
-    id: "TRX-9921",
-    date: "Oct 24, 2024",
-    desc: "Payout to Bank Account ****4589",
-    status: "Completed",
-    amount: "-$8,500.00",
-    type: "debit"
-  },
-  {
-    id: "TRX-9920",
-    date: "Oct 23, 2024",
-    desc: "Order #ORD-2891 Payment (Urban Bistro)",
-    status: "Completed",
-    amount: "+$1,250.00",
-    type: "credit"
-  },
-  {
-    id: "TRX-9919",
-    date: "Oct 23, 2024",
-    desc: "Order #ORD-2890 Payment (Sushi Zen)",
-    status: "Completed",
-    amount: "+$840.50",
-    type: "credit"
-  },
-  {
-    id: "TRX-9918",
-    date: "Oct 22, 2024",
-    desc: "Logistics Fee (DHL Express)",
-    status: "Pending",
-    amount: "-$320.00",
-    type: "debit"
-  },
-  {
-    id: "TRX-9917",
-    date: "Oct 21, 2024",
-    desc: "Order #ORD-2888 Payment (Whole Foods)",
-    status: "Completed",
-    amount: "+$4,500.00",
-    type: "credit"
-  }
-]
 
 const statusTransStyles: any = {
   Completed: "bg-green-100 text-green-700",
@@ -162,6 +40,7 @@ const statusTransStyles: any = {
 }
 
 export default function FinanceWallet() {
+  const { formatPrice } = useCurrency();
   const tabs = ["Transactions", "Invoices", "Finance Settings"];
   const [activeFinance, setActiveFinance] = useState(1);
   const [openInvoice, setOpenInvoice] = useState(false);
@@ -179,14 +58,38 @@ export default function FinanceWallet() {
     } catch(err) { console.error(err); }
   };
 
+  const handleExport = async () => {
+    try {
+      const toastId = toast.loading("Exporting finance report...");
+      const res = await fetch(`${API_BASE}/supplier/finance/export`, { headers: authHeaders() });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `supplier-finance-export-${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        toast.success("Export successful", { id: toastId });
+      } else {
+        toast.error("Export failed", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+  };
+
   useEffect(() => {
     fetchFinance();
   }, []);
 
-  const revenueData = financeData?.revenue || data;
-  const invoicesData = financeData?.invoices || invoices;
-  const transactionsData = financeData?.transactions || transactions;
-  const cardsData = financeData?.cards || cards;
+  const revenueData = financeData?.revenue || [];
+  const invoicesData = financeData?.invoices || [];
+  const transactionsData = financeData?.transactions || [];
+  const cardsData = financeData?.cards || [];
 
   return (
     <div className="space-y-6">
@@ -196,18 +99,18 @@ export default function FinanceWallet() {
             Financial Overview
           </h1>
 
-          <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+          <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
             Track revenue, manage payouts, and handle invoices.
           </p>
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 border border-[#E5E7EB] rounded-lg px-4 py-2 bg-white shadow-sm">
+          <button onClick={handleExport} className="flex items-center gap-2 border border-theme-border rounded-lg px-4 py-2 bg-theme-surface shadow-sm hover:bg-gray-50">
             <Download size={18} />
             Export Report
           </button>
 
-          <button onClick={() => setOpenPayout(true)} className="flex items-center gap-2 bg-[#2563EB] text-white rounded-lg px-4 py-2 shadow">
+          <button onClick={() => setOpenPayout(true)} className="flex items-center gap-2 bg-[#2563EB] text-theme-text rounded-lg px-4 py-2 shadow">
             <DollarSign size={18} />
             Request Payout
           </button>
@@ -218,10 +121,10 @@ export default function FinanceWallet() {
       </div>
 
       <div className="grid lg:grid-cols-4 gap-6">
-        {cardsData.map((c: any, i: number) => (
+        {cardsData.length > 0 ? cardsData.map((c: any, i: number) => (
           <div
             key={i}
-            className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
+            className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm"
           >
             <div className="flex items-center justify-between mb-6">
               <div
@@ -233,22 +136,24 @@ export default function FinanceWallet() {
               <span
                 className={`px-3 py-1 text-xs rounded-full ${c.badgeColor || 'text-gray-700 bg-gray-100'}`}
               >
-                {c.badge}
+                {c.badge || "Status"}
               </span>
             </div>
 
-            <p className="text-[#62748E]">{c.title}</p>
+            <p className="text-[#62748E]">{c.title || "Metric"}</p>
 
-            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `$${c.value.toFixed(2)}` : c.value}</h3>
+            <h3 className="text-[28px] font-playfair mt-2">{typeof c.value === 'number' ? `${formatPrice(c.value)}` : c.value || "-"}</h3>
 
-            <p className="text-[#94A3B8] mt-2 text-sm">{c.desc}</p>
+            <p className="text-theme-muted mt-2 text-sm">{c.desc || ""}</p>
           </div>
-        ))}
+        )) : (
+          <div className="lg:col-span-4 text-center py-6 text-gray-500">No finance cards data available.</div>
+        )}
       </div>
 
       <div className="grid lg:grid-cols-[2fr_1fr] gap-6 items-start">
 
-        <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+        <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
           <div className="mb-6">
 
@@ -256,7 +161,7 @@ export default function FinanceWallet() {
               Revenue Analytics
             </h3>
 
-            <p className="text-[#6A7282] text-sm mt-1">
+            <p className="text-theme-muted text-sm mt-1">
               Monthly revenue vs profit performance
             </p>
 
@@ -306,13 +211,13 @@ export default function FinanceWallet() {
 
         <div className="space-y-6">
 
-          <div className="bg-[#0F172A] text-white rounded-lg lg:rounded-xl p-6 shadow-lg">
+          <div className="bg-theme-surface text-theme-text rounded-lg lg:rounded-xl p-6 shadow-lg">
 
             <h3 className="font-playfair text-xl">
               Payout Method
             </h3>
 
-            <p className="text-[#94A3B8] mt-1">
+            <p className="text-theme-muted mt-1">
               Primary account for receiving funds
             </p>
 
@@ -342,7 +247,7 @@ export default function FinanceWallet() {
 
             </div>
 
-            <button className="w-full mt-5 bg-white text-[#0F172A] rounded-lg py-2.5 font-medium">
+            <button className="w-full mt-5 bg-theme-surface text-theme-text rounded-lg py-2.5 font-medium">
               Manage Accounts
             </button>
 
@@ -350,7 +255,7 @@ export default function FinanceWallet() {
 
 
 
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
             <h3 className="font-playfair text-xl mb-4">
               Quick Actions
@@ -358,7 +263,7 @@ export default function FinanceWallet() {
 
             <div className="grid grid-cols-2 gap-4">
 
-              <button onClick={() => setOpenInvoice(true)} className="border border-[#E5E7EB] rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-[#F8FAFC]">
+              <button onClick={() => setOpenInvoice(true)} className="border border-theme-border rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-theme-bg">
 
                 <FileText size={20} />
                 Create Invoice
@@ -368,7 +273,7 @@ export default function FinanceWallet() {
               <CreateInvoiceModal  open={openInvoice}
                     onClose={() => setOpenInvoice(false)} />
 
-              <button className="border border-[#E5E7EB] rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-[#F8FAFC]">
+              <button className="border border-theme-border rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-theme-bg">
 
                 <Download size={20} />
                 Statement
@@ -404,7 +309,7 @@ export default function FinanceWallet() {
         </div>
         {
           activeFinance === 0 &&
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
             <div className="flex items-center justify-between mb-6">
 
@@ -412,7 +317,7 @@ export default function FinanceWallet() {
                 Recent Transactions
               </h3>
 
-              <button className="flex items-center gap-2 text-[#0F172A]">
+              <button className="flex items-center gap-2 text-theme-text">
 
                 <Filter size={16} />
                 Filter
@@ -445,19 +350,19 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {transactionsData.map((t: any, i: number) => (
+                  {transactionsData.length > 0 ? transactionsData.map((t: any, i: number) => (
                     <tr key={t.id || t._id || i} className="border-b last:border-none">
 
-                      <td className="py-4 text-[#64748B]">
-                        {t.id || t._id?.substring(0,8)}
+                      <td className="py-4 text-theme-muted">
+                        {t.id || t._id?.substring(0,8) || "N/A"}
                       </td>
 
-                      <td className="py-4 text-[#64748B]">
-                        {t.date || new Date(t.createdAt).toLocaleDateString()}
+                      <td className="py-4 text-theme-muted">
+                        {t.date || (t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "-")}
                       </td>
 
-                      <td className="py-4 text-[#0F172A] font-medium">
-                        {t.desc || t.description}
+                      <td className="py-4 text-theme-text font-medium">
+                        {t.desc || t.description || "-"}
                       </td>
 
                       <td className="py-4">
@@ -469,16 +374,20 @@ export default function FinanceWallet() {
                       </td>
 
                       <td
-                        className={`py-4 text-end font-medium ${t.type === "credit"
+                        className={`py-4 text-end font-medium ${t.type === "credit" || (typeof t.amount === 'number' && t.amount > 0)
                           ? "text-green-600"
                           : "text-[#0F172A]"
                           }`}
                       >
-                        {typeof t.amount === "number" ? `$${t.amount.toFixed(2)}` : t.amount}
+                        {typeof t.amount === "number" ? `$${Math.abs(t.amount).toFixed(2)}` : (t.amount || "-")}
                       </td>
 
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-gray-500">No recent transactions found.</td>
+                    </tr>
+                  )}
 
                 </tbody>
 
@@ -491,7 +400,7 @@ export default function FinanceWallet() {
         }
         {
           activeFinance === 1 &&
-          <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+          <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
             <div className="flex items-center justify-between mb-6">
 
@@ -499,7 +408,7 @@ export default function FinanceWallet() {
                 Issued Invoices
               </h3>
 
-              <button className="bg-[#2563EB] text-white px-4 py-2 rounded-lg shadow">
+              <button className="bg-[#2563EB] text-theme-text px-4 py-2 rounded-lg shadow">
                 New Invoice
               </button>
 
@@ -531,22 +440,22 @@ export default function FinanceWallet() {
 
                 <tbody>
 
-                  {invoicesData.map((inv: any, i: number) => (
+                  {invoicesData.length > 0 ? invoicesData.map((inv: any, i: number) => (
                     <tr key={inv.id || inv._id || i} className="border-b last:border-none">
 
-                      <td className="py-4 text-[#64748B]">
-                        {inv.id || inv._id?.substring(0,8) || inv.invoiceNumber}
+                      <td className="py-4 text-theme-muted">
+                        {inv.id || inv._id?.substring(0,8) || inv.invoiceNumber || "N/A"}
                       </td>
 
-                      <td className="py-4 font-medium text-[#0F172A]">
+                      <td className="py-4 font-medium text-theme-text">
                         {inv.client || inv.clientName || "Unknown Client"}
                       </td>
 
-                      <td className="py-4 text-[#64748B]">
-                        {inv.issued || inv.issuedDate || new Date(inv.createdAt).toLocaleDateString()}
+                      <td className="py-4 text-theme-muted">
+                        {inv.issued || inv.issuedDate || (inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : "-")}
                       </td>
 
-                      <td className="py-4 text-[#64748B]">
+                      <td className="py-4 text-theme-muted">
                         {inv.due || inv.dueDate || "N/A"}
                       </td>
 
@@ -558,20 +467,24 @@ export default function FinanceWallet() {
 
                       </td>
 
-                      <td className="py-4 text-end font-medium text-[#0F172A]">
-                        {typeof inv.amount === "number" ? `$${inv.amount.toFixed(2)}` : (inv.total ? `$${inv.total.toFixed(2)}` : inv.amount)}
+                      <td className="py-4 text-end font-medium text-theme-text">
+                        {typeof inv.amount === "number" ? `${formatPrice(inv.amount)}` : (inv.total ? `${formatPrice(inv.total)}` : (inv.amount || "-"))}
                       </td>
 
                       <td className="py-4 text-end">
 
-                        <button className="text-[#64748B]">
+                        <button className="text-theme-muted">
                           <MoreHorizontal size={18} />
                         </button>
 
                       </td>
 
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-gray-500">No invoices found.</td>
+                    </tr>
+                  )}
 
                 </tbody>
 
@@ -585,14 +498,14 @@ export default function FinanceWallet() {
           activeFinance === 2 &&
           <div className="grid lg:grid-cols-2 gap-6">
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
               <div className="mb-6">
                 <h3 className="font-playfair text-xl">
                   Tax Information
                 </h3>
 
-                <p className="text-[#6A7282] mt-1">
+                <p className="text-theme-muted mt-1">
                   Manage your tax documents and settings
                 </p>
               </div>
@@ -601,7 +514,7 @@ export default function FinanceWallet() {
 
               <div className="space-y-4">
 
-                <div className="border border-[#E5E7EB] rounded-xl p-4 flex items-center justify-between">
+                <div className="border border-theme-border rounded-xl p-4 flex items-center justify-between">
 
                   <div className="flex items-center gap-4">
 
@@ -610,11 +523,11 @@ export default function FinanceWallet() {
                     </div>
 
                     <div>
-                      <p className="font-medium text-[#0F172A]">
+                      <p className="font-medium text-theme-text">
                         W-9 Form
                       </p>
 
-                      <p className="text-sm text-[#6A7282]">
+                      <p className="text-sm text-theme-muted">
                         Verified on Jan 15, 2024
                       </p>
                     </div>
@@ -629,20 +542,20 @@ export default function FinanceWallet() {
 
 
 
-                <div className="border border-[#E5E7EB] rounded-xl p-4 flex items-center justify-between">
+                <div className="border border-theme-border rounded-xl p-4 flex items-center justify-between">
 
                   <div className="flex items-center gap-4">
 
-                    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[#F1F5F9] text-[#475569]">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[#F1F5F9] text-theme-muted">
                       <Building2 size={20} />
                     </div>
 
                     <div>
-                      <p className="font-medium text-[#0F172A]">
+                      <p className="font-medium text-theme-text">
                         Tax ID (EIN)
                       </p>
 
-                      <p className="text-sm text-[#6A7282]">
+                      <p className="text-sm text-theme-muted">
                         ••••••9921
                       </p>
                     </div>
@@ -661,7 +574,7 @@ export default function FinanceWallet() {
 
 
 
-            <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
+            <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-sm">
 
               <div className="mb-6">
 
@@ -669,7 +582,7 @@ export default function FinanceWallet() {
                   Payout Preferences
                 </h3>
 
-                <p className="text-[#6A7282] mt-1">
+                <p className="text-theme-muted mt-1">
                   Configure when and how you get paid
                 </p>
 
@@ -705,7 +618,7 @@ export default function FinanceWallet() {
                     Payout Schedule
                   </label>
 
-                  <select className="w-full border border-[#E5E7EB] rounded-lg h-12 px-3 outline-none">
+                  <select className="w-full border border-theme-border rounded-lg h-12 px-3 outline-none">
 
                     <option>Weekly (Every Monday)</option>
 

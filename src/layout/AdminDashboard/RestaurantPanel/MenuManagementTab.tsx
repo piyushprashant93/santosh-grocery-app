@@ -18,16 +18,16 @@ export default function MenuManagementTab() {
           <input 
             type="text"
             placeholder="Search menu items..."
-            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition shadow-sm"
+            className="w-full pl-10 pr-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition shadow-sm"
           />
           <Search size={16} className="absolute left-3 top-2.5 text-gray-400" />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center shadow-sm">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center shadow-sm">
             <Filter size={16} />
             Filters
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition justify-center shadow-sm">
+          <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg hover:bg-emerald-700 transition justify-center shadow-sm">
             <Plus size={16} />
             Add New Item
           </button>
@@ -35,7 +35,7 @@ export default function MenuManagementTab() {
       </div>
 
       {/* Menu Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[400px]">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-100">
@@ -50,13 +50,13 @@ export default function MenuManagementTab() {
             {menuItems.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="font-bold text-gray-900">{item.name}</span>
+                  <span className="font-bold text-theme-text">{item.name}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-medium text-gray-600">{item.category}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-gray-900">{item.price}</span>
+                  <span className="text-sm font-bold text-theme-text">{item.price}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <label className="relative inline-flex items-center cursor-pointer">

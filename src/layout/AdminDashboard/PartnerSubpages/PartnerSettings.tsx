@@ -18,32 +18,32 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
       <div className="flex items-center gap-4 mb-2">
         <button 
           onClick={onBack}
-          className="p-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
+          className="p-2 bg-theme-surface border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition"
         >
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Partner Settings</h1>
-          <p className="text-gray-500 mt-1">Manage access, commissions, and critical settings for <span className="font-bold text-gray-900">Spicy Kitchen</span></p>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Partner Settings</h1>
+          <p className="text-gray-500 mt-1">Manage access, commissions, and critical settings for <span className="font-bold text-theme-text">Spicy Kitchen</span></p>
         </div>
       </div>
 
       <div className="flex flex-col gap-6">
         
         {/* Financial Configuration Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Financial Configuration</h2>
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Financial Configuration</h2>
           <p className="text-sm text-gray-500 mb-6">Configure commission rates and payout terms.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">Commission Rate (%)</label>
+              <label className="block text-sm font-bold text-theme-text mb-2">Commission Rate (%)</label>
               <div className="relative">
                 <input 
                   type="number" 
                   value={commission}
                   onChange={(e) => setCommission(e.target.value)}
-                  className="w-full pl-4 pr-10 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                  className="w-full pl-4 pr-10 py-2.5 bg-theme-surface border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">%</span>
               </div>
@@ -51,11 +51,11 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
             </div>
             
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">Payout Frequency</label>
+              <label className="block text-sm font-bold text-theme-text mb-2">Payout Frequency</label>
               <select 
                 value={payoutFrequency}
                 onChange={(e) => setPayoutFrequency(e.target.value)}
-                className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
+                className="w-full bg-theme-surface border border-gray-200 text-theme-text text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 transition"
               >
                 <option value="Daily">Daily</option>
                 <option value="Weekly">Weekly</option>
@@ -74,7 +74,7 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
         </div>
 
         {/* Access Control Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-red-200 p-6">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-red-200 p-6">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0">
               <Lock size={20} />
@@ -87,7 +87,7 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
 
           <div className="mt-6 bg-gray-50 rounded-xl p-5 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-gray-900">Block Partner Access</h3>
+              <h3 className="text-sm font-bold text-theme-text">Block Partner Access</h3>
               <p className="text-xs text-gray-500 mt-0.5">Prevent this partner from logging into their dashboard.</p>
             </div>
             
@@ -105,7 +105,7 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
         </div>
 
         {/* Danger Zone Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-red-200 p-6">
+        <div className="bg-theme-surface rounded-2xl shadow-sm border border-red-200 p-6">
           <div className="flex items-center gap-2 text-red-600 mb-4">
             <AlertTriangle size={20} />
             <h2 className="text-lg font-bold" style={{ fontFamily: 'serif' }}>Danger Zone</h2>
@@ -115,7 +115,7 @@ export default function PartnerSettings({ partnerId, onBack }: PartnerSettingsPr
             Permanently delete this partner and all associated data. This action cannot be undone.
           </p>
 
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-white text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition">
+          <button className="flex items-center gap-2 px-5 py-2.5 bg-theme-surface text-red-600 border border-red-200 text-sm font-medium rounded-lg shadow-sm hover:bg-red-50 transition">
             <Trash2 size={16} />
             Delete Partner Account
           </button>

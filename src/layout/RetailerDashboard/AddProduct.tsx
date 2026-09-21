@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { ArrowLeft, Save } from "lucide-react"
+import toast from "react-hot-toast"
+import { parseApiError } from "../../lib/apiErrorHandler"
 
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
@@ -22,6 +24,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
     const [activeProductTab, setActiveProductTab] = useState("general")
     const [images, setImages] = useState<File[]>([]);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
     const [form, setForm] = useState<any>({
         name: "",
@@ -55,6 +58,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
     }
 
     const handleSave = async () => {
+        setFieldErrors({});
         try {
             const formData = new FormData();
             Object.keys(form).forEach(key => {
@@ -70,14 +74,33 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                 body: formData
             });
 
+            const data = await res.json().catch(() => null);
+
             if (res.ok) {
-                alert("Product saved successfully!");
+                toast.success("Product saved successfully!");
                 setActiveTab("products");
             } else {
-                alert("Failed to save product.");
+                if (data && data.errors && Array.isArray(data.errors)) {
+                    const newErrors: Record<string, string> = {};
+                    data.errors.forEach((err: string) => {
+                        const errLower = err.toLowerCase();
+                        if (errLower.includes("name")) newErrors.name = err;
+                        if (errLower.includes("description")) newErrors.description = err;
+                        if (errLower.includes("category")) newErrors.category = err;
+                        if (errLower.includes("sku")) newErrors.sku = err;
+                        if (errLower.includes("baseprice") || errLower.includes("price")) newErrors.basePrice = err;
+                        if (errLower.includes("stock")) newErrors.stock = err;
+                        if (errLower.includes("weight")) newErrors.weight = err;
+                    });
+                    setFieldErrors(newErrors);
+                    toast.error("Please fix the validation errors.");
+                } else {
+                    toast.error(parseApiError(data, "Failed to save product."));
+                }
             }
         } catch(err) {
             console.error(err);
+            toast.error("An error occurred while saving the product.");
         }
     }
 
@@ -95,7 +118,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
                 <div className="flex items-start gap-4">
 
-                    <button onClick={() => setActiveTab("products")} className="mt-2 text-[#64748B]">
+                    <button onClick={() => setActiveTab("products")} className="mt-2 text-theme-muted">
                         <ArrowLeft size={22} />
                     </button>
 
@@ -104,7 +127,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                             Add New Product
                         </h1>
 
-                        <p className="text-[#6A7282] mt-2 lg:text-[18px] text-base">
+                        <p className="text-theme-muted mt-2 lg:text-[18px] text-base">
                             Fill in the details below to create your product.
                         </p>
                     </div>
@@ -114,7 +137,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
                 <div className="flex items-center gap-3">
 
-                    <button onClick={() => setActiveTab("products")} className="px-5 py-2 border border-[#E5E7EB] rounded-lg bg-white">
+                    <button onClick={() => setActiveTab("products")} className="px-5 py-2 border border-theme-border rounded-lg bg-theme-surface">
                         Cancel
                     </button>
 
@@ -154,7 +177,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
 
             {activeProductTab === "general" && (
-                <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+                <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
                     <h3 className="font-playfair text-xl mb-6">
                         Basic Details
@@ -174,8 +197,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                 value={form.name}
                                 onChange={handleChange}
                                 placeholder="e.g. Organic Whole Milk"
-                                className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                             />
+                            {fieldErrors.name && <p className="text-red-500 text-xs mt-1">{fieldErrors.name}</p>}
                         </div>
 
 
@@ -191,8 +215,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                 onChange={handleChange}
                                 placeholder="Describe your product..."
                                 rows={5}
-                                className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                             />
+                            {fieldErrors.description && <p className="text-red-500 text-xs mt-1">{fieldErrors.description}</p>}
                         </div>
 
 
@@ -208,7 +233,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     name="category"
                                     value={form.category}
                                     onChange={handleChange}
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 >
                                     <option value="">Select Category</option>
                                     <option>Dairy</option>
@@ -216,6 +241,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     <option>Produce</option>
                                     <option>Pantry</option>
                                 </select>
+                                {fieldErrors.category && <p className="text-red-500 text-xs mt-1">{fieldErrors.category}</p>}
                             </div>
 
 
@@ -230,8 +256,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     value={form.sku}
                                     onChange={handleChange}
                                     placeholder="e.g. DY-001"
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.sku && <p className="text-red-500 text-xs mt-1">{fieldErrors.sku}</p>}
                             </div>
 
                         </div>
@@ -244,7 +271,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
             {activeProductTab === "pricing" && (
                 <div className="space-y-6">
 
-                    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+                    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
                         <h3 className="font-playfair text-xl mb-6">
                             Pricing
@@ -261,8 +288,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     name="basePrice"
                                     onChange={handleChange}
                                     placeholder="0.00"
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.basePrice && <p className="text-red-500 text-xs mt-1">{fieldErrors.basePrice}</p>}
                             </div>
 
 
@@ -276,7 +304,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     name="discountPrice"
                                     onChange={handleChange}
                                     placeholder="Optional"
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 />
                             </div>
 
@@ -286,7 +314,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
 
 
-                    <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+                    <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
                         <h3 className="font-playfair text-xl mb-6">
                             Inventory
@@ -303,8 +331,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     name="stock"
                                     onChange={handleChange}
                                     placeholder="0"
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 />
+                                {fieldErrors.stock && <p className="text-red-500 text-xs mt-1">{fieldErrors.stock}</p>}
                             </div>
 
 
@@ -318,7 +347,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                     name="lowStock"
                                     onChange={handleChange}
                                     placeholder="5"
-                                    className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+                                    className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
                                 />
                             </div>
 
@@ -331,7 +360,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
             {activeProductTab === "images" && (
 
-                <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+                <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
                     <h3 className="font-playfair text-xl mb-6">
                         Product Images
@@ -364,11 +393,11 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                                 <polyline points="21 15 16 10 5 21" />
                             </svg>
 
-                            <p className="mt-4 text-lg font-medium text-[#111827]">
+                            <p className="mt-4 text-lg font-medium text-theme-text">
                                 Click to upload images
                             </p>
 
-                            <p className="text-[#6A7282] mt-1">
+                            <p className="text-theme-muted mt-1">
                                 SVG, PNG, JPG or GIF (max. 5MB)
                             </p>
 
@@ -382,7 +411,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
             {activeProductTab === "shipping" && (
 
-  <div className="border border-[#E5E7EB] bg-white rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+  <div className="border border-theme-border bg-theme-surface rounded-lg lg:rounded-xl p-3 lg:p-6 shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
 
     <h3 className="font-playfair text-xl mb-6">
       Shipping Information
@@ -400,8 +429,9 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
           name="weight"
           onChange={handleChange}
           placeholder="0.00"
-          className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+          className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
         />
+        {fieldErrors.weight && <p className="text-red-500 text-xs mt-1">{fieldErrors.weight}</p>}
       </div>
 
 
@@ -414,7 +444,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
         <select
           name="shippingClass"
           onChange={handleChange}
-          className="w-full mt-2 border outline-none border-[#E5E7EB] rounded-lg px-4 py-3"
+          className="w-full mt-2 border outline-none border-theme-border rounded-lg px-4 py-3"
         >
           <option value="">Select Class</option>
           <option value="standard">Standard</option>
@@ -439,21 +469,21 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
           name="length"
           onChange={handleChange}
           placeholder="Length"
-          className="border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+          className="border border-theme-border outline-none rounded-lg px-4 py-3"
         />
 
         <input
           name="width"
           onChange={handleChange}
           placeholder="Width"
-          className="border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+          className="border border-theme-border outline-none rounded-lg px-4 py-3"
         />
 
         <input
           name="height"
           onChange={handleChange}
           placeholder="Height"
-          className="border border-[#E5E7EB] outline-none rounded-lg px-4 py-3"
+          className="border border-theme-border outline-none rounded-lg px-4 py-3"
         />
 
       </div>
@@ -462,7 +492,7 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
 
 
 
-    <div className="border-t border-[#E5E7EB] mt-6 pt-6">
+    <div className="border-t border-theme-border mt-6 pt-6">
 
       <label className="flex items-start gap-3 cursor-pointer">
 
@@ -475,11 +505,11 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
         />
 
         <div>
-          <p className="font-medium text-[#111827]">
+          <p className="font-medium text-theme-text">
             Enable Free Shipping for this product
           </p>
 
-          <p className="text-[#6A7282] text-sm mt-1">
+          <p className="text-theme-muted text-sm mt-1">
             If checked, shipping costs will be waived for this item.
           </p>
         </div>

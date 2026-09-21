@@ -40,11 +40,26 @@ const privacyPolicyData = {
   ],
 };
 
+import { useState, useEffect } from "react";
+
 export const PolicyPage = () => {
+  const [data, setData] = useState(privacyPolicyData);
+
+  useEffect(() => {
+    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/policy")
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          setData({ ...privacyPolicyData, ...json.data });
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <>
       <SecondaryHeader />
-      <TermsSection {...privacyPolicyData} />
+      <TermsSection {...data} />
     </>
   )
 }

@@ -23,6 +23,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import AddressModal from "./AddressModal";
 import { QRCodeSVG } from "qrcode.react";
+import { useTheme } from "./ThemeContext";
+import { useCurrency } from "../../context/CurrencyContext";
 
 type UserProfile = {
   firstName: string;
@@ -68,6 +70,8 @@ type TwoFASetupData = {
 const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
 
 export default function AccountSettings() {
+  const { setTheme } = useTheme();
+  const { setCurrency } = useCurrency();
   const [tab, setTab] = useState("Profile");
   const navigate = useNavigate();
   const [toggles, setToggles] = useState<Record<number, boolean>>({
@@ -727,6 +731,9 @@ export default function AccountSettings() {
         darkMode: prefs.darkMode,
       });
 
+      setTheme(prefs.darkMode ? "dark" : "light");
+      if (prefs.currency) setCurrency(prefs.currency);
+
       setToggles({
         0: prefs.notifications.orderUpdates,
         1: prefs.notifications.promotions,
@@ -807,6 +814,9 @@ export default function AccountSettings() {
       setPreferencesSuccess(
         data.message || "Preferences updated successfully.",
       );
+
+      setTheme(preferences.darkMode ? "dark" : "light");
+      if (preferences.currency) setCurrency(preferences.currency);
     } catch (err) {
       setPreferencesError(
         err instanceof Error ? err.message : "Something went wrong.",
@@ -1052,21 +1062,21 @@ export default function AccountSettings() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-[#0F172A]">
+        <h1 className="lg:text-[34px] text-[24px] font-playfair font-medium text-theme-text">
           Account Settings
         </h1>
-        <p className="text-[#6A7282] mt-1 lg:text-lg text-base">
+        <p className="text-theme-muted mt-1 lg:text-lg text-base">
           Manage your profile, security, and preferences.
         </p>
       </div>
 
-      <div className="flex lg:gap-2 gap-1 bg-[#F1F5F9] p-1 rounded-lg lg:rounded-xl w-fit">
+      <div className="flex lg:gap-2 gap-1 bg-theme-bg p-1 rounded-lg lg:rounded-xl w-fit">
         {["Profile", "Security", "Preferences", "Addresses"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`sm:px-4 px-2 py-2 rounded-lg text-sm ${
-              tab === t ? "bg-white shadow-sm" : "text-[#475569]"
+              tab === t ? "bg-theme-surface shadow-sm" : "text-theme-muted"
             }`}
           >
             {t}
@@ -1087,15 +1097,15 @@ export default function AccountSettings() {
       )}
 
       {tab === "Profile" && (
-        <div className="border border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
-            <h2 className="font-playfair text-xl text-[#0F172A]">
+            <h2 className="font-playfair text-xl text-theme-text">
               Personal Information
             </h2>
-            <p className="text-[#6A7282]">Update your personal details here.</p>
+            <p className="text-theme-muted">Update your personal details here.</p>
           </div>
           {loadingProfile ? (
-            <p className="text-[#6A7282]">Loading profile...</p>
+            <p className="text-theme-muted">Loading profile...</p>
           ) : profileError ? (
             <p className="text-[#F87171]">{profileError}</p>
           ) : null}
@@ -1109,7 +1119,7 @@ export default function AccountSettings() {
                   className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full object-cover"
                 />
               ) : (
-                <div className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full bg-gray-100 text-black flex items-center justify-center font-semibold md:text-3xl text-xl">
+                <div className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full bg-gray-100 text-theme-text flex items-center justify-center font-semibold md:text-3xl text-xl">
                   {initials || "U"}
                 </div>
               )}
@@ -1132,11 +1142,11 @@ export default function AccountSettings() {
             </div>
 
             <div>
-              <p className="font-playfair text-lg text-[#0F172A]">
+              <p className="font-playfair text-lg text-theme-text">
                 Profile Picture
               </p>
 
-              <p className="text-[#6A7282] lg:text-sm text-xs">
+              <p className="text-theme-muted lg:text-sm text-xs">
                 Supports JPG, PNG, WEBP, and GIF files (max. 5 MB).
               </p>
             </div>
@@ -1144,9 +1154,9 @@ export default function AccountSettings() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="text-sm text-[#475569]">First Name</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
-                <User size={16} className="text-[#94A3B8]" />
+              <label className="text-sm text-theme-muted">First Name</label>
+              <div className="mt-1 w-full border border-theme-border rounded-lg px-4 py-3 flex items-center gap-1">
+                <User size={16} className="text-theme-muted" />
                 <input
                   value={profile.firstName}
                   disabled={!isEditing}
@@ -1158,17 +1168,17 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-theme-muted"
                       : ""
-                  }`}
+                  } bg-transparent`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Last Name</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
-                <User size={16} className="text-[#94A3B8]" />
+              <label className="text-sm text-theme-muted">Last Name</label>
+              <div className="mt-1 w-full border border-theme-border rounded-lg px-4 py-3 flex items-center gap-1">
+                <User size={16} className="text-theme-muted" />
                 <input
                   value={profile.lastName}
                   disabled={!isEditing}
@@ -1180,29 +1190,29 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-theme-muted"
                       : ""
-                  }`}
+                  } bg-transparent`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Email Address</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1 bg-gray-50">
-                <Mail size={16} className="text-[#94A3B8]" />
+              <label className="text-sm text-theme-muted">Email Address</label>
+              <div className="mt-1 w-full border border-theme-border rounded-lg px-4 py-3 flex items-center gap-1 bg-gray-50">
+                <Mail size={16} className="text-theme-muted" />
                 <input
                   value={profile.email}
                   disabled
-                  className="ml-2 flex-1 outline-none bg-transparent cursor-not-allowed text-gray-500"
+                  className="ml-2 flex-1 outline-none bg-transparent cursor-not-allowed text-gray-500 bg-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-sm text-[#475569]">Phone Number</label>
-              <div className="mt-1 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 flex items-center gap-1">
-                <Phone size={16} className="text-[#94A3B8]" />
+              <label className="text-sm text-theme-muted">Phone Number</label>
+              <div className="mt-1 w-full border border-theme-border rounded-lg px-4 py-3 flex items-center gap-1">
+                <Phone size={16} className="text-theme-muted" />
                 <input
                   value={profile.phone}
                   disabled={!isEditing}
@@ -1214,9 +1224,9 @@ export default function AccountSettings() {
                   }
                   className={`ml-2 flex-1 outline-none ${
                     !isEditing
-                      ? "bg-transparent cursor-not-allowed text-gray-500"
+                      ? "bg-transparent cursor-not-allowed text-theme-muted"
                       : ""
-                  }`}
+                  } bg-transparent`}
                 />
               </div>
             </div>
@@ -1230,7 +1240,7 @@ export default function AccountSettings() {
                   setIsEditing(true);
                 }
               }}
-              className="border border-[#E5E7EB] px-5 py-2 rounded-lg bg-white shadow-sm w-fit"
+              className="border border-theme-border px-5 py-2 rounded-lg bg-theme-surface shadow-sm w-fit"
             >
               {isEditing ? "Save Changes" : "Edit Profile"}
             </button>
@@ -1239,10 +1249,10 @@ export default function AccountSettings() {
       )}
 
       {tab === "Security" && (
-        <div className="border border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-8 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
+        <div className="border border-theme-border lg:rounded-xl rounded-lg lg:p-8 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] space-y-8">
           <div>
             <h2 className="font-playfair text-xl">Password & Security</h2>
-            <p className="text-[#6A7282]">
+            <p className="text-theme-muted">
               Manage your password and security settings.
             </p>
           </div>
@@ -1256,7 +1266,7 @@ export default function AccountSettings() {
                 placeholder="Current Password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-theme-border rounded-lg px-4 py-3 pr-12 outline-none bg-transparent"
               />
 
               <button
@@ -1274,7 +1284,7 @@ export default function AccountSettings() {
                 placeholder="New Password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-theme-border rounded-lg px-4 py-3 pr-12 outline-none bg-transparent"
               />
 
               <button
@@ -1292,7 +1302,7 @@ export default function AccountSettings() {
                 placeholder="Confirm New Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border border-[#E5E7EB] rounded-lg px-4 py-3 pr-12 outline-none"
+                className="w-full border border-theme-border rounded-lg px-4 py-3 pr-12 outline-none bg-transparent"
               />
 
               <button
@@ -1326,7 +1336,7 @@ export default function AccountSettings() {
               <h3 className="font-playfair text-lg">
                 Two-Factor Authentication
               </h3>
-              <p className="text-[#6A7282] text-sm">
+              <p className="text-theme-muted text-sm">
                 Add an extra layer of security to your account.
               </p>
             </div>
@@ -1352,7 +1362,7 @@ export default function AccountSettings() {
               <button
                 onClick={handleRegenerateBackupCodes}
                 disabled={regenerateLoading}
-                className="border border-[#E5E7EB] px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm md:text-base"
+                className="border border-theme-border px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 text-sm md:text-base"
               >
                 {regenerateLoading ? "Regenerating..." : "Regenerate Backup Codes"}
               </button>
@@ -1370,7 +1380,7 @@ export default function AccountSettings() {
           ) : (
             <button
               onClick={handleEnable2FAClick}
-              className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+              className="border border-theme-border px-4 py-2 rounded-lg"
             >
               Enable 2FA
             </button>
@@ -1380,7 +1390,7 @@ export default function AccountSettings() {
 
       {tab === "Preferences" && (
         <div className="space-y-6">
-          <div className="border border-[#E5E7EB] rounded-lg lg:rounded-xl lg:p-8 p-3 bg-white space-y-6">
+          <div className="border border-theme-border rounded-lg lg:rounded-xl lg:p-8 p-3 bg-theme-surface space-y-6">
             <div className="flex items-center gap-3">
               <Bell className="text-[#009966]" size={20} />
               <h3 className="font-playfair text-lg">Notifications</h3>
@@ -1389,8 +1399,8 @@ export default function AccountSettings() {
             {notificationItems.map((item) => (
               <div key={item.key} className="flex items-center justify-between">
                 <div>
-                  <p className="text-[#0F172A]">{item.title}</p>
-                  <p className="text-sm text-[#6A7282]">{item.description}</p>
+                  <p className="text-theme-text">{item.title}</p>
+                  <p className="text-sm text-theme-muted">{item.description}</p>
                 </div>
 
                 <button
@@ -1406,12 +1416,12 @@ export default function AccountSettings() {
                       : "bg-[#CBD5E1] justify-start"
                   }`}
                 >
-                  <span className="w-5 h-5 bg-white rounded-full shadow" />
+                  <span className="w-5 h-5 bg-theme-surface rounded-full shadow" />
                 </button>
               </div>
             ))}
 
-            <div className="border-t border-[#E5E7EB] my-6"></div>
+            <div className="border-t border-theme-border my-6"></div>
 
             <div className="">
               <div className="flex items-center gap-3 mb-6">
@@ -1421,7 +1431,7 @@ export default function AccountSettings() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-sm text-[#475569]">Language</label>
+                  <label className="text-sm text-theme-muted">Language</label>
 
                   <select
                     value={preferences.language}
@@ -1431,7 +1441,7 @@ export default function AccountSettings() {
                         language: e.target.value,
                       }))
                     }
-                    className="mt-2 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none"
+                    className="mt-2 w-full h-11 px-3 border border-theme-border rounded-lg outline-none bg-transparent text-theme-text"
                   >
                     <option value="en">English</option>
                     <option value="hi">Hindi</option>
@@ -1439,26 +1449,27 @@ export default function AccountSettings() {
                 </div>
 
                 <div>
-                  <label className="text-sm text-[#475569]">Currency</label>
+                  <label className="text-sm text-theme-muted">Currency</label>
 
                   <select
                     value={preferences.currency}
                     onChange={(e) =>
-                      setPreferences((prev) => ({
-                        ...prev,
+                      setPreferences({
+                        ...preferences,
                         currency: e.target.value,
-                      }))
+                      })
                     }
-                    className="mt-2 w-full border border-[#E5E7EB] rounded-lg px-4 py-3 outline-none"
+                    className="mt-2 w-full h-11 px-3 border border-theme-border rounded-lg outline-none bg-transparent text-theme-text"
                   >
-                    <option value="USD">USD</option>
+                    <option value="NPR">NPR</option>
                     <option value="INR">INR</option>
                     <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
                   </select>
                 </div>
               </div>
 
-              <div className="border-t border-[#E5E7EB] my-6"></div>
+              <div className="border-t border-theme-border my-6"></div>
 
               <div className="flex items-center gap-3">
                 <Moon className="text-purple-500" />
@@ -1469,8 +1480,8 @@ export default function AccountSettings() {
                 <label
                   className={`border-2 rounded-lg lg:rounded-xl p-6 text-center cursor-pointer transition ${
                     preferences.darkMode
-                      ? "border-[#009966] bg-[#F0FDF4]"
-                      : "border-[#E5E7EB]"
+                      ? "border-[#009966] bg-[#F0FDF4]  text-[#009966]"
+                      : "border-theme-border text-theme-muted"
                   }`}
                 >
                   <input
@@ -1485,18 +1496,14 @@ export default function AccountSettings() {
                     }
                     className="hidden"
                   />
-                  <Moon
-                    className={`mx-auto mb-2 ${
-                      preferences.darkMode ? "text-[#009966]" : ""
-                    }`}
-                  />
-                  Dark Mode
+                  <Moon className="mx-auto mb-2" />
+                  <span className="block font-medium">Dark Mode</span>
                 </label>
                 <label
                   className={`border-2 rounded-lg lg:rounded-xl p-6 text-center cursor-pointer transition ${
                     !preferences.darkMode
-                      ? "border-[#009966] bg-[#F0FDF4]"
-                      : "border-[#E5E7EB]"
+                      ? "border-[#009966] bg-[#F0FDF4]  text-[#009966]"
+                      : "border-theme-border text-theme-muted"
                   }`}
                 >
                   <input
@@ -1511,12 +1518,8 @@ export default function AccountSettings() {
                     }
                     className="hidden"
                   />
-                  <Smartphone
-                    className={`mx-auto mb-2 ${
-                      !preferences.darkMode ? "text-[#009966]" : ""
-                    }`}
-                  />
-                  Light Mode
+                  <Smartphone className="mx-auto mb-2" />
+                  <span className="block font-medium">Light Mode</span>
                 </label>
               </div>
 
@@ -1575,7 +1578,7 @@ export default function AccountSettings() {
         <div className="grid md:grid-cols-2 gap-6">
           <div
             onClick={handleAddAddress}
-            className="border cursor-pointer border-[#E5E7EB] lg:rounded-xl rounded-lg lg:p-6 p-3 flex flex-col items-center justify-center text-[#6A7282] bg-[#fff]"
+            className="border cursor-pointer border-theme-border lg:rounded-xl rounded-lg lg:p-6 p-3 flex flex-col items-center justify-center text-theme-muted bg-theme-surface"
           >
             <span className="bg-[#F3F4F6] rounded-full w-[54px] h-[54px] flex justify-center items-center">
               <MapPin size={28} />
@@ -1586,7 +1589,7 @@ export default function AccountSettings() {
           {addresses.map((address, index) => (
             <div
               key={address._id || index}
-              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-white shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
+              className="border border-[#34D399] lg:rounded-xl rounded-lg lg:p-6 p-3 bg-theme-surface shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]"
             >
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-2">
@@ -1597,7 +1600,7 @@ export default function AccountSettings() {
                       {address.label || `Address ${index + 1}`}
                     </h3>
 
-                    <p className="text-xs text-[#6A7282]">{address.fullName}</p>
+                    <p className="text-xs text-theme-muted">{address.fullName}</p>
                   </div>
                 </div>
 
@@ -1608,34 +1611,34 @@ export default function AccountSettings() {
                 )}
               </div>
 
-              <div className="space-y-1 text-sm text-[#6A7282]">
+              <div className="space-y-1 text-sm text-theme-muted">
                 <p>
-                  <span className="font-medium text-[#0F172A]">Phone:</span>{" "}
+                  <span className="font-medium text-theme-text">Phone:</span>{" "}
                   {address.phone}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Street:</span>{" "}
+                  <span className="font-medium text-theme-text">Street:</span>{" "}
                   {address.street}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">City:</span>{" "}
+                  <span className="font-medium text-theme-text">City:</span>{" "}
                   {address.city}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">State:</span>{" "}
+                  <span className="font-medium text-theme-text">State:</span>{" "}
                   {address.state}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Zip Code:</span>{" "}
+                  <span className="font-medium text-theme-text">Zip Code:</span>{" "}
                   {address.zipCode}
                 </p>
 
                 <p>
-                  <span className="font-medium text-[#0F172A]">Country:</span>{" "}
+                  <span className="font-medium text-theme-text">Country:</span>{" "}
                   {address.country}
                 </p>
               </div>
@@ -1643,7 +1646,7 @@ export default function AccountSettings() {
               <div className="flex gap-4 mt-5 text-sm">
                 <button
                   onClick={() => handleEditAddress(index)}
-                  className="text-[#6A7282]"
+                  className="text-theme-muted"
                 >
                   Edit
                 </button>
@@ -1670,17 +1673,17 @@ export default function AccountSettings() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowBackupCodesModal(false)}
           />
-          <div className="relative bg-white rounded-xl w-full max-w-md p-6 overflow-hidden">
+          <div className="relative bg-theme-surface rounded-xl w-full max-w-md p-6 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-playfair text-xl">New Backup Codes</h3>
               <button
                 onClick={() => setShowBackupCodesModal(false)}
-                className="text-[#6A7282] hover:text-[#0F172A] text-2xl leading-none"
+                className="text-theme-muted hover:text-theme-text text-2xl leading-none"
               >
                 &times;
               </button>
             </div>
-            <p className="text-sm text-[#6A7282] mb-4">
+            <p className="text-sm text-theme-muted mb-4">
               Please save these backup codes in a secure place. They can be used to recover your account if you lose access to your authenticator app.
             </p>
             <div className="bg-gray-100 p-4 rounded-lg grid grid-cols-2 gap-2 text-center mb-6">
@@ -1702,12 +1705,12 @@ export default function AccountSettings() {
 
       {show2FADisableModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
-            <h2 className="text-xl font-semibold text-[#0F172A]">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-sm">
+            <h2 className="text-xl font-semibold text-theme-text">
               Disable Two-Factor Authentication
             </h2>
 
-            <p className="mt-2 text-sm text-[#6A7282]">
+            <p className="mt-2 text-sm text-theme-muted">
               Enter the 6-digit code from your authenticator app.
             </p>
 
@@ -1716,7 +1719,7 @@ export default function AccountSettings() {
               placeholder="Enter 6-digit code"
               value={disable2FACode}
               onChange={(e) => setDisable2FACode(e.target.value)}
-              className="w-full border border-[#E5E7EB] rounded-lg p-3 mt-4 outline-none"
+              className="w-full border border-theme-border rounded-lg p-3 mt-4 outline-none bg-transparent"
             />
 
             {disable2FAError && (
@@ -1731,7 +1734,7 @@ export default function AccountSettings() {
                   setDisable2FACode("");
                 }}
                 disabled={disable2FALoading}
-                className="border border-[#E5E7EB] px-4 py-2 rounded-lg"
+                className="border border-theme-border px-4 py-2 rounded-lg"
               >
                 Cancel
               </button>
@@ -1750,14 +1753,14 @@ export default function AccountSettings() {
 
       {show2FAModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-md">
             <h2 className="text-xl font-semibold">
               Enable Two-Factor Authentication
             </h2>
 
-            <p className="text-sm text-gray-700 mt-2">
+            <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
               Scan this QR code using Google Authenticator or Authy.{" "}
-              <span className="text-xs text-[#6A7282] mt-2">
+              <span className="text-xs text-theme-muted mt-2">
                 {`(After scanning, open your authenticator app and enter the 6-digit code displayed for this account)`}
               </span>
             </p>
@@ -1826,10 +1829,10 @@ export default function AccountSettings() {
 
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 !mt-0">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
+          <div className="bg-theme-surface rounded-xl p-6 w-full max-w-sm">
             <h2 className="text-xl font-semibold">Delete Address</h2>
 
-            <p className="mt-3 text-[#6A7282]">
+            <p className="mt-3 text-theme-muted">
               Are you sure you want to delete this address?
             </p>
 
@@ -1863,7 +1866,7 @@ export default function AccountSettings() {
 
       {showPasswordSuccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 !mt-0">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+          <div className="w-full max-w-sm rounded-2xl bg-theme-surface p-6 text-center shadow-xl">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <svg
                 className="h-8 w-8 text-green-600"
@@ -1880,11 +1883,11 @@ export default function AccountSettings() {
               </svg>
             </div>
 
-            <h2 className="mt-5 text-xl font-semibold text-[#0F172A]">
+            <h2 className="mt-5 text-xl font-semibold text-theme-text">
               Password Updated
             </h2>
 
-            <p className="mt-2 text-sm text-[#6A7282]">
+            <p className="mt-2 text-sm text-theme-muted">
               Your password has been changed successfully.
               <br />
               Please sign in again.
@@ -1906,24 +1909,24 @@ export default function AccountSettings() {
 
       {showDeleteAccountModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 !mt-0">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl bg-theme-surface p-6 shadow-xl">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
                 <AlertTriangle className="text-red-600" size={24} />
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-[#0F172A]">
+                <h2 className="text-xl font-semibold text-theme-text">
                   Delete Account
                 </h2>
 
-                <p className="text-sm text-[#6A7282] mt-1">
+                <p className="text-sm text-theme-muted mt-1">
                   This action cannot be undone.
                 </p>
               </div>
             </div>
 
-            <p className="mt-5 text-[#475569]">
+            <p className="mt-5 text-theme-muted">
               Are you sure you want to permanently delete your account and all
               associated data?
             </p>
@@ -1936,7 +1939,7 @@ export default function AccountSettings() {
               <button
                 onClick={() => setShowDeleteAccountModal(false)}
                 disabled={deleteLoading}
-                className="border border-[#E5E7EB] rounded-lg px-5 py-2"
+                className="border border-theme-border rounded-lg px-5 py-2"
               >
                 Cancel
               </button>

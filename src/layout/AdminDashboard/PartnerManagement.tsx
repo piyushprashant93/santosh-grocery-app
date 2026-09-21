@@ -67,24 +67,24 @@ function PartnerManagementList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Partner Management</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Partner Management</h1>
           <p className="text-gray-500 mt-1">Onboard, verify, and manage restaurants and retailers.</p>
         </div>
         <button 
           onClick={() => navigate('/admin/dashboard/partner-management/new')}
-          className="px-5 py-2.5 bg-emerald-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition"
+          className="px-5 py-2.5 bg-emerald-600 text-theme-text text-sm font-medium rounded-lg shadow-sm hover:bg-emerald-700 transition"
         >
           Add New Partner
         </button>
       </div>
 
       {/* Tabs Container */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 flex px-4 pt-2">
         <div className="flex gap-8">
           <button 
             onClick={() => setActiveTab('restaurants')}
             className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-              activeTab === 'restaurants' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === 'restaurants' ? 'border-gray-900 text-theme-text' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
             <Store size={18} />
@@ -93,7 +93,7 @@ function PartnerManagementList() {
           <button 
             onClick={() => setActiveTab('retailers')}
             className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-              activeTab === 'retailers' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === 'retailers' ? 'border-gray-900 text-theme-text' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
             <ShoppingBag size={18} />
@@ -112,7 +112,7 @@ function PartnerManagementList() {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="relative w-full max-w-md">
           <input 
             type="text"
@@ -121,7 +121,7 @@ function PartnerManagementList() {
           />
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center">
+          <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition justify-center">
             <Filter size={16} />
             Filters
           </button>
@@ -132,7 +132,7 @@ function PartnerManagementList() {
       {activeTab === 'verifications' ? (
         <VerificationsList />
       ) : (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[300px] relative">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto min-h-[300px] relative">
         
         {loading && (
           <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
@@ -144,7 +144,7 @@ function PartnerManagementList() {
         {error && !loading && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchPartners} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
+            <button onClick={fetchPartners} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
           </div>
         )}
 
@@ -170,7 +170,7 @@ function PartnerManagementList() {
               <tr key={partner._id || partner.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900">{partner.businessName || partner.name || 'N/A'}</span>
+                    <span className="font-semibold text-theme-text">{partner.businessName || partner.name || 'N/A'}</span>
                     <span className="text-xs text-gray-400 mt-0.5">{(partner._id || partner.id || '').slice(-8).toUpperCase()}</span>
                   </div>
                 </td>
@@ -228,9 +228,9 @@ function PartnerManagementList() {
                   {activeDropdown === (partner._id || partner.id) && (
                     <div 
                       ref={dropdownRef}
-                      className="absolute right-8 top-12 w-52 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 py-2 z-20 flex flex-col items-start text-left"
+                      className="absolute right-8 top-12 w-52 bg-theme-surface rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 py-2 z-20 flex flex-col items-start text-left"
                     >
-                      <div className="px-4 py-2 text-xs font-bold text-gray-900 w-full mb-1">
+                      <div className="px-4 py-2 text-xs font-bold text-theme-text w-full mb-1">
                         Manage
                       </div>
                       <button 

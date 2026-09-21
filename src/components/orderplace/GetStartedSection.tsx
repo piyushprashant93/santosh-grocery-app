@@ -31,14 +31,14 @@ export default function GetStartedSection() {
   
   const navigate = useNavigate();
   return (
-    <section className="bg-[#020618] py-[108px]">
+    <section className="bg-theme-bg py-[108px]">
       <div className="max-w-[1265px] lg:px-6 px-3 mx-auto text-center">
 
-        <h2 className="font-playfair text-[54px] text-white font-medium mb-4">
+        <h2 className="font-playfair text-[54px] text-theme-text font-medium mb-4">
           Ready to get started?
         </h2>
 
-        <p className="text-[#90A1B9] text-[20px] mb-16">
+        <p className="text-theme-muted text-[20px] mb-16">
           Join the fastest growing food community.
         </p>
 
@@ -55,7 +55,7 @@ export default function GetStartedSection() {
         }
         navigate(card.path);
       }}
-      className="bg-[#0F172B80] max-w-[360px] border border-[#FFFFFF0D] rounded-[20px] p-10 text-center cursor-pointer"
+      className="bg-theme-surface max-w-[360px] border border-[#FFFFFF0D] rounded-[20px] p-10 text-center cursor-pointer"
     >
       <div
         className={`w-14 h-14 rounded-full ${card.bg} ${card.border} border flex items-center justify-center mx-auto mb-6`}
@@ -63,11 +63,11 @@ export default function GetStartedSection() {
         <Icon className={`${card.color}`} size={26} />
       </div>
 
-      <h3 className="font-playfair text-[22px] font-bold text-white mb-3">
+      <h3 className="font-playfair text-[22px] font-bold text-theme-text mb-3">
         {card.title}
       </h3>
 
-      <p className="text-[#90A1B9] text-[15px] mb-6">
+      <p className="text-theme-muted text-[15px] mb-6">
         {card.desc}
       </p>
 
