@@ -251,7 +251,7 @@ export default function FinanceWallet() {
                   <td className="py-4 text-end">
 
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Completed"] || "bg-gray-100 text-gray-800"}`}
+                      className={`px-3 py-1 rounded-full text-xs ${statusStyles[t.status || "Completed"] || "bg-gray-100 text-theme-text"}`}
                     >
                       {t.status || "Completed"}
                     </span>

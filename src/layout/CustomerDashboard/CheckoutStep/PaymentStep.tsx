@@ -429,7 +429,7 @@ const methodMeta: Record<
           setCardError("");
           setOpenAddCardModal(true);
         }}
-        className="mt-6 w-full bg-[#E5E7EB] text-black py-4 rounded-xl flex items-center justify-center gap-2"
+        className="mt-6 w-full bg-[#E5E7EB] text-theme-text py-4 rounded-xl flex items-center justify-center gap-2"
       >
         <Plus size={18} />
         Add New Card

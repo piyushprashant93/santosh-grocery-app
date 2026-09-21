@@ -688,7 +688,7 @@ export default function RestaurantSettings({
       {showLocationModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
-            <button onClick={() => setShowLocationModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+            <button onClick={() => setShowLocationModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-theme-text">
               <X size={20} />
             </button>
             <h3 className="font-playfair text-xl mb-4">{editingLocation._id ? "Edit Location" : "Add Location"}</h3>
@@ -811,7 +811,7 @@ export default function RestaurantSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.current ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                     />
@@ -831,7 +831,7 @@ export default function RestaurantSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.new ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                     />
@@ -853,7 +853,7 @@ export default function RestaurantSettings({
                   <div className="relative mt-1">
                     <input
                       type={show.confirm ? "text" : "password"}
-                      className="w-full border border-theme-border text-black rounded-lg px-4 py-2.5 pr-10 outline-none"
+                      className="w-full border border-theme-border text-theme-text rounded-lg px-4 py-2.5 pr-10 outline-none"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                     />

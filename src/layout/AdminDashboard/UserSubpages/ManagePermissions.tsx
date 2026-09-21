@@ -80,8 +80,8 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Manage Permissions</h1>
-          <p className="text-gray-500 mt-1">Security settings for <span className="font-semibold text-gray-900">{user.fullName}</span></p>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Manage Permissions</h1>
+          <p className="text-gray-500 mt-1">Security settings for <span className="font-semibold text-theme-text">{user.fullName}</span></p>
         </div>
       </div>
 
@@ -92,7 +92,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
           
           {/* Role Assignment Card */}
           <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Role Assignment</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Role Assignment</h2>
             <p className="text-sm text-gray-500 mb-6">Determine what this user can access within the platform.</p>
             
             <div className="mb-4">
@@ -100,7 +100,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
               <select 
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full bg-theme-surface border border-gray-200 text-gray-900 text-sm rounded-lg px-4 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
+                className="w-full bg-theme-surface border border-gray-200 text-theme-text text-sm rounded-lg px-4 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition"
               >
                 <option value="customer">Customer (Standard)</option>
                 <option value="restaurant">Restaurant Manager</option>
@@ -115,14 +115,14 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
 
           {/* Feature Access Card */}
           <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Feature Access</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Feature Access</h2>
             <p className="text-sm text-gray-500 mb-6">Granular permission controls.</p>
             
             <div className="flex flex-col gap-6">
               {/* Toggle 1 */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">Can Place Orders</h3>
+                  <h3 className="text-sm font-bold text-theme-text">Can Place Orders</h3>
                   <p className="text-xs text-gray-500 mt-0.5">Allow user to purchase items</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -134,7 +134,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
               {/* Toggle 2 */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">Can Review Products</h3>
+                  <h3 className="text-sm font-bold text-theme-text">Can Review Products</h3>
                   <p className="text-xs text-gray-500 mt-0.5">Allow user to leave ratings/comments</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -146,7 +146,7 @@ export default function ManagePermissions({ user, onBack }: ManagePermissionsPro
               {/* Toggle 3 */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">Beta Features</h3>
+                  <h3 className="text-sm font-bold text-theme-text">Beta Features</h3>
                   <p className="text-xs text-gray-500 mt-0.5">Access to experimental features</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">

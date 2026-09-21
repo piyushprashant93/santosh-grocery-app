@@ -149,7 +149,7 @@ export default function SupplyCart({
         <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition">
           <ArrowLeft size={20} className="text-gray-600" />
         </button>
-        <h1 className="text-2xl font-bold text-gray-800">Supply Cart</h1>
+        <h1 className="text-2xl font-bold text-theme-text">Supply Cart</h1>
       </div>
 
       {loading ? (
@@ -168,7 +168,7 @@ export default function SupplyCart({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
            <div className={`col-span-1 lg:col-span-2 space-y-4 ${processing ? 'opacity-50 pointer-events-none' : ''}`}>
              <div className="flex justify-between items-center mb-4">
-               <h2 className="text-lg font-semibold text-gray-800">Items ({cart.items.length})</h2>
+               <h2 className="text-lg font-semibold text-theme-text">Items ({cart.items.length})</h2>
                <button onClick={clearCart} className="text-red-500 hover:text-red-700 text-sm font-medium transition">
                  Clear Cart
                </button>
@@ -185,7 +185,7 @@ export default function SupplyCart({
                    </div>
                    
                    <div className="flex-1 min-w-0">
-                     <h3 className="font-semibold text-gray-800 truncate">{item.product?.name || "Product Name"}</h3>
+                     <h3 className="font-semibold text-theme-text truncate">{item.product?.name || "Product Name"}</h3>
                      <p className="text-sm text-gray-500 mb-2">{item.product?.supplier?.name || "Supplier"}</p>
                      <div className="text-orange-600 font-bold">${item.price || item.product?.price || 0} <span className="text-gray-400 text-xs font-normal">/ unit</span></div>
                    </div>
@@ -195,13 +195,13 @@ export default function SupplyCart({
                         <button onClick={() => updateQuantity(item._id || item.id, (item.quantity || 1) - 1)} className="p-2 hover:bg-gray-200 text-gray-600 transition">
                            <Minus size={16} />
                         </button>
-                        <span className="w-10 text-center font-medium text-gray-800">{item.quantity}</span>
+                        <span className="w-10 text-center font-medium text-theme-text">{item.quantity}</span>
                         <button onClick={() => updateQuantity(item._id || item.id, (item.quantity || 1) + 1)} className="p-2 hover:bg-gray-200 text-gray-600 transition">
                            <Plus size={16} />
                         </button>
                       </div>
                       
-                      <div className="font-bold text-gray-800 w-20 text-right">
+                      <div className="font-bold text-theme-text w-20 text-right">
                          ${((item.price || item.product?.price || 0) * (item.quantity || 1)).toFixed(2)}
                       </div>
 
@@ -215,7 +215,7 @@ export default function SupplyCart({
 
            <div className="col-span-1">
              <div className="bg-theme-surface rounded-xl border border-gray-200 p-6 shadow-sm sticky top-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h2>
+                <h2 className="text-lg font-semibold text-theme-text mb-4">Order Summary</h2>
                 
                 <div className="space-y-3 mb-6">
                    <div className="flex justify-between text-gray-600">
@@ -235,7 +235,7 @@ export default function SupplyCart({
                    </div>
                    ) : null}
                    
-                   <div className="pt-3 mt-3 border-t border-gray-100 flex justify-between font-bold text-xl text-gray-900">
+                   <div className="pt-3 mt-3 border-t border-gray-100 flex justify-between font-bold text-xl text-theme-text">
                       <span>Total</span>
                       <span>{formatPrice(total)}</span>
                    </div>

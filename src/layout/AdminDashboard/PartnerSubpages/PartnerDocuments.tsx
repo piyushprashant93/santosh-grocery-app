@@ -84,8 +84,8 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Verification Documents</h1>
-          <p className="text-gray-500 mt-1">Review and approve documents for <span className="font-bold text-gray-900">Spicy Kitchen</span></p>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Verification Documents</h1>
+          <p className="text-gray-500 mt-1">Review and approve documents for <span className="font-bold text-theme-text">Spicy Kitchen</span></p>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
                   {doc.type === 'PDF' ? <FileText size={20} /> : <ImageIcon size={20} />}
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900" style={{ fontFamily: 'serif' }}>{doc.title}</h3>
+                  <h3 className="font-bold text-theme-text" style={{ fontFamily: 'serif' }}>{doc.title}</h3>
                   <p className="text-xs text-gray-500 mt-0.5">{doc.type} • {doc.size}</p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
                 </div>
                 <button 
                   onClick={() => setSelectedDoc(doc)}
-                  className="text-sm font-bold text-gray-900 hover:text-orange-600 transition"
+                  className="text-sm font-bold text-theme-text hover:text-orange-600 transition"
                 >
                   Review
                 </button>
@@ -142,7 +142,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <div>
-                <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>{selectedDoc.title}</h2>
+                <h2 className="text-xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>{selectedDoc.title}</h2>
                 <p className="text-sm text-gray-500 mt-1">Uploaded on {selectedDoc.date} • {selectedDoc.size}</p>
               </div>
               <div className="flex items-center gap-3">

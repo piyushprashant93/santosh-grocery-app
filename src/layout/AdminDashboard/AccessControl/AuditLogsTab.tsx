@@ -107,7 +107,7 @@ export default function AuditLogsTab() {
                 <tr key={idx} className="hover:bg-gray-50/30 transition">
                   <td className="p-4">
                     <div className="flex flex-col">
-                      <span className="font-medium text-gray-900 text-sm">{log.user}</span>
+                      <span className="font-medium text-theme-text text-sm">{log.user}</span>
                       <span className="text-xs text-gray-500">{log.role}</span>
                     </div>
                   </td>

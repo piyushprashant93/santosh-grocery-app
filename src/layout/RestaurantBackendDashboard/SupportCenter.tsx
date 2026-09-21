@@ -219,7 +219,7 @@ export default function HelpSupport() {
       {showNewTicketModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-theme-surface rounded-xl w-[90%] max-w-[500px] p-6 relative">
-            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+            <button onClick={() => setShowNewTicketModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-theme-text">
               <X size={20} />
             </button>
             <h3 className="font-playfair text-xl mb-4">Create New Ticket</h3>

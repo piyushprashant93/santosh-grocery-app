@@ -18,7 +18,7 @@ export default function LegalSettingsTab() {
         
         {/* Header & Tabs */}
         <div className="p-6 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-2" style={{ fontFamily: 'serif' }}>Legal & Policies Editor</h2>
+          <h2 className="text-lg font-bold text-theme-text mb-2" style={{ fontFamily: 'serif' }}>Legal & Policies Editor</h2>
           <p className="text-sm text-gray-500 mb-6">Manage terms, privacy policies, and agreements.</p>
           
           <div className="flex flex-wrap gap-2">

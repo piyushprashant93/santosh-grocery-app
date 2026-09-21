@@ -48,8 +48,8 @@ export default function BannersTab() {
             
             <div className="p-4 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-2">
-                <h4 className="font-bold text-gray-900 line-clamp-1" title={banner.title}>{banner.title}</h4>
-                <button className="text-gray-400 hover:text-gray-900 -mr-2 -mt-1 p-1 rounded-md">
+                <h4 className="font-bold text-theme-text line-clamp-1" title={banner.title}>{banner.title}</h4>
+                <button className="text-gray-400 hover:text-theme-text -mr-2 -mt-1 p-1 rounded-md">
                   <MoreVertical size={16} />
                 </button>
               </div>
@@ -71,7 +71,7 @@ export default function BannersTab() {
           <div className="w-12 h-12 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mb-3 text-orange-500">
             <Plus size={24} />
           </div>
-          <h3 className="font-medium text-gray-900">Add New Banner</h3>
+          <h3 className="font-medium text-theme-text">Add New Banner</h3>
           <p className="text-xs text-center max-w-[150px] mt-1 text-gray-500">Upload a new promotional banner</p>
         </div>
 

@@ -170,7 +170,7 @@ export default function AllCampaignsTab() {
               {campaigns.map((camp, idx) => (
                 <tr key={idx} className="hover:bg-gray-50/50 transition">
                   <td className="p-4">
-                    <p className="font-bold text-gray-900">{camp.name}</p>
+                    <p className="font-bold text-theme-text">{camp.name}</p>
                     <p className="text-xs text-gray-500 mt-0.5">ID: {camp._id.substring(0, 8)}</p>
                   </td>
                   <td className="p-4">
@@ -182,14 +182,14 @@ export default function AllCampaignsTab() {
                     <p className="text-sm text-gray-700">{camp.target}</p>
                   </td>
                   <td className="p-4">
-                    <p className="text-sm text-gray-900">{camp.start}</p>
+                    <p className="text-sm text-theme-text">{camp.start}</p>
                     <p className="text-xs text-gray-500 mt-0.5">to {camp.end}</p>
                   </td>
                   <td className="p-4">
-                    <p className="text-sm font-medium text-gray-900">{camp.clicks}</p>
+                    <p className="text-sm font-medium text-theme-text">{camp.clicks}</p>
                   </td>
                   <td className="p-4">
-                    <p className="text-sm font-medium text-gray-900">{camp.conversions}</p>
+                    <p className="text-sm font-medium text-theme-text">{camp.conversions}</p>
                   </td>
                   <td className="p-4">
                     <div className="flex justify-center items-center gap-2">
@@ -219,7 +219,7 @@ export default function AllCampaignsTab() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
-              <h3 className="font-bold text-lg text-gray-900">Create New Campaign</h3>
+              <h3 className="font-bold text-lg text-theme-text">Create New Campaign</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-700">
                 <X size={20} />
               </button>

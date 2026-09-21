@@ -148,7 +148,7 @@ export default function UserManagement() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>User Management</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>User Management</h1>
           <p className="text-gray-500 mt-1">View, edit, and manage user access and permissions.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -243,7 +243,7 @@ export default function UserManagement() {
                 <tr key={user._id} className="hover:bg-gray-50/50 transition">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
-                      <span className="font-semibold text-gray-900">{user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown User'}</span>
+                      <span className="font-semibold text-theme-text">{user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown User'}</span>
                       <span className="text-sm text-gray-500">{user.email || 'No email'}</span>
                     </div>
                   </td>
@@ -266,7 +266,7 @@ export default function UserManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
-                      <span className="font-bold text-gray-900">${(user.walletBalance || 0).toLocaleString()}</span>
+                      <span className="font-bold text-theme-text">${(user.walletBalance || 0).toLocaleString()}</span>
                       <span className="text-xs text-gray-500">{user.rewardPoints || 0} pts</span>
                     </div>
                   </td>
@@ -340,7 +340,7 @@ export default function UserManagement() {
         {!loading && users.length > 0 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
             <span className="text-sm text-gray-500">
-              Showing page <span className="font-medium text-gray-900">{page}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+              Showing page <span className="font-medium text-theme-text">{page}</span> of <span className="font-medium text-theme-text">{totalPages}</span>
             </span>
             <div className="flex items-center gap-2">
               <button 

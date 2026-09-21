@@ -347,7 +347,7 @@ export default function Checkout() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/customer/dashboard")}
-              className="bg-[#fff] text-black px-3 py-2 rounded-md text-sm flex items-center justify-center gap-2 w-full"
+              className="bg-[#fff] text-theme-text px-3 py-2 rounded-md text-sm flex items-center justify-center gap-2 w-full"
             >
               <ArrowLeft size={15} />
               Back to Dashboard

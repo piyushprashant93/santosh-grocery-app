@@ -50,13 +50,13 @@ export default function MenuManagementTab() {
             {menuItems.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="font-bold text-gray-900">{item.name}</span>
+                  <span className="font-bold text-theme-text">{item.name}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm font-medium text-gray-600">{item.category}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-gray-900">{item.price}</span>
+                  <span className="text-sm font-bold text-theme-text">{item.price}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <label className="relative inline-flex items-center cursor-pointer">

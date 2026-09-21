@@ -14,7 +14,7 @@ export default function FinanceTab() {
       
       {/* Finance Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Financial Overview</h2>
+        <h2 className="text-xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Financial Overview</h2>
         <button className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm">
           <Download size={16} />
           Download Report
@@ -26,7 +26,7 @@ export default function FinanceTab() {
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
           <p className="text-sm font-medium text-gray-500 mb-2">Total Revenue (This Month)</p>
           <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-bold text-gray-900">$12,345.00</h3>
+            <h3 className="text-4xl font-bold text-theme-text">$12,345.00</h3>
             <span className="flex items-center gap-1 text-sm font-medium text-emerald-600 mb-1">
               <ArrowUpRight size={16} /> 12%
             </span>
@@ -35,7 +35,7 @@ export default function FinanceTab() {
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-center">
           <p className="text-sm font-medium text-gray-500 mb-2">Pending Payout</p>
           <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-bold text-gray-900">$850.00</h3>
+            <h3 className="text-4xl font-bold text-theme-text">$850.00</h3>
             <span className="flex items-center gap-1 text-sm font-medium text-red-600 mb-1">
               <ArrowDownRight size={16} /> 2%
             </span>
@@ -46,7 +46,7 @@ export default function FinanceTab() {
       {/* Payouts Table */}
       <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
         <div className="px-6 py-4 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Recent Settlements</h3>
+          <h3 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Recent Settlements</h3>
         </div>
         <table className="w-full text-left border-collapse">
           <thead>
@@ -61,13 +61,13 @@ export default function FinanceTab() {
             {payouts.map((payout) => (
               <tr key={payout.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="font-bold text-gray-900">{payout.id}</span>
+                  <span className="font-bold text-theme-text">{payout.id}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="text-sm text-gray-600">{payout.date}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm font-bold text-gray-900">{payout.amount}</span>
+                  <span className="text-sm font-bold text-theme-text">{payout.amount}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${

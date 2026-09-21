@@ -183,7 +183,7 @@ export default function NotificationsTab() {
               {notifications.map((notif) => (
                 <tr key={notif.id} className="hover:bg-gray-50/50 transition">
                   <td className="p-4 max-w-[300px]">
-                    <p className="font-bold text-gray-900 truncate" title={notif.title}>{notif.title}</p>
+                    <p className="font-bold text-theme-text truncate" title={notif.title}>{notif.title}</p>
                     <p className="text-xs text-gray-500 mt-1 line-clamp-2" title={notif.message}>{notif.message}</p>
                   </td>
                   <td className="p-4">
@@ -202,14 +202,14 @@ export default function NotificationsTab() {
                     <p className="text-sm text-gray-700 capitalize">{notif.audience}</p>
                   </td>
                   <td className="p-4">
-                    <p className="text-sm text-gray-900">{notif.sentAt}</p>
+                    <p className="text-sm text-theme-text">{notif.sentAt}</p>
                   </td>
                   <td className="p-4">
-                    <p className="text-sm font-medium text-gray-900">{notif.clicks !== null ? `${notif.clicks} clicks` : '-'}</p>
+                    <p className="text-sm font-medium text-theme-text">{notif.clicks !== null ? `${notif.clicks} clicks` : '-'}</p>
                   </td>
                   <td className="p-4">
                     <div className="flex justify-center">
-                      <button className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition">
+                      <button className="p-2 text-gray-400 hover:text-theme-text hover:bg-gray-100 rounded-lg transition">
                         <MoreVertical size={18} />
                       </button>
                     </div>
@@ -226,7 +226,7 @@ export default function NotificationsTab() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
-              <h3 className="font-bold text-lg text-gray-900">Send Push Notification</h3>
+              <h3 className="font-bold text-lg text-theme-text">Send Push Notification</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-700">
                 <X size={20} />
               </button>

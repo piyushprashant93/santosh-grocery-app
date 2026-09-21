@@ -75,7 +75,7 @@ export default function ProductFoodList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Product & Food Management</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Product & Food Management</h1>
           <p className="text-gray-500 mt-1">Manage global catalog, approval requests, and categorization.</p>
         </div>
         <button 
@@ -105,7 +105,7 @@ export default function ProductFoodList() {
               setPage(1)
             }}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition flex items-center gap-2 ${
-              activeTab === "retail" ? "text-gray-900 bg-gray-50" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+              activeTab === "retail" ? "text-theme-text bg-gray-50" : "text-gray-500 hover:bg-gray-50 hover:text-theme-text"
             }`}
           >
             <ShoppingBag size={16} />
@@ -117,7 +117,7 @@ export default function ProductFoodList() {
               setPage(1)
             }}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition flex items-center gap-2 ${
-              activeTab === "restaurant" ? "text-gray-900 bg-gray-50" : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+              activeTab === "restaurant" ? "text-theme-text bg-gray-50" : "text-gray-500 hover:bg-gray-50 hover:text-theme-text"
             }`}
           >
             <Utensils size={16} />
@@ -177,7 +177,7 @@ export default function ProductFoodList() {
               <tbody>
                 {items.map((item, idx) => (
                   <tr key={item._id || item.id || idx} className="border-b border-gray-50 hover:bg-gray-50/50 transition group">
-                    <td className="py-4 px-6 text-sm font-medium text-gray-900">
+                    <td className="py-4 px-6 text-sm font-medium text-theme-text">
                       {item.name || item.itemName || 'Unnamed Item'}
                     </td>
                     <td className="py-4 px-6 text-sm">
@@ -188,7 +188,7 @@ export default function ProductFoodList() {
                     <td className="py-4 px-6 text-sm text-gray-600">
                       {item.vendor?.name || item.vendorName || item.restaurant?.name || 'N/A'}
                     </td>
-                    <td className="py-4 px-6 text-sm font-bold text-gray-900">
+                    <td className="py-4 px-6 text-sm font-bold text-theme-text">
                       ${Number(item.price || item.basePrice || 0).toFixed(2)}
                     </td>
                     <td className="py-4 px-6 text-sm">
@@ -227,7 +227,7 @@ export default function ProductFoodList() {
         {!loading && items.length > 0 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between mt-auto bg-theme-surface">
             <span className="text-sm text-gray-500">
-              Showing page <span className="font-medium text-gray-900">{page}</span> of <span className="font-medium text-gray-900">{totalPages}</span>
+              Showing page <span className="font-medium text-theme-text">{page}</span> of <span className="font-medium text-theme-text">{totalPages}</span>
             </span>
             <div className="flex items-center gap-2">
               <button 

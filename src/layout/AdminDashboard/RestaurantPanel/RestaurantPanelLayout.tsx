@@ -31,7 +31,7 @@ export default function RestaurantPanelLayout() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Restaurant Panel</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Restaurant Panel</h1>
           <p className="text-gray-500 mt-1">Manage restaurant details, orders, and operations.</p>
         </div>
       </div>
@@ -44,7 +44,7 @@ export default function RestaurantPanelLayout() {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Total Orders</p>
-            <h3 className="text-2xl font-bold text-gray-900">1,456</h3>
+            <h3 className="text-2xl font-bold text-theme-text">1,456</h3>
             <p className="text-xs text-emerald-600 font-medium mt-1">+12% from last week</p>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function RestaurantPanelLayout() {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Total Revenue</p>
-            <h3 className="text-2xl font-bold text-gray-900">$12,345</h3>
+            <h3 className="text-2xl font-bold text-theme-text">$12,345</h3>
             <p className="text-xs text-emerald-600 font-medium mt-1">+8% from last week</p>
           </div>
         </div>
@@ -66,7 +66,7 @@ export default function RestaurantPanelLayout() {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Avg. Prep Time</p>
-            <h3 className="text-2xl font-bold text-gray-900">12 mins</h3>
+            <h3 className="text-2xl font-bold text-theme-text">12 mins</h3>
             <p className="text-xs text-red-600 font-medium mt-1">+2 mins from last week</p>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function RestaurantPanelLayout() {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-500">Total Customers</p>
-            <h3 className="text-2xl font-bold text-gray-900">2,800</h3>
+            <h3 className="text-2xl font-bold text-theme-text">2,800</h3>
             <p className="text-xs text-emerald-600 font-medium mt-1">+15% from last week</p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function RestaurantPanelLayout() {
               key={tab.id}
               onClick={() => navigate(tab.path)}
               className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-                currentTab === tab.id ? 'border-orange-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                currentTab === tab.id ? 'border-orange-500 text-theme-text' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               {tab.label}

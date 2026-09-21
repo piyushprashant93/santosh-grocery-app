@@ -107,7 +107,7 @@ export default function SalesAndAnalytics() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Sales & Analytics</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Sales & Analytics</h1>
           <p className="text-gray-500 mt-1">Deep dive into platform performance and user behavior.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -144,7 +144,7 @@ export default function SalesAndAnalytics() {
         {/* Revenue Growth Chart */}
         <div className="xl:col-span-2 bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Revenue Growth</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Revenue Growth</h2>
             <p className="text-gray-500 text-sm mt-1">Comparison between Retail and Restaurant vendors.</p>
           </div>
           <div className="flex-1 min-h-0 w-full relative">
@@ -204,7 +204,7 @@ export default function SalesAndAnalytics() {
         {/* Sales by Category Chart */}
         <div className="bg-theme-surface rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col h-[400px]">
           <div className="mb-2">
-            <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Sales by Category</h2>
+            <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Sales by Category</h2>
             <p className="text-gray-500 text-sm mt-1">Top performing product categories.</p>
           </div>
           <div className="flex-1 min-h-0 w-full flex items-center justify-center relative">
@@ -255,7 +255,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.cac)}</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{formatPrice(metrics.cac)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+4% from last month</p>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">{formatPrice(metrics.aov)}</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{formatPrice(metrics.aov)}</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">+2% from last month</p>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function SalesAndAnalytics() {
             </div>
           </div>
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">{metrics.retentionRate}%</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{metrics.retentionRate}%</h3>
             <p className="text-emerald-500 text-sm font-medium mt-1">Excellent</p>
           </div>
         </div>

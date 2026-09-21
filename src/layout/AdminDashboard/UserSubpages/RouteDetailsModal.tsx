@@ -14,7 +14,7 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
         {/* Custom Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Route Details</h2>
+            <h2 className="text-2xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Route Details</h2>
             <p className="text-gray-500 mt-1">Delivery tracking for Order #ORD-5521</p>
           </div>
           <span className="px-3 py-1.5 bg-gray-50 text-gray-700 font-semibold rounded-lg text-sm border border-gray-200">
@@ -48,11 +48,11 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
                     <Navigation size={20} />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">Total Distance: 4.2 miles</p>
+                    <p className="text-sm font-semibold text-theme-text">Total Distance: 4.2 miles</p>
                   </div>
                 </div>
                 <div className="flex-1 pl-4">
-                  <p className="text-sm font-semibold text-gray-900">Est. Time: 25 mins</p>
+                  <p className="text-sm font-semibold text-theme-text">Est. Time: 25 mins</p>
                 </div>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
                     className="w-10 h-10 rounded-full border border-gray-200 object-cover"
                   />
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900">Mike S.</span>
+                    <span className="font-semibold text-theme-text">Mike S.</span>
                     <span className="text-xs text-gray-500">+1 234 567 890</span>
                   </div>
                 </div>
@@ -92,20 +92,20 @@ export default function RouteDetailsModal({ isOpen, onClose, deliveryId }: Route
                 {/* Steps */}
                 <div className="relative">
                   <div className="absolute -left-[29px] top-1.5 w-3 h-3 rounded-full bg-gray-300 border-2 border-white shadow-sm" />
-                  <p className="text-sm font-medium text-gray-900">Picked up from restaurant</p>
+                  <p className="text-sm font-medium text-theme-text">Picked up from restaurant</p>
                   <p className="text-xs text-gray-500 mt-1">12:20 PM</p>
                 </div>
                 
                 <div className="relative">
                   <div className="absolute -left-[29px] top-1.5 w-3 h-3 rounded-full bg-gray-300 border-2 border-white shadow-sm" />
-                  <p className="text-sm font-medium text-gray-900">Arrived at location</p>
+                  <p className="text-sm font-medium text-theme-text">Arrived at location</p>
                   <p className="text-xs text-gray-500 mt-1">12:35 PM</p>
                 </div>
                 
                 <div className="relative">
                   {/* Current Active Step */}
                   <div className="absolute -left-[30px] top-1 w-[14px] h-[14px] rounded-full bg-emerald-500 border-[3px] border-emerald-100 shadow-sm" />
-                  <p className="text-sm font-medium text-gray-900">Delivered to customer</p>
+                  <p className="text-sm font-medium text-theme-text">Delivered to customer</p>
                   <p className="text-xs text-gray-500 mt-1">12:45 PM</p>
                 </div>
 

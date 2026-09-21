@@ -150,7 +150,7 @@ export default function FinanceSettlements() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Finance & Settlements</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Finance & Settlements</h1>
           <p className="text-gray-500 mt-1">Manage partner payouts, refunds, and financial reporting.</p>
         </div>
         <div className="flex gap-3">
@@ -212,7 +212,7 @@ export default function FinanceSettlements() {
               </div>
               <div>
                 <p className="text-gray-500 font-medium text-sm mb-1">Pending Settlements</p>
-                <h3 className="text-4xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+                <h3 className="text-4xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>
                   ${(stats.pendingSettlementsAmount || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </h3>
               </div>
@@ -230,7 +230,7 @@ export default function FinanceSettlements() {
               </div>
               <div>
                 <p className="text-gray-500 font-medium text-sm mb-1">Total Commissions</p>
-                <h3 className="text-4xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
+                <h3 className="text-4xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>
                   ${(stats.totalCommissions || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                 </h3>
               </div>
@@ -245,7 +245,7 @@ export default function FinanceSettlements() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-6 py-2.5 text-sm font-medium rounded-t-lg transition ${
                   activeTab === tab
-                    ? 'bg-white border-t border-l border-r border-gray-200 text-gray-900 relative translate-y-px'
+                    ? 'bg-white border-t border-l border-r border-gray-200 text-theme-text relative translate-y-px'
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50 border-t border-l border-r border-transparent'
                 }`}
               >
@@ -260,7 +260,7 @@ export default function FinanceSettlements() {
             {/* Table Controls */}
             <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-theme-surface">
               <div className="flex items-center gap-4">
-                <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Partner Payouts</h2>
+                <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Partner Payouts</h2>
                 <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">{settlements.length} Total</span>
               </div>
               
@@ -312,7 +312,7 @@ export default function FinanceSettlements() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex flex-col">
-                              <span className="font-bold text-gray-900">{item.recipientName || 'Unknown'}</span>
+                              <span className="font-bold text-theme-text">{item.recipientName || 'Unknown'}</span>
                               <span className="text-gray-500 text-xs capitalize">{item.recipientType || 'Partner'}</span>
                             </div>
                           </td>
@@ -329,7 +329,7 @@ export default function FinanceSettlements() {
                             {getStatusBadge(item.status)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="font-bold text-gray-900 text-lg">${(item.amount || 0).toFixed(2)}</span>
+                            <span className="font-bold text-theme-text text-lg">${(item.amount || 0).toFixed(2)}</span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-center">
                             <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition inline-flex">
@@ -351,7 +351,7 @@ export default function FinanceSettlements() {
               {/* Table Controls */}
               <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-theme-surface">
                 <div className="flex items-center gap-4">
-                  <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Customer Refunds</h2>
+                  <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Customer Refunds</h2>
                   <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-xs font-bold">2 Pending Action</span>
                 </div>
                 
@@ -387,7 +387,7 @@ export default function FinanceSettlements() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="font-bold text-gray-900 text-sm">John Doe</span>
+                          <span className="font-bold text-theme-text text-sm">John Doe</span>
                           <span className="text-blue-500 text-xs mt-0.5">ORD-9921</span>
                         </div>
                       </td>
@@ -406,7 +406,7 @@ export default function FinanceSettlements() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="font-bold text-gray-900 text-lg">$12.50</span>
+                        <span className="font-bold text-theme-text text-lg">$12.50</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         
@@ -418,7 +418,7 @@ export default function FinanceSettlements() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="font-bold text-gray-900 text-sm">Sarah Smith</span>
+                          <span className="font-bold text-theme-text text-sm">Sarah Smith</span>
                           <span className="text-blue-500 text-xs mt-0.5">ORD-9925</span>
                         </div>
                       </td>
@@ -437,7 +437,7 @@ export default function FinanceSettlements() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="font-bold text-gray-900 text-lg">$24.00</span>
+                        <span className="font-bold text-theme-text text-lg">$24.00</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <button className="px-4 py-1.5 border border-emerald-200 text-emerald-600 hover:bg-emerald-50 rounded-lg text-sm font-medium transition">
@@ -456,7 +456,7 @@ export default function FinanceSettlements() {
               {/* Table Controls */}
               <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between items-center bg-theme-surface">
                 <div className="flex items-center gap-4">
-                  <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Platform Commissions</h2>
+                  <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Platform Commissions</h2>
                 </div>
                 
                 <div className="flex gap-3 w-full sm:w-auto">
@@ -486,7 +486,7 @@ export default function FinanceSettlements() {
                         <span className="font-medium text-gray-400 text-sm">COM-4421</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="font-bold text-gray-900 text-sm">Spicy Kitchen</span>
+                        <span className="font-bold text-theme-text text-sm">Spicy Kitchen</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-blue-500 text-sm hover:underline cursor-pointer">ORD-9921</span>
@@ -511,7 +511,7 @@ export default function FinanceSettlements() {
                         <span className="font-medium text-gray-400 text-sm">COM-4422</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="font-bold text-gray-900 text-sm">Fresh Mart</span>
+                        <span className="font-bold text-theme-text text-sm">Fresh Mart</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-blue-500 text-sm hover:underline cursor-pointer">ORD-9922</span>
@@ -546,7 +546,7 @@ export default function FinanceSettlements() {
             {/* Modal Header */}
             <div className="px-6 py-5 flex justify-between items-start border-b border-gray-100">
               <div>
-                <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Process Weekly Payouts</h3>
+                <h3 className="text-xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Process Weekly Payouts</h3>
                 <p className="text-sm text-gray-500 mt-1">This will initiate bank transfers for all pending settlements.</p>
               </div>
               <button 
@@ -562,7 +562,7 @@ export default function FinanceSettlements() {
             <div className="p-6 flex flex-col gap-5">
               <div className="flex justify-between items-center py-3 border-b border-gray-100">
                 <span className="text-gray-600 font-medium">Total Partners</span>
-                <span className="text-gray-900 font-bold text-lg">{stats.pendingSettlementsCount}</span>
+                <span className="text-theme-text font-bold text-lg">{stats.pendingSettlementsCount}</span>
               </div>
               
               <div className="flex justify-between items-center py-4 px-4 bg-emerald-50 rounded-xl border border-emerald-100">

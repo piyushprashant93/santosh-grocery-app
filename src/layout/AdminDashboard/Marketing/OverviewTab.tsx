@@ -35,7 +35,7 @@ export default function OverviewTab() {
                 </div>
               </div>
               <div>
-                <h4 className="text-2xl font-bold text-gray-900">{stat.value}</h4>
+                <h4 className="text-2xl font-bold text-theme-text">{stat.value}</h4>
                 <p className="text-sm font-medium text-gray-500 mt-0.5">{stat.label}</p>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function OverviewTab() {
         <div className="lg:col-span-2 bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'serif' }}>Campaign Performance</h3>
+              <h3 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Campaign Performance</h3>
               <p className="text-sm text-gray-500">Reach vs Clicks over the last 7 days</p>
             </div>
             <select className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-orange-500">
@@ -88,7 +88,7 @@ export default function OverviewTab() {
 
         {/* Quick Actions */}
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col">
-          <h3 className="text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'serif' }}>Quick Actions</h3>
+          <h3 className="text-lg font-bold text-theme-text mb-1" style={{ fontFamily: 'serif' }}>Quick Actions</h3>
           <p className="text-sm text-gray-500 mb-6">Launch new marketing initiatives</p>
           
           <div className="flex flex-col gap-3 flex-1 justify-center">
@@ -98,7 +98,7 @@ export default function OverviewTab() {
                   <PlusCircle size={20} />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-gray-900 text-sm group-hover:text-emerald-700 transition">New Campaign</h5>
+                  <h5 className="font-bold text-theme-text text-sm group-hover:text-emerald-700 transition">New Campaign</h5>
                   <p className="text-xs text-gray-500">Create a promotional campaign</p>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function OverviewTab() {
                   <Radio size={20} />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-gray-900 text-sm group-hover:text-blue-700 transition">Send Broadcast</h5>
+                  <h5 className="font-bold text-theme-text text-sm group-hover:text-blue-700 transition">Send Broadcast</h5>
                   <p className="text-xs text-gray-500">Push notification to users</p>
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default function OverviewTab() {
                   <ImageIcon size={20} />
                 </div>
                 <div className="text-left">
-                  <h5 className="font-bold text-gray-900 text-sm group-hover:text-orange-700 transition">Add Banner</h5>
+                  <h5 className="font-bold text-theme-text text-sm group-hover:text-orange-700 transition">Add Banner</h5>
                   <p className="text-xs text-gray-500">Update app homepage banners</p>
                 </div>
               </div>

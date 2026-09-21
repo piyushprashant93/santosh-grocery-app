@@ -73,7 +73,7 @@ export default function KYCDocuments({ kyc }: { kyc?: any }) {
                 {d.title}
               </h4>
 
-              <span className={`px-3 py-1 rounded-md text-sm capitalize ${statusStyles[d.status] || "bg-gray-100 text-gray-800"}`}>
+              <span className={`px-3 py-1 rounded-md text-sm capitalize ${statusStyles[d.status] || "bg-gray-100 text-theme-text"}`}>
                 {d.status}
               </span>
 

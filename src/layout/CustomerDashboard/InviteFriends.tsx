@@ -239,7 +239,7 @@ export default function InviteFriends() {
             <button
               onClick={shareOnTwitter}
               disabled={loading || !shareLink}
-              className="bg-theme-surface text-black py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-theme-surface text-theme-text py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Twitter size={22} className="text-theme-muted" />
               Twitter
@@ -248,7 +248,7 @@ export default function InviteFriends() {
             <button
               onClick={shareOnFacebook}
               disabled={loading || !shareLink}
-              className="bg-theme-surface text-black py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-theme-surface text-theme-text py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Facebook size={22} className="text-theme-muted" />
               Facebook
@@ -257,7 +257,7 @@ export default function InviteFriends() {
             <button
               onClick={shareViaEmail}
               disabled={loading || !shareLink}
-              className="bg-theme-surface text-black py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-theme-surface text-theme-text py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Mail size={22} className="text-theme-muted" />
               Email
@@ -266,7 +266,7 @@ export default function InviteFriends() {
             <button
               onClick={shareMore}
               disabled={loading || !shareLink}
-              className="bg-theme-surface text-black py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-theme-surface text-theme-text py-6 rounded-xl flex flex-col items-center gap-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Share2 size={22} className="text-theme-muted" />
               More

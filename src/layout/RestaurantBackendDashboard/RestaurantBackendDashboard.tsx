@@ -285,7 +285,7 @@ export default function RestaurantBackendDashboard({
               Overview
             </button>
 
-            <button className="flex items-center gap-2 bg-[#fff] text-black px-5 py-2.5 rounded-lg shadow">
+            <button className="flex items-center gap-2 bg-[#fff] text-theme-text px-5 py-2.5 rounded-lg shadow">
               Detailed View
             </button>
           </div>

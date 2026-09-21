@@ -65,7 +65,7 @@ function PartnerManagementList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Partner Management</h1>
+          <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Partner Management</h1>
           <p className="text-gray-500 mt-1">Onboard, verify, and manage restaurants and retailers.</p>
         </div>
         <button 
@@ -82,7 +82,7 @@ function PartnerManagementList() {
           <button 
             onClick={() => setActiveTab('restaurants')}
             className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-              activeTab === 'restaurants' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === 'restaurants' ? 'border-gray-900 text-theme-text' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
             <Store size={18} />
@@ -91,7 +91,7 @@ function PartnerManagementList() {
           <button 
             onClick={() => setActiveTab('retailers')}
             className={`pb-3 pt-2 text-sm font-medium transition flex items-center gap-2 border-b-2 ${
-              activeTab === 'retailers' ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              activeTab === 'retailers' ? 'border-gray-900 text-theme-text' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
             <ShoppingBag size={18} />
@@ -156,7 +156,7 @@ function PartnerManagementList() {
               <tr key={partner._id || partner.id} className="hover:bg-gray-50/50 transition">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-900">{partner.businessName || partner.name || 'N/A'}</span>
+                    <span className="font-semibold text-theme-text">{partner.businessName || partner.name || 'N/A'}</span>
                     <span className="text-xs text-gray-400 mt-0.5">{(partner._id || partner.id || '').slice(-8).toUpperCase()}</span>
                   </div>
                 </td>
@@ -216,7 +216,7 @@ function PartnerManagementList() {
                       ref={dropdownRef}
                       className="absolute right-8 top-12 w-52 bg-theme-surface rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 py-2 z-20 flex flex-col items-start text-left"
                     >
-                      <div className="px-4 py-2 text-xs font-bold text-gray-900 w-full mb-1">
+                      <div className="px-4 py-2 text-xs font-bold text-theme-text w-full mb-1">
                         Manage
                       </div>
                       <button 

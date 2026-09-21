@@ -189,7 +189,7 @@ export default function SearchTab() {
     async function fetchTrending() {
       setTrendingLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/search/trending`, {
+        const res = await fetch(`${API_BASE}/general/search/trending`, {
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
         });
@@ -230,7 +230,7 @@ export default function SearchTab() {
     suggestDebounceRef.current = setTimeout(async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/search/suggestions?q=${encodeURIComponent(query.trim())}`,
+          `${API_BASE}/general/search/suggestions?q=${encodeURIComponent(query.trim())}`,
           { headers: { "Content-Type": "application/json" } },
         );
         const json = await res.json();
@@ -261,7 +261,7 @@ export default function SearchTab() {
 
     try {
       const res = await fetch(
-        `${API_BASE}/search?q=${encodeURIComponent(term.trim())}&type=all`,
+        `${API_BASE}/general/search?q=${encodeURIComponent(term.trim())}&type=all`,
         { headers: { "Content-Type": "application/json" } },
       );
       const json = await res.json();

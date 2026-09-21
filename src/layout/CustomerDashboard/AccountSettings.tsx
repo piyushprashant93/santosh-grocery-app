@@ -1119,7 +1119,7 @@ export default function AccountSettings() {
                   className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full object-cover"
                 />
               ) : (
-                <div className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full bg-gray-100 text-black flex items-center justify-center font-semibold md:text-3xl text-xl">
+                <div className="md:min-w-24 md:w-24 md:h-24 w-16 h-16 min-w-16 rounded-full bg-gray-100 text-theme-text flex items-center justify-center font-semibold md:text-3xl text-xl">
                   {initials || "U"}
                 </div>
               )}

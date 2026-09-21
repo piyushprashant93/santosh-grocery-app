@@ -1530,7 +1530,7 @@ const submitCancelOrder = async () => {
 
                       <button
                         onClick={() => setShowInvoiceModal(false)}
-                        className="text-2xl text-theme-muted hover:text-black"
+                        className="text-2xl text-theme-muted hover:text-theme-text"
                       >
                         ×
                       </button>

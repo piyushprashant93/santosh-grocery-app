@@ -29,11 +29,25 @@ const termsData = {
     },
   ],
 };
+import { useState, useEffect } from "react";
+
 export const TermsPage = () => {
+  const [data, setData] = useState(termsData);
+
+  useEffect(() => {
+    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/terms")
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          setData({ ...termsData, ...json.data });
+        }
+      })
+      .catch(console.error);
+  }, []);
   return (
     <>
       <SecondaryHeader />
-      <TermsSection {...termsData} />
+      <TermsSection {...data} />
     </>
   )
 }
