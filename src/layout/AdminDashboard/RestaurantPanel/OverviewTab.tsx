@@ -1,20 +1,41 @@
+import { useState, useEffect } from "react"
 import { ShoppingBag, TrendingUp } from "lucide-react"
+import api from "../../../lib/api"
 
 export default function OverviewTab() {
-  const newOrders = [
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOverview = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get('/api/v1/admin/partners/restaurants');
+        const partners = res.data?.data?.data || res.data?.data || res.data || [];
+        const id = Array.isArray(partners) && partners.length > 0 ? (partners[0]._id || partners[0].id) : null;
+        if (id) {
+          const overviewRes = await api.get(`/api/v1/admin/partners/restaurants/${id}/overview`);
+          setData(overviewRes.data?.data || overviewRes.data || null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch overview data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOverview();
+  }, []);
+
+  const newOrders: any[] = data?.newOrders || [
     { id: '#ORD-001', amount: '$45.00', status: 'Pending', time: '2 mins ago' },
     { id: '#ORD-002', amount: '$32.50', status: 'Pending', time: '5 mins ago' },
-    { id: '#ORD-003', amount: '$112.00', status: 'Pending', time: '12 mins ago' },
-    { id: '#ORD-004', amount: '$28.00', status: 'Pending', time: '15 mins ago' },
-    { id: '#ORD-005', amount: '$65.50', status: 'Pending', time: '18 mins ago' },
+    { id: '#ORD-003', amount: '$112.00', status: 'Pending', time: '12 mins ago' }
   ];
 
-  const topItems = [
+  const topItems: any[] = data?.topItems || [
     { name: 'Spicy Chicken Wings', orders: 145, revenue: '$1,450' },
     { name: 'Classic Burger', orders: 112, revenue: '$980' },
-    { name: 'Margherita Pizza', orders: 98, revenue: '$1,200' },
-    { name: 'Truffle Fries', orders: 85, revenue: '$425' },
-    { name: 'Caesar Salad', orders: 64, revenue: '$512' },
+    { name: 'Margherita Pizza', orders: 98, revenue: '$1,200' }
   ];
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ArrowLeft, FileText, Image as ImageIcon, Calendar, Download, X, XCircle, CheckCircle2, Loader2 } from "lucide-react"
 import api from "../../../lib/api"
 
@@ -39,19 +39,60 @@ const MOCK_DOCS = [
 ];
 
 export default function PartnerDocuments({ partnerId, onBack }: PartnerDocumentsProps) {
-  const [selectedDoc, setSelectedDoc] = useState<typeof MOCK_DOCS[0] | null>(null);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [restaurantName, setRestaurantName] = useState("Partner");
+  const [selectedDoc, setSelectedDoc] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
 
-  const handleVerifyDocument = async (status: 'Verified' | 'Rejected') => {
+  useEffect(() => {
+    fetchPartnerAndDocs();
+  }, [partnerId]);
+
+  const fetchPartnerAndDocs = async () => {
+    setFetchLoading(true);
+    try {
+      // Use the generic partners endpoint or restaurant specific one
+      // Here assuming we fetch the restaurant info
+      const res = await api.get(`/api/v1/admin/partners/restaurants/${partnerId}`);
+      const data = res.data?.data || res.data || {};
+      setRestaurantName(data.restaurantName || data.businessName || data.name || "Partner");
+      
+      const docs = data.documents || [];
+      // Map to expected UI format
+      const mappedDocs = docs.map((d: any, idx: number) => ({
+        id: d._id || idx.toString(),
+        typeId: d.type || d.documentType || 'unknown',
+        title: d.title || d.type || "Document",
+        type: d.format || (d.url?.endsWith('.pdf') ? 'PDF' : 'Image'),
+        size: "N/A", // Backend might not provide size
+        date: new Date(d.uploadedAt || d.createdAt || Date.now()).toLocaleDateString(),
+        status: d.status || "Pending",
+        image: d.url || "/placeholder.png"
+      }));
+      setDocuments(mappedDocs.length > 0 ? mappedDocs : MOCK_DOCS);
+    } catch (err) {
+      console.error("Failed to fetch documents:", err);
+      // Fallback to MOCK_DOCS for demo
+      setDocuments(MOCK_DOCS);
+    } finally {
+      setFetchLoading(false);
+    }
+  };
+
+  const handleVerifyDocument = async (action: 'approve' | 'reject') => {
     if (!selectedDoc) return;
     setLoading(true);
     try {
       await api.put(`/api/v1/admin/partners/restaurants/${partnerId}/verify-document`, {
-        documentId: selectedDoc.id,
-        status: status
+        partnerType: 'restaurant',
+        documentType: selectedDoc.typeId || selectedDoc.title.toLowerCase(),
+        action: action,
+        rejectionReason: action === 'reject' ? "Rejected by admin" : undefined
       });
-      alert(`Document ${status} successfully!`);
+      alert(`Document ${action}d successfully!`);
       setSelectedDoc(null);
+      fetchPartnerAndDocs();
     } catch (err: any) {
       alert(err.response?.data?.message || err.message || "Failed to verify document");
     } finally {
@@ -60,12 +101,13 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Pending':
+    switch (status.toLowerCase()) {
+      case 'pending':
         return <span className="absolute top-3 right-3 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Pending</span>;
-      case 'Verified':
+      case 'verified':
+      case 'approved':
         return <span className="absolute top-3 right-3 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Verified</span>;
-      case 'Rejected':
+      case 'rejected':
         return <span className="absolute top-3 right-3 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Rejected</span>;
       default:
         return null;
@@ -85,13 +127,17 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
         </button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>Verification Documents</h1>
-          <p className="text-gray-500 mt-1">Review and approve documents for <span className="font-bold text-gray-900">Spicy Kitchen</span></p>
+          <p className="text-gray-500 mt-1">Review and approve documents for <span className="font-bold text-gray-900">{restaurantName}</span></p>
         </div>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {MOCK_DOCS.map((doc) => (
+        {fetchLoading ? (
+          <div className="col-span-3 flex justify-center py-12">
+            <Loader2 className="animate-spin text-orange-500" size={32} />
+          </div>
+        ) : documents.map((doc) => (
           <div key={doc.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col group">
             
             {/* Image Thumbnail */}
@@ -162,7 +208,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto flex-1 bg-gray-50 flex items-center justify-center min-h-[400px]">
               <img 
-                src={`file://${selectedDoc.image}`} 
+                src={selectedDoc.image.startsWith('/') && !selectedDoc.image.startsWith('/Users') ? selectedDoc.image : (selectedDoc.image.startsWith('/Users') ? `file://${selectedDoc.image}` : selectedDoc.image)} 
                 alt={selectedDoc.title} 
                 className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-sm"
               />
@@ -171,7 +217,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
             {/* Modal Footer */}
             <div className="p-6 border-t border-gray-100 flex items-center justify-end gap-3 bg-white rounded-b-2xl">
               <button 
-                onClick={() => handleVerifyDocument('Rejected')}
+                onClick={() => handleVerifyDocument('reject')}
                 disabled={loading}
                 className="flex items-center gap-2 px-5 py-2.5 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition disabled:opacity-50"
               >
@@ -179,7 +225,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
                 Reject Document
               </button>
               <button 
-                onClick={() => handleVerifyDocument('Verified')}
+                onClick={() => handleVerifyDocument('approve')}
                 disabled={loading}
                 className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition shadow-sm disabled:opacity-50"
               >

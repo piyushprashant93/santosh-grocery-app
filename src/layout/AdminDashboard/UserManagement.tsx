@@ -35,6 +35,7 @@ export default function UserManagement() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Sub-view states
   const [activeView, setActiveView] = useState<'main' | 'orders' | 'payments' | 'deliveries' | 'permissions'>('main');
@@ -99,6 +100,30 @@ export default function UserManagement() {
     }
   };
 
+  const handleExportUsers = async () => {
+    setIsExporting(true);
+    try {
+      const params = new URLSearchParams();
+      if (roleFilter) params.append("role", roleFilter);
+      if (search) params.append("search", search);
+      const query = params.toString() ? `?${params.toString()}` : "";
+      
+      const response = await api.get(`/api/v1/admin/users/export${query}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'users_export.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Error exporting users. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "N/A";
     const date = new Date(dateStr);
@@ -152,9 +177,13 @@ export default function UserManagement() {
           <p className="text-gray-500 mt-1">View, edit, and manage user access and permissions.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
-            <Download size={16} />
-            Export Data
+          <button 
+            onClick={handleExportUsers}
+            disabled={isExporting}
+            className="px-4 py-2 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition flex items-center gap-2 disabled:opacity-50"
+          >
+            {isExporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+            {isExporting ? "Exporting..." : "Export Data"}
           </button>
           <button 
             onClick={() => setIsAddModalOpen(true)}

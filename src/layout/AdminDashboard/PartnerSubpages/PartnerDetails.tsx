@@ -1,5 +1,7 @@
-import { ArrowLeft, ShoppingBag, DollarSign, Star, Store, Phone, MapPin, ExternalLink } from "lucide-react"
+import { ArrowLeft, ShoppingBag, DollarSign, Star, Store, Phone, MapPin, ExternalLink, Loader2 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import api from "../../../lib/api"
 
 interface PartnerDetailsProps {
   partner: any; // Using any for now since we're rendering static layout, but in reality this would be the Partner interface
@@ -8,6 +10,48 @@ interface PartnerDetailsProps {
 
 export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps) {
   const navigate = useNavigate();
+  const [partnerData, setPartnerData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchPartner = async () => {
+      try {
+        setLoading(true);
+        // Since we don't strictly know if it's a restaurant or retailer here, we'll assume restaurant for now
+        // based on the document or try both if one fails.
+        const res = await api.get(`/api/v1/admin/partners/restaurants/${partner.id}`);
+        setPartnerData(res.data?.data || res.data || {});
+      } catch (err: any) {
+        // if not found, maybe it's a retailer? Let's just catch and show error for now
+        setError(err.response?.data?.message || "Failed to load partner details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPartner();
+  }, [partner.id]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="animate-spin text-orange-500 mb-4" size={32} />
+        <p className="text-gray-500">Loading partner details...</p>
+      </div>
+    );
+  }
+
+  if (error || !partnerData) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <p className="text-red-500 mb-4">{error || "Partner not found"}</p>
+        <button onClick={onBack} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Go Back</button>
+      </div>
+    );
+  }
+
+  const name = partnerData.restaurantName || partnerData.businessName || partnerData.name || "Partner";
+  const initials = name.substring(0, 2).toUpperCase();
 
   return (
     <div className="flex flex-col gap-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
@@ -24,18 +68,24 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-pink-600 text-white flex items-center justify-center text-xl font-bold">
-              SK
+              {initials}
             </div>
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight" style={{ fontFamily: 'serif' }}>
-                  Spicy Kitchen
+                  {name}
                 </h1>
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600">
-                  Active
-                </span>
+                {partnerData.isActive ? (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600">
+                    Active
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                    Inactive
+                  </span>
+                )}
               </div>
-              <p className="text-sm text-gray-500 mt-0.5">Partner ID: RES-001 • Joined Feb 2023</p>
+              <p className="text-sm text-gray-500 mt-0.5">Partner ID: {partner.id} • Joined {new Date(partnerData.createdAt || Date.now()).toLocaleDateString()}</p>
             </div>
           </div>
         </div>
@@ -65,7 +115,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Orders</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">1,245</p>
+            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.totalOrders || 0}</p>
           </div>
         </div>
 
@@ -76,7 +126,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Total Revenue</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">$45,230</p>
+            <p className="text-2xl font-bold text-gray-900 mt-0.5">${(partnerData.totalRevenue || 0).toLocaleString()}</p>
           </div>
         </div>
 
@@ -87,7 +137,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
           </div>
           <div>
             <p className="text-sm text-gray-500 font-medium">Rating</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">4.8</p>
+            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.rating || "N/A"}</p>
           </div>
         </div>
 
@@ -97,8 +147,8 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             <Store size={20} />
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-medium">Outlets</p>
-            <p className="text-2xl font-bold text-gray-900 mt-0.5">2</p>
+            <p className="text-sm text-gray-500 font-medium">Outlets / Locations</p>
+            <p className="text-2xl font-bold text-gray-900 mt-0.5">{partnerData.outletsCount || 1}</p>
           </div>
         </div>
       </div>
@@ -116,24 +166,24 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Owner Name</p>
-                <p className="text-gray-900 font-medium">Michael Chen</p>
+                <p className="text-gray-900 font-medium">{partnerData.ownerName || partnerData.firstName + ' ' + partnerData.lastName || "N/A"}</p>
               </div>
               
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</p>
-                <p className="text-gray-900 font-medium">Asian Cuisine • Restaurant</p>
+                <p className="text-gray-900 font-medium">{partnerData.category || "Restaurant"}</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
-                <p className="text-gray-900 font-medium truncate">michael.chen@spicykitchen.com</p>
+                <p className="text-gray-900 font-medium truncate">{partnerData.email || "N/A"}</p>
               </div>
 
               <div>
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Phone Number</p>
                 <p className="text-gray-900 font-medium flex items-center gap-2">
                   <Phone size={14} className="text-gray-400" />
-                  +1 (555) 123-4567
+                  {partnerData.phone || partnerData.phoneNumber || "N/A"}
                 </p>
               </div>
 
@@ -141,7 +191,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Address</p>
                 <p className="text-gray-900 font-medium flex items-center gap-2">
                   <MapPin size={14} className="text-gray-400 shrink-0" />
-                  123 Culinary Ave, Suite 100, Scranton, PA 18503
+                  {partnerData.address || "No address provided"}
                 </p>
               </div>
             </div>
@@ -185,18 +235,18 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             <h2 className="text-lg font-bold mb-4" style={{ fontFamily: 'serif' }}>Commission Rate</h2>
             
             <div className="flex items-baseline gap-2 mb-8">
-              <span className="text-5xl font-bold text-emerald-400">15%</span>
+              <span className="text-5xl font-bold text-emerald-400">{partnerData.commissionRate || 15}%</span>
               <span className="text-gray-400 text-sm">per order</span>
             </div>
 
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-400">Current Plan</span>
-                <span className="font-semibold">Professional</span>
+                <span className="font-semibold">{partnerData.subscriptionPlan || "Standard"}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-400">Next Payout</span>
-                <span className="font-semibold">Feb 15, 2026</span>
+                <span className="font-semibold">{partnerData.nextPayoutDate ? new Date(partnerData.nextPayoutDate).toLocaleDateString() : "N/A"}</span>
               </div>
             </div>
           </div>
@@ -208,20 +258,26 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
             <div className="flex flex-col gap-5">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">Store Status</span>
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
-                  Open Now
-                </span>
+                {partnerData.isOpen ? (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                    Open Now
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-700">
+                    Closed
+                  </span>
+                )}
               </div>
               
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">Last Active</span>
-                <span className="font-medium text-gray-900">5 mins ago</span>
+                <span className="font-medium text-gray-900">Recently</span>
               </div>
 
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-500">Verification</span>
-                <span className="font-medium text-emerald-600 flex items-center gap-1.5">
-                  Verified
+                <span className={`font-medium flex items-center gap-1.5 ${partnerData.isVerified ? 'text-emerald-600' : 'text-amber-600'}`}>
+                  {partnerData.isVerified ? 'Verified' : 'Pending'}
                   <ExternalLink size={14} />
                 </span>
               </div>

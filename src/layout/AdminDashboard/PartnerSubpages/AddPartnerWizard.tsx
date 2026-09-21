@@ -8,6 +8,8 @@ export default function AddPartnerWizard() {
   const [step, setStep] = useState(1);
   const [partnerType, setPartnerType] = useState<'restaurant' | 'retailer'>('restaurant');
   const [loading, setLoading] = useState(false);
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [taxIdFile, setTaxIdFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     businessName: '',
     ownerName: '',
@@ -31,7 +33,30 @@ export default function AddPartnerWizard() {
         ...formData
       };
 
-      await api.post('/api/v1/admin/partners', payload);
+      const res = await api.post('/api/v1/admin/partners', payload);
+      const partnerId = res.data?.data?._id || res.data?.data?.id || res.data?._id;
+
+      if (partnerId) {
+        const typePath = partnerType === 'restaurant' ? 'restaurants' : 'retailers';
+        
+        if (licenseFile) {
+          const fd = new FormData();
+          fd.append('documentType', 'license');
+          fd.append('document', licenseFile);
+          await api.post(`/api/v1/admin/partners/${typePath}/${partnerId}/documents`, fd, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }).catch(console.error);
+        }
+
+        if (taxIdFile) {
+          const fd = new FormData();
+          fd.append('documentType', 'tax_id');
+          fd.append('document', taxIdFile);
+          await api.post(`/api/v1/admin/partners/${typePath}/${partnerId}/documents`, fd, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }).catch(console.error);
+        }
+      }
       
       alert('Partner created successfully!');
       navigate('/admin/dashboard/partner-management');
@@ -240,20 +265,44 @@ export default function AddPartnerWizard() {
 
             <div className="flex flex-col gap-6 mb-8">
               {/* Dropzone 1 */}
-              <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-gray-300 transition cursor-pointer group">
+              <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-gray-300 transition cursor-pointer group">
+                <input 
+                  type="file" 
+                  accept=".pdf,.jpg,.jpeg,.png" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setLicenseFile(e.target.files[0]);
+                    }
+                  }}
+                />
                 <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <UploadCloud size={20} />
+                  {licenseFile ? <Check size={20} /> : <UploadCloud size={20} />}
                 </div>
-                <p className="font-bold text-gray-900 mt-2">Upload Business License</p>
+                <p className="font-bold text-gray-900 mt-2">
+                  {licenseFile ? licenseFile.name : "Upload Business License"}
+                </p>
                 <p className="text-xs text-gray-400">PDF, JPG, or PNG (Max 5MB)</p>
               </div>
 
               {/* Dropzone 2 */}
-              <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-gray-300 transition cursor-pointer group">
+              <div className="relative border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-gray-300 transition cursor-pointer group">
+                <input 
+                  type="file" 
+                  accept=".pdf,.jpg,.jpeg,.png" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      setTaxIdFile(e.target.files[0]);
+                    }
+                  }}
+                />
                 <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <UploadCloud size={20} />
+                  {taxIdFile ? <Check size={20} /> : <UploadCloud size={20} />}
                 </div>
-                <p className="font-bold text-gray-900 mt-2">Upload Tax ID / EIN</p>
+                <p className="font-bold text-gray-900 mt-2">
+                  {taxIdFile ? taxIdFile.name : "Upload Tax ID / EIN"}
+                </p>
                 <p className="text-xs text-gray-400">PDF, JPG, or PNG (Max 5MB)</p>
               </div>
             </div>
