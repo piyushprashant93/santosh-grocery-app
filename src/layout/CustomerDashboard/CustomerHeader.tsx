@@ -16,9 +16,10 @@ export default function CustomerHeader({
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return;
+
     const fetchUnreadCount = async () => {
-      const token = localStorage.getItem("authToken");
-      if (!token) return;
 
       try {
         const response = await fetch(
