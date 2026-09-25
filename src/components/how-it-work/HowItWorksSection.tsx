@@ -61,7 +61,8 @@ export default function HowItWorksSection() {
 
                 <div className="relative">
                   <img
-                    src={getImageUrl(step.image)}
+                    src={step.image}
+                    alt={step.title}
                     className="w-full h-[320px] md:h-[420px] object-cover rounded-[16px]"
                   />
 

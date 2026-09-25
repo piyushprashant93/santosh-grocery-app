@@ -57,23 +57,8 @@ export default function Footer() {
   const [data, setData] = useState<FooterData>(DEFAULT_FOOTER_DATA);
 
   useEffect(() => {
-    // Placeholder fetch logic until public API is available
-    const fetchFooterData = async () => {
-      try {
-        const res = await fetch(
-          "https://mr-santosh-grocery-backend.onrender.com/api/v1/public/footer"
-        );
-        if (res.ok) {
-          const json = await res.json();
-          if (json.data) {
-            setData(json.data);
-          }
-        }
-      } catch (error) {
-        console.log("Using default footer data", error);
-      }
-    };
-    fetchFooterData();
+    // Commented out API call to prevent 404 error
+    // Once backend is ready, this can be re-enabled
   }, []);
 
   return (

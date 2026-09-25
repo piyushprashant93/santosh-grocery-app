@@ -19,10 +19,11 @@ const icon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ContactSection() {
-  const [data, setData] = useState({
+  const [data] = useState({
     headquarters: {
       line1: "123 Innovation Drive,",
       line2: "Tech Valley, CA 94043",
@@ -38,16 +39,47 @@ export default function ContactSection() {
     }
   });
 
-  useEffect(() => {
-    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/contact")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.data) {
-          setData({ ...data, ...json.data });
-        }
-      })
-      .catch(console.error);
-  }, []);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        }),
+      });
+      const result = await response.json();
+      if (response.ok && result.success) {
+        toast.success(result.message || "Message sent successfully!");
+        setFormData({ firstName: "", lastName: "", email: "", subject: "", message: "" });
+      } else {
+        toast.error(result.message || "Failed to send message.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while sending the message.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="bg-theme-bg py-24 text-theme-text">
@@ -104,36 +136,36 @@ export default function ContactSection() {
           </div>
 
           <div className="bg-theme-surface border border-theme-border rounded-xl p-8">
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="text-sm text-theme-muted">First Name</label>
-                  <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
+                  <input name="firstName" value={formData.firstName} onChange={handleChange} required className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
                 </div>
 
                 <div>
                   <label className="text-sm text-theme-muted">Last Name</label>
-                  <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
+                  <input name="lastName" value={formData.lastName} onChange={handleChange} required className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
                 </div>
               </div>
 
               <div>
                 <label className="text-sm text-theme-muted">Email Address</label>
-                <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
               </div>
 
               <div>
                 <label className="text-sm text-theme-muted">Subject</label>
-                <input className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
+                <input name="subject" value={formData.subject} onChange={handleChange} required className="w-full mt-2 h-11 bg-theme-bg border border-theme-border rounded-lg px-4 outline-none" />
               </div>
 
               <div>
                 <label className="text-sm text-theme-muted">Message</label>
-                <textarea className="w-full mt-2 h-32 bg-theme-bg border border-theme-border rounded-lg px-4 py-3 outline-none" />
+                <textarea name="message" value={formData.message} onChange={handleChange} required className="w-full mt-2 h-32 bg-theme-bg border border-theme-border rounded-lg px-4 py-3 outline-none" />
               </div>
 
-              <button className="w-full h-[48px] rounded-lg bg-[#009966] flex items-center justify-center gap-2">
-                Send Message <Send size={18} />
+              <button disabled={isSubmitting} type="submit" className="w-full h-[48px] rounded-lg bg-[#009966] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+                {isSubmitting ? "Sending..." : "Send Message"} <Send size={18} />
               </button>
             </form>
           </div>
