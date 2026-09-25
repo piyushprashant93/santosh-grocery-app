@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom"
 import { Instagram, Twitter, Facebook, Linkedin, Heart } from "lucide-react"
-import Logo from "../assets/images/logo.svg"
+import LogoDark from "../assets/images/logo.svg"
+import LogoLight from "../assets/images/logo-light.svg"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -67,10 +68,11 @@ export default function Footer() {
         <div className="grid lg:grid-cols-5 justify-between gap-32">
           <div className="col-span-2">
             <div 
-              className="flex items-center gap-3 mb-6 bg-[#FFFFFF0D] p-3 w-fit rounded-[12px] cursor-pointer"
+              className="flex items-center gap-3 mb-6 p-2 -ml-2 w-fit rounded-[12px] cursor-pointer hover:bg-gray-100 dark:hover:bg-[#FFFFFF0D] transition"
               onClick={() => navigate("/")}
             >
-              <img src={Logo} alt="" className="dark:invert" />
+              <img src={LogoDark} alt="Hubnepa" className="block dark:hidden" />
+              <img src={LogoLight} alt="Hubnepa" className="hidden dark:block" />
             </div>
 
             <p className="leading-relaxed text-theme-muted">
