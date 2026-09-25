@@ -1,4 +1,5 @@
 import { Check } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const plans = [
   {
@@ -14,6 +15,7 @@ const plans = [
     button: "Join Now",
     btnColor: "bg-[#009966]",
     color: "text-[#009966]",
+    url: "/sign-up"
   },
   {
     title: "HubNepa+",
@@ -28,6 +30,7 @@ const plans = [
     button: "Start Free Trial",
     btnColor: "bg-[#F54900]",
     color: "text-[#F54900]",
+    url: "/sign-up"
   },
   {
     title: "Partner",
@@ -42,10 +45,13 @@ const plans = [
     button: "Become a Partner",
     btnColor: "bg-[#155DFC]",
     color: "text-[#155DFC]",
+    url: "/role-wise-sign-in"
   },
 ]
 
 export default function PricingSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="bg-theme-bg py-[60px] text-theme-text">
       <div className="max-w-[1265px] mx-auto px-4">
@@ -86,6 +92,7 @@ export default function PricingSection() {
               </div>
 
               <button
+                onClick={() => navigate(plan.url)}
                 className={`${plan.btnColor} mt-8 h-[48px] rounded-lg text-white text-base`}
               >
                 {plan.button}

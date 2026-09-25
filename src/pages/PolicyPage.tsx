@@ -1,5 +1,6 @@
 import { TermsSection } from '../layout/TermsSection'
-import { SecondaryHeader } from '../layout/SecondaryHeader'
+import { SecondaryHeader } from '../layout/SecondaryHeader';
+import Footer from '../layout/Footer';
 import { Shield } from "lucide-react";
 
 const privacyPolicyData = {
@@ -60,6 +61,7 @@ export const PolicyPage = () => {
     <>
       <SecondaryHeader />
       <TermsSection {...data} />
+      <Footer />
     </>
   )
 }

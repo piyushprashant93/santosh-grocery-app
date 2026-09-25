@@ -1,5 +1,6 @@
 import { TermsSection } from '../layout/TermsSection'
-import { SecondaryHeader } from '../layout/SecondaryHeader'
+import { SecondaryHeader } from '../layout/SecondaryHeader';
+import Footer from '../layout/Footer';
 
 const termsData = {
   title: "Terms of Service",
@@ -48,6 +49,7 @@ export const TermsPage = () => {
     <>
       <SecondaryHeader />
       <TermsSection {...data} />
+      <Footer />
     </>
   )
 }

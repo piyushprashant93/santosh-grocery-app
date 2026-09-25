@@ -1,5 +1,6 @@
 import { TermsSection } from '../layout/TermsSection'
-import { SecondaryHeader } from '../layout/SecondaryHeader'
+import { SecondaryHeader } from '../layout/SecondaryHeader';
+import Footer from '../layout/Footer';
 import { FileTextIcon } from 'lucide-react';
 
 const cookiesData = {
@@ -31,6 +32,7 @@ export const CookiesPage = () => {
     <>
       <SecondaryHeader />
       <TermsSection {...cookiesData} />
+      <Footer />
     </>
   )
 }

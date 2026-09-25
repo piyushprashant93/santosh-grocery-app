@@ -1,5 +1,6 @@
 import { TermsSection } from '../layout/TermsSection'
-import { SecondaryHeader } from '../layout/SecondaryHeader'
+import { SecondaryHeader } from '../layout/SecondaryHeader';
+import Footer from '../layout/Footer';
 import { Scale } from 'lucide-react';
 
 const disputeData = {
@@ -31,6 +32,7 @@ export const DisputePage = () => {
     <>
       <SecondaryHeader />
       <TermsSection {...disputeData} />
+      <Footer />
     </>
   )
 }
