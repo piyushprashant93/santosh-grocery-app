@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import Logo from "../assets/images/logo-light.svg";
+import LogoDark from "../assets/images/logo.svg";
+import LogoLight from "../assets/images/logo-light.svg";
 import { useNavigate } from "react-router-dom";
 
 export function SecondaryHeader() {
@@ -12,7 +13,8 @@ export function SecondaryHeader() {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <img src={Logo} alt="" className="dark:invert" />
+          <img src={LogoDark} alt="Hubnepa" className="block dark:hidden" />
+          <img src={LogoLight} alt="Hubnepa" className="hidden dark:block" />
         </div>
 
         <div onClick={() => navigate(-1)}

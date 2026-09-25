@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../assets/images/logo.svg";
+import LogoDark from "../assets/images/logo.svg";
+import LogoLight from "../assets/images/logo-light.svg";
 import { LayoutGrid, LogOut, AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -109,7 +110,8 @@ export default function Header() {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <img src={Logo} alt="" className="dark:invert" />
+          <img src={LogoDark} alt="Hubnepa" className="block dark:hidden" />
+          <img src={LogoLight} alt="Hubnepa" className="hidden dark:block" />
         </div>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
