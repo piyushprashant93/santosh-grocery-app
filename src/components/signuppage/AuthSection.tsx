@@ -124,7 +124,7 @@ export default function AuthSection() {
                 <span className="text-xs text-theme-muted">
                   Already a member?
                 </span>
-                <button onClick={()=>navigate("/sign-in")} className="text-theme-muted text-xs bg-gray-100 dark:bg-[#1E2939] border border-theme-border px-3 py-1 rounded-full font-medium hover:text-theme-text transition">
+                <button onClick={()=>navigate("/sign-in")} className="text-theme-muted text-xs bg-[#1E2939] border border-theme-border px-3 py-1 rounded-full font-medium hover:text-theme-text transition">
                   SIGN IN
                 </button>
               </div>
@@ -143,18 +143,18 @@ export default function AuthSection() {
                 const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
                 window.location.href = `${baseUrl}/api/v1/auth/google`;
               }}
-              className="mt-8 w-full bg-theme-surface border border-theme-border shadow-sm dark:shadow-none text-theme-text font-bold py-3 rounded-[12px] hover:bg-gray-50 dark:hover:bg-gray-800 transition flex items-center gap-3 justify-center"
+              className="mt-8 w-full bg-theme-surface text-[#0F172B] font-bold py-3 rounded-[12px] hover:bg-gray-200 transition flex items-center gap-3 justify-center"
             >
               <img src={GoogleIcon} alt="" />
               Continue with Google
             </button>
 
             <div className="flex items-center gap-4 my-8">
-              <div className="flex-1 h-px bg-gray-200 dark:bg-[#1D293D]" />
-              <span className="text-xs text-theme-muted">
+              <div className="flex-1 h-px bg-[#1D293D]" />
+              <span className="text-xs text-[#62748E]">
                 OR SIGN UP WITH EMAIL
               </span>
-              <div className="flex-1 h-px bg-gray-200 dark:bg-[#1D293D]" />
+              <div className="flex-1 h-px bg-[#1D293D]" />
             </div>
 
             {error ? (
@@ -167,7 +167,7 @@ export default function AuthSection() {
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+                <label htmlFor="" className="text-[#CAD5E2] text-sm">
                   First Name
                 </label>
                 <div className="relative">
@@ -181,13 +181,13 @@ export default function AuthSection() {
                     onChange={handleInputChange}
                     type="text"
                     placeholder="John"
-                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+                <label htmlFor="" className="text-[#CAD5E2] text-sm">
                   Last Name
                 </label>
                 <div>
@@ -197,13 +197,13 @@ export default function AuthSection() {
                     onChange={handleInputChange}
                     type="text"
                     placeholder="Doe"
-                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                    className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                   />
                 </div>
               </div>
             </div>
             <div className="mt-4">
-              <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
                 Email
               </label>
               <div className="relative">
@@ -218,12 +218,12 @@ export default function AuthSection() {
                   type="email"
                   placeholder="name@example.com"
                   autoComplete="off"
-                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
               </div>
             </div>
             <div className="mt-4">
-              <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
                 Phone
               </label>
               <div className="relative">
@@ -234,12 +234,12 @@ export default function AuthSection() {
                   type="tel"
                   placeholder="e.g. +919645299758"
                   autoComplete="off"
-                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] px-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
               </div>
             </div>
             <div className="mt-4">
-              <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
                 Password
               </label>
               <div className="relative">
@@ -254,7 +254,7 @@ export default function AuthSection() {
                   type={showPassword ? "text" : "password"}
                   autoComplete="off"
                   placeholder="Create a strong password"
-                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-10 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-10 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E]"
                 />
                 <Eye
                   size={18}
@@ -265,7 +265,7 @@ export default function AuthSection() {
             </div>
             
             <div className="mt-4">
-              <label htmlFor="" className="text-gray-700 dark:text-[#CAD5E2] text-sm">
+              <label htmlFor="" className="text-[#CAD5E2] text-sm">
                 Referral Code (Optional)
               </label>
               <div className="relative">
@@ -280,7 +280,7 @@ export default function AuthSection() {
                   type="text"
                   autoComplete="off"
                   placeholder="Enter referral code"
-                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-gray-400 dark:placeholder-[#64748B] focus:outline-none focus:border-[#00A63E] uppercase"
+                  className="w-full bg-theme-surface border border-theme-border rounded-[12px] pl-10 pr-4 py-3 text-theme-text placeholder-[#64748B] focus:outline-none focus:border-[#00A63E] uppercase"
                 />
               </div>
             </div>
@@ -293,12 +293,12 @@ export default function AuthSection() {
                     ${
                       checked
                         ? "bg-[#00A63E] border-[#00A63E]"
-                        : "bg-white dark:bg-[#0F172B] border-gray-300 dark:border-[#334155] shadow-sm dark:shadow-[0px_0px_0px_1px_#FFFFFF0D]"
+                        : "bg-[#0F172B] border-[#334155] shadow-[0px_0px_0px_1px_#FFFFFF0D]"
                     }
                 `}
               >
                 {checked && (
-                  <Check size={14} className="text-white dark:text-theme-text" strokeWidth={3} />
+                  <Check size={14} className="text-theme-text" strokeWidth={3} />
                 )}
               </button>
               <p className="text-sm text-theme-muted leading-relaxed">
