@@ -294,7 +294,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                 className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm transition ${
                   activeCuisine === item.name
                     ? "bg-[#00A63E] text-white"
-                    : "bg-[#0F172B] text-[#94A3B8] hover:bg-[#1E293B]"
+                    : "bg-white dark:bg-[#0F172B] text-gray-700 dark:text-[#94A3B8] border border-gray-200 dark:border-transparent hover:bg-gray-100 dark:hover:bg-[#1E293B]"
                 }`}
               >
                 <item.Icon size={16} />
@@ -346,7 +346,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                       className="w-full h-56 object-cover"
                     />
                   ) : (
-                    <div className="w-full h-56 bg-theme-surface flex flex-col items-center justify-center text-theme-muted">
+                    <div className="w-full h-56 bg-gray-100 dark:bg-[#1D293D] flex flex-col items-center justify-center text-theme-muted">
                       <ImageOff size={36} />
                       <span className="mt-2 text-sm">No Image Available</span>
                     </div>
@@ -365,13 +365,13 @@ const handleCardClick = (restaurant: Restaurant) => {
                   )}
 
                   <div className="absolute bottom-3 left-3 flex gap-3 text-xs bg-[#020618CC] rounded-full py-2 px-3">
-                    <span className="flex items-center gap-1 text-xs font-medium pr-3 border-r-2 border-r-[#ffffff2e]">
+                    <span className="flex items-center gap-1 text-xs font-medium pr-3 border-r-2 border-r-[#ffffff2e] text-white">
                       <Clock size={14} color="#05DF72" />
                       {item.time}
                     </span>
 
                     {item.distance && (
-                      <span className="flex items-center gap-1 text-xs font-medium">
+                      <span className="flex items-center gap-1 text-xs font-medium text-white">
                         <MapPin size={14} color="#05DF72" />
                         {item.distance}
                       </span>
@@ -381,8 +381,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                   <div className="absolute bottom-3 right-3 flex items-center gap-1 bg-theme-surface text-theme-text text-sm font-bold px-2 py-1 rounded-full">
                     <Star
                       size={12}
-                      color="#0F172B"
-                      className="fill-[#0F172B]"
+                      className="fill-theme-text text-theme-text"
                     />
                     {item.rating}
                   </div>
@@ -398,20 +397,20 @@ const handleCardClick = (restaurant: Restaurant) => {
                     </div>
                     {/* {item.min && ( */}
                       <div className="text-right">
-                         <p className="text-[16px] text-[#fff] font-playfair">
+                         <p className="text-[16px] text-theme-text font-playfair">
                            {item.badge}
                         </p>
-                        <p className="text-[10px] text-[#62748E]">
+                        <p className="text-[10px] text-theme-muted">
                           Min. {item.min}
                         </p>
                       </div>
                     {/* )} */}
                   </div>
 
-                  <div className="text-sm mt-4 text-theme-muted bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
+                  <div className="text-sm mt-4 text-theme-muted bg-gray-100 dark:bg-[#1D293D80] px-3 py-2 rounded-lg flex items-center gap-2">
                     {item.delivery && (
                       <>
-                        <span className="text-sm text-[#CAD5E2] font-medium">
+                        <span className="text-sm text-theme-text dark:text-[#CAD5E2] font-medium">
                           {item.delivery}
                         </span>
                         •
@@ -427,7 +426,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                       {item.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="text-[10px] text-theme-muted px-3 py-1 bg-[#FFFFFF0D] rounded-full"
+                          className="text-[10px] text-theme-muted px-3 py-1 bg-gray-100 dark:bg-[#FFFFFF0D] rounded-full"
                         >
                           {tag.toUpperCase()}
                         </span>
@@ -435,7 +434,7 @@ const handleCardClick = (restaurant: Restaurant) => {
                     </div>
                   )}
 
-                  <button className="w-full mt-6 bg-[#1D293D] hover:bg-[#334155] text-base text-[#CAD5E2] font-medium py-2 rounded-full">
+                  <button className="w-full mt-6 bg-gray-900 dark:bg-[#1D293D] hover:bg-gray-800 dark:hover:bg-[#334155] text-white dark:text-[#CAD5E2] font-medium py-2 rounded-full transition">
                     View Menu
                   </button>
                 </div>
