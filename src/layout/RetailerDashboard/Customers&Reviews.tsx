@@ -283,7 +283,7 @@ export default function CustomersandReviews() {
                                                 <div>
 
                                                     <p className="font-medium text-theme-text">
-                                                        {c.name || "Unknown Customer"}
+                                                        {c.name || c.fullName || (c.firstName ? `${c.firstName || ''} ${c.lastName || ''}`.trim() : null) || "Unknown Customer"}
                                                     </p>
 
                                                     <p className="text-sm text-theme-muted">

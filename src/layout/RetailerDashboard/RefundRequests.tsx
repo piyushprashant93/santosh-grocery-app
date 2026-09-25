@@ -191,7 +191,9 @@ export default function RefundRequests() {
                     {r.orderId || r.order?.id || r.order?._id?.substring(0, 8)}
                   </td>
                   <td className="py-5 text-[#374151]">
-                    {r.customer || r.order?.customer?.name || "Unknown"}
+                    {typeof r.customer === 'object' && r.customer !== null 
+                      ? (r.customer.name || r.customer.fullName || `${r.customer.firstName || ''} ${r.customer.lastName || ''}`.trim() || "Unknown")
+                      : (r.customer || r.order?.customer?.name || "Unknown")}
                   </td>
                   <td className="py-5 text-[#374151]">
                     {r.reason}
