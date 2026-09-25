@@ -152,7 +152,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
               {orders.map((order) => (
                 <tr key={order._id || order.id} className="hover:bg-gray-50/50 transition">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-theme-text">{(order._id || order.id || "").slice(-8).toUpperCase()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-theme-text">{order.restaurant?.name || order.store?.name || order.restaurant || "N/A"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-theme-text">{order.restaurant?.name || order.store?.name || (typeof order.restaurant === 'string' ? order.restaurant : (typeof order.store === 'string' ? order.store : "N/A"))}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.createdAt || order.date)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-theme-text">${(order.totalAmount || order.total || 0).toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap">

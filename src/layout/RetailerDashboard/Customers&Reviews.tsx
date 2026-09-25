@@ -430,7 +430,7 @@ export default function CustomersandReviews() {
                                         <div>
 
                                             <p className="font-medium text-theme-text">
-                                                {r.name || r.userName || "Anonymous"}
+                                                {typeof r.name === 'string' ? r.name : (typeof r.userName === 'string' ? r.userName : "Anonymous")}
                                             </p>
 
                                             <p className="text-sm text-theme-muted">

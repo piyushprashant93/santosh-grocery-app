@@ -83,8 +83,8 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
   const activeOrders = useMemo(() => (dashboardData?.recentOrders || []).map((o: any) => ({
     id: o._id ? `#${o._id.substring(o._id.length - 6).toUpperCase()}` : (o.id || "#---"),
     customer: typeof o.customer === 'object' && o.customer !== null
-      ? (o.customer.name || o.customer.fullName || `${o.customer.firstName || ''} ${o.customer.lastName || ''}`.trim() || "Unknown")
-      : (o.customer || "Unknown"),
+      ? (typeof o.customer.name === 'string' ? o.customer.name : (typeof o.customer.fullName === 'string' ? o.customer.fullName : (o.customer.firstName ? `${o.customer.firstName} ${o.customer.lastName || ''}`.trim() : "Unknown")))
+      : (typeof o.customer === 'string' ? o.customer : "Unknown"),
     amount: typeof o.totalAmount === 'number' ? `${formatPrice(o.totalAmount)}` : (o.amount || "$0.00"),
     status: o.status || "Pending",
     date: o.createdAt ? new Date(o.createdAt).toLocaleDateString() : (o.date || "Just now")

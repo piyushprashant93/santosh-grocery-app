@@ -187,7 +187,7 @@ export default function Orders() {
                   <td className="py-6">
                     <div>
                       <p className="text-theme-text font-medium">
-                        {o.name || (typeof o.customer === 'object' && o.customer !== null ? (o.customer.name || o.customer.fullName || `${o.customer.firstName || ''} ${o.customer.lastName || ''}`.trim()) : o.customer) || "Unknown"}
+                        {(typeof o.name === 'string' && o.name) || (typeof o.customer === 'object' && o.customer !== null ? (o.customer.name || o.customer.fullName || `${o.customer.firstName || ''} ${o.customer.lastName || ''}`.trim()) : o.customer) || "Unknown"}
                       </p>
                       <p className="text-sm text-theme-muted">
                         {o.email || o.customer?.email || "Unknown"}
