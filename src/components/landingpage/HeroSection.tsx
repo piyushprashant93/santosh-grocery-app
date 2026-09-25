@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { MapPin, ArrowRight, Leaf } from "lucide-react";
 import HeroBg from "../../assets/images/herobg.svg";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="relative w-full h-[calc(100vh-80px)] bg-cover bg-center">
       <img src={HeroBg} alt="" className="absolute inset-0 w-full h-[calc(100vh-80px)] object-cover" />
@@ -33,19 +35,19 @@ export default function HeroSection() {
             />
           </div>
 
-          <button className="bg-[#00A63E] hover:opacity-90 transition text-theme-text px-6 py-3 shadow-[0px_4px_6px_-4px_#00A63E33,0px_10px_15px_-3px_#00A63E33] rounded-lg font-semibold whitespace-nowrap">
+          <button onClick={() => navigate('/restaurants')} className="bg-[#00A63E] hover:opacity-90 transition text-theme-text px-6 py-3 shadow-[0px_4px_6px_-4px_#00A63E33,0px_10px_15px_-3px_#00A63E33] rounded-lg font-semibold whitespace-nowrap">
             Find Food
           </button>
         </div>
 
         <div className="flex gap-3 items-start justify-between mt-8 ">
           <div className="flex flex-wrap gap-4">
-          <button className="flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full text-theme-text bg-[linear-gradient(90deg,#E7000B_0%,#EC003F_100%)] hover:opacity-90 transition shadow-[0px_4px_6px_-4px_#82181A33,0px_10px_15px_-3px_#82181A33]">
+          <button onClick={() => navigate('/marketplace')} className="flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-full text-theme-text bg-[linear-gradient(90deg,#E7000B_0%,#EC003F_100%)] hover:opacity-90 transition shadow-[0px_4px_6px_-4px_#82181A33,0px_10px_15px_-3px_#82181A33]">
             Start Ordering
             <ArrowRight size={18} />
           </button>
 
-          <button className="px-6 py-3 text-sm rounded-full bg-theme-surface text-[#0F172B] font-semibold hover:bg-gray-200 transition shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
+          <button onClick={() => navigate('/orderplace')} className="px-6 py-3 text-sm rounded-full bg-theme-surface text-[#0F172B] font-semibold hover:bg-gray-200 transition shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A]">
             Partner with Us
           </button>
         </div>

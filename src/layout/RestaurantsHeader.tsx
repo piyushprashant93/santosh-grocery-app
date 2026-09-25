@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import Favicon from "../assets/images/favicon.svg";
+import Logo from "../assets/images/logo.svg";
 import { useRole } from "./RoleProvider";
 export default function RestaurantsHeader() {
     const { setRole } = useRole();
@@ -9,17 +9,10 @@ export default function RestaurantsHeader() {
       <div className="max-w-[1265px] mx-auto lg:px-6 px-3 h-[80px] flex items-center justify-between">
 
         <div 
-          className="flex items-center gap-3 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <img
-            src={Favicon}
-            className="w-14 h-14 object-contain"
-          />
-
-          <span className="text-theme-text text-lg font-semibold">
-            Restaurants
-          </span>
+          <img src={Logo} alt="Hubnepa" className="dark:invert h-10 object-contain" />
         </div>
 
         <div className="flex items-center gap-6">
