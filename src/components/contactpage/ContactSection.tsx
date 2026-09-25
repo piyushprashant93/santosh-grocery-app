@@ -56,7 +56,7 @@ export default function ContactSection() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/support", {
+      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
