@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
 import { MapPin, Mail, Clock, Send } from "lucide-react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -19,8 +21,6 @@ const icon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
-import { useState } from "react";
-import { toast } from "react-toastify";
 
 export default function ContactSection() {
   const [data] = useState({
