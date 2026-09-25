@@ -186,14 +186,16 @@ export default function RestaurantGrid({
         if (!data.success) throw new Error(data.message || "Request failed");
 
         if (data && data.success && Array.isArray(data.data)) {
-          setRestaurants(data.data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
+          const list = Array.from(new Map(data.data.map((r: RestaurantApi) => [r.name, r])).values()) as RestaurantApi[];
+          setRestaurants(list.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         } else if (Array.isArray(data)) {
-          setRestaurants(data.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
+          const list = Array.from(new Map(data.map((r: RestaurantApi) => [r.name, r])).values()) as RestaurantApi[];
+          setRestaurants(list.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         } else {
-          const list = searchQuery
+          const rawList = searchQuery
             ? data.data.restaurants || []
             : data.data.data || [];
-
+          const list = Array.from(new Map(rawList.map((r: RestaurantApi) => [r.name, r])).values()) as RestaurantApi[];
           setRestaurants(list.map((r: RestaurantApi) => mapRestaurant(r, formatPrice)));
         }
       } catch (err: unknown) {
@@ -224,7 +226,12 @@ export default function RestaurantGrid({
           if (Array.isArray(apiCuisines) && apiCuisines.length > 0) {
             const dynamicCuisines = [
               { name: "All Cuisines", Icon: Utensils },
-              ...apiCuisines.map((c: string | { name: string }) => {
+              ...apiCuisines
+                .filter((c: string | { name: string }) => {
+                  const name = typeof c === "string" ? c : c.name;
+                  return name !== "All Cuisines";
+                })
+                .map((c: string | { name: string }) => {
                 const name = typeof c === "string" ? c : c.name;
                 return {
                   name,
