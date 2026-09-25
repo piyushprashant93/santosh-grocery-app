@@ -78,17 +78,17 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center gap-4 mt-8">
-              <a href={data.socials.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
-                <Instagram size={18} className="text-theme-muted" />
+              <a href={data.socials.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
+                <Instagram size={18} className="text-gray-600 dark:text-theme-muted hover:text-white" />
               </a>
-              <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
-                <Twitter size={18} className="text-theme-muted" />
+              <a href={data.socials.twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
+                <Twitter size={18} className="text-gray-600 dark:text-theme-muted hover:text-white" />
               </a>
-              <a href={data.socials.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
-                <Facebook size={18} className="text-theme-muted" />
+              <a href={data.socials.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
+                <Facebook size={18} className="text-gray-600 dark:text-theme-muted hover:text-white" />
               </a>
-              <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
-                <Linkedin size={18} className="text-theme-muted" />
+              <a href={data.socials.linkedin} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-[#1D293D] flex items-center justify-center hover:bg-[#D97706] transition cursor-pointer">
+                <Linkedin size={18} className="text-gray-600 dark:text-theme-muted hover:text-white" />
               </a>
             </div>
           </div>
