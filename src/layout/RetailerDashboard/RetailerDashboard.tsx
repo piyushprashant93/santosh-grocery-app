@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { DollarSign, Package, ShoppingBag, Clock, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react"
 import { useState, useEffect, useMemo } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
@@ -20,7 +21,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/dashboard", {
+        const res = await fetch(`${API_BASE_URL}/retailer/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})

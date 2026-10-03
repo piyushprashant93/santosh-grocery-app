@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ShieldCheck, ArrowRight, Loader2 } from "lucide-react"
@@ -18,7 +19,7 @@ export default function AdminLogin() {
 
     setLoading(true)
     try {
-      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { DollarSign, Package, Users, AlertTriangle, Truck, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 import mapImage from "../../assets/images/dashboardmap.jpg";
 
@@ -19,7 +20,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/dashboard", {
+        const res = await fetch(`${API_BASE_URL}/supplier/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -30,7 +31,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
           let data = json.data || json;
           if (!data.recentOrders || data.recentOrders.length === 0) {
             // Fallback to fetch pending orders
-            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/orders?page=1", {
+            const ordersRes = await fetch(`${API_BASE_URL}/supplier/orders?page=1`, {
               headers: {
                 "Content-Type": "application/json",
                 ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -59,7 +60,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     const token = localStorage.getItem("authToken");
     if (!token) return;
 
-    const es = new EventSource(`https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/logistics/fleet/stream?token=${token}`);
+    const es = new EventSource(`${API_BASE_URL}/supplier/logistics/fleet/stream?token=${token}`);
     
     es.addEventListener('message', (e) => {
       try {

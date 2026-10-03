@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -58,7 +59,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
   const fetchOffers = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/offers`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/offers`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -74,7 +75,7 @@ export default function OffersCoupons({ setActiveTab }: { setActiveTab: (tab: st
 
   const deleteOffer = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/offers/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/offers/${id}`, {
         method: "DELETE",
         headers: authHeaders()
       });

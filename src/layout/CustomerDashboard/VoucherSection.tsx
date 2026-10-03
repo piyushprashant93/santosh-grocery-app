@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useEffect, useState } from "react";
 import { Gift, Loader2 } from "lucide-react";
 
@@ -14,7 +15,7 @@ const STATIC_VOUCHERS = [
 ];
 
 const API_URL =
-  "https://mr-santosh-grocery-backend.onrender.com/api/v1/wallet/apply-voucher";
+  `${API_BASE_URL}/wallet/apply-voucher`;
 
 export default function VoucherSection({
   orderTotal,

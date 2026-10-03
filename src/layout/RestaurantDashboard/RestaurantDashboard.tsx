@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../../utils/dataHelper";
@@ -21,7 +22,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", {
+        const res = await fetch(`${API_BASE_URL}/restaurant-panel/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -32,7 +33,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
           let data = json.data || json;
           if (!data.recentOrders || data.recentOrders.length === 0) {
             // Fallback to fetch pending orders
-            const ordersRes = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/orders?status=pending", {
+            const ordersRes = await fetch(`${API_BASE_URL}/restaurant-panel/orders?status=pending`, {
               headers: {
                 "Content-Type": "application/json",
                 ...(token ? { Authorization: `Bearer ${token}` } : {})

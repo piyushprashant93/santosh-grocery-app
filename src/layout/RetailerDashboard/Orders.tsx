@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Download, Eye, ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -20,7 +21,7 @@ export default function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/orders`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/orders`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -36,7 +37,7 @@ export default function Orders() {
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/orders/${id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -57,7 +58,7 @@ export default function Orders() {
     try {
       const toastId = toast.loading("Exporting orders...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE}/retailer/orders/export`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/orders/export`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }

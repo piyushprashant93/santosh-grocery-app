@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 export function extractList(d: any): any[] {
   if (!d) return [];
   if (Array.isArray(d)) return d;
@@ -21,5 +22,5 @@ export function extractList(d: any): any[] {
 export function getImageUrl(image: string | undefined | null): string {
   if (!image) return "https://placehold.co/112x112?text=No+Image";
   if (image.startsWith("http") || image.startsWith("data:")) return image;
-  return `https://mr-santosh-grocery-backend.onrender.com/api/v1/uploads/${image}`;
+  return `${API_BASE_URL}/uploads/${image}`;
 }

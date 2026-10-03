@@ -1,10 +1,11 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Download, MoreHorizontal } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -20,7 +21,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/products`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/products`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -36,7 +37,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
   const deleteProduct = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/products/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/products/${id}`, { method: "DELETE", headers: authHeaders() });
       if (res.ok) fetchProducts();
     } catch(err) { console.error(err); }
   };

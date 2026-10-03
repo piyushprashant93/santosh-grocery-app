@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Download,
   Wrench, CheckCircle2, Clock,
@@ -16,7 +17,7 @@ import ExpenseModal from "./ExpenseModal";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
   return {
@@ -65,7 +66,7 @@ export default function FinanceWallet() {
 
   const fetchExpenses = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setExpensesState(extractList(data));
@@ -76,7 +77,7 @@ export default function FinanceWallet() {
 
   const fetchPayroll = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setEmployeesState(extractList(data));
@@ -87,7 +88,7 @@ export default function FinanceWallet() {
 
   const fetchMaintenance = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setIssuesState(extractList(data));
@@ -149,7 +150,7 @@ export default function FinanceWallet() {
         if (searchQuery) queryParams.append("search", searchQuery);
         if (statusFilter !== "All") queryParams.append("status", statusFilter);
 
-        const res = await fetch(`${API_BASE}/restaurant-panel/expenses/export?${queryParams.toString()}`, { headers: authHeaders() });
+        const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/export?${queryParams.toString()}`, { headers: authHeaders() });
         if (res.ok) {
           const blob = await res.blob();
           const url = window.URL.createObjectURL(blob);
@@ -162,7 +163,7 @@ export default function FinanceWallet() {
           alert("Failed to export expenses");
         }
       } else {
-        const res = await fetch(`${API_BASE}/restaurant-panel/reports/export?days=30`, { headers: authHeaders() });
+        const res = await fetch(`${API_BASE_URL}/restaurant-panel/reports/export?days=30`, { headers: authHeaders() });
         if (res.ok) {
           const blob = await res.blob();
           const url = window.URL.createObjectURL(blob);

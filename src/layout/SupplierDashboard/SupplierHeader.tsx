@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Bell, Menu } from "lucide-react"
 import { useState, useEffect } from "react";
 import ProfileMenu from "./ProfileMenu";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }: { activeTab: string; setActiveTab: (tab: string) => void; openSidebar: () => void }) {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -11,7 +12,7 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE}/notifications`, {
+        const res = await fetch(`${API_BASE_URL}/notifications`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})

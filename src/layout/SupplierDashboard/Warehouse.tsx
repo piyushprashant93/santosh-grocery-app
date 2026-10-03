@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   Filter,
@@ -13,7 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import StockAdjustmentModal from "./StockAdjustmentModal";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -42,8 +43,8 @@ export default function Warehouse() {
       setLoading(true);
       setError(null);
       const [itemsRes, zonesRes] = await Promise.all([
-        fetch(`${API_BASE}/supplier/warehouse/items`, { headers: authHeaders() }),
-        fetch(`${API_BASE}/supplier/warehouse/zones`, { headers: authHeaders() })
+        fetch(`${API_BASE_URL}/supplier/warehouse/items`, { headers: authHeaders() }),
+        fetch(`${API_BASE_URL}/supplier/warehouse/zones`, { headers: authHeaders() })
       ]);
 
       if (!itemsRes.ok && !zonesRes.ok) {

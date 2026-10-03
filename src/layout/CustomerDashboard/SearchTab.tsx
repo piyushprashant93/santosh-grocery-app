@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   Package,
@@ -13,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const RECENT_KEY = "recentSearches";
 const MAX_RECENT = 8;
 
@@ -189,7 +190,7 @@ export default function SearchTab() {
     async function fetchTrending() {
       setTrendingLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/general/search/trending`, {
+        const res = await fetch(`${API_BASE_URL}/general/search/trending`, {
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
         });
@@ -230,7 +231,7 @@ export default function SearchTab() {
     suggestDebounceRef.current = setTimeout(async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/general/search/suggestions?q=${encodeURIComponent(query.trim())}`,
+          `${API_BASE_URL}/general/search/suggestions?q=${encodeURIComponent(query.trim())}`,
           { headers: { "Content-Type": "application/json" } },
         );
         const json = await res.json();
@@ -261,7 +262,7 @@ export default function SearchTab() {
 
     try {
       const res = await fetch(
-        `${API_BASE}/general/search?q=${encodeURIComponent(term.trim())}&type=all`,
+        `${API_BASE_URL}/general/search?q=${encodeURIComponent(term.trim())}&type=all`,
         { headers: { "Content-Type": "application/json" } },
       );
       const json = await res.json();

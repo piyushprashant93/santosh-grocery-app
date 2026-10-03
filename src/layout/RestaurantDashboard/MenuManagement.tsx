@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   Filter,
@@ -12,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -59,7 +60,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
       if (search) queryParams.append("search", search);
       if (active && active !== "All Items") queryParams.append("category", active);
 
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu?${queryParams.toString()}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu?${queryParams.toString()}`, {
         headers: authHeaders(),
       });
       if (res.ok) {
@@ -79,7 +80,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu/categories`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/categories`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setServerCategories(data.data || data.categories || []);
@@ -102,7 +103,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
   const toggleStock = async (id: string, currentAvail: boolean) => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}/availability`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}/availability`, {
         method: "PUT",
         headers: authHeaders(),
       });
@@ -117,7 +118,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const deleteItem = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}`, {
         method: "DELETE",
         headers: authHeaders(),
       });
@@ -137,7 +138,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
     const formData = new FormData();
     formData.append("image", file);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/menu/${id}/image`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}/image`, {
         method: "POST",
         headers: authHeadersForm(),
         body: formData

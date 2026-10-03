@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Download, Plus, Trash2, Upload } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { useDebounce } from "use-debounce"
@@ -5,7 +6,7 @@ import toast from "react-hot-toast"
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -38,7 +39,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
       if (categoryFilter !== "All") queryParams.append("category", categoryFilter);
       if (statusFilter !== "All") queryParams.append("status", statusFilter);
 
-      const res = await fetch(`${API_BASE}/supplier/products?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/products?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const prods = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
@@ -54,7 +55,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
   const deleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      const res = await fetch(`${API_BASE}/supplier/products/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/products/${id}`, {
         method: "DELETE",
         headers: authHeaders()
       });
@@ -73,7 +74,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
     try {
       const toastId = toast.loading("Importing products...");
-      const res = await fetch(`${API_BASE}/supplier/products/import`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/products/import`, {
         method: "POST",
         headers: authHeadersForm(),
         body: formData
@@ -102,7 +103,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
       if (categoryFilter !== "All") queryParams.append("category", categoryFilter);
       if (statusFilter !== "All") queryParams.append("status", statusFilter);
 
-      const res = await fetch(`${API_BASE}/supplier/products/export?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/products/export?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

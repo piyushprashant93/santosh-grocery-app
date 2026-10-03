@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import { Wallet, Package, TrendingUp, Clock, AlertCircle, Loader2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 interface RecommendedDeal {
   _id: string;
@@ -107,7 +108,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BASE}/users/dashboard`, {
+        const res = await fetch(`${API_BASE_URL}/users/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

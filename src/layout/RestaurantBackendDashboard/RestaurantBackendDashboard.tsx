@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   DollarSign,
   Package,
@@ -56,8 +57,8 @@ export default function RestaurantBackendDashboard({
         };
 
         const [dashRes, reportsRes] = await Promise.all([
-          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/dashboard", { headers }),
-          fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/reports?days=7", { headers })
+          fetch(`${API_BASE_URL}/restaurant-panel/dashboard`, { headers }),
+          fetch(`${API_BASE_URL}/restaurant-panel/reports?days=7`, { headers })
         ]);
 
         const dashData = dashRes.ok ? await dashRes.json() : {};

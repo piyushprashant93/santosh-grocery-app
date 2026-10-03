@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo-light.svg";
 import { useState, useEffect } from "react";
@@ -21,7 +22,7 @@ export default function SecondaryFooter() {
     const fetchFooterData = async () => {
       try {
         const res = await fetch(
-          "https://mr-santosh-grocery-backend.onrender.com/api/v1/public/secondary-footer"
+          `${API_BASE_URL}/public/secondary-footer`
         );
         if (res.ok) {
           const json = await res.json();

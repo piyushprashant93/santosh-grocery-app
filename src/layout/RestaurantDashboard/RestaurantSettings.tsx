@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
@@ -29,7 +30,7 @@ const tabs = [
   { key: "team", label: "Team", icon: Users },
 ];
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -78,7 +79,7 @@ export default function RestaurantSettings({
   
   const fetchTeam = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         // The API returns the list in data.data or data
@@ -115,7 +116,7 @@ export default function RestaurantSettings({
 
   const fetchLocations = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setLocs(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
@@ -127,7 +128,7 @@ export default function RestaurantSettings({
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurants/my/restaurant`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurants/my/restaurant`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const profileData = data.data?.restaurant || data.restaurant || data.data || {};
@@ -186,14 +187,14 @@ export default function RestaurantSettings({
         };
       });
 
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ openingHours })
       });
       if (res.ok) {
          // Also update the profile general fields using the old endpoint
-         const res2 = await fetch(`${API_BASE}/restaurants/my/restaurant`, {
+         const res2 = await fetch(`${API_BASE_URL}/restaurants/my/restaurant`, {
            method: "PUT",
            headers: authHeaders(),
            body: JSON.stringify(profile)
@@ -218,7 +219,7 @@ export default function RestaurantSettings({
 
     setPasswordLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/users/change-password`, {
+      const res = await fetch(`${API_BASE_URL}/users/change-password`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ currentPassword, newPassword })
@@ -244,7 +245,7 @@ export default function RestaurantSettings({
     const formData = new FormData();
     formData.append(type, file);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/${type}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/${type}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
         body: formData
@@ -256,7 +257,7 @@ export default function RestaurantSettings({
   const deleteLocation = async (id: string) => {
     if (!id || !confirm("Delete location?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations/${id}`, {
         method: "DELETE",
         headers: authHeaders()
       });
@@ -268,8 +269,8 @@ export default function RestaurantSettings({
     if (!editingLocation.name || !editingLocation.address) return alert("Name and Address required");
     try {
       const url = editingLocation._id 
-        ? `${API_BASE}/restaurant-panel/settings/locations/${editingLocation._id}`
-        : `${API_BASE}/restaurant-panel/settings/locations`;
+        ? `${API_BASE_URL}/restaurant-panel/settings/locations/${editingLocation._id}`
+        : `${API_BASE_URL}/restaurant-panel/settings/locations`;
       const method = editingLocation._id ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
@@ -292,7 +293,7 @@ export default function RestaurantSettings({
            notificationPreferences[key] = { email: item.email, sms: item.sms };
         }
       });
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ notificationPreferences })
@@ -1043,7 +1044,7 @@ export default function RestaurantSettings({
               
               <button onClick={async () => {
                 try {
-                  const res = await fetch(`${API_BASE}/restaurant-panel/staff`, {
+                  const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, {
                     method: "POST",
                     headers: authHeaders(),
                     body: JSON.stringify(inviteForm)

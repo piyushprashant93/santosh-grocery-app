@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { Store, FileText, Bell, Shield, Save } from "lucide-react"
 import toast from "react-hot-toast"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -47,7 +48,7 @@ export default function RetailerSettings() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/settings`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/settings`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -81,7 +82,7 @@ export default function RetailerSettings() {
   const handleSave = async () => {
     try {
       let res;
-      const endpoint = `${API_BASE}/retailer/settings/${activeTab}`;
+      const endpoint = `${API_BASE_URL}/retailer/settings/${activeTab}`;
 
       if (activeTab === "profile" && (logoFile || bannerFile)) {
         const formData = new FormData();

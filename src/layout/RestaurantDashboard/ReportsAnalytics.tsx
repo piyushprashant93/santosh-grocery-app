@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   ResponsiveContainer,
   LineChart,
@@ -25,7 +26,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
   return {
@@ -41,7 +42,7 @@ export default function ReportsAnalytics() {
 
   const fetchReports = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/reports?days=${days}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/reports?days=${days}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setReportData(data.data || data);

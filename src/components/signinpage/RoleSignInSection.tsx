@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useNavigate } from "react-router-dom";
 import { useState, type ChangeEvent } from "react";
 import {
@@ -165,7 +166,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
     setLoading(true);
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/login",
+        `${API_BASE_URL}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -239,7 +240,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
   try {
     const response = await fetch(
-      "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/2fa/validate",
+      `${API_BASE_URL}/auth/2fa/validate`,
       {
         method: "POST",
         headers: {
@@ -309,7 +310,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/forgot-password",
+        `${API_BASE_URL}/auth/forgot-password`,
         {
           method: "POST",
           headers: {
@@ -369,7 +370,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/reset-password",
+        `${API_BASE_URL}/auth/reset-password`,
         {
           method: "POST",
           headers: {
@@ -567,8 +568,8 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
                 <button 
                   onClick={() => {
-                    const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-                    window.location.href = `${baseUrl}/api/v1/auth/google`;
+                    
+                    window.location.href = `${API_BASE_URL}/auth/google`;
                   }}
                   className="w-full bg-theme-surface text-[#0F172B] py-3 rounded-lg flex items-center justify-center gap-3 font-medium hover:bg-gray-100 transition"
                 >

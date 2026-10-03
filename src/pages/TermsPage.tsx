@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { TermsSection } from '../layout/TermsSection'
 import { SecondaryHeader } from '../layout/SecondaryHeader';
 import Footer from '../layout/Footer';
@@ -36,7 +37,7 @@ export const TermsPage = () => {
   const [data, setData] = useState(termsData);
 
   useEffect(() => {
-    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/terms")
+    fetch(`${API_BASE_URL}/public/terms`)
       .then(res => res.json())
       .then(json => {
         if (json.success && json.data) {

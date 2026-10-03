@@ -1,10 +1,11 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { User, Truck, Package, Plus, MapPin, ArrowLeft, Trash2 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
 
@@ -39,7 +40,7 @@ export default function CreateShipment({
 
   const fetchClients = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setClients(extractList(data));
@@ -49,7 +50,7 @@ export default function CreateShipment({
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/products`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setProducts(extractList(data));
@@ -89,7 +90,7 @@ export default function CreateShipment({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/supplier/logistics`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({

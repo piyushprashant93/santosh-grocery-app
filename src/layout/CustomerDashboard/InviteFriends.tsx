@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import {
@@ -54,7 +55,7 @@ const steps = [
   },
 ];
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 export default function InviteFriends() {
   const { formatPrice } = useCurrency();
@@ -79,14 +80,14 @@ export default function InviteFriends() {
 
       try {
         const [infoRes, usersRes] = await Promise.all([
-          fetch(`${API_BASE}/referral`, {
+          fetch(`${API_BASE_URL}/referral`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           }),
-          fetch(`${API_BASE}/referral/referred-users`, {
+          fetch(`${API_BASE_URL}/referral/referred-users`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

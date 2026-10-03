@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Truck,
   Calendar,
@@ -11,7 +12,7 @@ import {
 import AssignDriverModal from "./AssignDriverModal"
 import { useState, useEffect } from "react"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -35,7 +36,7 @@ export default function Logistics() {
 
   const fetchLogistics = async () => {
     try {
-      const logisticsRes = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
+      const logisticsRes = await fetch(`${API_BASE_URL}/supplier/logistics`, { headers: authHeaders() });
       if (logisticsRes.ok) {
         const data = await logisticsRes.json();
         const shipments = data.data || data;
@@ -50,7 +51,7 @@ export default function Logistics() {
     const token = localStorage.getItem("authToken");
     if (!token) return;
 
-    const es = new EventSource(`${API_BASE}/supplier/logistics/fleet/stream?token=${token}`);
+    const es = new EventSource(`${API_BASE_URL}/supplier/logistics/fleet/stream?token=${token}`);
     
     es.addEventListener('message', (e) => {
       try {

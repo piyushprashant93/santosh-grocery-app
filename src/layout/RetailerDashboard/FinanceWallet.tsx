@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Download, Wallet, Clock, Calendar } from "lucide-react"
 import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
@@ -5,7 +6,7 @@ import EmptyTableState from "../../components/common/EmptyTableState"
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
 
@@ -23,7 +24,7 @@ export default function FinanceWallet() {
 
   const fetchFinance = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/finance`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/finance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setFinanceData(data.data || data);
@@ -37,7 +38,7 @@ export default function FinanceWallet() {
 
   const handleWithdraw = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/finance/withdraw`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/finance/withdraw`, {
         method: "POST",
         body: JSON.stringify({ amount: financeData?.totalRevenue || 0 })
       });
@@ -54,7 +55,7 @@ export default function FinanceWallet() {
     try {
       const toastId = toast.loading("Downloading statement...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE}/retailer/finance/statement`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/finance/statement`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }

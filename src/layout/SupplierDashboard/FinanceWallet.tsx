@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Download,
   DollarSign,
@@ -16,7 +17,7 @@ import RequestPayoutModal from "./RequestPayoutModal";
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
 
@@ -50,7 +51,7 @@ export default function FinanceWallet() {
 
   const fetchFinance = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/finance`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/finance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setFinanceData(data.data || data);
@@ -61,7 +62,7 @@ export default function FinanceWallet() {
   const handleExport = async () => {
     try {
       const toastId = toast.loading("Exporting finance report...");
-      const res = await fetch(`${API_BASE}/supplier/finance/export`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/finance/export`, { headers: authHeaders() });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

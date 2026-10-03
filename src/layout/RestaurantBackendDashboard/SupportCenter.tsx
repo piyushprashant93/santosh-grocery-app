@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Plus, Search, Filter, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import SupportLiveChat from "./SupportLiveChat";
 import SupportFAQ from "./SupportFAQ";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -38,7 +39,7 @@ export default function HelpSupport() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/support/tickets`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/support/tickets`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -54,7 +55,7 @@ export default function HelpSupport() {
 
   const createTicket = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/support/tickets`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/support/tickets`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(newTicket)

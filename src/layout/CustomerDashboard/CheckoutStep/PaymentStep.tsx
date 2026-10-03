@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useEffect, useState } from "react";
 import { useCurrency } from "../../../context/CurrencyContext";
 import { Plus, Loader2, Wallet, Banknote, CreditCard as CardIcon } from "lucide-react";
 import AddCardModal from "../AddCardModal";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const PAYMENT_STORAGE_KEY = "checkout_payment";
 
 interface CardApi {
@@ -111,7 +112,7 @@ export function PaymentStep() {
     setFetchError("");
 
     try {
-      const res = await fetch(`${API_BASE}/payment/methods`, {
+      const res = await fetch(`${API_BASE_URL}/payment/methods`, {
         headers: authHeaders(),
       });
       const data = await res.json();
@@ -204,7 +205,7 @@ export function PaymentStep() {
     setCardError("");
 
     try {
-      const res = await fetch(`${API_BASE}/wallet/cards`, {
+      const res = await fetch(`${API_BASE_URL}/wallet/cards`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(cardForm),

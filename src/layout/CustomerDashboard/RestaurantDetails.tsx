@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   ArrowLeft,
   Share2,
@@ -25,7 +26,7 @@ import CartModal from "./CartModal";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const FALLBACK_HERO_IMAGE =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1200&q=80";
 
@@ -166,11 +167,11 @@ export default function RestaurantMenuDetails() {
 
       try {
         const [detailsRes, menuRes] = await Promise.all([
-          fetch(`${API_BASE}/restaurants/${id}`, {
+          fetch(`${API_BASE_URL}/restaurants/${id}`, {
             headers: { "Content-Type": "application/json" },
             signal: controller.signal,
           }),
-          fetch(`${API_BASE}/restaurants/${id}/menu`, {
+          fetch(`${API_BASE_URL}/restaurants/${id}/menu`, {
             headers: { "Content-Type": "application/json" },
             signal: controller.signal,
           }),
@@ -207,7 +208,7 @@ export default function RestaurantMenuDetails() {
     if (!restaurantId) return;
     setReviewsLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/reviews/restaurant/${restaurantId}?page=${page}`, {
+      const res = await fetch(`${API_BASE_URL}/reviews/restaurant/${restaurantId}?page=${page}`, {
         headers: { "Content-Type": "application/json" }
       });
       const data = await res.json();
@@ -247,7 +248,7 @@ export default function RestaurantMenuDetails() {
 
     setSubmittingReview(true);
     try {
-      const res = await fetch(`${API_BASE}/reviews`, {
+      const res = await fetch(`${API_BASE_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +284,7 @@ export default function RestaurantMenuDetails() {
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/reviews/${reviewId}/helpful`, {
+      const res = await fetch(`${API_BASE_URL}/reviews/${reviewId}/helpful`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -319,7 +320,7 @@ export default function RestaurantMenuDetails() {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/cart/add`, {
+      const res = await fetch(`${API_BASE_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -361,7 +362,7 @@ export default function RestaurantMenuDetails() {
     setCartError(null);
 
     try {
-      const res = await fetch(`${API_BASE}/wishlist/add`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

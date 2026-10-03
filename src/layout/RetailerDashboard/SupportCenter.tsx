@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, X } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -24,7 +25,7 @@ export default function SupportCenter() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/support/tickets`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/support/tickets`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -40,7 +41,7 @@ export default function SupportCenter() {
 
   const createTicket = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/support/tickets`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/support/tickets`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(newTicket)

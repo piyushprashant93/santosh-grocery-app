@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -20,7 +21,7 @@ export default function ExpenseModal({ open, onClose, onSuccess }: { open: boole
     setSaving(true)
     try {
       const token = localStorage.getItem("authToken")
-      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/expenses", {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

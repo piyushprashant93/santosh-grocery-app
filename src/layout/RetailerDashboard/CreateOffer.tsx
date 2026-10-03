@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { parseApiError } from "../../lib/apiErrorHandler"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -35,7 +36,7 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
   const handleSave = async () => {
     setFieldErrors({});
     try {
-      const res = await fetch(`${API_BASE}/retailer/offers`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/offers`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(form)

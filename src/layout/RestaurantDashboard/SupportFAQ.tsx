@@ -1,7 +1,8 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { ChevronDown, FileText } from "lucide-react"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -17,7 +18,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
   const [faqs, setFaqs] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/restaurant-panel/support/faq/categories`, { headers: authHeaders() })
+    fetch(`${API_BASE_URL}/restaurant-panel/support/faq/categories`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -25,7 +26,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
         }
       }).catch(console.error);
 
-    fetch(`${API_BASE}/restaurant-panel/support/faq`, { headers: authHeaders() })
+    fetch(`${API_BASE_URL}/restaurant-panel/support/faq`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

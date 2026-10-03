@@ -1,10 +1,11 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Download, Calendar, CheckCircle2, FileText, AlertCircle, Calendar as CalendarIcon, Search, Plus, X
 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const { formatPrice } = useCurrency();
@@ -69,7 +70,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
   const fetchSales = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const list = extractList(data);
@@ -80,7 +81,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
   const fetchMissing = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing/missing`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing/missing`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setMissingDates(extractList(data));
@@ -101,7 +102,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
         ...values,
         total
       };
-      const res = await fetch(`${API_BASE}/restaurant-panel/sales-closing`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(payload)

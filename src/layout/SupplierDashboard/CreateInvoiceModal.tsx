@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { X, Plus, Trash2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
 
@@ -32,7 +33,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
 
     const fetchClients = async () => {
         try {
-            const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
+            const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
                 setClients(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));
@@ -63,7 +64,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
         }
 
         try {
-            const res = await fetch(`${API_BASE}/supplier/finance/invoice`, {
+            const res = await fetch(`${API_BASE_URL}/supplier/finance/invoice`, {
                 method: "POST",
                 headers: authHeaders(),
                 body: JSON.stringify({

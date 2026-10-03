@@ -1,10 +1,11 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { FileText, MapPin, Package, Truck, ArrowLeft, Calendar, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { extractList } from "../../utils/dataHelper";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -70,7 +71,7 @@ export default function CreateManifest({
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/orders`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setOrdersData(extractList(data));
@@ -95,7 +96,7 @@ export default function CreateManifest({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/supplier/logistics`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({

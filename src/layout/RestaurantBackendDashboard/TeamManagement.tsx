@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   FileText,
   ChevronLeft,
@@ -23,7 +24,7 @@ import toast from "react-hot-toast";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -223,7 +224,7 @@ export default function TeamManagement({
     e.preventDefault();
     setIsAddingStaff(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(staffForm)
@@ -252,7 +253,7 @@ export default function TeamManagement({
 
   const fetchStaff = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setStaff(extractList(data));
@@ -262,7 +263,7 @@ export default function TeamManagement({
 
   const fetchSchedule = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff/schedule`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setSchedule(extractList(data));
@@ -272,7 +273,7 @@ export default function TeamManagement({
 
   const fetchRequests = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff/requests`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setRequests(extractList(data));
@@ -282,7 +283,7 @@ export default function TeamManagement({
 
   const fetchPayroll = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setPayroll(extractList(data));
@@ -299,7 +300,7 @@ export default function TeamManagement({
 
   const updateRequestStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff/requests/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff/requests/${id}`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -311,7 +312,7 @@ export default function TeamManagement({
   const runPayroll = async () => {
     if (!confirm("Run payroll for this period?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll/run`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll/run`, {
         method: "POST",
         headers: authHeaders()
       });
@@ -322,7 +323,7 @@ export default function TeamManagement({
   const markPayrollPaid = async (id: string) => {
     if (!confirm("Mark this payroll as paid?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll/${id}/pay`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll/${id}/pay`, {
         method: "PUT",
         headers: authHeaders()
       });
@@ -335,7 +336,7 @@ export default function TeamManagement({
     const roles = window.prompt("Enter comma separated permissions (e.g., manager,chef):");
     if (!roles) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff/${id}/permissions`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff/${id}/permissions`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ permissions: roles.split(',') })
@@ -348,7 +349,7 @@ export default function TeamManagement({
     if (!id) return;
     if (!confirm("Delete this shift?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff/schedule/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff/schedule/${id}`, {
         method: "DELETE",
         headers: authHeaders()
       });

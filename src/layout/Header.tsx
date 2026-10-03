@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { NavLink, useNavigate } from "react-router-dom";
 import LogoDark from "../assets/images/logo.svg";
 import LogoLight from "../assets/images/logo-light.svg";
@@ -69,7 +70,7 @@ export default function Header() {
 
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/logout",
+        `${API_BASE_URL}/auth/logout`,
         {
           method: "POST",
           headers: {

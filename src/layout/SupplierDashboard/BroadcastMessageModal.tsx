@@ -1,7 +1,8 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Users, Store, Building2, CheckCircle2, Send } from "lucide-react";
 import { useState } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -24,7 +25,7 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/supplier/clients/broadcast`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/clients/broadcast`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(form)

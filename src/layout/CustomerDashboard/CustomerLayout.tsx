@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, ShoppingBag, Bell, Menu } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import CustomerSidebar from "./CustomerSidebar";
@@ -64,7 +65,7 @@ const { setRole } = useRole();
 
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/logout",
+        `${API_BASE_URL}/auth/logout`,
         {
           method: "POST",
           headers: {

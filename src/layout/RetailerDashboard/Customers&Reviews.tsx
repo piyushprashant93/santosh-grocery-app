@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Calendar, Download, Mail, MapPin, MoreHorizontal, Users, Star, ThumbsUp } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const stats = [
     { value: "4.8", label: "Average Rating", stars: true },
@@ -58,7 +59,7 @@ export default function CustomersandReviews() {
         const fetchCustomers = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await fetch(`${API_BASE}/retailer/customers`, {
+                const res = await fetch(`${API_BASE_URL}/retailer/customers`, {
                     headers: {
                         "Content-Type": "application/json",
                         ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -78,7 +79,7 @@ export default function CustomersandReviews() {
         const fetchReviews = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await fetch(`${API_BASE}/retailer/reviews`, {
+                const res = await fetch(`${API_BASE_URL}/retailer/reviews`, {
                     headers: {
                         "Content-Type": "application/json",
                         ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -102,7 +103,7 @@ export default function CustomersandReviews() {
     const handleExport = async () => {
         try {
             const token = localStorage.getItem("authToken");
-            const res = await fetch(`${API_BASE}/retailer/customers/export`, {
+            const res = await fetch(`${API_BASE_URL}/retailer/customers/export`, {
                 headers: {
                     ...(token ? { Authorization: `Bearer ${token}` } : {})
                 }

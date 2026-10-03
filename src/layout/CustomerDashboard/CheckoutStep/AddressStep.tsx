@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useEffect, useState } from "react";
 import { MapPin, Plus, Loader2, Check, Pencil, Trash2 } from "lucide-react";
 import AddressModal, {
@@ -5,7 +6,7 @@ import AddressModal, {
   EMPTY_ADDRESS_FORM,
 } from "../AddressModal";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 interface AddressApi extends AddressFormData {
   _id: string;
@@ -45,7 +46,7 @@ export default function AddressStep() {
     setLoading(true);
     setFetchError("");
     try {
-      const res = await fetch(`${API_BASE}/users/profile`, {
+      const res = await fetch(`${API_BASE_URL}/users/profile`, {
         headers: authHeaders(),
       });
       const data = await res.json();
@@ -85,8 +86,8 @@ export default function AddressStep() {
     try {
       const res = await fetch(
         isEdit
-          ? `${API_BASE}/users/addresses/${editingAddressId}`
-          : `${API_BASE}/users/addresses`,
+          ? `${API_BASE_URL}/users/addresses/${editingAddressId}`
+          : `${API_BASE_URL}/users/addresses`,
         {
           method: isEdit ? "PUT" : "POST",
           headers: authHeaders(),
@@ -132,7 +133,7 @@ export default function AddressStep() {
     setDeleteError("");
 
     try {
-      const res = await fetch(`${API_BASE}/users/addresses/${addressId}`, {
+      const res = await fetch(`${API_BASE_URL}/users/addresses/${addressId}`, {
         method: "DELETE",
         headers: authHeaders(),
       });

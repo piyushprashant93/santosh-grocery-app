@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   ShoppingBag,
   X,
@@ -13,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const CART_STORAGE_KEY = "checkout_cart";
 interface CartItem {
   _id: string;
@@ -100,7 +101,7 @@ export default function CartModal({
     });
 
     try {
-      const res = await fetch(`${API_BASE}/cart/items/${cartItemId}`, {
+      const res = await fetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -145,7 +146,7 @@ export default function CartModal({
     setError(null);
 
     try {
-      const res = await fetch(`${API_BASE}/cart`, {
+      const res = await fetch(`${API_BASE_URL}/cart`, {
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -199,7 +200,7 @@ export default function CartModal({
     });
 
    try {
-      const res = await fetch(`${API_BASE}/cart/items/${cartItemId}`, {
+      const res = await fetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
   method: "DELETE",
   headers: {
     "Content-Type": "application/json",
@@ -239,7 +240,7 @@ export default function CartModal({
 
     setClearingCart(true);
     try {
-      const res = await fetch(`${API_BASE}/cart/clear`, {
+      const res = await fetch(`${API_BASE_URL}/cart/clear`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

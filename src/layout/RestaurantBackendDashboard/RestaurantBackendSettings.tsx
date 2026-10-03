@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -21,7 +22,7 @@ import {
   EyeOff,
 } from "lucide-react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -106,7 +107,7 @@ export default function RestaurantBackendSettings({
     e.preventDefault();
     setIsAddingLocation(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(locationForm)
@@ -132,7 +133,7 @@ export default function RestaurantBackendSettings({
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setSettingsData(data.data?.settings || data.settings || data.data || {});
@@ -142,7 +143,7 @@ export default function RestaurantBackendSettings({
 
   const fetchLocations = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setLocationsData(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
@@ -152,7 +153,7 @@ export default function RestaurantBackendSettings({
 
   const fetchTeam = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/staff`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setMembers(data.data?.staff || data.staff || (Array.isArray(data.data) ? data.data : []));
@@ -168,7 +169,7 @@ export default function RestaurantBackendSettings({
 
   const updateSettings = async () => {
     try {
-      await fetch(`${API_BASE}/restaurant-panel/settings`, {
+      await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify(settingsData)
@@ -183,7 +184,7 @@ export default function RestaurantBackendSettings({
     const formData = new FormData();
     formData.append("logo", file);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
     } catch(err) { console.error(err); }
   };
@@ -194,7 +195,7 @@ export default function RestaurantBackendSettings({
     const formData = new FormData();
     formData.append("banner", file);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
       if (res.ok) fetchSettings();
     } catch(err) { console.error(err); }
   };

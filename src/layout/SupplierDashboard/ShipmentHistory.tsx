@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   Calendar,
@@ -13,7 +14,7 @@ import { toast } from "react-hot-toast";
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
 
@@ -43,7 +44,7 @@ export default function ShipmentHistory({
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/logistics`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, { headers: authHeaders() });
       if (res.ok) {
         const json = await res.json();
         const logs = json.data?.manifests || json.data?.deliveries || (Array.isArray(json.data) ? json.data : (json.data?.data || []));
@@ -68,7 +69,7 @@ export default function ShipmentHistory({
       if (startDate) params.append('dateFrom', startDate);
       if (endDate) params.append('dateTo', endDate);
       
-      const res = await fetch(`${API_BASE}/supplier/logistics/export?${params.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics/export?${params.toString()}`, { headers: authHeaders() });
       if (!res.ok) throw new Error("Export failed");
       
       const blob = await res.blob();

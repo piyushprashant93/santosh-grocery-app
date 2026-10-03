@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { Check, Trash2, Store, AlertTriangle, Info, AlertCircle, ShieldAlert, Loader2, Clock } from "lucide-react"
 import toast from "react-hot-toast"
@@ -31,8 +32,8 @@ export default function Notifications() {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       };
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/notifications`, { headers });
+      
+      const res = await fetch(`${API_BASE_URL}/admin/notifications`, { headers });
       
       if (!res.ok) throw new Error("Failed to fetch notifications");
       
@@ -81,8 +82,8 @@ export default function Notifications() {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       };
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/notifications/read-all`, { 
+      
+      const res = await fetch(`${API_BASE_URL}/admin/notifications/read-all`, { 
         method: "PUT",
         headers 
       });

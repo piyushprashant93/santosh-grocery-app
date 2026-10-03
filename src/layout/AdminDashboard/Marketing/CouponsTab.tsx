@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
 import { Search, Filter, Percent, DollarSign, Tag, Loader2, Plus, Trash2, X } from "lucide-react"
 
@@ -25,8 +26,8 @@ export default function CouponsTab() {
     setError("");
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/vouchers`, {
+      
+      const res = await fetch(`${API_BASE_URL}/admin/vouchers`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -58,7 +59,7 @@ export default function CouponsTab() {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      
       
       const payload = {
         code,
@@ -67,7 +68,7 @@ export default function CouponsTab() {
         maxUses: maxUses ? Number(maxUses) : 1000
       };
 
-      const res = await fetch(`${baseUrl}/api/v1/admin/vouchers`, {
+      const res = await fetch(`${API_BASE_URL}/admin/vouchers`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -94,8 +95,8 @@ export default function CouponsTab() {
     if (!confirm("Are you sure you want to delete this coupon?")) return;
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/vouchers/${id}`, {
+      
+      const res = await fetch(`${API_BASE_URL}/admin/vouchers/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

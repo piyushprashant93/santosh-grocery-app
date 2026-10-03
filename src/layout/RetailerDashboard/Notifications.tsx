@@ -1,7 +1,8 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { Bell, CheckCircle, AlertCircle, Info } from "lucide-react"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -15,7 +16,7 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE}/retailer/notifications`, { headers: authHeaders() })
+    fetch(`${API_BASE_URL}/retailer/notifications`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -29,7 +30,7 @@ export default function Notifications() {
 
   const markAllAsRead = async () => {
     try {
-      await fetch(`${API_BASE}/retailer/notifications/read-all`, {
+      await fetch(`${API_BASE_URL}/retailer/notifications/read-all`, {
         method: "PUT",
         headers: authHeaders()
       });

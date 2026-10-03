@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { MapPin, Mail, Clock, Send } from "lucide-react";
@@ -56,7 +57,7 @@ export default function ContactSection() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/contact", {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

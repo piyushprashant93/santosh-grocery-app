@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState } from "react"
 import { ArrowLeft, Check, Info, Loader2 } from "lucide-react"
 
@@ -41,7 +42,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
     setError("");
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      
       
       const payload = {
         name,
@@ -51,8 +52,8 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
       };
 
       const url = isEditing 
-        ? `${baseUrl}/api/v1/admin/access-control/roles/${roleData._id}` 
-        : `${baseUrl}/api/v1/admin/access-control/roles`;
+        ? `${API_BASE_URL}/admin/access-control/roles/${roleData._id}` 
+        : `${API_BASE_URL}/admin/access-control/roles`;
         
       const res = await fetch(url, {
         method: isEditing ? "PUT" : "POST",

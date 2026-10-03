@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Download,
   Wrench, CheckCircle2, Clock,
@@ -16,7 +17,7 @@ import ExpenseModal from "./ExpenseModal";
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -65,7 +66,7 @@ export default function FinanceWallet() {
 
   const fetchExpenses = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setExpenses(extractList(data));
@@ -75,7 +76,7 @@ export default function FinanceWallet() {
 
   const fetchPayroll = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setEmployees(extractList(data));
@@ -85,7 +86,7 @@ export default function FinanceWallet() {
 
   const fetchMaintenance = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setIssues(extractList(data));
@@ -101,7 +102,7 @@ export default function FinanceWallet() {
 
   const markMaintenanceResolved = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/expenses/maintenance/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/maintenance/${id}`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status: "Resolved" })

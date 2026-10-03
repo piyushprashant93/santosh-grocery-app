@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   MessageCircle,
@@ -15,7 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import SupportLiveChat from "./SupportLiveChat";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -69,7 +70,7 @@ export default function HelpSupport() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/support/tickets`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/support/tickets`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -82,7 +83,7 @@ export default function HelpSupport() {
   useEffect(() => {
     fetchTickets();
     
-    fetch(`${API_BASE}/supplier/support/faq`, { headers: authHeaders() })
+    fetch(`${API_BASE_URL}/supplier/support/faq`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -92,7 +93,7 @@ export default function HelpSupport() {
         }
       }).catch(console.error);
       
-    fetch(`${API_BASE}/supplier/support/contact`, { headers: authHeaders() })
+    fetch(`${API_BASE_URL}/supplier/support/contact`, { headers: authHeaders() })
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data) {
@@ -103,7 +104,7 @@ export default function HelpSupport() {
 
   const submitTicket = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/support/tickets`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/support/tickets`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(newTicket)

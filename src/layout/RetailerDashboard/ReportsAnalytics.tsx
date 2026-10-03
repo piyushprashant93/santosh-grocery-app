@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 import { Calendar, Download } from "lucide-react"
 import { useState, useEffect, useMemo } from "react"
@@ -12,7 +13,7 @@ export default function ReportsAnalytics() {
     const fetchReports = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/reports", {
+        const res = await fetch(`${API_BASE_URL}/retailer/reports`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -35,7 +36,7 @@ export default function ReportsAnalytics() {
     try {
       const toastId = toast.loading("Exporting reports...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/retailer/reports/export", {
+      const res = await fetch(`${API_BASE_URL}/retailer/reports/export`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }

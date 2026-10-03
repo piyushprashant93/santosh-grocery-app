@@ -1,6 +1,7 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -118,7 +119,7 @@ export default function SupplierSettings() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/settings`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/settings`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const profile = data.data || data;
@@ -139,7 +140,7 @@ export default function SupplierSettings() {
 
   const handleSaveProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/settings`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify(profileForm)
@@ -154,7 +155,7 @@ export default function SupplierSettings() {
 
   const handleSavePreferences = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/settings`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ notifications: settings })
@@ -171,7 +172,7 @@ export default function SupplierSettings() {
     const newValue = !twoFA;
     setTwoFA(newValue);
     try {
-      await fetch(`${API_BASE}/supplier/settings`, {
+      await fetch(`${API_BASE_URL}/supplier/settings`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ twoFA: newValue })
@@ -185,7 +186,7 @@ export default function SupplierSettings() {
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/users/change-password`, {
+      const res = await fetch(`${API_BASE_URL}/users/change-password`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({

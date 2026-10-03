@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect, useRef } from "react";
 import { Upload, Clock, Check, Calculator, Plus, ChartPie } from "lucide-react";
 import toast from "react-hot-toast";
@@ -32,7 +33,7 @@ export default function AddMenuItem({
     const fetchCategories = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/menu/categories", {
+        const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/categories`, {
           headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
         });
         if (res.ok) {
@@ -90,7 +91,7 @@ export default function AddMenuItem({
     setFieldErrors({});
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/restaurant-panel/menu", {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

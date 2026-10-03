@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { TermsSection } from '../layout/TermsSection'
 import { SecondaryHeader } from '../layout/SecondaryHeader';
 import Footer from '../layout/Footer';
@@ -47,7 +48,7 @@ export const PolicyPage = () => {
   const [data, setData] = useState(privacyPolicyData);
 
   useEffect(() => {
-    fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/public/policy")
+    fetch(`${API_BASE_URL}/public/policy`)
       .then(res => res.json())
       .then(json => {
         if (json.success && json.data) {

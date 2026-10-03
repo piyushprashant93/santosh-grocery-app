@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
   return {
@@ -54,7 +55,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
     setLoadingOrderId(orderId);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -86,7 +87,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const acceptAllOrders = async () => {
     setAcceptingAll(true);
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/accept-all`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/accept-all`, {
         method: "PUT",
         headers: authHeaders()
       });
@@ -120,7 +121,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const fetchLiveOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/live`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/live`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const liveRaw = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
@@ -144,7 +145,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (searchQuery) queryParams.append("search", searchQuery);
       if (types.length > 0) queryParams.append("type", types.join(","));
 
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
@@ -239,7 +240,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (searchQuery) queryParams.append("search", searchQuery);
       if (types.length > 0) queryParams.append("type", types.join(","));
 
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/history/export?${queryParams.toString()}`, { 
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/history/export?${queryParams.toString()}`, { 
         headers: authHeaders()
       });
       if (res.ok) {
@@ -262,7 +263,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const handleViewReceipt = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, {
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, {
         headers: authHeaders()
       });
       if (res.ok) {

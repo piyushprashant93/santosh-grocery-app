@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, MoreHorizontal, XCircle, CheckCircle2, Eye } from "lucide-react"
 import { useState, useEffect } from "react"
 import EmptyTableState from "../../components/common/EmptyTableState"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -52,7 +53,7 @@ export default function RefundRequests() {
 
   const fetchRefunds = async () => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/refunds`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/retailer/refunds`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -81,7 +82,7 @@ export default function RefundRequests() {
 
   const updateRefundStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/retailer/refunds/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/retailer/refunds/${id}`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })

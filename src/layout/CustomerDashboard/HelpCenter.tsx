@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Package,
   CreditCard,
@@ -58,7 +59,7 @@ const LEGAL_CONTENT = {
   }
 };
 
-const BASE_URL = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 // ---------- Types ----------
 interface Faq {
@@ -222,7 +223,7 @@ export default function HelpCenter() {
       setFaqsLoading(true);
       setFaqsError(null);
       try {
-        const res = await fetch(`${BASE_URL}/support/faq`, {
+        const res = await fetch(`${API_BASE_URL}/support/faq`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -243,7 +244,7 @@ export default function HelpCenter() {
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/support/contact`, {
+        const res = await fetch(`${API_BASE_URL}/support/contact`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -269,7 +270,7 @@ export default function HelpCenter() {
     setTicketsLoading(true);
     setTicketsError(null);
     try {
-      const res = await fetch(`${BASE_URL}/support?page=${page}`, {
+      const res = await fetch(`${API_BASE_URL}/support?page=${page}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -329,7 +330,7 @@ const [legalModal, setLegalModal] = useState({
 
     setContactSubmitting(true);
     try {
-      const res = await fetch(`${BASE_URL}/support/contact`, {
+      const res = await fetch(`${API_BASE_URL}/support/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(contactForm),
@@ -378,7 +379,7 @@ const [legalModal, setLegalModal] = useState({
         message: ticketForm.message,
       };
 
-      const res = await fetch(`${BASE_URL}/support`, {
+      const res = await fetch(`${API_BASE_URL}/support`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -440,7 +441,7 @@ const [legalModal, setLegalModal] = useState({
     setReplySubmitting(true);
     try {
       const res = await fetch(
-        `${BASE_URL}/support/${selectedTicket._id}/reply`,
+        `${API_BASE_URL}/support/${selectedTicket._id}/reply`,
         {
           method: "POST",
           headers: {
@@ -499,7 +500,7 @@ const [legalModal, setLegalModal] = useState({
     setRatingSubmitting(true);
     try {
       const res = await fetch(
-        `${BASE_URL}/support/${selectedTicket._id}/rate`,
+        `${API_BASE_URL}/support/${selectedTicket._id}/rate`,
         {
           method: "PUT",
           headers: {

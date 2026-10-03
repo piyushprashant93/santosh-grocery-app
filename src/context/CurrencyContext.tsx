@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type Rates = Record<string, number>;
@@ -38,7 +39,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       if (!token) return;
 
       try {
-        const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/users/preferences", {
+        const response = await fetch(`${API_BASE_URL}/users/preferences`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

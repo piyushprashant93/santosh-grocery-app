@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
@@ -36,8 +37,8 @@ export default function SalesAndAnalytics() {
     setDownloading(true)
     try {
       const token = localStorage.getItem("authToken")
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com"
-      const response = await fetch(`${baseUrl}/api/v1/admin/reports/export?days=30`, {
+      
+      const response = await fetch(`${API_BASE_URL}/admin/reports/export?days=30`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }

@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
 import { Users, Wallet, FileText, Store, ArrowUpRight, Utensils, Loader2, UserPlus } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
@@ -51,11 +52,11 @@ export default function AdminDashboard({
         "Content-Type": "application/json"
       };
 
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      
 
       const [dashRes, analyticsRes] = await Promise.all([
-        fetch(`${baseUrl}/api/v1/admin/dashboard`, { headers }),
-        fetch(`${baseUrl}/api/v1/admin/analytics`, { headers })
+        fetch(`${API_BASE_URL}/admin/dashboard`, { headers }),
+        fetch(`${API_BASE_URL}/admin/analytics`, { headers })
       ]);
 
       if (!dashRes.ok || !analyticsRes.ok) {
@@ -78,8 +79,8 @@ export default function AdminDashboard({
     setDownloading(true);
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const response = await fetch(`${baseUrl}/api/v1/admin/reports`, {
+      
+      const response = await fetch(`${API_BASE_URL}/admin/reports`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }

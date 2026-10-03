@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useEffect, useState } from "react";
 import {
   MapPin,
@@ -19,7 +20,7 @@ import OrderSuccess from "./OrderSuccess";
 import { useNavigate } from "react-router-dom";
 import { useCurrency } from "../../../context/CurrencyContext";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const CART_STORAGE_KEY = "checkout_cart";
 const ADDRESS_STORAGE_KEY = "checkout_address";
@@ -73,7 +74,7 @@ export default function Checkout() {
     setSummaryError("");
 
     try {
-      const res = await fetch(`${API_BASE}/payment/checkout-summary`, {
+      const res = await fetch(`${API_BASE_URL}/payment/checkout-summary`, {
         headers: authHeaders(),
       });
       const data = await res.json();
@@ -133,7 +134,7 @@ export default function Checkout() {
     setPromoError("");
 
     try {
-      const res = await fetch(`${API_BASE}/payment/apply-promo`, {
+      const res = await fetch(`${API_BASE_URL}/payment/apply-promo`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({
@@ -239,7 +240,7 @@ export default function Checkout() {
         initiatePayload.cardId = payment.cardId;
       }
 
-      const initiateRes = await fetch(`${API_BASE}/payment/initiate`, {
+      const initiateRes = await fetch(`${API_BASE_URL}/payment/initiate`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(initiatePayload),
@@ -265,7 +266,7 @@ export default function Checkout() {
         confirmPayload.cardId = payment.cardId;
       }
 
-      const confirmRes = await fetch(`${API_BASE}/payment/confirm`, {
+      const confirmRes = await fetch(`${API_BASE_URL}/payment/confirm`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(confirmPayload),
@@ -281,7 +282,7 @@ export default function Checkout() {
 
       // Step 3: Handle Gateway Redirects (e.g., Khalti)
       if (payment.method === "khalti") {
-        const khaltiRes = await fetch(`${API_BASE}/payment/khalti/initiate`, {
+        const khaltiRes = await fetch(`${API_BASE_URL}/payment/khalti/initiate`, {
           method: "POST",
           headers: authHeaders(),
           body: JSON.stringify({ 

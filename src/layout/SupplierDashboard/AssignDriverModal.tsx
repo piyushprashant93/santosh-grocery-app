@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { User, MapPin, Truck } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -25,7 +26,7 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
 
   const fetchDrivers = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/logistics/drivers`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics/drivers`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setDrivers(data.data || []);
@@ -41,7 +42,7 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
 
     try {
       const toastId = toast.loading("Assigning driver...");
-      const res = await fetch(`${API_BASE}/supplier/logistics/${selectedShipment}/assign-driver`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/logistics/${selectedShipment}/assign-driver`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ driverId: selectedDriver })

@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Upload, Box, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { parseApiError } from "../../lib/apiErrorHandler";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeadersForm = () => {
   const token = localStorage.getItem("authToken");
@@ -60,7 +61,7 @@ export default function AddProduct({
       formData.append("tiers", JSON.stringify(tiers));
       if (imageFile) formData.append("image", imageFile);
 
-      const res = await fetch(`${API_BASE}/supplier/products`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/products`, {
         method: "POST",
         headers: authHeadersForm(),
         body: formData

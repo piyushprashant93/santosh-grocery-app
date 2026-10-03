@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Star,
   Heart,
@@ -19,7 +20,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1553621042-f6e147245754";
 
@@ -145,7 +146,7 @@ export default function ProductDetails({
     setCartError(null);
 
     try {
-      const res = await fetch(`${API_BASE}/cart/add`, {
+      const res = await fetch(`${API_BASE_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -185,7 +186,7 @@ export default function ProductDetails({
       setError(null);
 
       try {
-        const res = await fetch(`${API_BASE}/products/${productId}`, {
+        const res = await fetch(`${API_BASE_URL}/products/${productId}`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -218,7 +219,7 @@ export default function ProductDetails({
     if (!productId) return;
     setReviewsLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/reviews/product/${productId}?page=${page}`, {
+      const res = await fetch(`${API_BASE_URL}/reviews/product/${productId}?page=${page}`, {
         headers: { "Content-Type": "application/json" }
       });
       const data = await res.json();
@@ -258,7 +259,7 @@ export default function ProductDetails({
 
     setSubmittingReview(true);
     try {
-      const res = await fetch(`${API_BASE}/reviews`, {
+      const res = await fetch(`${API_BASE_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -294,7 +295,7 @@ export default function ProductDetails({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE}/reviews/${reviewId}/helpful`, {
+      const res = await fetch(`${API_BASE_URL}/reviews/${reviewId}/helpful`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -330,7 +331,7 @@ export default function ProductDetails({
     setWishlistLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/wishlist/add`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

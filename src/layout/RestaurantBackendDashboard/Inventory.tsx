@@ -1,6 +1,7 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -56,7 +57,7 @@ export default function Inventory({
 
   const fetchInventory = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/inventory`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const items = extractList(data);
@@ -69,7 +70,7 @@ export default function Inventory({
 
   const fetchBeverages = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/beverages`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/beverages`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setBeverages(extractList(data));
@@ -79,7 +80,7 @@ export default function Inventory({
 
   const fetchRecipes = async () => {
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/recipes`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/recipes`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setRecipes(extractList(data));
@@ -100,7 +101,7 @@ export default function Inventory({
   const deleteBeverage = async (id: string) => {
     if(!confirm("Delete this beverage?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/beverages/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/beverages/${id}`, { method: "DELETE", headers: authHeaders() });
       if (res.ok) fetchBeverages();
     } catch (e) { console.error(e); }
   }
@@ -108,7 +109,7 @@ export default function Inventory({
   const deleteItem = async (id: string) => {
     if(!confirm("Delete this item?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: authHeaders() });
       if (res.ok) fetchInventory();
     } catch (e) { console.error(e); }
   }
@@ -116,7 +117,7 @@ export default function Inventory({
   const deleteRecipe = async (id: string) => {
     if(!confirm("Delete this recipe?")) return;
     try {
-      const res = await fetch(`${API_BASE}/restaurant-panel/recipes/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/restaurant-panel/recipes/${id}`, { method: "DELETE", headers: authHeaders() });
       if (res.ok) fetchRecipes();
     } catch (e) { console.error(e); }
   }
@@ -128,8 +129,8 @@ export default function Inventory({
     
     try {
       const endpoint = type === 'beverage' 
-        ? `${API_BASE}/restaurant-panel/inventory/beverages/${id}/adjust` 
-        : `${API_BASE}/restaurant-panel/inventory/${id}/adjust`;
+        ? `${API_BASE_URL}/restaurant-panel/inventory/beverages/${id}/adjust` 
+        : `${API_BASE_URL}/restaurant-panel/inventory/${id}/adjust`;
         
       const res = await fetch(endpoint, {
         method: "PUT",

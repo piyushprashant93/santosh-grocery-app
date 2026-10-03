@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Search,
   Filter,
@@ -138,7 +139,7 @@ type TrackingData = {
   cancelReason: string | null;
 };
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const PAGE_LIMIT = 10;
 
 const statusStyles: any = {
@@ -248,7 +249,7 @@ const CANCEL_REASONS = [
 
   try {
     const response = await fetch(
-      `${API_BASE}/orders/my/${orderId}/reorder`,
+      `${API_BASE_URL}/orders/my/${orderId}/reorder`,
       {
         method: "POST",
         headers: {
@@ -297,7 +298,7 @@ const submitCancelOrder = async () => {
 
   try {
     const response = await fetch(
-      `${API_BASE}/orders/my/${selectedOrder._id}/cancel`,
+      `${API_BASE_URL}/orders/my/${selectedOrder._id}/cancel`,
       {
         method: "PUT",
         headers: {
@@ -363,7 +364,7 @@ const submitCancelOrder = async () => {
 
     try {
       const response = await fetch(
-        `${API_BASE}/orders/my/${selectedOrder._id}/refund`,
+        `${API_BASE_URL}/orders/my/${selectedOrder._id}/refund`,
         {
           method: "POST",
           headers: {
@@ -411,7 +412,7 @@ const submitCancelOrder = async () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/invoices/${orderId}`, {
+      const response = await fetch(`${API_BASE_URL}/invoices/${orderId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -438,7 +439,7 @@ const submitCancelOrder = async () => {
     try {
       const token = localStorage.getItem("authToken");
 
-      const response = await fetch(`${API_BASE}/invoices/${orderId}/download`, {
+      const response = await fetch(`${API_BASE_URL}/invoices/${orderId}/download`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -611,7 +612,7 @@ const submitCancelOrder = async () => {
 
     try {
       const response = await fetch(
-        `${API_BASE}/orders/my?page=${page}&limit=${PAGE_LIMIT}`,
+        `${API_BASE_URL}/orders/my?page=${page}&limit=${PAGE_LIMIT}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -665,7 +666,7 @@ const submitCancelOrder = async () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/orders/my/${orderId}`, {
+      const response = await fetch(`${API_BASE_URL}/orders/my/${orderId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -703,7 +704,7 @@ const submitCancelOrder = async () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/orders/my/${orderId}/track`, {
+      const response = await fetch(`${API_BASE_URL}/orders/my/${orderId}/track`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

@@ -1,8 +1,9 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Mail, Phone, MapPin, MoreHorizontal, Building2 } from "lucide-react"
 import { useState, useEffect } from "react";
 import BroadcastMessageModal from "./BroadcastMessageModal";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -18,7 +19,7 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
 
   const fetchClients = async () => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/clients`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setClientsData(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));

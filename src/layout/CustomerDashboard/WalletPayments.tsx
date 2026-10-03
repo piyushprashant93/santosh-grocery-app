@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Wallet,
   Plus,
@@ -57,7 +58,7 @@ type Card = {
   isDefault: boolean;
 };
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const PAGE_LIMIT = 10;
 
 const PAYMENT_METHODS = [
@@ -126,7 +127,7 @@ export default function WalletPayments() {
     setPaymentsError("");
 
     try {
-      const response = await fetch(`${API_BASE}/payment/history?page=${page}`, {
+      const response = await fetch(`${API_BASE_URL}/payment/history?page=${page}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -175,7 +176,7 @@ export default function WalletPayments() {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/wallet`, {
+      const response = await fetch(`${API_BASE_URL}/wallet`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +222,7 @@ export default function WalletPayments() {
 
     try {
       const response = await fetch(
-        `${API_BASE}/wallet/transactions?page=${page}&limit=${PAGE_LIMIT}`,
+        `${API_BASE_URL}/wallet/transactions?page=${page}&limit=${PAGE_LIMIT}`,
         {
           method: "GET",
           headers: {
@@ -269,7 +270,7 @@ export default function WalletPayments() {
     }
 
     try {
-      const response = await fetch(`${API_BASE}/wallet/cards`, {
+      const response = await fetch(`${API_BASE_URL}/wallet/cards`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -382,7 +383,7 @@ export default function WalletPayments() {
       // Round to 2 decimal places to avoid floating point precision issues on the backend
       const amountInUSD = Math.round((amount / rate) * 100) / 100;
 
-      const response = await fetch(`${API_BASE}/wallet/top-up`, {
+      const response = await fetch(`${API_BASE_URL}/wallet/top-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -442,7 +443,7 @@ export default function WalletPayments() {
     setWithdrawLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/wallet/withdraw`, {
+      const response = await fetch(`${API_BASE_URL}/wallet/withdraw`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -520,7 +521,7 @@ export default function WalletPayments() {
     setAddCardLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/wallet/cards`, {
+      const response = await fetch(`${API_BASE_URL}/wallet/cards`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -568,7 +569,7 @@ export default function WalletPayments() {
     setCards((prev) => prev.filter((c) => c.cardId !== cardId));
 
     try {
-      const response = await fetch(`${API_BASE}/wallet/cards/${cardId}`, {
+      const response = await fetch(`${API_BASE_URL}/wallet/cards/${cardId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -607,7 +608,7 @@ export default function WalletPayments() {
 
     try {
       const response = await fetch(
-        `${API_BASE}/wallet/cards/${cardId}/default`,
+        `${API_BASE_URL}/wallet/cards/${cardId}/default`,
         {
           method: "PUT",
           headers: {

@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { User, Mail, Lock, Eye, Sparkles, Check } from "lucide-react";
 import authImg from "../../assets/images/signupbg.svg";
@@ -44,7 +45,7 @@ export default function AuthSection() {
 
     try {
       const response = await fetch(
-        "https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/register",
+        `${API_BASE_URL}/auth/register`,
         {
           method: "POST",
           headers: {
@@ -140,8 +141,8 @@ export default function AuthSection() {
 
             <button 
               onClick={() => {
-                const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-                window.location.href = `${baseUrl}/api/v1/auth/google`;
+                
+                window.location.href = `${API_BASE_URL}/auth/google`;
               }}
               className="mt-8 w-full bg-white dark:bg-theme-surface text-gray-900 dark:text-white border border-gray-200 dark:border-transparent font-bold py-3 rounded-[12px] hover:bg-gray-50 dark:hover:bg-[#1E293B] transition flex items-center gap-3 justify-center shadow-sm dark:shadow-none"
             >

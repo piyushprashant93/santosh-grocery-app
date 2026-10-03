@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../config';
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -17,7 +18,7 @@ export default function AuthCallback() {
 
     const establishSession = async (token: string) => {
       try {
-        const response = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/auth/me", {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

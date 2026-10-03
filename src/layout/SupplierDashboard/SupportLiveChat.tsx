@@ -1,9 +1,10 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Paperclip, Send, MoreVertical, X } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { parseApiError } from "../../lib/apiErrorHandler"
 import toast from "react-hot-toast"
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -27,8 +28,8 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
     try {
       const currentId = chatSessionIdRef.current;
       const url = currentId 
-        ? `${API_BASE}/supplier/support/livechat/${currentId}`
-        : `${API_BASE}/supplier/support/livechat`;
+        ? `${API_BASE_URL}/supplier/support/livechat/${currentId}`
+        : `${API_BASE_URL}/supplier/support/livechat`;
         
       const res = await fetch(url, { headers: authHeaders() });
       const text = await res.text();
@@ -75,7 +76,7 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
     }]);
 
     try {
-      const res = await fetch(`${API_BASE}/supplier/support/livechat/${chatSessionId}`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/support/livechat/${chatSessionId}`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({ message: tempMessage })
@@ -96,7 +97,7 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const closeChat = async () => {
     if(!chatSessionId) return;
     try {
-      await fetch(`${API_BASE}/supplier/support/livechat/${chatSessionId}/close`, {
+      await fetch(`${API_BASE_URL}/supplier/support/livechat/${chatSessionId}/close`, {
         method: "PUT",
         headers: authHeaders()
       });

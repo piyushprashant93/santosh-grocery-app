@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Package,
   Clock,
@@ -21,7 +22,7 @@ type NotificationItem = {
   createdAt: string;
 };
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const PAGE_LIMIT = 20;
 
 export default function Notifications() {
@@ -127,7 +128,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
 
       try {
         const response = await fetch(
-          `${API_BASE}/notifications?page=${pageToFetch}&limit=${PAGE_LIMIT}`,
+          `${API_BASE_URL}/notifications?page=${pageToFetch}&limit=${PAGE_LIMIT}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -177,7 +178,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     );
 
     try {
-      const response = await fetch(`${API_BASE}/notifications/${id}/read`, {
+      const response = await fetch(`${API_BASE_URL}/notifications/${id}/read`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +216,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
 
     try {
-      const response = await fetch(`${API_BASE}/notifications/read-all`, {
+      const response = await fetch(`${API_BASE_URL}/notifications/read-all`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -250,7 +251,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications((prev) => prev.filter((item) => item._id !== id));
 
     try {
-      const response = await fetch(`${API_BASE}/notifications/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/notifications/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -289,7 +290,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications([]);
 
     try {
-      const response = await fetch(`${API_BASE}/notifications/clear-all`, {
+      const response = await fetch(`${API_BASE_URL}/notifications/clear-all`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

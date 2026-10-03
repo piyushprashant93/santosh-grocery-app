@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Leaf,
   Wheat,
@@ -15,7 +16,7 @@ import { useRole } from "../../layout/RoleProvider";
 import { useCurrency } from "../../context/CurrencyContext";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 const PAGE_LIMIT = 12;
 
 // Default fallback categories in case the API fails
@@ -102,7 +103,7 @@ export default function FeaturedProducts({
     if (searchQuery.trim()) params.set("search", searchQuery.trim());
 
     if (activeCategory && !searchQuery.trim()) {
-      return `${API_BASE}/home/products/${encodeURIComponent(activeCategory)}?${params.toString()}`;
+      return `${API_BASE_URL}/home/products/${encodeURIComponent(activeCategory)}?${params.toString()}`;
     }
 
     if (activeCategory) params.set("category", activeCategory);
@@ -113,7 +114,7 @@ export default function FeaturedProducts({
     if (sortBy === "new-arrival" || sortBy === "newest") sortParam = "new";
     params.set("sort", sortParam);
 
-    return `${API_BASE}/products?${params.toString()}`;
+    return `${API_BASE_URL}/products?${params.toString()}`;
   };
 
   const fetchProducts = async (pageToFetch: number, append: boolean) => {
@@ -159,7 +160,7 @@ export default function FeaturedProducts({
     const fetchCategories = async () => {
       setCategoriesLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/home/products`, {
+        const res = await fetch(`${API_BASE_URL}/home/products`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -221,7 +222,7 @@ export default function FeaturedProducts({
     setAddingToCartId(productId);
 
     try {
-      const res = await fetch(`${API_BASE}/cart/add`, {
+      const res = await fetch(`${API_BASE_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

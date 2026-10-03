@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
 import {
   ShoppingCart,
@@ -12,7 +13,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 import CartModal from "./CartModal";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 interface ProductApi {
   _id: string;
@@ -69,7 +70,7 @@ export default function SavedItems() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${BASE_URL}/wishlist`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist`, {
         method: "GET",
         headers: authHeaders(),
       });
@@ -97,7 +98,7 @@ export default function SavedItems() {
   const removeItem = async (wishlistItemId: string) => {
     setRemovingId(wishlistItemId);
     try {
-      const res = await fetch(`${BASE_URL}/wishlist/${wishlistItemId}`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist/${wishlistItemId}`, {
         method: "DELETE",
         headers: authHeaders(),
       });
@@ -119,7 +120,7 @@ export default function SavedItems() {
   const clearAll = async () => {
     setClearing(true);
     try {
-      const res = await fetch(`${BASE_URL}/wishlist/clear`, {
+      const res = await fetch(`${API_BASE_URL}/wishlist/clear`, {
         method: "DELETE",
         headers: authHeaders(),
       });
@@ -148,7 +149,7 @@ export default function SavedItems() {
 
     setAddingToCartId(productId);
     try {
-      const res = await fetch(`${BASE_URL}/cart/add`, {
+      const res = await fetch(`${API_BASE_URL}/cart/add`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({

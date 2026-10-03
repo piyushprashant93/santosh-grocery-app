@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   Clock,
   MapPin,
@@ -18,7 +19,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 // const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80";
 const restaurantTypes = ["Premium", "Luxury", "Signature", "Elite"];
 
@@ -172,9 +173,9 @@ export default function RestaurantGrid({
       try {
         let url;
         if (searchQuery) {
-          url = `${API_BASE}/general/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
+          url = `${API_BASE_URL}/general/search?q=${encodeURIComponent(searchQuery)}&type=restaurant`;
         } else {
-          url = `${API_BASE}/home/food/${encodeURIComponent(activeCuisine)}`;
+          url = `${API_BASE_URL}/home/food/${encodeURIComponent(activeCuisine)}`;
         }
 
         const res = await fetch(url, {
@@ -217,7 +218,7 @@ export default function RestaurantGrid({
     const fetchCuisines = async () => {
       setCuisinesLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/home/food`, {
+        const res = await fetch(`${API_BASE_URL}/home/food`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();

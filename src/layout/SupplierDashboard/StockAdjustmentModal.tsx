@@ -1,7 +1,8 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { AlertCircle, Plus, TriangleAlertIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -30,7 +31,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch(`${API_BASE}/supplier/products`, { headers: authHeaders() });
+            const res = await fetch(`${API_BASE_URL}/supplier/products`, { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
                 const fetched = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
@@ -45,7 +46,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
             return;
         }
         try {
-            const res = await fetch(`${API_BASE}/supplier/warehouse/adjust`, {
+            const res = await fetch(`${API_BASE_URL}/supplier/warehouse/adjust`, {
                 method: "POST",
                 headers: authHeaders(),
                 body: JSON.stringify(form)

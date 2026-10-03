@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
 import { Search, Filter, Send, MoreVertical, CheckCircle2, Clock, Plus, X, Loader2 } from "lucide-react"
 
@@ -15,8 +16,8 @@ export default function NotificationsTab() {
     setError("");
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/notifications`, {
+      
+      const res = await fetch(`${API_BASE_URL}/admin/notifications`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -83,7 +84,7 @@ export default function NotificationsTab() {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
+      
       
       const payload = {
         title,
@@ -91,7 +92,7 @@ export default function NotificationsTab() {
         targetRole
       };
 
-      const res = await fetch(`${baseUrl}/api/v1/admin/marketing/notifications/send`, {
+      const res = await fetch(`${API_BASE_URL}/admin/marketing/notifications/send`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

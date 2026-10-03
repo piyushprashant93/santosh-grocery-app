@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, ShoppingBag, Bell, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import CartModal from "./CartModal";
@@ -23,7 +24,7 @@ export default function CustomerHeader({
 
       try {
         const response = await fetch(
-          "https://mr-santosh-grocery-backend.onrender.com/api/v1/notifications?page=1&limit=20",
+          `${API_BASE_URL}/notifications?page=1&limit=20`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -49,7 +50,7 @@ export default function CustomerHeader({
 
     void fetchUnreadCount();
 
-    const eventSource = new EventSource(`https://mr-santosh-grocery-backend.onrender.com/api/v1/notifications/stream?token=${token}`);
+    const eventSource = new EventSource(`${API_BASE_URL}/notifications/stream?token=${token}`);
     eventSource.onmessage = (event) => {
       try {
         if (event.data !== "ping") {
@@ -79,7 +80,7 @@ export default function CustomerHeader({
 
       try {
         const res = await fetch(
-          "https://mr-santosh-grocery-backend.onrender.com/api/v1/cart",
+          `${API_BASE_URL}/cart`,
           {
             headers: {
               "Content-Type": "application/json",

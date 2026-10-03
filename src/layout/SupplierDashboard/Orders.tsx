@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Download, Truck, PackageCheck, Clock, Box, MoreHorizontal, Filter, Package, ChevronDown } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useDebounce } from "use-debounce"
@@ -5,7 +6,7 @@ import { toast } from "react-hot-toast"
 import { getImageUrl } from "../../utils/dataHelper";
 
 
-const API_BASE = "https://mr-santosh-grocery-backend.onrender.com/api/v1";
+
 
 const authHeaders = () => {
   const token = localStorage.getItem("authToken");
@@ -31,7 +32,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (debouncedSearch) queryParams.append("search", debouncedSearch);
       if (statusFilter !== "All Filters") queryParams.append("status", statusFilter);
 
-      const res = await fetch(`${API_BASE}/supplier/orders?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/orders?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         const ords = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
@@ -46,7 +47,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE}/supplier/orders/${id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/supplier/orders/${id}/status`, {
         method: "PUT",
         headers: authHeaders(),
         body: JSON.stringify({ status })
@@ -80,7 +81,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (debouncedSearch) queryParams.append("search", debouncedSearch);
       if (statusFilter !== "All Filters") queryParams.append("status", statusFilter);
 
-      const res = await fetch(`${API_BASE}/supplier/orders/export?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await fetch(`${API_BASE_URL}/supplier/orders/export?${queryParams.toString()}`, { headers: authHeaders() });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

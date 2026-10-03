@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
 import { Shield, Users, Edit, Loader2 } from "lucide-react"
 
@@ -15,8 +16,8 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
     setError("");
     try {
       const token = localStorage.getItem("authToken");
-      const baseUrl = import.meta.env.VITE_BASE_URL || "https://mr-santosh-grocery-backend.onrender.com";
-      const res = await fetch(`${baseUrl}/api/v1/admin/access-control/roles`, {
+      
+      const res = await fetch(`${API_BASE_URL}/admin/access-control/roles`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }

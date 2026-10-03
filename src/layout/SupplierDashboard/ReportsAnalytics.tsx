@@ -1,3 +1,4 @@
+import { API_BASE_URL, BASE_URL } from '../../config';
 import {
   ResponsiveContainer,
   LineChart,
@@ -37,7 +38,7 @@ export default function ReportsAnalytics() {
     const fetchReports = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch("https://mr-santosh-grocery-backend.onrender.com/api/v1/supplier/reports", {
+        const res = await fetch(`${API_BASE_URL}/supplier/reports`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
