@@ -1,19 +1,36 @@
 import AdminDashboard from "./AdminDashboard"
+
 import UserManagement from "./UserManagement"
+
 import Notifications from "./Notifications"
+
 import SystemHealth from "./SystemHealth"
+
 import PartnerManagement from "./PartnerManagement"
+
 import RestaurantPanelLayout from "./RestaurantPanel/RestaurantPanelLayout"
+
 import RetailerPanelLayout from "./RetailerPanel/RetailerPanelLayout"
+
 import SupplierPanelLayout from "./SupplierPanel/SupplierPanelLayout"
+
 import ProductFoodPanelLayout from "./ProductFoodPanel/ProductFoodPanelLayout"
+
 import PlatformSettingsLayout from "./PlatformSettings/PlatformSettingsLayout"
+
 import SalesAndAnalytics from "./SalesAndAnalytics"
+
 import AccessControlLayout from "./AccessControl/AccessControlLayout"
+
 import MarketingLayout from "./Marketing/MarketingLayout"
+
 import OrderManagement from "./OrderManagement"
+
 import FeedbackComplaints from "./FeedbackComplaints"
+
 import FinanceSettlements from "./FinanceSettlements"
+
+
 
 export default function AdminChild({
   activeTab,

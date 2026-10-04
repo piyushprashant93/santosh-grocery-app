@@ -1,5 +1,6 @@
 import { Utensils, ShoppingBag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 const cards = [
   {
     icon: Utensils,

@@ -1,16 +1,7 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Users, Store, Building2, CheckCircle2, Send } from "lucide-react";
 import { useState } from "react";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function BroadcastMessageModal({open, onClose}: {open: boolean; onClose: () => void}) {
   const [form, setForm] = useState({
@@ -25,9 +16,9 @@ export default function BroadcastMessageModal({open, onClose}: {open: boolean; o
       return;
     }
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/clients/broadcast`, {
+      const res = await apiFetch(`/supplier/clients/broadcast`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
       if (res.ok) {

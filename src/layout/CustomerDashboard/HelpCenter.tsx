@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import LegalInfoModal from "./LegalInfoModal";
+import { apiFetch } from '../../lib/apiFetch';
 
 const LEGAL_CONTENT = {
   terms: {
@@ -223,7 +224,7 @@ export default function HelpCenter() {
       setFaqsLoading(true);
       setFaqsError(null);
       try {
-        const res = await fetch(`${API_BASE_URL}/support/faq`, {
+        const res = await apiFetch(`/support/faq`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -244,7 +245,7 @@ export default function HelpCenter() {
   useEffect(() => {
     const fetchContactInfo = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/support/contact`, {
+        const res = await apiFetch(`/support/contact`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -270,7 +271,7 @@ export default function HelpCenter() {
     setTicketsLoading(true);
     setTicketsError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/support?page=${page}`, {
+      const res = await apiFetch(`/support?page=${page}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -330,7 +331,7 @@ const [legalModal, setLegalModal] = useState({
 
     setContactSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/support/contact`, {
+      const res = await apiFetch(`/support/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(contactForm),
@@ -379,7 +380,7 @@ const [legalModal, setLegalModal] = useState({
         message: ticketForm.message,
       };
 
-      const res = await fetch(`${API_BASE_URL}/support`, {
+      const res = await apiFetch(`/support`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -440,8 +441,7 @@ const [legalModal, setLegalModal] = useState({
     const token = getToken();
     setReplySubmitting(true);
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/support/${selectedTicket._id}/reply`,
+      const res = await apiFetch(`/support/${selectedTicket._id}/reply`,
         {
           method: "POST",
           headers: {
@@ -499,8 +499,7 @@ const [legalModal, setLegalModal] = useState({
     const token = getToken();
     setRatingSubmitting(true);
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/support/${selectedTicket._id}/rate`,
+      const res = await apiFetch(`/support/${selectedTicket._id}/rate`,
         {
           method: "PUT",
           headers: {

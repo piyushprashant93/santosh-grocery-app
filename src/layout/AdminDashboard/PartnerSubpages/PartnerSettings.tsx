@@ -1,5 +1,8 @@
 import { useState } from "react"
+
 import { ArrowLeft, Save, Lock, AlertTriangle, Trash2 } from "lucide-react"
+
+
 
 interface PartnerSettingsProps {
   partnerId: string;

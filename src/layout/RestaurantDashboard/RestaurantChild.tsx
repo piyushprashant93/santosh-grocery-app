@@ -1,14 +1,26 @@
 import FinanceWallet from "./FinanceWallet"
+
 import Notifications from "./Notifications"
+
 import Orders from "./Orders"
+
 import ReportsAnalytics from "./ReportsAnalytics"
+
 import SupportCenter from "./SupportCenter"
+
 import MenuManagement from "./MenuManagement"
+
 import RestaurantDashboard from "./RestaurantDashboard"
+
 import RestaurantSettings from "./RestaurantSettings"
+
 import AddMenuItem from "./AddMenuItem"
+
 import Reviews from "./Reviews"
+
 import SupplierMarketplace from "../../components/SupplierMarketplace/SupplierMarketplace"
+
+
 
 
 export default function RestaurantChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {

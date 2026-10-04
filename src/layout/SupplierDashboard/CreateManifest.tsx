@@ -3,17 +3,7 @@ import { FileText, MapPin, Package, Truck, ArrowLeft, Calendar, CheckCircle2 } f
 import { useState, useEffect } from "react";
 import { extractList } from "../../utils/dataHelper";
 import { getImageUrl } from "../../utils/dataHelper";
-
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 const orders = [
   {
@@ -71,7 +61,7 @@ export default function CreateManifest({
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/orders`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/orders`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setOrdersData(extractList(data));
@@ -96,9 +86,9 @@ export default function CreateManifest({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, {
+      const res = await apiFetch(`/supplier/logistics`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...logistics,
           orders: selected

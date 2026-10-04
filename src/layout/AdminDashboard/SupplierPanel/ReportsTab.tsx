@@ -1,5 +1,7 @@
 import { BarChart2, Package } from "lucide-react"
 
+
+
 export default function ReportsTab() {
   return (
     <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6 animate-in fade-in duration-300">

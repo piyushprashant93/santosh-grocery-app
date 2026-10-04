@@ -1,29 +1,24 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
+
 import { Store, FileText, Bell, Shield, Save } from "lucide-react"
+
 import toast from "react-hot-toast"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
 
-const authHeadersForm = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+
+
 import KYCDocuments from "./KYCDocuments"
-import NotificationSettings from "./NotificationSettings"
-import SecuritySettings from "./SecuritySettings"
-import { getImageUrl } from "../../utils/dataHelper";
 
+import NotificationSettings from "./NotificationSettings"
+
+import SecuritySettings from "./SecuritySettings"
+
+import { getImageUrl } from "../../utils/dataHelper";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function RetailerSettings() {
   const [activeTab, setActiveTab] = useState("profile")
@@ -48,7 +43,7 @@ export default function RetailerSettings() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/settings`, { headers: authHeaders() });
+      const res = await apiFetch(`/retailer/settings`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -98,7 +93,6 @@ export default function RetailerSettings() {
 
         res = await fetch(endpoint, {
           method: "PUT",
-          headers: authHeadersForm(),
           body: formData
         });
       } else {
@@ -118,7 +112,7 @@ export default function RetailerSettings() {
 
         res = await fetch(endpoint, {
           method: "PUT",
-          headers: authHeaders(),
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       }

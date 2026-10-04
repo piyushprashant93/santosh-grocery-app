@@ -1,6 +1,6 @@
 import { Plus, MoreVertical } from "lucide-react"
-import { getImageUrl } from "../../../utils/dataHelper";
 
+import { getImageUrl } from "../../../utils/dataHelper";
 
 export default function BannersTab() {
   const banners = [

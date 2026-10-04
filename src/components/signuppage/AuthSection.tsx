@@ -6,6 +6,7 @@ import GoogleIcon from "../../assets/images/googleicon.svg";
 import RestIcon from "../../assets/images/restIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { parseApiError } from "../../lib/apiErrorHandler";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function AuthSection() {
   const [checked, setChecked] = useState(false);
@@ -44,8 +45,7 @@ export default function AuthSection() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/register`,
+      const response = await apiFetch(`/auth/register`,
         {
           method: "POST",
           headers: {

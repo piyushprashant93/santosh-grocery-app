@@ -1,18 +1,16 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Paperclip, Send, MoreVertical, X } from "lucide-react"
+
 import { useState, useEffect, useRef } from "react"
+
 import { parseApiError } from "../../lib/apiErrorHandler"
+
 import toast from "react-hot-toast"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const [message, setMessage] = useState("")
@@ -24,7 +22,7 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
 
   const fetchChat = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/support/livechat`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/support/livechat`, { headers: { 'Content-Type': 'application/json' } });
       const data = await res.json();
       if (data.success && data.data) {
         const sessionObj = data.data.session || data.data;
@@ -61,9 +59,9 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
     }]);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/support/livechat/${chatSessionId}`, {
+      const res = await apiFetch(`/restaurant-panel/support/livechat/${chatSessionId}`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: tempMessage })
       });
       const data = await res.json();
@@ -82,9 +80,9 @@ export default function SupportLiveChat({ onClose }: { onClose?: () => void }) {
   const closeChat = async () => {
     if(!chatSessionId) return;
     try {
-      await fetch(`${API_BASE_URL}/restaurant-panel/support/livechat/${chatSessionId}/close`, {
+      await apiFetch(`/restaurant-panel/support/livechat/${chatSessionId}/close`, {
         method: "PUT",
-        headers: authHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
       toast.success("Chat session closed.");
       setMessages([]);

@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Search, Filter, Plus, MoreVertical, Edit, Trash2, Loader2 } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function AdminUsersTab() {
   const [users, setUsers] = useState<any[]>([]);
@@ -17,7 +21,7 @@ export default function AdminUsersTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/access-control/users`, {
+      const res = await apiFetch(`/admin/access-control/users`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }

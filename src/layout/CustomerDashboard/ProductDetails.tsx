@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CartModal from "./CartModal";
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1553621042-f6e147245754";
@@ -146,7 +146,7 @@ export default function ProductDetails({
     setCartError(null);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/cart/add`, {
+      const res = await apiFetch(`/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export default function ProductDetails({
       setError(null);
 
       try {
-        const res = await fetch(`${API_BASE_URL}/products/${productId}`, {
+        const res = await apiFetch(`/products/${productId}`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -219,7 +219,7 @@ export default function ProductDetails({
     if (!productId) return;
     setReviewsLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/reviews/product/${productId}?page=${page}`, {
+      const res = await apiFetch(`/reviews/product/${productId}?page=${page}`, {
         headers: { "Content-Type": "application/json" }
       });
       const data = await res.json();
@@ -259,7 +259,7 @@ export default function ProductDetails({
 
     setSubmittingReview(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/reviews`, {
+      const res = await apiFetch(`/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -295,7 +295,7 @@ export default function ProductDetails({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE_URL}/reviews/${reviewId}/helpful`, {
+      const res = await apiFetch(`/reviews/${reviewId}/helpful`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -331,7 +331,7 @@ export default function ProductDetails({
     setWishlistLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/wishlist/add`, {
+      const res = await apiFetch(`/wishlist/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

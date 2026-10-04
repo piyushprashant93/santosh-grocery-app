@@ -1,5 +1,7 @@
 import { Star } from "lucide-react"
 
+
+
 export default function CustomersTab() {
   const customers = [
     { name: "John Smith", orders: 24, spent: 1450, lastOrder: "2 days ago", rating: 4.5 },

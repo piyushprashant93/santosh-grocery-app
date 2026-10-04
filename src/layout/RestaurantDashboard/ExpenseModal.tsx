@@ -1,7 +1,12 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { X } from 'lucide-react'
+
 import { useState } from 'react'
+
 import toast from 'react-hot-toast'
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function ExpenseModal({ open, onClose, onSuccess }: { open: boolean, onClose: () => void, onSuccess?: () => void }) {
   const [form, setForm] = useState({
@@ -21,7 +26,7 @@ export default function ExpenseModal({ open, onClose, onSuccess }: { open: boole
     setSaving(true)
     try {
       const token = localStorage.getItem("authToken")
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses`, {
+      const res = await apiFetch(`/restaurant-panel/expenses`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

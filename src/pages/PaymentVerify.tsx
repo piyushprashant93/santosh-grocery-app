@@ -2,8 +2,7 @@ import { API_BASE_URL, BASE_URL } from '../config';
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Loader2, CheckCircle, XCircle } from "lucide-react";
-
-
+import { apiFetch } from '../lib/apiFetch';
 
 export default function PaymentVerify() {
   const [searchParams] = useSearchParams();
@@ -30,7 +29,7 @@ export default function PaymentVerify() {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/payment/khalti/verify?pidx=${pidx}`, {
+        const res = await apiFetch(`/payment/khalti/verify?pidx=${pidx}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

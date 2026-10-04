@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from "react"
+
 import RetailerChild from "./RetailerChild"
+
 import RetailerSidebar from "./RetailerSidebar"
+
 import RetailerHeader from "./RetailerHeader"
+
 import { useNavigate, useLocation } from "react-router-dom"
+
+
 
 const retailerTabToPath = (tab: string) => {
   if (tab === "dashboard") return ""

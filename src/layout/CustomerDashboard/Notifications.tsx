@@ -12,6 +12,7 @@ import {
   PartyPopper,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { apiFetch } from '../../lib/apiFetch';
 
 type NotificationItem = {
   _id: string;
@@ -127,8 +128,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
       setLoadError("");
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/notifications?page=${pageToFetch}&limit=${PAGE_LIMIT}`,
+        const response = await apiFetch(`/notifications?page=${pageToFetch}&limit=${PAGE_LIMIT}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -178,7 +178,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     );
 
     try {
-      const response = await fetch(`${API_BASE_URL}/notifications/${id}/read`, {
+      const response = await apiFetch(`/notifications/${id}/read`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -216,7 +216,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
 
     try {
-      const response = await fetch(`${API_BASE_URL}/notifications/read-all`, {
+      const response = await apiFetch(`/notifications/read-all`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -251,7 +251,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications((prev) => prev.filter((item) => item._id !== id));
 
     try {
-      const response = await fetch(`${API_BASE_URL}/notifications/${id}`, {
+      const response = await apiFetch(`/notifications/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -290,7 +290,7 @@ const getNotificationIcon = (type: string, title: string = "") => {
     setNotifications([]);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/notifications/clear-all`, {
+      const response = await apiFetch(`/notifications/clear-all`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

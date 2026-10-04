@@ -1,8 +1,11 @@
 import { API_BASE_URL, BASE_URL } from '../config';
 import { TermsSection } from '../layout/TermsSection'
+
 import { SecondaryHeader } from '../layout/SecondaryHeader';
 import Footer from '../layout/Footer';
 import { Shield } from "lucide-react";
+import { useState, useEffect } from "react";
+import { apiFetch } from '../lib/apiFetch';
 
 const privacyPolicyData = {
   title: "Privacy Policy",
@@ -42,13 +45,15 @@ const privacyPolicyData = {
   ],
 };
 
-import { useState, useEffect } from "react";
+
+
+
 
 export const PolicyPage = () => {
   const [data, setData] = useState(privacyPolicyData);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/public/policy`)
+    apiFetch(`/public/policy`)
       .then(res => res.json())
       .then(json => {
         if (json.success && json.data) {

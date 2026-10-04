@@ -1,3 +1,5 @@
+import { Scale } from "lucide-react";
+
 type SectionListItem = {
   label: string;
   text: string;
@@ -17,7 +19,7 @@ type TermsSectionProps = {
   sections: SectionItem[];
 };
 
-import { Scale } from "lucide-react";
+
 
 export function TermsSection({
   title,

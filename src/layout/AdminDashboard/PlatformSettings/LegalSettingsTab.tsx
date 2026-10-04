@@ -1,5 +1,8 @@
 import { useState } from "react"
+
 import { Info, Bold, Italic, Underline, Link2, List, AlignLeft, AlignCenter, AlignRight } from "lucide-react"
+
+
 
 export default function LegalSettingsTab() {
   const [activePolicy, setActivePolicy] = useState('Terms of Service');

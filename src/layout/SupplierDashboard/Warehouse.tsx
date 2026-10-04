@@ -13,16 +13,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import StockAdjustmentModal from "./StockAdjustmentModal";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles: any = {
   "In Stock": "bg-green-100 text-green-700",
@@ -43,8 +34,8 @@ export default function Warehouse() {
       setLoading(true);
       setError(null);
       const [itemsRes, zonesRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/supplier/warehouse/items`, { headers: authHeaders() }),
-        fetch(`${API_BASE_URL}/supplier/warehouse/zones`, { headers: authHeaders() })
+        apiFetch(`/supplier/warehouse/items`, { headers: { 'Content-Type': 'application/json' } }),
+        apiFetch(`/supplier/warehouse/zones`, { headers: { 'Content-Type': 'application/json' } })
       ]);
 
       if (!itemsRes.ok && !zonesRes.ok) {

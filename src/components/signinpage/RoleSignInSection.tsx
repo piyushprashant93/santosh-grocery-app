@@ -17,6 +17,8 @@ import CustomerImg from "../../assets/images/customersideimg.jpg";
 import RestaurantImg from "../../assets/images/restaurantsideimg.jpg";
 import RetailerImg from "../../assets/images/retailersideimg.jpg";
 import SupplierImg from "../../assets/images/suppliersideimg.jpg";
+import { apiFetch } from '../../lib/apiFetch';
+
 type RoleType =
   | "customer"
   | "restaurant"
@@ -165,8 +167,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/login`,
+      const response = await apiFetch(`/auth/login`,
         {
           method: "POST",
           headers: {
@@ -239,8 +240,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
   setOtpLoading(true);
 
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/auth/2fa/validate`,
+    const response = await apiFetch(`/auth/2fa/validate`,
       {
         method: "POST",
         headers: {
@@ -309,8 +309,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
     setForgotMessage("");
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/forgot-password`,
+      const response = await apiFetch(`/auth/forgot-password`,
         {
           method: "POST",
           headers: {
@@ -369,8 +368,7 @@ const [pendingUser, setPendingUser] = useState<any>(null);
     setResetLoading(true);
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/reset-password`,
+      const response = await apiFetch(`/auth/reset-password`,
         {
           method: "POST",
           headers: {

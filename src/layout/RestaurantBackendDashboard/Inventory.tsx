@@ -1,15 +1,5 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
 import {
   ChefHat,
   Scale,
@@ -22,7 +12,7 @@ import {
   Edit,
 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const solidStatusMap: any = {
   "In Stock": "bg-green-100 text-[#009966]",
@@ -57,7 +47,7 @@ export default function Inventory({
 
   const fetchInventory = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/inventory`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const items = extractList(data);
@@ -70,7 +60,7 @@ export default function Inventory({
 
   const fetchBeverages = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/beverages`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/inventory/beverages`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setBeverages(extractList(data));
@@ -80,7 +70,7 @@ export default function Inventory({
 
   const fetchRecipes = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/recipes`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/recipes`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setRecipes(extractList(data));
@@ -101,7 +91,7 @@ export default function Inventory({
   const deleteBeverage = async (id: string) => {
     if(!confirm("Delete this beverage?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/beverages/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/inventory/beverages/${id}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
       if (res.ok) fetchBeverages();
     } catch (e) { console.error(e); }
   }
@@ -109,7 +99,7 @@ export default function Inventory({
   const deleteItem = async (id: string) => {
     if(!confirm("Delete this item?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/inventory/${id}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
       if (res.ok) fetchInventory();
     } catch (e) { console.error(e); }
   }
@@ -117,7 +107,7 @@ export default function Inventory({
   const deleteRecipe = async (id: string) => {
     if(!confirm("Delete this recipe?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/recipes/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/recipes/${id}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
       if (res.ok) fetchRecipes();
     } catch (e) { console.error(e); }
   }
@@ -134,7 +124,7 @@ export default function Inventory({
         
       const res = await fetch(endpoint, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ quantity: Number(qty), notes: notes || "" })
       });
       if (res.ok) {

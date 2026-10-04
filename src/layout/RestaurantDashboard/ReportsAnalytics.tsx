@@ -12,7 +12,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-
 import {
   Calendar,
   Download,
@@ -25,16 +24,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
-
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function ReportsAnalytics() {
   const [days, setDays] = useState(7);
@@ -42,7 +32,7 @@ export default function ReportsAnalytics() {
 
   const fetchReports = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/reports?days=${days}`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/reports?days=${days}`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setReportData(data.data || data);

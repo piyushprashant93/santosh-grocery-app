@@ -1,9 +1,14 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Calendar, Download, Mail, MapPin, MoreHorizontal, Users, Star, ThumbsUp } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 const stats = [
     { value: "4.8", label: "Average Rating", stars: true },
@@ -59,7 +64,7 @@ export default function CustomersandReviews() {
         const fetchCustomers = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await fetch(`${API_BASE_URL}/retailer/customers`, {
+                const res = await apiFetch(`/retailer/customers`, {
                     headers: {
                         "Content-Type": "application/json",
                         ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -79,7 +84,7 @@ export default function CustomersandReviews() {
         const fetchReviews = async () => {
             try {
                 const token = localStorage.getItem("authToken");
-                const res = await fetch(`${API_BASE_URL}/retailer/reviews`, {
+                const res = await apiFetch(`/retailer/reviews`, {
                     headers: {
                         "Content-Type": "application/json",
                         ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -103,7 +108,7 @@ export default function CustomersandReviews() {
     const handleExport = async () => {
         try {
             const token = localStorage.getItem("authToken");
-            const res = await fetch(`${API_BASE_URL}/retailer/customers/export`, {
+            const res = await apiFetch(`/retailer/customers/export`, {
                 headers: {
                     ...(token ? { Authorization: `Bearer ${token}` } : {})
                 }

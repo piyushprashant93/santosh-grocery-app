@@ -1,17 +1,14 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState } from "react"
+
 import toast from "react-hot-toast"
+
 import { parseApiError } from "../../lib/apiErrorHandler"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -36,9 +33,9 @@ export default function CreateOffer({ setActiveTab }: { setActiveTab: (tab: stri
   const handleSave = async () => {
     setFieldErrors({});
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/offers`, {
+      const res = await apiFetch(`/retailer/offers`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
       const data = await res.json().catch(() => null);

@@ -16,6 +16,7 @@ import ReportChartCard from "./ReportChartCard";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { getImageUrl } from "../../utils/dataHelper";
+import { apiFetch } from '../../lib/apiFetch';
 
 const COLORS = ["#10B981", "#3B82F6", "#8B5CF6", "#F59E0B", "#EF4444"];
 
@@ -57,8 +58,8 @@ export default function RestaurantBackendDashboard({
         };
 
         const [dashRes, reportsRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/restaurant-panel/dashboard`, { headers }),
-          fetch(`${API_BASE_URL}/restaurant-panel/reports?days=7`, { headers })
+          apiFetch(`/restaurant-panel/dashboard`, { headers }),
+          apiFetch(`/restaurant-panel/reports?days=7`, { headers })
         ]);
 
         const dashData = dashRes.ok ? await dashRes.json() : {};

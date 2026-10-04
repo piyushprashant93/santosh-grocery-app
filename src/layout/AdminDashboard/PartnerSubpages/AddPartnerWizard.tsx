@@ -1,7 +1,12 @@
 import { useState } from "react"
+
 import { ArrowLeft, Check, Store, ShoppingBag, UploadCloud, Loader2 } from "lucide-react"
+
 import { useNavigate } from "react-router-dom"
+
 import api from "../../../lib/api"
+
+
 
 export default function AddPartnerWizard() {
   const navigate = useNavigate();

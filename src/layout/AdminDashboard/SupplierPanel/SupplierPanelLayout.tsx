@@ -1,14 +1,25 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+
 import { LayoutDashboard, Package, Truck, Database, Users, Tag, Navigation, Wallet, BarChart2, ArrowUpRight, ArrowDownRight } from "lucide-react"
 
+
 import OverviewTab from "./OverviewTab"
+
 import ProductCatalogTab from "./ProductCatalogTab"
+
 import BulkOrdersTab from "./BulkOrdersTab"
+
 import WarehouseTab from "./WarehouseTab"
+
 import ClientsTab from "./ClientsTab"
+
 import LogisticsTab from "./LogisticsTab"
+
 import FinanceTab from "./FinanceTab"
+
 import ReportsTab from "./ReportsTab"
+
+
 
 export default function SupplierPanelLayout() {
   const navigate = useNavigate();

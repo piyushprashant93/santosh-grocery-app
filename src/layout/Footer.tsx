@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom"
+
 import { Instagram, Twitter, Facebook, Linkedin, Heart } from "lucide-react"
+
 import LogoDark from "../assets/images/logo.svg"
+
 import LogoLight from "../assets/images/logo-light.svg"
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -1,5 +1,7 @@
 import { AlertTriangle, Plus, RotateCcw } from "lucide-react"
 
+
+
 export default function InventoryTab() {
   const lowStock = [
     { item: 'Olive Oil', current: '2 Liters', threshold: '5 Liters' },

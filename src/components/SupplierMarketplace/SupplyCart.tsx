@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Trash2, Plus, Minus, CreditCard, ShoppingBag } from "lucide-react";
 import { getImageUrl } from "../../utils/dataHelper";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
+import { API_BASE_URL } from "../../config";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupplyCart({
   role,
@@ -20,7 +20,7 @@ export default function SupplyCart({
   const fetchCart = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -49,7 +49,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart/items/${itemId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -96,7 +96,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/clear`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ export default function SupplyCart({
     try {
       setProcessing(true);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/checkout`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart/checkout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`

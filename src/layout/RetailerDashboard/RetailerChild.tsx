@@ -1,17 +1,32 @@
 import AddProduct from "./AddProduct"
+
 import CreateOffer from "./CreateOffer"
+
 import CustomersandReviews from "./Customers&Reviews"
+
 import FinanceWallet from "./FinanceWallet"
+
 import Notifications from "./Notifications"
+
 import OffersCoupons from "./OffersCoupons"
+
 import Orders from "./Orders"
+
 import ProductsTable from "./ProductsTable"
+
 import RefundRequests from "./RefundRequests"
+
 import ReportsAnalytics from "./ReportsAnalytics"
+
 import RetailerDashboard from "./RetailerDashboard"
+
 import RetailerSettings from "./RetailerSettings"
+
 import SupportCenter from "./SupportCenter"
+
 import SupplierMarketplace from "../../components/SupplierMarketplace/SupplierMarketplace"
+
+
 
 
 export default function RetailerChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {

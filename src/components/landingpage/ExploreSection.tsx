@@ -1,7 +1,12 @@
 import { UtensilsCrossed, ShoppingBag } from "lucide-react"
+
 import eatsImg from "../../assets/images/meal.jpg"
+
 import martImg from "../../assets/images/fresh.jpg"
+
 import { useNavigate } from "react-router-dom"
+
+
 
 export default function ExploreSection() {
   const navigate = useNavigate();

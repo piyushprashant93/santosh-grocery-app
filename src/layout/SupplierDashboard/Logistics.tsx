@@ -9,18 +9,15 @@ import {
   CheckCircle2,
   BarChart3
 } from "lucide-react"
+
 import AssignDriverModal from "./AssignDriverModal"
+
 import { useState, useEffect } from "react"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function Logistics() {
   const [logisticsData, setLogisticsData] = useState<any[]>([]);
@@ -36,7 +33,7 @@ export default function Logistics() {
 
   const fetchLogistics = async () => {
     try {
-      const logisticsRes = await fetch(`${API_BASE_URL}/supplier/logistics`, { headers: authHeaders() });
+      const logisticsRes = await apiFetch(`/supplier/logistics`, { headers: { 'Content-Type': 'application/json' } });
       if (logisticsRes.ok) {
         const data = await logisticsRes.json();
         const shipments = data.data || data;

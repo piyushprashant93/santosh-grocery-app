@@ -1,8 +1,14 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
+
 import { Check, Trash2, Store, AlertTriangle, Info, AlertCircle, ShieldAlert, Loader2, Clock } from "lucide-react"
+
 import toast from "react-hot-toast"
+
 import { formatTimeAgo } from "../../lib/formatTimeAgo"
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 interface NotificationItem {
   id: string;
@@ -33,7 +39,7 @@ export default function Notifications() {
         "Content-Type": "application/json"
       };
       
-      const res = await fetch(`${API_BASE_URL}/admin/notifications`, { headers });
+      const res = await apiFetch(`/admin/notifications`, { headers });
       
       if (!res.ok) throw new Error("Failed to fetch notifications");
       
@@ -83,7 +89,7 @@ export default function Notifications() {
         "Content-Type": "application/json"
       };
       
-      const res = await fetch(`${API_BASE_URL}/admin/notifications/read-all`, { 
+      const res = await apiFetch(`/admin/notifications/read-all`, { 
         method: "PUT",
         headers 
       });

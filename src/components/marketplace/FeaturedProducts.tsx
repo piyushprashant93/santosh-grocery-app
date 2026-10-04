@@ -14,8 +14,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const PAGE_LIMIT = 12;
 
@@ -160,7 +159,7 @@ export default function FeaturedProducts({
     const fetchCategories = async () => {
       setCategoriesLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/home/products`, {
+        const res = await apiFetch(`/home/products`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();
@@ -222,7 +221,7 @@ export default function FeaturedProducts({
     setAddingToCartId(productId);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/cart/add`, {
+      const res = await apiFetch(`/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

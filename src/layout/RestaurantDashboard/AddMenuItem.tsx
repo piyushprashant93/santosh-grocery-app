@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Upload, Clock, Check, Calculator, Plus, ChartPie } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCurrency } from "../../context/CurrencyContext";
-
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function AddMenuItem({
   activeTab,
@@ -33,7 +33,7 @@ export default function AddMenuItem({
     const fetchCategories = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/categories`, {
+        const res = await apiFetch(`/restaurant-panel/menu/categories`, {
           headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
         });
         if (res.ok) {
@@ -91,7 +91,7 @@ export default function AddMenuItem({
     setFieldErrors({});
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu`, {
+      const res = await apiFetch(`/restaurant-panel/menu`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

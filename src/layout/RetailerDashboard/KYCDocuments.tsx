@@ -1,5 +1,7 @@
 import { FileText, Upload, CheckCircle, Clock } from "lucide-react"
 
+
+
 export default function KYCDocuments({ kyc }: { kyc?: any }) {
 
   const docs = [

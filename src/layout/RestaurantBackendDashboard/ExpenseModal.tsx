@@ -1,5 +1,7 @@
 import { X } from 'lucide-react'
 
+
+
 export default function ExpenseModal({ open, onClose }: { open: boolean, onClose: () => void }) {
   if (!open) return null
 

@@ -12,8 +12,7 @@ import {
 import { useCurrency } from "../../context/CurrencyContext";
 import CartModal from "./CartModal";
 import { useNavigate } from "react-router-dom";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 interface ProductApi {
   _id: string;
@@ -70,9 +69,9 @@ export default function SavedItems() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/wishlist`, {
+      const res = await apiFetch(`/wishlist`, {
         method: "GET",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -98,9 +97,9 @@ export default function SavedItems() {
   const removeItem = async (wishlistItemId: string) => {
     setRemovingId(wishlistItemId);
     try {
-      const res = await fetch(`${API_BASE_URL}/wishlist/${wishlistItemId}`, {
+      const res = await apiFetch(`/wishlist/${wishlistItemId}`, {
         method: "DELETE",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -120,9 +119,9 @@ export default function SavedItems() {
   const clearAll = async () => {
     setClearing(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/wishlist/clear`, {
+      const res = await apiFetch(`/wishlist/clear`, {
         method: "DELETE",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -149,9 +148,9 @@ export default function SavedItems() {
 
     setAddingToCartId(productId);
     try {
-      const res = await fetch(`${API_BASE_URL}/cart/add`, {
+      const res = await apiFetch(`/cart/add`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           itemType: "product",
           itemId: productId,

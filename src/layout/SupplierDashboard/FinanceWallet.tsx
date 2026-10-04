@@ -15,19 +15,7 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "rec
 import CreateInvoiceModal from "./CreateInvoiceModal";
 import RequestPayoutModal from "./RequestPayoutModal";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
-
-
-const authHeaders = () => {
-
-
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles: any = {
   Paid: "bg-green-100 text-green-700",
@@ -51,7 +39,7 @@ export default function FinanceWallet() {
 
   const fetchFinance = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/finance`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/finance`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setFinanceData(data.data || data);
@@ -62,7 +50,7 @@ export default function FinanceWallet() {
   const handleExport = async () => {
     try {
       const toastId = toast.loading("Exporting finance report...");
-      const res = await fetch(`${API_BASE_URL}/supplier/finance/export`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/finance/export`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

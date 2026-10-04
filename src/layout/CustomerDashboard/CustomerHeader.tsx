@@ -2,6 +2,7 @@ import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, ShoppingBag, Bell, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import CartModal from "./CartModal";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function CustomerHeader({
   activeTab,
@@ -23,8 +24,7 @@ export default function CustomerHeader({
     const fetchUnreadCount = async () => {
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/notifications?page=1&limit=20`,
+        const response = await apiFetch(`/notifications?page=1&limit=20`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -79,8 +79,7 @@ export default function CustomerHeader({
       if (!token) return;
 
       try {
-        const res = await fetch(
-          `${API_BASE_URL}/cart`,
+        const res = await apiFetch(`/cart`,
           {
             headers: {
               "Content-Type": "application/json",

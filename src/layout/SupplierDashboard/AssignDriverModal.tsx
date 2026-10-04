@@ -2,16 +2,7 @@ import { API_BASE_URL, BASE_URL } from '../../config';
 import { User, MapPin, Truck } from "lucide-react";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function AssignDriverModal({ open, onClose, deliveries = [], onAssignSuccess }: { open: boolean; onClose: () => void; deliveries?: any[]; onAssignSuccess?: () => void }) {
   const [drivers, setDrivers] = useState<any[]>([]);
@@ -26,7 +17,7 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
 
   const fetchDrivers = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics/drivers`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/logistics/drivers`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setDrivers(data.data || []);
@@ -42,9 +33,9 @@ export default function AssignDriverModal({ open, onClose, deliveries = [], onAs
 
     try {
       const toastId = toast.loading("Assigning driver...");
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics/${selectedShipment}/assign-driver`, {
+      const res = await apiFetch(`/supplier/logistics/${selectedShipment}/assign-driver`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ driverId: selectedDriver })
       });
       if (res.ok) {

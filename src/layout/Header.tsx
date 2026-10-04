@@ -4,6 +4,7 @@ import LogoDark from "../assets/images/logo.svg";
 import LogoLight from "../assets/images/logo-light.svg";
 import { LayoutGrid, LogOut, AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { apiFetch } from '../lib/apiFetch';
 
 const navItems = [
   { name: "Restaurants", path: "/restaurants" },
@@ -69,8 +70,7 @@ export default function Header() {
     const token = localStorage.getItem("authToken");
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/logout`,
+      const response = await apiFetch(`/auth/logout`,
         {
           method: "POST",
           headers: {

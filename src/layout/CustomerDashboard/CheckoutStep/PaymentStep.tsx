@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useCurrency } from "../../../context/CurrencyContext";
 import { Plus, Loader2, Wallet, Banknote, CreditCard as CardIcon } from "lucide-react";
 import AddCardModal from "../AddCardModal";
-
+import { apiFetch } from '../../../lib/apiFetch';
 
 const PAYMENT_STORAGE_KEY = "checkout_payment";
 
@@ -112,8 +112,8 @@ export function PaymentStep() {
     setFetchError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/methods`, {
-        headers: authHeaders(),
+      const res = await apiFetch(`/payment/methods`, {
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -205,9 +205,9 @@ export function PaymentStep() {
     setCardError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/wallet/cards`, {
+      const res = await apiFetch(`/wallet/cards`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cardForm),
       });
       const data = await res.json();

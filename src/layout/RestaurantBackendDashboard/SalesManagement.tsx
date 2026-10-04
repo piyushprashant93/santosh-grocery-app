@@ -4,18 +4,18 @@ import {
 } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
-
-
-
-const authHeaders = () => {
-  const { formatPrice } = useCurrency();
-
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { useCurrency } from "../../context/CurrencyContext";
+import { apiFetch } from '../../lib/apiFetch';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend
+} from "recharts";
 
 const fields = [
   { key: "dineIn", label: "In House Dine-In" },
@@ -34,17 +34,9 @@ const fields = [
 
 
 
-import { useCurrency } from "../../context/CurrencyContext";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  Legend
-} from "recharts";
+
+
+
 
 export default function SalesManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
   const { formatPrice } = useCurrency();
@@ -70,7 +62,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
   const fetchSales = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/sales-closing`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const list = extractList(data);
@@ -81,7 +73,7 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
 
   const fetchMissing = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing/missing`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/sales-closing/missing`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setMissingDates(extractList(data));
@@ -102,9 +94,9 @@ export default function SalesManagement({ activeTab, setActiveTab }: { activeTab
         ...values,
         total
       };
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/sales-closing`, {
+      const res = await apiFetch(`/restaurant-panel/sales-closing`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       if (res.ok) {

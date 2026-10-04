@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import HeroBg from "../../assets/images/restpagebg.jpg";
+
 interface HeroSectionProps {
   onSearch?: (query: string) => void;
 }

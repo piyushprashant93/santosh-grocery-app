@@ -1,18 +1,16 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Download, Eye, ChevronDown } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import toast from "react-hot-toast"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function Orders() {
 
@@ -21,7 +19,7 @@ export default function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/orders`, { headers: authHeaders() });
+      const res = await apiFetch(`/retailer/orders`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -37,9 +35,9 @@ export default function Orders() {
 
   const updateOrderStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/orders/${id}/status`, {
+      const res = await apiFetch(`/retailer/orders/${id}/status`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
       if (res.ok) {
@@ -58,7 +56,7 @@ export default function Orders() {
     try {
       const toastId = toast.loading("Exporting orders...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE_URL}/retailer/orders/export`, {
+      const res = await apiFetch(`/retailer/orders/export`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }

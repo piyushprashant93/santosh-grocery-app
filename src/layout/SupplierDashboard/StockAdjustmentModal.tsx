@@ -1,16 +1,7 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { AlertCircle, Plus, TriangleAlertIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {open: boolean; onClose: () => void; onAdjustSuccess?: () => void}) {
 
@@ -31,7 +22,7 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch(`${API_BASE_URL}/supplier/products`, { headers: authHeaders() });
+            const res = await apiFetch(`/supplier/products`, { headers: { 'Content-Type': 'application/json' } });
             if (res.ok) {
                 const data = await res.json();
                 const fetched = data.data?.products || data.products || (Array.isArray(data.data) ? data.data : []);
@@ -46,9 +37,9 @@ export default function StockAdjustmentModal({open, onClose, onAdjustSuccess}: {
             return;
         }
         try {
-            const res = await fetch(`${API_BASE_URL}/supplier/warehouse/adjust`, {
+            const res = await apiFetch(`/supplier/warehouse/adjust`, {
                 method: "POST",
-                headers: authHeaders(),
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form)
             });
             if (res.ok) {

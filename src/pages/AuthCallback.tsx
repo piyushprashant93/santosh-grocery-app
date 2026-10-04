@@ -1,6 +1,7 @@
 import { API_BASE_URL, BASE_URL } from '../config';
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { apiFetch } from '../lib/apiFetch';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function AuthCallback() {
 
     const establishSession = async (token: string) => {
       try {
-        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        const response = await apiFetch(`/auth/me`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

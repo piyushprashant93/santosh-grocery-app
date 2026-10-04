@@ -1,10 +1,14 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { DollarSign, Package, ShoppingBag, Clock, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react"
-import { useState, useEffect, useMemo } from "react"
-import EmptyTableState from "../../components/common/EmptyTableState"
-import ChartsSection from "./ChartsSection"
-import { useCurrency } from "../../context/CurrencyContext";
 
+import { useState, useEffect, useMemo } from "react"
+
+import EmptyTableState from "../../components/common/EmptyTableState"
+
+import ChartsSection from "./ChartsSection"
+
+import { useCurrency } from "../../context/CurrencyContext";
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles:any = {
   Pending:"bg-yellow-100 text-yellow-700",
@@ -21,7 +25,7 @@ export default function RetailerDashboard({ setActiveTab }: { setActiveTab: (tab
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/retailer/dashboard`, {
+        const res = await apiFetch(`/retailer/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})

@@ -13,6 +13,7 @@ import {
   Bar,
 } from "recharts"
 
+
 import {
   Calendar,
   Download,
@@ -21,7 +22,11 @@ import {
   Users,
   TrendingDown, Filter
 } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles = {
   Active: "bg-green-100 text-green-700",
@@ -38,7 +43,7 @@ export default function ReportsAnalytics() {
     const fetchReports = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/supplier/reports`, {
+        const res = await apiFetch(`/supplier/reports`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})

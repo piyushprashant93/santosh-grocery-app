@@ -3,8 +3,7 @@ import { DollarSign, Package, Users, Clock, ArrowUpRight, ArrowDownRight } from 
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../../utils/dataHelper";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles: any = {
   New: "bg-blue-100 text-blue-600",
@@ -22,7 +21,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/restaurant-panel/dashboard`, {
+        const res = await apiFetch(`/restaurant-panel/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -33,7 +32,7 @@ export default function RestaurantDashboard({ setActiveTab }: { setActiveTab: (t
           let data = json.data || json;
           if (!data.recentOrders || data.recentOrders.length === 0) {
             // Fallback to fetch pending orders
-            const ordersRes = await fetch(`${API_BASE_URL}/restaurant-panel/orders?status=pending`, {
+            const ordersRes = await apiFetch(`/restaurant-panel/orders?status=pending`, {
               headers: {
                 "Content-Type": "application/json",
                 ...(token ? { Authorization: `Bearer ${token}` } : {})

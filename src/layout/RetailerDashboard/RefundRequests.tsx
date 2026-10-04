@@ -1,17 +1,15 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, MoreHorizontal, XCircle, CheckCircle2, Eye } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
+
 const refunds = [
   {
     refundId: "REF-3321",
@@ -53,7 +51,7 @@ export default function RefundRequests() {
 
   const fetchRefunds = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/refunds`, { headers: authHeaders() });
+      const res = await apiFetch(`/retailer/refunds`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -82,9 +80,9 @@ export default function RefundRequests() {
 
   const updateRefundStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/refunds/${id}`, {
+      const res = await apiFetch(`/retailer/refunds/${id}`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
       if (res.ok) {

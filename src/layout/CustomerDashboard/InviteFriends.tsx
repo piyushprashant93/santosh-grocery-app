@@ -1,6 +1,7 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
+import { apiFetch } from '../../lib/apiFetch';
 import {
   Gift,
   Copy,
@@ -80,14 +81,14 @@ export default function InviteFriends() {
 
       try {
         const [infoRes, usersRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/referral`, {
+          apiFetch(`/referral`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           }),
-          fetch(`${API_BASE_URL}/referral/referred-users`, {
+          apiFetch(`/referral/referred-users`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

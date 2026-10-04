@@ -1,5 +1,7 @@
 import { Download, ArrowUpRight, ArrowDownRight } from "lucide-react"
 
+
+
 export default function FinanceTab() {
   const payouts = [
     { id: '#PAY-001', date: 'Oct 24, 2026', amount: '$1,250.00', status: 'Completed' },

@@ -3,19 +3,7 @@ import { User, Truck, Package, Plus, MapPin, ArrowLeft, Trash2 } from "lucide-re
 import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
-
-
-const authHeaders = () => {
-
-
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function CreateShipment({
   setActiveTab,
@@ -40,7 +28,7 @@ export default function CreateShipment({
 
   const fetchClients = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/clients`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setClients(extractList(data));
@@ -50,7 +38,7 @@ export default function CreateShipment({
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/products`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/products`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setProducts(extractList(data));
@@ -90,9 +78,9 @@ export default function CreateShipment({
       return;
     }
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, {
+      const res = await apiFetch(`/supplier/logistics`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
           items,

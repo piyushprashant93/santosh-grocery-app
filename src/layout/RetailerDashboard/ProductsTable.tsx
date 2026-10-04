@@ -1,19 +1,12 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Download, MoreHorizontal } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
+
 import { getImageUrl } from "../../utils/dataHelper";
-
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 
@@ -21,7 +14,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/products`, { headers: authHeaders() });
+      const res = await apiFetch(`/retailer/products`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -37,7 +30,7 @@ export default function ProductsTable({ setActiveTab }: { setActiveTab: (tab: st
 
   const deleteProduct = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/products/${id}`, { method: "DELETE", headers: authHeaders() });
+      const res = await apiFetch(`/retailer/products/${id}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
       if (res.ok) fetchProducts();
     } catch(err) { console.error(err); }
   };

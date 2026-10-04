@@ -12,25 +12,7 @@ import {
   Trash2
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
-
-const authHeadersForm = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function MenuManagement({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {
   const [tab, setTab] = useState("live");
@@ -60,8 +42,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
       if (search) queryParams.append("search", search);
       if (active && active !== "All Items") queryParams.append("category", active);
 
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu?${queryParams.toString()}`, {
-        headers: authHeaders(),
+      const res = await apiFetch(`/restaurant-panel/menu?${queryParams.toString()}`, {
+        headers: { 'Content-Type': 'application/json' },
       });
       if (res.ok) {
         const data = await res.json();
@@ -80,7 +62,7 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/categories`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/menu/categories`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setServerCategories(data.data || data.categories || []);
@@ -103,9 +85,9 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
 
   const toggleStock = async (id: string, currentAvail: boolean) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}/availability`, {
+      const res = await apiFetch(`/restaurant-panel/menu/${id}/availability`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       if (res.ok) {
         setMenuItems(prev => prev.map(item => item._id === id ? { ...item, isAvailable: !currentAvail } : item));
@@ -118,9 +100,9 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
   const deleteItem = async (id: string) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}`, {
+      const res = await apiFetch(`/restaurant-panel/menu/${id}`, {
         method: "DELETE",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       if (res.ok) {
         setMenuItems(prev => prev.filter(item => item._id !== id));
@@ -138,9 +120,8 @@ export default function MenuManagement({ activeTab, setActiveTab }: { activeTab:
     const formData = new FormData();
     formData.append("image", file);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/menu/${id}/image`, {
+      const res = await apiFetch(`/restaurant-panel/menu/${id}/image`, {
         method: "POST",
-        headers: authHeadersForm(),
         body: formData
       });
       if (res.ok) {

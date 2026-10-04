@@ -19,8 +19,7 @@ import AddressStep from "./AddressStep";
 import OrderSuccess from "./OrderSuccess";
 import { useNavigate } from "react-router-dom";
 import { useCurrency } from "../../../context/CurrencyContext";
-
-
+import { apiFetch } from '../../../lib/apiFetch';
 
 const CART_STORAGE_KEY = "checkout_cart";
 const ADDRESS_STORAGE_KEY = "checkout_address";
@@ -74,8 +73,8 @@ export default function Checkout() {
     setSummaryError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/checkout-summary`, {
-        headers: authHeaders(),
+      const res = await apiFetch(`/payment/checkout-summary`, {
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -134,9 +133,9 @@ export default function Checkout() {
     setPromoError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/payment/apply-promo`, {
+      const res = await apiFetch(`/payment/apply-promo`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           code: promoCode.trim(),
           orderTotal: pricing.subtotal,
@@ -240,9 +239,9 @@ export default function Checkout() {
         initiatePayload.cardId = payment.cardId;
       }
 
-      const initiateRes = await fetch(`${API_BASE_URL}/payment/initiate`, {
+      const initiateRes = await apiFetch(`/payment/initiate`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(initiatePayload),
       });
       const initiateData = await initiateRes.json();
@@ -266,9 +265,9 @@ export default function Checkout() {
         confirmPayload.cardId = payment.cardId;
       }
 
-      const confirmRes = await fetch(`${API_BASE_URL}/payment/confirm`, {
+      const confirmRes = await apiFetch(`/payment/confirm`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(confirmPayload),
       });
       const confirmData = await confirmRes.json();
@@ -282,9 +281,9 @@ export default function Checkout() {
 
       // Step 3: Handle Gateway Redirects (e.g., Khalti)
       if (payment.method === "khalti") {
-        const khaltiRes = await fetch(`${API_BASE_URL}/payment/khalti/initiate`, {
+        const khaltiRes = await apiFetch(`/payment/khalti/initiate`, {
           method: "POST",
-          headers: authHeaders(),
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             orderId: order._id,
             return_url: `${window.location.origin}/customer/dashboard`

@@ -1,7 +1,6 @@
 import { MapPin, Mail, Clock, Send, LucideBookCopy } from "lucide-react";
 import { getImageUrl } from "../../utils/dataHelper";
 
-
 const pressArticles = [
   {
     source: "TECHCRUNCH",

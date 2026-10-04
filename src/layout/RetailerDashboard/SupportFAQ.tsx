@@ -1,16 +1,12 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
+
 import { ChevronDown, FileText } from "lucide-react"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }) {
   const [open, setOpen] = useState<number | null>(null)
@@ -18,7 +14,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
   const [faqs, setFaqs] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/retailer/support/faq/categories`, { headers: authHeaders() })
+    apiFetch(`/retailer/support/faq/categories`, { headers: { 'Content-Type': 'application/json' } })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -26,7 +22,7 @@ export default function SupportFAQ({ onStartChat }: { onStartChat?: () => void }
         }
       }).catch(console.error);
 
-    fetch(`${API_BASE_URL}/retailer/support/faq`, { headers: authHeaders() })
+    apiFetch(`/retailer/support/faq`, { headers: { 'Content-Type': 'application/json' } })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {

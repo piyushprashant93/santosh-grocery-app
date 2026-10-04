@@ -1,4 +1,5 @@
 import { Search, Bell, Menu } from "lucide-react"
+
 import ProfileMenu from "./ProfileMenu";
 
 export default function RetailerHeader({ activeTab, setActiveTab, openSidebar }: { activeTab: string; setActiveTab: (tab: string) => void; openSidebar: () => void }) {

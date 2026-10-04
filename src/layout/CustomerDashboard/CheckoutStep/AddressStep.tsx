@@ -1,6 +1,8 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useEffect, useState } from "react";
 import { MapPin, Plus, Loader2, Check, Pencil, Trash2 } from "lucide-react";
+import { apiFetch } from '../../../lib/apiFetch';
+
 import AddressModal, {
   AddressFormData,
   EMPTY_ADDRESS_FORM,
@@ -46,8 +48,8 @@ export default function AddressStep() {
     setLoading(true);
     setFetchError("");
     try {
-      const res = await fetch(`${API_BASE_URL}/users/profile`, {
-        headers: authHeaders(),
+      const res = await apiFetch(`/users/profile`, {
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 
@@ -90,7 +92,7 @@ export default function AddressStep() {
           : `${API_BASE_URL}/users/addresses`,
         {
           method: isEdit ? "PUT" : "POST",
-          headers: authHeaders(),
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(addressForm),
         },
       );
@@ -133,9 +135,9 @@ export default function AddressStep() {
     setDeleteError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/users/addresses/${addressId}`, {
+      const res = await apiFetch(`/users/addresses/${addressId}`, {
         method: "DELETE",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
 

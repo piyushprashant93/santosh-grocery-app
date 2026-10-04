@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.svg";
 import { useRole } from "./RoleProvider";
+
 export default function RestaurantsHeader() {
     const { setRole } = useRole();
     const navigate = useNavigate();

@@ -1,5 +1,9 @@
 import { API_BASE_URL, BASE_URL } from '../config';
+import { apiFetch } from '../lib/apiFetch';
+
 import React, { createContext, useContext, useEffect, useState } from "react";
+
+
 
 type Rates = Record<string, number>;
 
@@ -39,7 +43,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       if (!token) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/users/preferences`, {
+        const response = await apiFetch(`/users/preferences`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

@@ -1,10 +1,14 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
-import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import api from "../../lib/api"
-import { useCurrency } from "../../context/CurrencyContext";
 
+import { Calendar, Download, TrendingUp, DollarSign, Activity, Loader2, AlertTriangle } from "lucide-react"
+
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+
+import api from "../../lib/api"
+
+import { useCurrency } from "../../context/CurrencyContext";
+import { apiFetch } from '../../lib/apiFetch';
 
 const COLORS = ['#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
@@ -38,7 +42,7 @@ export default function SalesAndAnalytics() {
     try {
       const token = localStorage.getItem("authToken")
       
-      const response = await fetch(`${API_BASE_URL}/admin/reports/export?days=30`, {
+      const response = await apiFetch(`/admin/reports/export?days=30`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }

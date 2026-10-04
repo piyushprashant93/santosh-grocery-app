@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Search, Filter, Send, MoreVertical, CheckCircle2, Clock, Plus, X, Loader2 } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function NotificationsTab() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -17,7 +21,7 @@ export default function NotificationsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/notifications`, {
+      const res = await apiFetch(`/admin/notifications`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -92,7 +96,7 @@ export default function NotificationsTab() {
         targetRole
       };
 
-      const res = await fetch(`${API_BASE_URL}/admin/marketing/notifications/send`, {
+      const res = await apiFetch(`/admin/marketing/notifications/send`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,

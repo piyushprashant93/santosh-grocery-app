@@ -1,17 +1,9 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Filter, Mail, Phone, MapPin, MoreHorizontal, Building2 } from "lucide-react"
+
 import { useState, useEffect } from "react";
 import BroadcastMessageModal from "./BroadcastMessageModal";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const [clientsData, setClientsData] = useState<any[]>([]);
@@ -19,7 +11,7 @@ export default function Clients({ setActiveTab }: { setActiveTab: (tab: string) 
 
   const fetchClients = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/clients`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setClientsData(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));

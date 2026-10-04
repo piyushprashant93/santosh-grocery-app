@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Search, Filter, Download, Loader2 } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function AuditLogsTab() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -17,7 +21,7 @@ export default function AuditLogsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/access-control/logs?page=1`, {
+      const res = await apiFetch(`/admin/access-control/logs?page=1`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }

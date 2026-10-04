@@ -16,9 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useRole } from "../../layout/RoleProvider";
 import { getImageUrl } from "../../utils/dataHelper";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 // const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80";
 const restaurantTypes = ["Premium", "Luxury", "Signature", "Elite"];
@@ -218,7 +216,7 @@ export default function RestaurantGrid({
     const fetchCuisines = async () => {
       setCuisinesLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/home/food`, {
+        const res = await apiFetch(`/home/food`, {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();

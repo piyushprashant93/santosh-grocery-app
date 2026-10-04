@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getImageUrl } from "../../utils/dataHelper";
+import { apiFetch } from '../../lib/apiFetch';
 import {
   Shield,
   Bell,
@@ -21,23 +22,6 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
-
-const authHeadersForm = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
 
 const tabs = [
   { key: "general", label: "General", icon: Settings },
@@ -107,9 +91,9 @@ export default function RestaurantBackendSettings({
     e.preventDefault();
     setIsAddingLocation(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, {
+      const res = await apiFetch(`/restaurant-panel/settings/locations`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(locationForm)
       });
       if (res.ok) {
@@ -133,7 +117,7 @@ export default function RestaurantBackendSettings({
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/settings`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setSettingsData(data.data?.settings || data.settings || data.data || {});
@@ -143,7 +127,7 @@ export default function RestaurantBackendSettings({
 
   const fetchLocations = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/settings/locations`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setLocationsData(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
@@ -153,7 +137,7 @@ export default function RestaurantBackendSettings({
 
   const fetchTeam = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/staff`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setMembers(data.data?.staff || data.staff || (Array.isArray(data.data) ? data.data : []));
@@ -169,9 +153,9 @@ export default function RestaurantBackendSettings({
 
   const updateSettings = async () => {
     try {
-      await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
+      await apiFetch(`/restaurant-panel/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settingsData)
       });
       alert("Settings updated!");
@@ -184,7 +168,7 @@ export default function RestaurantBackendSettings({
     const formData = new FormData();
     formData.append("logo", file);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/logo`, { method: "POST", headers: authHeadersForm(), body: formData });
+      const res = await apiFetch(`/restaurant-panel/logo`, { method: "POST", body: formData });
       if (res.ok) fetchSettings();
     } catch(err) { console.error(err); }
   };
@@ -195,7 +179,7 @@ export default function RestaurantBackendSettings({
     const formData = new FormData();
     formData.append("banner", file);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/banner`, { method: "POST", headers: authHeadersForm(), body: formData });
+      const res = await apiFetch(`/restaurant-panel/banner`, { method: "POST", body: formData });
       if (res.ok) fetchSettings();
     } catch(err) { console.error(err); }
   };

@@ -1,13 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { DollarSign, Package, Users, AlertTriangle, Truck, TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
 import mapImage from "../../assets/images/dashboardmap.jpg";
-
-
 import { useState, useEffect } from "react";
 import { getImageUrl } from "../../utils/dataHelper";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const { formatPrice } = useCurrency();
@@ -20,7 +17,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
     const fetchDashboard = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/supplier/dashboard`, {
+        const res = await apiFetch(`/supplier/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -31,7 +28,7 @@ export default function SupplierDashboard({ setActiveTab }: { setActiveTab: (tab
           let data = json.data || json;
           if (!data.recentOrders || data.recentOrders.length === 0) {
             // Fallback to fetch pending orders
-            const ordersRes = await fetch(`${API_BASE_URL}/supplier/orders?page=1`, {
+            const ordersRes = await apiFetch(`/supplier/orders?page=1`, {
               headers: {
                 "Content-Type": "application/json",
                 ...(token ? { Authorization: `Bearer ${token}` } : {})

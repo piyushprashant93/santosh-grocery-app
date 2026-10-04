@@ -15,16 +15,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import SupportLiveChat from "./SupportLiveChat";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function HelpSupport() {
   const helpCards = [
@@ -70,7 +61,7 @@ export default function HelpSupport() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/support/tickets`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/support/tickets`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -83,7 +74,7 @@ export default function HelpSupport() {
   useEffect(() => {
     fetchTickets();
     
-    fetch(`${API_BASE_URL}/supplier/support/faq`, { headers: authHeaders() })
+    apiFetch(`/supplier/support/faq`, { headers: { 'Content-Type': 'application/json' } })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -93,7 +84,7 @@ export default function HelpSupport() {
         }
       }).catch(console.error);
       
-    fetch(`${API_BASE_URL}/supplier/support/contact`, { headers: authHeaders() })
+    apiFetch(`/supplier/support/contact`, { headers: { 'Content-Type': 'application/json' } })
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data) {
@@ -104,9 +95,9 @@ export default function HelpSupport() {
 
   const submitTicket = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/support/tickets`, {
+      const res = await apiFetch(`/supplier/support/tickets`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTicket)
       });
       const data = await res.json();

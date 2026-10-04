@@ -1,20 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { X, Plus, Trash2 } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import { useCurrency } from "../../context/CurrencyContext";
-
-
-
-
-const authHeaders = () => {
-
-
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: { open: boolean, onClose: () => void, onInvoiceCreated?: () => void }) {
     const { formatPrice } = useCurrency();
@@ -33,7 +23,7 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
 
     const fetchClients = async () => {
         try {
-            const res = await fetch(`${API_BASE_URL}/supplier/clients`, { headers: authHeaders() });
+            const res = await apiFetch(`/supplier/clients`, { headers: { 'Content-Type': 'application/json' } });
             if (res.ok) {
                 const data = await res.json();
                 setClients(data.data?.clients || data.clients || (Array.isArray(data.data) ? data.data : []));
@@ -64,9 +54,9 @@ export default function CreateInvoiceModal({ open, onClose, onInvoiceCreated }: 
         }
 
         try {
-            const res = await fetch(`${API_BASE_URL}/supplier/finance/invoice`, {
+            const res = await apiFetch(`/supplier/finance/invoice`, {
                 method: "POST",
-                headers: authHeaders(),
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...form,
                     items,

@@ -1,7 +1,12 @@
 import { ArrowLeft, ShoppingBag, DollarSign, Star, Store, Phone, MapPin, ExternalLink, Loader2 } from "lucide-react"
+
 import { useNavigate } from "react-router-dom"
+
 import { useState, useEffect } from "react"
+
 import api from "../../../lib/api"
+
+
 
 interface PartnerDetailsProps {
   partner: any; // Using any for now since we're rendering static layout, but in reality this would be the Partner interface

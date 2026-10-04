@@ -1,5 +1,7 @@
 import { Zap, Leaf, ChefHat } from "lucide-react"
 
+
+
 export default function WhyHubnepa() {
   return (
     <section className="bg-theme-bg py-24">

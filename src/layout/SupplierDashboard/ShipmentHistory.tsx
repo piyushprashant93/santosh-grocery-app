@@ -12,19 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useCurrency } from "../../context/CurrencyContext";
-
-
-
-
-const authHeaders = () => {
-
-
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function ShipmentHistory({
   setActiveTab,
@@ -44,7 +32,7 @@ export default function ShipmentHistory({
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/logistics`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const json = await res.json();
         const logs = json.data?.manifests || json.data?.deliveries || (Array.isArray(json.data) ? json.data : (json.data?.data || []));
@@ -69,7 +57,7 @@ export default function ShipmentHistory({
       if (startDate) params.append('dateFrom', startDate);
       if (endDate) params.append('dateTo', endDate);
       
-      const res = await fetch(`${API_BASE_URL}/supplier/logistics/export?${params.toString()}`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/logistics/export?${params.toString()}`, { headers: { 'Content-Type': 'application/json' } });
       if (!res.ok) throw new Error("Export failed");
       
       const blob = await res.blob();

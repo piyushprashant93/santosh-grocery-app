@@ -15,17 +15,7 @@ import { extractList } from "../../utils/dataHelper";
 import { useState, useEffect } from "react";
 import ExpenseModal from "./ExpenseModal";
 import { getImageUrl } from "../../utils/dataHelper";
-
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles: any = {
   Paid: "bg-[#ECFDF5] text-[#059669] border border-[#A7F3D0]",
@@ -66,7 +56,7 @@ export default function FinanceWallet() {
 
   const fetchExpenses = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/expenses`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setExpenses(extractList(data));
@@ -76,7 +66,7 @@ export default function FinanceWallet() {
 
   const fetchPayroll = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/payroll`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/expenses/payroll`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setEmployees(extractList(data));
@@ -86,7 +76,7 @@ export default function FinanceWallet() {
 
   const fetchMaintenance = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/maintenance`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/expenses/maintenance`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setIssues(extractList(data));
@@ -102,9 +92,9 @@ export default function FinanceWallet() {
 
   const markMaintenanceResolved = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/expenses/maintenance/${id}`, {
+      const res = await apiFetch(`/restaurant-panel/expenses/maintenance/${id}`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: "Resolved" })
       });
       if (res.ok) fetchMaintenance();

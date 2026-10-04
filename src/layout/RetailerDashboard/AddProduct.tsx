@@ -1,25 +1,16 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState } from "react"
+
 import { ArrowLeft, Save } from "lucide-react"
+
 import toast from "react-hot-toast"
+
 import { parseApiError } from "../../lib/apiErrorHandler"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
 
-const authHeadersForm = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
 
@@ -69,9 +60,8 @@ export default function AddProduct({ setActiveTab }: { setActiveTab: (tab: strin
                 formData.append("images", img);
             });
 
-            const res = await fetch(`${API_BASE_URL}/retailer/products`, {
+            const res = await apiFetch(`/retailer/products`, {
                 method: "POST",
-                headers: authHeadersForm(),
                 body: formData
             });
 

@@ -14,6 +14,8 @@ import retailerImg from "../../assets/images/retailerlogin.svg";
 import supplierImg from "../../assets/images/supplierlogin.svg";
 import restaurantImg from "../../assets/images/restaurantlogin.svg";
 import Logo from "../../assets/images/logo-light.svg"
+
+
 type RoleType = "customer" | "restaurant" | "retailer" | "supplier";
 
 const cards = [

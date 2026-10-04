@@ -1,7 +1,12 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
+
 import { Users, Wallet, FileText, Store, ArrowUpRight, Utensils, Loader2, UserPlus } from "lucide-react"
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 interface DashboardData {
   totalUsers: number;
@@ -55,8 +60,8 @@ export default function AdminDashboard({
       
 
       const [dashRes, analyticsRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/admin/dashboard`, { headers }),
-        fetch(`${API_BASE_URL}/admin/analytics`, { headers })
+        apiFetch(`/admin/dashboard`, { headers }),
+        apiFetch(`/admin/analytics`, { headers })
       ]);
 
       if (!dashRes.ok || !analyticsRes.ok) {
@@ -80,7 +85,7 @@ export default function AdminDashboard({
     try {
       const token = localStorage.getItem("authToken");
       
-      const response = await fetch(`${API_BASE_URL}/admin/reports`, {
+      const response = await apiFetch(`/admin/reports`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }

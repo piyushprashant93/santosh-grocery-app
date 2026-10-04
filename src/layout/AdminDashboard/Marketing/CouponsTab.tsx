@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Search, Filter, Percent, DollarSign, Tag, Loader2, Plus, Trash2, X } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function CouponsTab() {
   const [coupons, setCoupons] = useState<any[]>([]);
@@ -27,7 +31,7 @@ export default function CouponsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/vouchers`, {
+      const res = await apiFetch(`/admin/vouchers`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -68,7 +72,7 @@ export default function CouponsTab() {
         maxUses: maxUses ? Number(maxUses) : 1000
       };
 
-      const res = await fetch(`${API_BASE_URL}/admin/vouchers`, {
+      const res = await apiFetch(`/admin/vouchers`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -96,7 +100,7 @@ export default function CouponsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/vouchers/${id}`, {
+      const res = await apiFetch(`/admin/vouchers/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

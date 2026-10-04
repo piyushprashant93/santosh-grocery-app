@@ -1,14 +1,26 @@
 import Overview from "./Overview"
+
 import Notifications from "./Notifications"
+
 import SearchTab from "./SearchTab"
+
 import InviteFriends from "./InviteFriends"
+
 import ProductDetails from "./ProductDetails"
+
 import OrderHistory from "./OrderHistory"
+
 import WalletPayments from "./WalletPayments"
+
 import SavedItems from "./SavedItems"
+
 import AccountSettings from "./AccountSettings"
+
 import HelpCenter from "./HelpCenter"
+
 import RestaurantDetails from "./RestaurantDetails"
+
+
 
 
 export default function CustomerChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {

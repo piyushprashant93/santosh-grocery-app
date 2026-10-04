@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+
 import { 
   FileText, 
   CreditCard,
@@ -15,7 +16,10 @@ import {
   Loader2,
   Download
 } from "lucide-react"
+
 import api from "../../lib/api"
+
+
 
 interface Settlement {
   _id: string;

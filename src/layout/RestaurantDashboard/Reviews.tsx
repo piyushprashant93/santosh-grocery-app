@@ -2,16 +2,7 @@ import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
 import { Star, MessageSquare } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
-
-
-
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function Reviews() {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -24,13 +15,13 @@ export default function Reviews() {
     const fetchProfileAndReviews = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/restaurants/my/restaurant`, { headers: authHeaders() });
+        const res = await apiFetch(`/restaurants/my/restaurant`, { headers: { 'Content-Type': 'application/json' } });
         if (res.ok) {
           const data = await res.json();
           const rId = data.data?.restaurant?._id || data.restaurant?._id;
           if (rId) {
             setRestaurantId(rId);
-            const reviewsRes = await fetch(`${API_BASE_URL}/reviews/restaurant/${rId}?page=1`, { headers: authHeaders() });
+            const reviewsRes = await apiFetch(`/reviews/restaurant/${rId}?page=1`, { headers: { 'Content-Type': 'application/json' } });
             if (reviewsRes.ok) {
               const reviewsData = await reviewsRes.json();
               setReviews(extractList(reviewsData));

@@ -9,7 +9,10 @@ import {
   BarChart,
   Bar
 } from "recharts"
+
 import { TrendingUp, ShoppingBag } from "lucide-react"
+
+
 
 const salesData = [
   { day: "Mon", value: 4000 },

@@ -9,6 +9,8 @@ import {
   ResponsiveContainer
 } from "recharts"
 
+
+
 export default function ReportChartCard({
   title,
   total,

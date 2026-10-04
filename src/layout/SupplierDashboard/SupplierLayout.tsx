@@ -1,8 +1,14 @@
 import { useState, useEffect, useRef } from "react"
+
 import SupplierSidebar from "./SupplierSidebar"
+
 import SupplierHeader from "./SupplierHeader"
+
 import SupplierChild from "./SupplierChild"
+
 import { useNavigate, useLocation } from "react-router-dom"
+
+
 
 const supplierTabToPath = (tab: string) => {
   if (tab === "dashboard") return ""

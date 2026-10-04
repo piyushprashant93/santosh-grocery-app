@@ -1,7 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../config';
 import { TermsSection } from '../layout/TermsSection'
+
 import { SecondaryHeader } from '../layout/SecondaryHeader';
 import Footer from '../layout/Footer';
+import { useState, useEffect } from "react";
+import { apiFetch } from '../lib/apiFetch';
 
 const termsData = {
   title: "Terms of Service",
@@ -31,13 +34,15 @@ const termsData = {
     },
   ],
 };
-import { useState, useEffect } from "react";
+
+
+
 
 export const TermsPage = () => {
   const [data, setData] = useState(termsData);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/public/terms`)
+    apiFetch(`/public/terms`)
       .then(res => res.json())
       .then(json => {
         if (json.success && json.data) {

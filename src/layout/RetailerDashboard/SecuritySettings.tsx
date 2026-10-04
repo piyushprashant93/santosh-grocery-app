@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState } from "react"
+
 import toast from "react-hot-toast"
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SecuritySettings() {
 
@@ -28,7 +32,7 @@ export default function SecuritySettings() {
     try {
       const toastId = toast.loading("Updating password...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+      const res = await apiFetch(`/auth/change-password`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

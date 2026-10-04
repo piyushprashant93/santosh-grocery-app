@@ -1,18 +1,13 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Download, Clock, MoreHorizontal, Filter, ChevronDown, Calendar, Loader2 } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import toast from "react-hot-toast"
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
 
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const statusStyles: any = {
   Completed: "bg-green-100 text-green-700",
@@ -55,9 +50,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
     }
     setLoadingOrderId(orderId);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
+      const res = await apiFetch(`/restaurant-panel/orders/${encodeURIComponent(orderId)}/status`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
       if (res.ok) {
@@ -87,9 +82,9 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
   const acceptAllOrders = async () => {
     setAcceptingAll(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/accept-all`, {
+      const res = await apiFetch(`/restaurant-panel/orders/accept-all`, {
         method: "PUT",
-        headers: authHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
       if (res.ok) {
         toast.success("All new orders accepted");
@@ -121,7 +116,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const fetchLiveOrders = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/live`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/orders/live`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const liveRaw = data.data?.orders || data.orders || (Array.isArray(data.data) ? data.data : []);
@@ -145,7 +140,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (searchQuery) queryParams.append("search", searchQuery);
       if (types.length > 0) queryParams.append("type", types.join(","));
 
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/orders/history?${queryParams.toString()}`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const historyList = data.data?.orders || data.orders || [];
@@ -240,9 +235,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
       if (searchQuery) queryParams.append("search", searchQuery);
       if (types.length > 0) queryParams.append("type", types.join(","));
 
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/history/export?${queryParams.toString()}`, { 
-        headers: authHeaders()
-      });
+      const res = await apiFetch(`/restaurant-panel/orders/history/export?${queryParams.toString()}`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
@@ -263,9 +256,7 @@ export default function Orders({ setActiveTab }: { setActiveTab: (tab: string) =
 
   const handleViewReceipt = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, {
-        headers: authHeaders()
-      });
+      const res = await apiFetch(`/restaurant-panel/orders/${encodeURIComponent(id)}/invoice?download=true`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Search, ShoppingCart, Store, ChevronRight } from "lucide-react";
 import { extractList } from "../../utils/dataHelper";
+import { API_BASE_URL } from "../../config";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupplierMarketplaceList({
   role,
@@ -18,7 +20,7 @@ export default function SupplierMarketplaceList({
   const fetchSuppliers = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/suppliers`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/suppliers`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

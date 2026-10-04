@@ -7,6 +7,7 @@ import CustomerChild from "./CustomerChild";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRole } from "../RoleProvider";
 import { ThemeProvider } from "./ThemeContext";
+import { apiFetch } from '../../lib/apiFetch';
 
 const customerTabToPath = (tab: string) => {
   if (tab === "overview") return "";
@@ -64,8 +65,7 @@ const { setRole } = useRole();
     const token = localStorage.getItem("authToken");
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/auth/logout`,
+      const response = await apiFetch(`/auth/logout`,
         {
           method: "POST",
           headers: {

@@ -1,18 +1,34 @@
 import FinanceWallet from "./FinanceWallet"
+
 import Notifications from "./Notifications"
+
 import Clients from "./Clients"
+
 import Orders from "./Orders"
+
 import ProductsTable from "./ProductsTable"
+
 import Logistics from "./Logistics"
+
 import ReportsAnalytics from "./ReportsAnalytics"
+
 import SupplierDashboard from "./SupplierDashboard"
+
 import SupplierSettings from "./SupplierSettings"
+
 import SupportCenter from "./SupportCenter"
+
 import Warehouse from "./Warehouse"
+
 import ShipmentHistory from "./ShipmentHistory"
+
 import CreateShipment from "./NewShipment"
+
 import AddProduct from "./AddProduct"
+
 import CreateManifest from "./CreateManifest"
+
+
 
 
 export default function SupplierChild({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) {

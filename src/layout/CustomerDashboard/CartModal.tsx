@@ -12,8 +12,7 @@ import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const CART_STORAGE_KEY = "checkout_cart";
 interface CartItem {
@@ -101,7 +100,7 @@ export default function CartModal({
     });
 
     try {
-      const res = await fetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
+      const res = await apiFetch(`/cart/items/${cartItemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -146,7 +145,7 @@ export default function CartModal({
     setError(null);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/cart`, {
+      const res = await apiFetch(`/cart`, {
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -200,7 +199,7 @@ export default function CartModal({
     });
 
    try {
-      const res = await fetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
+      const res = await apiFetch(`/cart/items/${cartItemId}`, {
   method: "DELETE",
   headers: {
     "Content-Type": "application/json",
@@ -240,7 +239,7 @@ export default function CartModal({
 
     setClearingCart(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/cart/clear`, {
+      const res = await apiFetch(`/cart/clear`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

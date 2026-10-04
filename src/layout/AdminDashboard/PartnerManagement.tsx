@@ -1,12 +1,22 @@
 import { useState, useRef, useEffect } from "react"
+
 import { useNavigate, Routes, Route, useParams } from "react-router-dom"
+
 import { Search, Filter, MoreHorizontal, Eye, FileText, CheckCircle2, Ban, AlertTriangle, Store, ShoppingBag, Loader2 } from "lucide-react"
+
 import PartnerDetails from "./PartnerSubpages/PartnerDetails"
+
 import PartnerDocuments from "./PartnerSubpages/PartnerDocuments"
+
 import PartnerSettings from "./PartnerSubpages/PartnerSettings"
+
 import AddPartnerWizard from "./PartnerSubpages/AddPartnerWizard"
+
 import VerificationsList from "./VerificationsList"
+
 import api from "../../lib/api"
+
+
 
 function PartnerManagementList() {
   const navigate = useNavigate();

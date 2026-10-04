@@ -3,15 +3,7 @@ import { Upload, Box, Plus, Trash2, Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { parseApiError } from "../../lib/apiErrorHandler";
-
-
-
-const authHeadersForm = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function AddProduct({
   setActiveTab,
@@ -61,9 +53,8 @@ export default function AddProduct({
       formData.append("tiers", JSON.stringify(tiers));
       if (imageFile) formData.append("image", imageFile);
 
-      const res = await fetch(`${API_BASE_URL}/supplier/products`, {
+      const res = await apiFetch(`/supplier/products`, {
         method: "POST",
-        headers: authHeadersForm(),
         body: formData
       });
       const data = await res.json().catch(() => null);

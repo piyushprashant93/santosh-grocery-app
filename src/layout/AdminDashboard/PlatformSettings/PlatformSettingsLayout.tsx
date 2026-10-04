@@ -1,10 +1,17 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+
 import { Settings, Shield, Bell, CreditCard } from "lucide-react"
 
+
 import GeneralSettingsTab from "./GeneralSettingsTab"
+
 import LegalSettingsTab from "./LegalSettingsTab"
+
 import NotificationSettingsTab from "./NotificationSettingsTab"
-import PaymentSettingsTab from "./PaymentSettingsTab"; // Force TS re-evaluation
+
+import PaymentSettingsTab from "./PaymentSettingsTab";
+
+// Force TS re-evaluation
 
 export default function PlatformSettingsLayout() {
   const navigate = useNavigate();

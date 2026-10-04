@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { useCurrency } from "../../context/CurrencyContext";
 import { Wallet, Package, TrendingUp, Clock, AlertCircle, Loader2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 interface RecommendedDeal {
   _id: string;
@@ -108,7 +107,7 @@ export default function Overview({ setActiveTab }: { setActiveTab: (tab: string)
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BASE_URL}/users/dashboard`, {
+        const res = await apiFetch(`/users/dashboard`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

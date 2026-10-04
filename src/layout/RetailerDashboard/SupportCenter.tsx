@@ -1,19 +1,20 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, X } from "lucide-react"
+
 import { useState, useEffect } from "react"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+
 import SupportLiveChat from "./SupportLiveChat"
+
 import SupportFAQ from "./SupportFAQ"
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupportCenter() {
 
@@ -25,7 +26,7 @@ export default function SupportCenter() {
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/support/tickets`, { headers: authHeaders() });
+      const res = await apiFetch(`/retailer/support/tickets`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const payload = data.data || data;
@@ -41,9 +42,9 @@ export default function SupportCenter() {
 
   const createTicket = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/retailer/support/tickets`, {
+      const res = await apiFetch(`/retailer/support/tickets`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTicket)
       });
       const data = await res.json();

@@ -1,8 +1,14 @@
 import { Search, Utensils, Truck, Star, ChevronRightIcon } from "lucide-react"
+
 import CurateImage from "../../assets/images/curate.jpg"
+
 import PrepareImage from "../../assets/images/masterful.jpg"
+
 import DeliverImage from "../../assets/images/delivery.jpg"
+
 import EnjoyImage from "../../assets/images/savor.jpg"
+
+
 
 
 

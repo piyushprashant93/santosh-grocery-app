@@ -1,14 +1,25 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+
 import { ArrowUpRight, ArrowDownRight, ShoppingCart, Package, ShoppingBag, Users, Tag, RefreshCw, Wallet, BarChart2 } from "lucide-react"
 
+
 import OverviewTab from "./OverviewTab"
+
 import ProductsTab from "./ProductsTab"
+
 import OrdersTab from "./OrdersTab"
+
 import CustomersTab from "./CustomersTab"
+
 import OffersTab from "./OffersTab"
+
 import RefundsTab from "./RefundsTab"
+
 import FinanceTab from "./FinanceTab"
+
 import ReportsTab from "./ReportsTab"
+
+
 
 export default function RetailerPanelLayout() {
   const navigate = useNavigate();

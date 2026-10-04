@@ -3,13 +3,9 @@ import { useState, useEffect } from "react"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+
+import { apiFetch } from '../../lib/apiFetch';
 import {
   Building2,
   Shield,
@@ -22,6 +18,8 @@ import {
   Save,
   Lock, Plus, Trash2
 } from "lucide-react"
+
+
 
 const options = [
   {
@@ -119,7 +117,7 @@ export default function SupplierSettings() {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/settings`, { headers: authHeaders() });
+      const res = await apiFetch(`/supplier/settings`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const profile = data.data || data;
@@ -140,9 +138,9 @@ export default function SupplierSettings() {
 
   const handleSaveProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/settings`, {
+      const res = await apiFetch(`/supplier/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profileForm)
       });
       if (res.ok) {
@@ -155,9 +153,9 @@ export default function SupplierSettings() {
 
   const handleSavePreferences = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/supplier/settings`, {
+      const res = await apiFetch(`/supplier/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notifications: settings })
       });
       if (res.ok) {
@@ -172,9 +170,9 @@ export default function SupplierSettings() {
     const newValue = !twoFA;
     setTwoFA(newValue);
     try {
-      await fetch(`${API_BASE_URL}/supplier/settings`, {
+      await apiFetch(`/supplier/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ twoFA: newValue })
       });
     } catch (err) { console.error(err); }
@@ -186,9 +184,9 @@ export default function SupplierSettings() {
       return;
     }
     try {
-      const res = await fetch(`${API_BASE_URL}/users/change-password`, {
+      const res = await apiFetch(`/users/change-password`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword

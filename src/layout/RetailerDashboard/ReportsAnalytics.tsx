@@ -1,9 +1,16 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+
 import { Calendar, Download } from "lucide-react"
+
 import { useState, useEffect, useMemo } from "react"
+
 import toast from "react-hot-toast"
+
 import EmptyTableState from "../../components/common/EmptyTableState"
+
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function ReportsAnalytics() {
 
@@ -13,7 +20,7 @@ export default function ReportsAnalytics() {
     const fetchReports = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/retailer/reports`, {
+        const res = await apiFetch(`/retailer/reports`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})
@@ -36,7 +43,7 @@ export default function ReportsAnalytics() {
     try {
       const toastId = toast.loading("Exporting reports...");
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${API_BASE_URL}/retailer/reports/export`, {
+      const res = await apiFetch(`/retailer/reports/export`, {
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {})
         }

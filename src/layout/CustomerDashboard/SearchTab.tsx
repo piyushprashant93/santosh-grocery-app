@@ -12,8 +12,7 @@ import { useCurrency } from "../../context/CurrencyContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 const RECENT_KEY = "recentSearches";
 const MAX_RECENT = 8;
@@ -190,7 +189,7 @@ export default function SearchTab() {
     async function fetchTrending() {
       setTrendingLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/general/search/trending`, {
+        const res = await apiFetch(`/general/search/trending`, {
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
         });
@@ -230,8 +229,7 @@ export default function SearchTab() {
 
     suggestDebounceRef.current = setTimeout(async () => {
       try {
-        const res = await fetch(
-          `${API_BASE_URL}/general/search/suggestions?q=${encodeURIComponent(query.trim())}`,
+        const res = await apiFetch(`/general/search/suggestions?q=${encodeURIComponent(query.trim())}`,
           { headers: { "Content-Type": "application/json" } },
         );
         const json = await res.json();
@@ -261,8 +259,7 @@ export default function SearchTab() {
     setSearchError(null);
 
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/general/search?q=${encodeURIComponent(term.trim())}&type=all`,
+      const res = await apiFetch(`/general/search?q=${encodeURIComponent(term.trim())}&type=all`,
         { headers: { "Content-Type": "application/json" } },
       );
       const json = await res.json();

@@ -3,7 +3,6 @@ import { useCurrency } from "../../../context/CurrencyContext";
 import { PackageX } from "lucide-react";
 import { getImageUrl } from "../../../utils/dataHelper";
 
-
 const CART_STORAGE_KEY = "checkout_cart";
 const PAYMENT_STORAGE_KEY = "checkout_payment";
 const SCHEDULE_STORAGE_KEY = "checkout_schedule";

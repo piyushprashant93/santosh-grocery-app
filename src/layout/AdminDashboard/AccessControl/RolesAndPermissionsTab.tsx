@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Shield, Users, Edit, Loader2 } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (role: any) => void }) {
   const [roles, setRoles] = useState<any[]>([]);
@@ -17,7 +21,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/access-control/roles`, {
+      const res = await apiFetch(`/admin/access-control/roles`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }

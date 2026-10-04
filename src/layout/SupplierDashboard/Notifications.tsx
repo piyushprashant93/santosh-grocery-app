@@ -1,22 +1,18 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react"
+
 import { Package, AlertTriangle, DollarSign, Truck, Info, CheckCircle, Clock, Trash2, Bell } from "lucide-react"
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/notifications`, { headers: authHeaders() })
+    apiFetch(`/notifications`, { headers: { 'Content-Type': 'application/json' } })
       .then(res => res.json())
       .then(data => {
         if (data.success && Array.isArray(data.data)) {
@@ -30,9 +26,9 @@ export default function Notifications() {
 
   const markAllAsRead = async () => {
     try {
-      await fetch(`${API_BASE_URL}/notifications/read-all`, {
+      await apiFetch(`/notifications/read-all`, {
         method: "PUT",
-        headers: authHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
       setNotifications(notifications.map(n => ({ ...n, isRead: true })));
     } catch(err) {
@@ -42,9 +38,9 @@ export default function Notifications() {
 
   const clearAll = async () => {
     try {
-      await fetch(`${API_BASE_URL}/notifications/clear-all`, {
+      await apiFetch(`/notifications/clear-all`, {
         method: "DELETE",
-        headers: authHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
       setNotifications([]);
     } catch(err) {

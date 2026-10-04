@@ -1,12 +1,21 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+
 import { ShoppingBag, DollarSign, Clock, Users } from "lucide-react"
 
+
 import OverviewTab from "./OverviewTab"
+
 import OrdersTab from "./OrdersTab"
+
 import MenuManagementTab from "./MenuManagementTab"
+
 import InventoryTab from "./InventoryTab"
+
 import FinanceTab from "./FinanceTab"
+
 import SettingsTab from "./SettingsTab"
+
+
 
 export default function RestaurantPanelLayout() {
   const navigate = useNavigate();

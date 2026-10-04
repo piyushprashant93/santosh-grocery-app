@@ -1,9 +1,9 @@
 import { API_BASE_URL, BASE_URL } from '../../config';
 import { Search, Bell, Menu } from "lucide-react"
+
 import { useState, useEffect } from "react";
 import ProfileMenu from "./ProfileMenu";
-
-
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }: { activeTab: string; setActiveTab: (tab: string) => void; openSidebar: () => void }) {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -12,7 +12,7 @@ export default function SupplierHeader({ activeTab, setActiveTab, openSidebar }:
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${API_BASE_URL}/notifications`, {
+        const res = await apiFetch(`/notifications`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {})

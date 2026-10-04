@@ -26,6 +26,7 @@ import AddressModal from "./AddressModal";
 import { QRCodeSVG } from "qrcode.react";
 import { useTheme } from "./ThemeContext";
 import { useCurrency } from "../../context/CurrencyContext";
+import { apiFetch } from '../../lib/apiFetch';
 
 type UserProfile = {
   firstName: string;
@@ -188,7 +189,7 @@ export default function AccountSettings() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/profile`, {
+      const response = await apiFetch(`/users/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -274,7 +275,7 @@ export default function AccountSettings() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/profile`, {
+      const response = await apiFetch(`/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -344,7 +345,7 @@ export default function AccountSettings() {
       const formData = new FormData();
       formData.append("avatar", file);
 
-      const response = await fetch(`${API_BASE_URL}/users/profile/image/upload`, {
+      const response = await apiFetch(`/users/profile/image/upload`, {
         method: "POST",
         headers: {
           // Content-Type intentionally omitted — browser sets correct
@@ -463,7 +464,7 @@ export default function AccountSettings() {
     setPasswordLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+      const response = await apiFetch(`/users/change-password`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -525,7 +526,7 @@ export default function AccountSettings() {
     setDeleteError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/account`, {
+      const response = await apiFetch(`/users/account`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -628,7 +629,7 @@ export default function AccountSettings() {
           throw new Error("Address id not found.");
         }
 
-        const response = await fetch(`${API_BASE_URL}/users/addresses/${id}`, {
+        const response = await apiFetch(`/users/addresses/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -650,7 +651,7 @@ export default function AccountSettings() {
         // Refresh from server so isDefault flags across addresses stay in sync
         await fetchProfile();
       } else {
-        const response = await fetch(`${API_BASE_URL}/users/addresses`, {
+        const response = await apiFetch(`/users/addresses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -711,7 +712,7 @@ export default function AccountSettings() {
     if (!token) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/preferences`, {
+      const response = await apiFetch(`/users/preferences`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -783,7 +784,7 @@ export default function AccountSettings() {
     setPreferencesLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/preferences`, {
+      const response = await apiFetch(`/users/preferences`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -848,7 +849,7 @@ export default function AccountSettings() {
     setDeleteAddressError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/addresses/${id}`, {
+      const response = await apiFetch(`/users/addresses/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -882,7 +883,7 @@ export default function AccountSettings() {
     setLoading2FA(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/2fa/status`, {
+      const response = await apiFetch(`/auth/2fa/status`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -925,7 +926,7 @@ export default function AccountSettings() {
     setDisable2FALoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/2fa/disable`, {
+      const response = await apiFetch(`/auth/2fa/disable`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -962,7 +963,7 @@ export default function AccountSettings() {
     setRegenerateError("");
     
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/2fa/backup-codes`, {
+      const response = await apiFetch(`/auth/2fa/backup-codes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -993,7 +994,7 @@ export default function AccountSettings() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/2fa/setup`, {
+      const response = await apiFetch(`/auth/2fa/setup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1030,7 +1031,7 @@ export default function AccountSettings() {
     setVerifyError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/2fa/verify`, {
+      const response = await apiFetch(`/auth/2fa/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

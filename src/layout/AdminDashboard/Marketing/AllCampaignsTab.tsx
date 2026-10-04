@@ -1,6 +1,10 @@
 import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
+
 import { Search, Filter, MoreVertical, Loader2, Plus, Trash2, X } from "lucide-react"
+
+
+import { apiFetch } from '../../../lib/apiFetch';
 
 export default function AllCampaignsTab() {
   const [campaigns, setCampaigns] = useState<any[]>([]);
@@ -24,7 +28,7 @@ export default function AllCampaignsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/marketing/campaigns`, {
+      const res = await apiFetch(`/admin/marketing/campaigns`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -64,7 +68,7 @@ export default function AllCampaignsTab() {
         discountValue: Number(discountValue)
       };
 
-      const res = await fetch(`${API_BASE_URL}/admin/marketing/campaigns`, {
+      const res = await apiFetch(`/admin/marketing/campaigns`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -90,7 +94,7 @@ export default function AllCampaignsTab() {
     try {
       const token = localStorage.getItem("authToken");
       
-      const res = await fetch(`${API_BASE_URL}/admin/marketing/campaigns/${id}`, {
+      const res = await apiFetch(`/admin/marketing/campaigns/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

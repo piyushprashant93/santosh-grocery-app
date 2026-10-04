@@ -2,6 +2,7 @@ import { API_BASE_URL, BASE_URL } from '../../config';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/dataHelper";
+import { apiFetch } from '../../lib/apiFetch';
 import {
   Shield,
   Bell,
@@ -32,13 +33,7 @@ const tabs = [
 
 
 
-const authHeaders = () => {
-  const token = localStorage.getItem("authToken");
-  return {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {})
-  };
-};
+
 
 
 
@@ -79,7 +74,7 @@ export default function RestaurantSettings({
   
   const fetchTeam = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/staff`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         // The API returns the list in data.data or data
@@ -116,7 +111,7 @@ export default function RestaurantSettings({
 
   const fetchLocations = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurant-panel/settings/locations`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         setLocs(data.data?.locations || data.locations || (Array.isArray(data.data) ? data.data : []));
@@ -128,7 +123,7 @@ export default function RestaurantSettings({
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurants/my/restaurant`, { headers: authHeaders() });
+      const res = await apiFetch(`/restaurants/my/restaurant`, { headers: { 'Content-Type': 'application/json' } });
       if (res.ok) {
         const data = await res.json();
         const profileData = data.data?.restaurant || data.restaurant || data.data || {};
@@ -187,16 +182,16 @@ export default function RestaurantSettings({
         };
       });
 
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
+      const res = await apiFetch(`/restaurant-panel/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ openingHours })
       });
       if (res.ok) {
          // Also update the profile general fields using the old endpoint
-         const res2 = await fetch(`${API_BASE_URL}/restaurants/my/restaurant`, {
+         const res2 = await apiFetch(`/restaurants/my/restaurant`, {
            method: "PUT",
-           headers: authHeaders(),
+           headers: { 'Content-Type': 'application/json' },
            body: JSON.stringify(profile)
          });
          if (res2.ok) {
@@ -219,9 +214,9 @@ export default function RestaurantSettings({
 
     setPasswordLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/users/change-password`, {
+      const res = await apiFetch(`/users/change-password`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentPassword, newPassword })
       });
       const data = await res.json();
@@ -245,7 +240,7 @@ export default function RestaurantSettings({
     const formData = new FormData();
     formData.append(type, file);
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/${type}`, {
+      const res = await apiFetch(`/restaurant-panel/${type}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
         body: formData
@@ -257,9 +252,9 @@ export default function RestaurantSettings({
   const deleteLocation = async (id: string) => {
     if (!id || !confirm("Delete location?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings/locations/${id}`, {
+      const res = await apiFetch(`/restaurant-panel/settings/locations/${id}`, {
         method: "DELETE",
-        headers: authHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
       if (res.ok) fetchLocations();
     } catch (err) { console.error(err); }
@@ -274,7 +269,7 @@ export default function RestaurantSettings({
       const method = editingLocation._id ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingLocation)
       });
       if (res.ok) {
@@ -293,9 +288,9 @@ export default function RestaurantSettings({
            notificationPreferences[key] = { email: item.email, sms: item.sms };
         }
       });
-      const res = await fetch(`${API_BASE_URL}/restaurant-panel/settings`, {
+      const res = await apiFetch(`/restaurant-panel/settings`, {
         method: "PUT",
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationPreferences })
       });
       if (res.ok) {
@@ -1044,9 +1039,9 @@ export default function RestaurantSettings({
               
               <button onClick={async () => {
                 try {
-                  const res = await fetch(`${API_BASE_URL}/restaurant-panel/staff`, {
+                  const res = await apiFetch(`/restaurant-panel/staff`, {
                     method: "POST",
-                    headers: authHeaders(),
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(inviteForm)
                   });
                   if (res.ok) {

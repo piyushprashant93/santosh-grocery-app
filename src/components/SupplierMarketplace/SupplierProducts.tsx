@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ShoppingCart, Plus, PackageOpen } from "lucide-react";
 import { getImageUrl } from "../../utils/dataHelper";
-
+import { API_BASE_URL } from "../../config";
+import { apiFetch } from '../../lib/apiFetch';
 
 export default function SupplierProducts({
   role,
@@ -23,7 +24,7 @@ export default function SupplierProducts({
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/suppliers/${supplierId}`, {
+        const res = await apiFetch(`/${role}/supplier-marketplace/suppliers/${supplierId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -55,7 +56,7 @@ export default function SupplierProducts({
     try {
       setAddingToCart(product._id || product.id);
       const token = localStorage.getItem("authToken");
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1/${role}/supplier-marketplace/supply-cart/add`, {
+      const res = await apiFetch(`/${role}/supplier-marketplace/supply-cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

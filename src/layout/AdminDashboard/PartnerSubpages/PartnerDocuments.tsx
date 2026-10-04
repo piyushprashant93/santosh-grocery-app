@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react"
+
 import { ArrowLeft, FileText, Image as ImageIcon, Calendar, Download, X, XCircle, CheckCircle2, Loader2 } from "lucide-react"
+
 import api from "../../../lib/api"
+
+
 
 interface PartnerDocumentsProps {
   partnerId: string;

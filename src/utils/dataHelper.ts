@@ -1,4 +1,5 @@
 import { API_BASE_URL, BASE_URL } from '../config';
+
 export function extractList(d: any): any[] {
   if (!d) return [];
   if (Array.isArray(d)) return d;

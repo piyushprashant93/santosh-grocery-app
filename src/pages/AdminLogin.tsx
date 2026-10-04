@@ -1,7 +1,12 @@
 import { API_BASE_URL, BASE_URL } from '../config';
 import { useState } from "react"
+
 import { useNavigate } from "react-router-dom"
+
 import { ShieldCheck, ArrowRight, Loader2 } from "lucide-react"
+
+
+import { apiFetch } from '../lib/apiFetch';
 
 export default function AdminLogin() {
   const navigate = useNavigate()
@@ -19,7 +24,7 @@ export default function AdminLogin() {
 
     setLoading(true)
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await apiFetch(`/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
