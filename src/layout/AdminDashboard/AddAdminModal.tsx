@@ -74,7 +74,7 @@ export default function AddAdminModal({ isOpen, onClose, onSuccess }: AddAdminMo
       };
 
       // Ensure your backend supports this route!
-      await api.post(`/api/v1/admin/users`, payload);
+      await api.post(`/admin/users`, payload);
 
       if (onSuccess) onSuccess();
       onClose();

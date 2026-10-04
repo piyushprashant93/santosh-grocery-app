@@ -16,7 +16,7 @@ export default function SystemHealth() {
     setLoading(true)
     setError("")
     try {
-      const response = await api.get('/api/v1/admin/system-health')
+      const response = await api.get('/admin/system-health')
       setHealthData(response.data?.data || response.data || {})
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to load system health data")

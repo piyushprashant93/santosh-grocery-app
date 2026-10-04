@@ -61,7 +61,7 @@ export default function DeliveryLogs({ user, onBack, onViewRoute }: DeliveryLogs
       try {
         setLoading(true);
         // The endpoint may accept driverId to filter if applicable
-        const response = await api.get(`/api/v1/admin/delivery/logs?driverId=${user.id}`);
+        const response = await api.get(`/admin/delivery/logs?driverId=${user.id}`);
         const data = response.data?.data || response.data || [];
         // Map the backend data to our interface
         const mapped = (Array.isArray(data) ? data : data.data || []).map((item: any) => ({

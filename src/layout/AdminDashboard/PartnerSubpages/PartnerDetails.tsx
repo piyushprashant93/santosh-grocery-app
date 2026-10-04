@@ -20,7 +20,7 @@ export default function PartnerDetails({ partner, onBack }: PartnerDetailsProps)
         setLoading(true);
         // Since we don't strictly know if it's a restaurant or retailer here, we'll assume restaurant for now
         // based on the document or try both if one fails.
-        const res = await api.get(`/api/v1/admin/partners/restaurants/${partner.id}`);
+        const res = await api.get(`/admin/partners/restaurants/${partner.id}`);
         setPartnerData(res.data?.data || res.data || {});
       } catch (err: any) {
         // if not found, maybe it's a retailer? Let's just catch and show error for now

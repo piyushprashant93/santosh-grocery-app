@@ -54,7 +54,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
     try {
       // Use the generic partners endpoint or restaurant specific one
       // Here assuming we fetch the restaurant info
-      const res = await api.get(`/api/v1/admin/partners/restaurants/${partnerId}`);
+      const res = await api.get(`/admin/partners/restaurants/${partnerId}`);
       const data = res.data?.data || res.data || {};
       setRestaurantName(data.restaurantName || data.businessName || data.name || "Partner");
       
@@ -84,7 +84,7 @@ export default function PartnerDocuments({ partnerId, onBack }: PartnerDocuments
     if (!selectedDoc) return;
     setLoading(true);
     try {
-      await api.put(`/api/v1/admin/partners/restaurants/${partnerId}/verify-document`, {
+      await api.put(`/admin/partners/restaurants/${partnerId}/verify-document`, {
         partnerType: 'restaurant',
         documentType: selectedDoc.typeId || selectedDoc.title.toLowerCase(),
         action: action,

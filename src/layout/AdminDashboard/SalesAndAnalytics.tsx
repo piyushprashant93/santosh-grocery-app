@@ -24,7 +24,7 @@ export default function SalesAndAnalytics() {
     setLoading(true)
     setError("")
     try {
-      const response = await api.get('/api/v1/admin/analytics')
+      const response = await api.get('/admin/analytics')
       setAnalyticsData(response.data?.data || response.data || {})
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || "Failed to load analytics data")

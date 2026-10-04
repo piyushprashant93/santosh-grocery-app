@@ -66,7 +66,7 @@ export default function UserManagement() {
       if (roleFilter) params.append("role", roleFilter);
       if (search) params.append("search", search);
 
-      const response = await api.get(`/api/v1/admin/users?${params.toString()}`);
+      const response = await api.get(`/admin/users?${params.toString()}`);
       const result = response.data;
       
       if (result.data && Array.isArray(result.data.data)) {
@@ -90,7 +90,7 @@ export default function UserManagement() {
     setActionLoading(userId);
     try {
       const newStatus = !currentStatus;
-      await api.put(`/api/v1/admin/users/${userId}/block`, { isActive: newStatus });
+      await api.put(`/admin/users/${userId}/block`, { isActive: newStatus });
       fetchUsers();
     } catch (err) {
       alert("Error updating user status. Please try again.");
@@ -108,7 +108,7 @@ export default function UserManagement() {
       if (search) params.append("search", search);
       const query = params.toString() ? `?${params.toString()}` : "";
       
-      const response = await api.get(`/api/v1/admin/users/export${query}`, { responseType: 'blob' });
+      const response = await api.get(`/admin/users/export${query}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;

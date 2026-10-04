@@ -61,7 +61,7 @@ export default function OrderManagement() {
       const params = new URLSearchParams({ page: page.toString() })
       if (searchQuery) params.append("search", searchQuery)
 
-      const response = await api.get(`/api/v1/admin/orders?${params.toString()}`)
+      const response = await api.get(`/admin/orders?${params.toString()}`)
       const result = response.data
 
       let fetchedOrders: Order[] = []

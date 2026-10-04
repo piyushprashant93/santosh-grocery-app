@@ -16,7 +16,7 @@ export default function VerificationsList() {
   const fetchVerifications = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/api/v1/admin/verifications?type=');
+      const res = await api.get('/admin/verifications?type=');
       const data = res.data?.data || res.data || [];
       setDocuments(Array.isArray(data) ? data : []);
     } catch (err: any) {

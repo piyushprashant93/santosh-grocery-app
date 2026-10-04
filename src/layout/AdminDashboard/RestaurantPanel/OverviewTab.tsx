@@ -10,11 +10,11 @@ export default function OverviewTab() {
     const fetchOverview = async () => {
       try {
         setLoading(true);
-        const res = await api.get('/api/v1/admin/partners/restaurants');
+        const res = await api.get('/admin/partners/restaurants');
         const partners = res.data?.data?.data || res.data?.data || res.data || [];
         const id = Array.isArray(partners) && partners.length > 0 ? (partners[0]._id || partners[0].id) : null;
         if (id) {
-          const overviewRes = await api.get(`/api/v1/admin/partners/restaurants/${id}/overview`);
+          const overviewRes = await api.get(`/admin/partners/restaurants/${id}/overview`);
           setData(overviewRes.data?.data || overviewRes.data || null);
         }
       } catch (err) {

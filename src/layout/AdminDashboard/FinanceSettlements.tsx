@@ -56,8 +56,8 @@ export default function FinanceSettlements() {
     setError("")
     try {
       const [statsRes, historyRes] = await Promise.all([
-        api.get('/api/v1/admin/finance'),
-        api.get('/api/v1/admin/payments').catch(err => {
+        api.get('/admin/finance'),
+        api.get('/admin/payments').catch(err => {
           console.warn('Failed to fetch payment history', err);
           return { data: { data: [] } };
         })
@@ -94,7 +94,7 @@ export default function FinanceSettlements() {
   const handleProcessPayouts = async () => {
     setIsProcessing(true)
     try {
-      await api.post('/api/v1/admin/finance/process-payouts', {})
+      await api.post('/admin/finance/process-payouts', {})
       // refetch after successful payout processing
       await fetchData()
       setIsPayoutModalOpen(false)

@@ -38,7 +38,7 @@ function PartnerManagementList() {
     setError("");
     try {
       if (activeTab === 'verifications') return; // VerificationsList fetches its own data
-      const endpoint = activeTab === 'restaurants' ? '/api/v1/admin/partners/restaurants' : '/api/v1/admin/partners/retailers';
+      const endpoint = activeTab === 'restaurants' ? '/admin/partners/restaurants' : '/admin/partners/retailers';
       const res = await api.get(endpoint);
       const data = res.data?.data?.data || res.data?.data || res.data || [];
       const partnersList = Array.isArray(data) ? data : (data.partners || []);
@@ -53,7 +53,7 @@ function PartnerManagementList() {
   const handleAction = async (partnerId: string, action: 'approve' | 'reject' | 'suspend') => {
     try {
       const type = activeTab === 'restaurants' ? 'restaurants' : 'retailers';
-      await api.put(`/api/v1/admin/partners/${type}/${partnerId}/${action}`);
+      await api.put(`/admin/partners/${type}/${partnerId}/${action}`);
       fetchPartners();
       setActiveDropdown(null);
     } catch (err: any) {

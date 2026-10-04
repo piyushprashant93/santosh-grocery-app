@@ -28,7 +28,7 @@ export default function ProductFoodList() {
       const params = new URLSearchParams({ page: page.toString() })
       if (searchQuery) params.append("search", searchQuery)
 
-      const endpoint = activeTab === "retail" ? "/api/v1/admin/products" : "/api/v1/admin/menu-items"
+      const endpoint = activeTab === "retail" ? "/admin/products" : "/admin/menu-items"
       const response = await api.get(`${endpoint}?${params.toString()}`)
       const result = response.data
 

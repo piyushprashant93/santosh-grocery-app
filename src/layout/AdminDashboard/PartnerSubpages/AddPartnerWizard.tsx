@@ -33,7 +33,7 @@ export default function AddPartnerWizard() {
         ...formData
       };
 
-      const res = await api.post('/api/v1/admin/partners', payload);
+      const res = await api.post('/admin/partners', payload);
       const partnerId = res.data?.data?._id || res.data?.data?.id || res.data?._id;
 
       if (partnerId) {
@@ -43,7 +43,7 @@ export default function AddPartnerWizard() {
           const fd = new FormData();
           fd.append('documentType', 'license');
           fd.append('document', licenseFile);
-          await api.post(`/api/v1/admin/partners/${typePath}/${partnerId}/documents`, fd, {
+          await api.post(`/admin/partners/${typePath}/${partnerId}/documents`, fd, {
             headers: { 'Content-Type': 'multipart/form-data' }
           }).catch(console.error);
         }
@@ -52,7 +52,7 @@ export default function AddPartnerWizard() {
           const fd = new FormData();
           fd.append('documentType', 'tax_id');
           fd.append('document', taxIdFile);
-          await api.post(`/api/v1/admin/partners/${typePath}/${partnerId}/documents`, fd, {
+          await api.post(`/admin/partners/${typePath}/${partnerId}/documents`, fd, {
             headers: { 'Content-Type': 'multipart/form-data' }
           }).catch(console.error);
         }

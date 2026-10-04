@@ -54,7 +54,7 @@ export default function FeedbackComplaints() {
       const params = new URLSearchParams({ page: page.toString() })
       if (searchQuery) params.append("search", searchQuery)
 
-      const response = await api.get(`/api/v1/admin/complaints?${params.toString()}`)
+      const response = await api.get(`/admin/complaints?${params.toString()}`)
       const result = response.data
 
       let fetchedData: Complaint[] = []

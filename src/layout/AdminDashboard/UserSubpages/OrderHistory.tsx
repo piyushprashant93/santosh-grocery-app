@@ -23,7 +23,7 @@ export default function OrderHistory({ user, onBack }: OrderHistoryProps) {
     setError("");
     try {
       // The API uses pagination and filtering. We pass userId to get orders for this specific user.
-      const res = await api.get(`/api/v1/admin/orders`, {
+      const res = await api.get(`/admin/orders`, {
         params: { userId: user?.id, search }
       });
       const data = res.data?.data?.data || res.data?.data || res.data || [];
