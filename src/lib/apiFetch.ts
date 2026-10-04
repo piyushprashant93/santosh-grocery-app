@@ -13,7 +13,9 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
     headers.set('Authorization', `Bearer ${token}`);
   }
   
-  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  // Prevent double /api/v1 by stripping it from the endpoint if it was passed manually
+  const cleanEndpoint = endpoint.replace(/^\/?api\/v1/, '');
+  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${cleanEndpoint.startsWith('/') ? cleanEndpoint : `/${cleanEndpoint}`}`;
 
   return fetch(url, {
     ...options,
