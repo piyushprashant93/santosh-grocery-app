@@ -1,15 +1,37 @@
-import { Search, Filter, Plus, Edit2, Trash2 } from "lucide-react"
-
-
+import { useState, useEffect } from "react"
+import { Search, Filter, Plus, Edit2, Trash2, Loader2 } from "lucide-react"
+import api from "../../../lib/api"
 
 export default function MenuManagementTab() {
-  const menuItems = [
-    { id: 'ITM-001', name: 'Spicy Chicken Wings', category: 'Appetizers', price: '$12.99', status: 'Active' },
-    { id: 'ITM-002', name: 'Classic Burger', category: 'Mains', price: '$14.50', status: 'Active' },
-    { id: 'ITM-003', name: 'Margherita Pizza', category: 'Mains', price: '$16.00', status: 'Active' },
-    { id: 'ITM-004', name: 'Truffle Fries', category: 'Sides', price: '$8.50', status: 'Active' },
-    { id: 'ITM-005', name: 'Caesar Salad', category: 'Salads', price: '$10.00', status: 'Inactive' },
-  ];
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get('/admin/partners/restaurants');
+        const partners = res.data?.data?.data || res.data?.data || res.data || [];
+        const id = Array.isArray(partners) && partners.length > 0 ? (partners[0]._id || partners[0].id) : null;
+        if (id) {
+          const productsRes = await api.get(`/admin/partners/restaurants/${id}/products`);
+          const rawProducts = productsRes.data?.data?.data || productsRes.data?.data || productsRes.data || [];
+          setMenuItems(rawProducts.map((p: any) => ({
+            id: p._id || p.id || 'ITM-000',
+            name: p.name || 'Unnamed Item',
+            category: typeof p.category === 'object' ? p.category?.name : (p.category || 'General'),
+            price: `$${(p.price || p.basePrice || 0).toFixed(2)}`,
+            status: p.isActive !== false ? 'Active' : 'Inactive'
+          })));
+        }
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">

@@ -66,6 +66,35 @@ export default function SalesAndAnalytics() {
     }
   }
 
+  const handleDownloadAnalytics = async () => {
+    setDownloading(true)
+    try {
+      const token = localStorage.getItem("authToken")
+      
+      const response = await apiFetch(`/admin/analytics/export?days=30`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        }
+      })
+      
+      if (!response.ok) throw new Error("Failed to download analytics")
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = "analytics.csv" 
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      a.remove()
+    } catch (err) {
+      alert("Error downloading analytics")
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   // Map API data or fallback to defaults
   let revenueData: any[] = []
   if (analyticsData?.revenueGrowth && Array.isArray(analyticsData.revenueGrowth)) {
@@ -121,12 +150,20 @@ export default function SalesAndAnalytics() {
             Last 30 Days
           </button>
           <button 
+            onClick={handleDownloadAnalytics}
+            disabled={downloading}
+            className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2 disabled:opacity-70"
+          >
+            {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+            Export Analytics
+          </button>
+          <button 
             onClick={handleDownloadReport}
             disabled={downloading}
             className="px-4 py-2 bg-gray-900 text-white font-medium rounded-lg shadow-sm hover:bg-gray-800 transition flex items-center gap-2 disabled:opacity-70"
           >
             {downloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-            {downloading ? "Downloading..." : "Export Report"}
+            Export Report
           </button>
         </div>
       </div>

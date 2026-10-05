@@ -1,15 +1,38 @@
-import { Search, Filter, Eye } from "lucide-react"
-
-
+import { useState, useEffect } from "react"
+import { Search, Filter, Eye, Loader2 } from "lucide-react"
+import api from "../../../lib/api"
 
 export default function OrdersTab() {
-  const orders = [
-    { id: '#ORD-001', customer: 'John Doe', items: 3, total: '$45.00', status: 'Delivered', time: '10:30 AM' },
-    { id: '#ORD-002', customer: 'Sarah Smith', items: 1, total: '$12.50', status: 'Preparing', time: '10:45 AM' },
-    { id: '#ORD-003', customer: 'Mike Johnson', items: 5, total: '$112.00', status: 'Pending', time: '11:00 AM' },
-    { id: '#ORD-004', customer: 'Emily Davis', items: 2, total: '$28.00', status: 'Cancelled', time: '11:15 AM' },
-    { id: '#ORD-005', customer: 'Alex Wilson', items: 4, total: '$65.50', status: 'Delivered', time: '11:30 AM' },
-  ];
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get('/admin/partners/restaurants');
+        const partners = res.data?.data?.data || res.data?.data || res.data || [];
+        const id = Array.isArray(partners) && partners.length > 0 ? (partners[0]._id || partners[0].id) : null;
+        if (id) {
+          const ordersRes = await api.get(`/admin/partners/restaurants/${id}/orders`);
+          const rawOrders = ordersRes.data?.data?.data || ordersRes.data?.data || ordersRes.data || [];
+          setOrders(rawOrders.map((o: any) => ({
+            id: o._id || o.id || '#ORD-000',
+            customer: o.customer?.fullName || o.customer?.firstName || o.customerName || 'Unknown Customer',
+            items: Array.isArray(o.items) ? o.items.length : (o.itemCount || 0),
+            total: `$${(o.totalAmount || o.total || 0).toFixed(2)}`,
+            status: o.status || 'Pending',
+            time: o.createdAt ? new Date(o.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A'
+          })));
+        }
+      } catch (err) {
+        console.error("Failed to fetch orders", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-300">

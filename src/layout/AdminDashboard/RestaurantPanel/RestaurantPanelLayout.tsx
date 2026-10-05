@@ -4,16 +4,14 @@ import { ShoppingBag, DollarSign, Clock, Users } from "lucide-react"
 
 
 import OverviewTab from "./OverviewTab"
-
 import OrdersTab from "./OrdersTab"
-
 import MenuManagementTab from "./MenuManagementTab"
-
 import InventoryTab from "./InventoryTab"
-
 import FinanceTab from "./FinanceTab"
-
 import SettingsTab from "./SettingsTab"
+import CustomersTab from "./CustomersTab"
+import OffersTab from "./OffersTab"
+import RefundsTab from "./RefundsTab"
 
 
 
@@ -29,6 +27,9 @@ export default function RestaurantPanelLayout() {
     { id: 'overview', label: 'Overview', path: '/admin/dashboard/restaurant-panel' },
     { id: 'orders', label: 'Orders', path: '/admin/dashboard/restaurant-panel/orders' },
     { id: 'menu', label: 'Menu Management', path: '/admin/dashboard/restaurant-panel/menu' },
+    { id: 'customers', label: 'Customers', path: '/admin/dashboard/restaurant-panel/customers' },
+    { id: 'offers', label: 'Offers', path: '/admin/dashboard/restaurant-panel/offers' },
+    { id: 'refunds', label: 'Refunds', path: '/admin/dashboard/restaurant-panel/refunds' },
     { id: 'inventory', label: 'Inventory & Stock', path: '/admin/dashboard/restaurant-panel/inventory' },
     { id: 'finance', label: 'Finance & Settlements', path: '/admin/dashboard/restaurant-panel/finance' },
     { id: 'settings', label: 'Details & Settings', path: '/admin/dashboard/restaurant-panel/settings' },
@@ -115,6 +116,9 @@ export default function RestaurantPanelLayout() {
           <Route path="restaurant-panel" element={<OverviewTab />} />
           <Route path="restaurant-panel/orders" element={<OrdersTab />} />
           <Route path="restaurant-panel/menu" element={<MenuManagementTab />} />
+          <Route path="restaurant-panel/customers" element={<CustomersTab />} />
+          <Route path="restaurant-panel/offers" element={<OffersTab />} />
+          <Route path="restaurant-panel/refunds" element={<RefundsTab />} />
           <Route path="restaurant-panel/inventory" element={<InventoryTab />} />
           <Route path="restaurant-panel/finance" element={<FinanceTab />} />
           <Route path="restaurant-panel/settings" element={<SettingsTab />} />
