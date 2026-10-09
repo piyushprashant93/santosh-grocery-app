@@ -1,33 +1,48 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
-
 import { ArrowUpRight, ArrowDownRight, ShoppingCart, Package, ShoppingBag, Users, Tag, RefreshCw, Wallet, BarChart2 } from "lucide-react"
-
+import { useState, useEffect } from "react"
+import { apiFetch } from "../../../lib/apiFetch"
+import { useCurrency } from "../../../context/CurrencyContext"
 
 import OverviewTab from "./OverviewTab"
-
 import ProductsTab from "./ProductsTab"
-
 import OrdersTab from "./OrdersTab"
-
 import CustomersTab from "./CustomersTab"
-
 import OffersTab from "./OffersTab"
-
 import RefundsTab from "./RefundsTab"
-
 import FinanceTab from "./FinanceTab"
-
 import ReportsTab from "./ReportsTab"
-
-
 
 export default function RetailerPanelLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { formatPrice } = useCurrency();
   
+  const [overviewData, setOverviewData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const pathParts = location.pathname.replace(/\/$/, '').split('/');
   const lastPart = pathParts[pathParts.length - 1];
   const currentTab = lastPart === 'retailer-panel' ? 'overview' : lastPart;
+
+  useEffect(() => {
+    fetchOverview();
+  }, []);
+
+  const fetchOverview = async () => {
+    try {
+      setLoading(true);
+      const res = await apiFetch('/admin/retailer-panel/overview');
+      if (res.ok) {
+        const data = await res.json();
+        setOverviewData(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch retailer overview", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: ShoppingCart, path: '/admin/dashboard/retailer-panel' },
@@ -56,44 +71,47 @@ export default function RetailerPanelLayout() {
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
-            <h3 className="text-3xl font-bold text-theme-text">$45,890</h3>
+            <h3 className="text-3xl font-bold text-theme-text">
+              {loading ? "..." : formatPrice(overviewData?.stats?.totalRevenue || 0)}
+            </h3>
           </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            +14%
-          </div>
+          {overviewData?.stats?.revenueChangePct !== undefined && (
+            <div className={`flex items-center font-medium text-sm gap-1 ${overviewData.stats.revenueChangePct >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+              {overviewData.stats.revenueChangePct >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {overviewData.stats.revenueChangePct > 0 && '+'}{overviewData.stats.revenueChangePct}%
+            </div>
+          )}
         </div>
         
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Total Orders</p>
-            <h3 className="text-3xl font-bold text-theme-text">568</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.totalOrders || 0)}</h3>
           </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            +9%
-          </div>
+          {overviewData?.stats?.ordersChangePct !== undefined && (
+            <div className={`flex items-center font-medium text-sm gap-1 ${overviewData.stats.ordersChangePct >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+              {overviewData.stats.ordersChangePct >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {overviewData.stats.ordersChangePct > 0 && '+'}{overviewData.stats.ordersChangePct}%
+            </div>
+          )}
         </div>
 
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Pending Payments</p>
-            <h3 className="text-3xl font-bold text-theme-text">32</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.pendingPayments || 0)}</h3>
           </div>
-          <div className="flex items-center text-red-500 font-medium text-sm gap-1">
-            <ArrowDownRight size={16} />
-            +3%
-          </div>
+          {!loading && overviewData?.stats?.pendingPaymentsAmount > 0 && (
+            <div className="text-sm text-gray-500">
+              {formatPrice(overviewData.stats.pendingPaymentsAmount)}
+            </div>
+          )}
         </div>
 
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Low Stock Alerts</p>
-            <h3 className="text-3xl font-bold text-theme-text">12</h3>
-          </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            -8%
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.lowStockAlerts || 0)}</h3>
           </div>
         </div>
       </div>
@@ -123,8 +141,8 @@ export default function RetailerPanelLayout() {
       {/* Main Content Router */}
       <div className="flex-1 mt-2">
         <Routes>
-          <Route path="*" element={<OverviewTab />} />
-          <Route path="retailer-panel" element={<OverviewTab />} />
+          <Route path="*" element={<OverviewTab recentOrders={overviewData?.recentOrders || []} />} />
+          <Route path="retailer-panel" element={<OverviewTab recentOrders={overviewData?.recentOrders || []} />} />
           <Route path="retailer-panel/products" element={<ProductsTab />} />
           <Route path="retailer-panel/orders" element={<OrdersTab />} />
           <Route path="retailer-panel/customers" element={<CustomersTab />} />

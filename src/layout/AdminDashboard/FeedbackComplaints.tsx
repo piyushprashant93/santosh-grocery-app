@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-
 import { 
   Download, 
   Search, 
@@ -10,12 +9,13 @@ import {
   X,
   Loader2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  MoreVertical,
+  CheckCircle,
+  XCircle,
+  Clock
 } from "lucide-react"
-
-import api from "../../lib/api"
-
-
+import { apiFetch } from "../../lib/apiFetch"
 
 interface Complaint {
   _id: string;
@@ -34,6 +34,7 @@ export default function FeedbackComplaints() {
   const [complaints, setComplaints] = useState<Complaint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [exporting, setExporting] = useState(false)
   
   const [searchQuery, setSearchQuery] = useState("")
   const [page, setPage] = useState(1)
@@ -49,23 +50,32 @@ export default function FeedbackComplaints() {
 
   useEffect(() => {
     fetchComplaints()
-  }, [page, searchQuery])
+  }, [page])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (page === 1) fetchComplaints()
+      else setPage(1)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   const fetchComplaints = async () => {
     setLoading(true)
     setError("")
     try {
-      const params = new URLSearchParams({ page: page.toString() })
+      const params = new URLSearchParams({ page: page.toString(), limit: "10" })
       if (searchQuery) params.append("search", searchQuery)
 
-      const response = await api.get(`/admin/complaints?${params.toString()}`)
-      const result = response.data
+      const response = await apiFetch(`/admin/complaints?${params.toString()}`)
+      if (!response.ok) throw new Error("Failed to fetch")
+      const result = await response.json()
 
       let fetchedData: Complaint[] = []
       
       if (result.data && Array.isArray(result.data.data)) {
         fetchedData = result.data.data
-        setTotalPages(result.data.pagination?.totalPages || 1)
+        setTotalPages(result.data.pagination?.pages || result.data.pagination?.totalPages || 1)
         setStats({
           total: result.data.pagination?.totalItems || fetchedData.length,
           open: result.data.stats?.open || 0,
@@ -78,10 +88,10 @@ export default function FeedbackComplaints() {
         setTotalPages(1)
         setStats({
           total: fetchedData.length,
-          open: fetchedData.filter(c => c.status?.toLowerCase() === 'open').length,
-          inReview: fetchedData.filter(c => c.status?.toLowerCase() === 'in review').length,
-          resolved: fetchedData.filter(c => c.status?.toLowerCase() === 'resolved').length,
-          rejected: fetchedData.filter(c => c.status?.toLowerCase() === 'rejected').length
+          open: fetchedData.filter((c: any) => c.status?.toLowerCase() === 'open').length,
+          inReview: fetchedData.filter((c: any) => c.status?.toLowerCase() === 'in review').length,
+          resolved: fetchedData.filter((c: any) => c.status?.toLowerCase() === 'resolved').length,
+          rejected: fetchedData.filter((c: any) => c.status?.toLowerCase() === 'rejected').length
         })
       } else {
         fetchedData = []
@@ -90,16 +100,57 @@ export default function FeedbackComplaints() {
       
       setComplaints(fetchedData)
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "An error occurred while fetching complaints")
+      setError(err.message || "An error occurred while fetching complaints")
     } finally {
       setLoading(false)
     }
   }
 
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      
+      const res = await apiFetch(`/admin/complaints/export?${params.toString()}`);
+      if (!res.ok) throw new Error("Export failed");
+      
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `complaints_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Export error", error);
+      alert("Failed to export complaints");
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const updateStatus = async (id: string, newStatus: string) => {
+    try {
+      const res = await apiFetch(`/admin/complaints/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        fetchComplaints();
+      }
+    } catch (err) {
+      console.error("Failed to update status", err);
+    }
+  };
+
   const getStatusBadge = (status?: string) => {
     const s = (status || 'Unknown').toLowerCase();
     switch (s) {
       case 'open':
+      case 'pending':
         return <span className="px-3 py-1 bg-red-100 text-red-600 rounded-full text-xs font-medium capitalize">{status}</span>;
       case 'in review':
       case 'investigation':
@@ -149,8 +200,12 @@ export default function FeedbackComplaints() {
           <h1 className="text-3xl font-bold text-theme-text tracking-tight" style={{ fontFamily: 'serif' }}>Feedback & Complaints</h1>
           <p className="text-gray-500 mt-1">Review customer feedback and resolve complaints efficiently</p>
         </div>
-        <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
-          <Download size={18} />
+        <button 
+          onClick={handleExport}
+          disabled={exporting}
+          className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm disabled:opacity-50"
+        >
+          {exporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
           Export Reports
         </button>
       </div>
@@ -208,17 +263,10 @@ export default function FeedbackComplaints() {
               type="text" 
               placeholder="Search by Complaint ID, Order ID, Customer, Vendor..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                setPage(1)
-              }}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-gray-50/50 text-sm"
             />
           </div>
-          <button className="px-4 py-2.5 bg-theme-surface border border-gray-200 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm w-full sm:w-auto justify-center">
-            <Filter size={16} />
-            Filter
-          </button>
         </div>
 
         {/* Loading / Error States */}
@@ -231,7 +279,7 @@ export default function FeedbackComplaints() {
         {!loading && error && (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-16 p-6 text-center">
             <p className="text-red-500 mb-4">{error}</p>
-            <button onClick={fetchComplaints} className="px-4 py-2 bg-orange-500 text-theme-text rounded-lg">Retry</button>
+            <button onClick={fetchComplaints} className="px-4 py-2 bg-orange-500 text-white rounded-lg">Retry</button>
           </div>
         )}
         {!loading && !error && complaints.length === 0 && (
@@ -254,11 +302,12 @@ export default function FeedbackComplaints() {
                 <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Description</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider">Date</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider text-center">Status</th>
+                <th className="px-6 py-4 text-[11px] font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {complaints.map((item, index) => (
-                <tr key={item._id || index} className="hover:bg-gray-50/50 transition">
+                <tr key={item._id || index} className="hover:bg-gray-50/50 transition group">
                   <td className="px-6 py-4">
                     <span className="font-bold text-theme-text text-sm block max-w-[80px]">
                       {formatId(item.complaintId || item._id)}
@@ -294,6 +343,19 @@ export default function FeedbackComplaints() {
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     {getStatusBadge(item.status)}
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={() => updateStatus(item._id, 'in review')} title="Mark as In Review" className="p-1.5 text-blue-600 hover:bg-blue-50 rounded">
+                        <Clock size={16} />
+                      </button>
+                      <button onClick={() => updateStatus(item._id, 'resolved')} title="Mark as Resolved" className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded">
+                        <CheckCircle size={16} />
+                      </button>
+                      <button onClick={() => updateStatus(item._id, 'rejected')} title="Reject" className="p-1.5 text-red-600 hover:bg-red-50 rounded">
+                        <XCircle size={16} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -301,7 +363,7 @@ export default function FeedbackComplaints() {
         </div>
 
         {/* Pagination Footer */}
-        {!loading && complaints.length > 0 && (
+        {!loading && totalPages > 1 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between mt-auto">
             <span className="text-sm text-gray-500">
               Showing page <span className="font-medium text-theme-text">{page}</span> of <span className="font-medium text-theme-text">{totalPages}</span>

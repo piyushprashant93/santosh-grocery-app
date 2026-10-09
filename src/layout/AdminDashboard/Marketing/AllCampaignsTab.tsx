@@ -1,42 +1,32 @@
-import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
-
-import { Search, Filter, MoreVertical, Loader2, Plus, Trash2, X } from "lucide-react"
-
-
-import { apiFetch } from '../../../lib/apiFetch';
+import { Search, Filter, Loader2, Plus, Trash2, X } from "lucide-react"
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function AllCampaignsTab() {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [campaigns, setCampaigns] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
-  const [title, setTitle] = useState("");
-  const [discountType, setDiscountType] = useState("percentage");
-  const [discountValue, setDiscountValue] = useState("");
+  const [title, setTitle] = useState("")
+  const [discountType, setDiscountType] = useState("percentage")
+  const [discountValue, setDiscountValue] = useState("")
 
   useEffect(() => {
-    fetchCampaigns();
-  }, []);
+    fetchCampaigns()
+  }, [])
 
   const fetchCampaigns = async () => {
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError("")
     try {
-      const token = localStorage.getItem("authToken");
+      const res = await apiFetch(`/admin/marketing/campaigns`)
+      if (!res.ok) throw new Error("Failed to fetch campaigns")
+      const data = await res.json()
       
-      const res = await apiFetch(`/admin/marketing/campaigns`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (!res.ok) throw new Error("Failed to fetch campaigns");
-      const data = await res.json();
-      
-      const fetchedCampaigns = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      const fetchedCampaigns = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
       setCampaigns(fetchedCampaigns.length > 0 ? fetchedCampaigns.map((c: any) => ({
         _id: c._id,
         name: c.name || c.title || 'Unnamed Campaign',
@@ -46,80 +36,70 @@ export default function AllCampaignsTab() {
         end: c.endDate ? new Date(c.endDate).toLocaleDateString() : 'N/A',
         clicks: c.clicks || 0,
         conversions: c.conversions || 0,
-      })) : []);
+      })) : [])
     } catch (err: any) {
-      setError(err.message);
-      setCampaigns([]);
+      setError(err.message)
+      setCampaigns([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleCreateCampaign = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
     try {
-      const token = localStorage.getItem("authToken");
-      
-      
       const payload = {
         title,
         discountType,
         discountValue: Number(discountValue)
-      };
+      }
 
       const res = await apiFetch(`/admin/marketing/campaigns`, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("Failed to create campaign");
+      })
+      if (!res.ok) throw new Error("Failed to create campaign")
       
-      fetchCampaigns();
-      setIsModalOpen(false);
-      setTitle("");
-      setDiscountValue("");
+      fetchCampaigns()
+      setIsModalOpen(false)
+      setTitle("")
+      setDiscountValue("")
     } catch (err: any) {
-      alert("Error creating campaign: " + err.message);
+      alert("Error creating campaign: " + err.message)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this campaign?")) return;
+    if (!confirm("Are you sure you want to delete this campaign?")) return
     try {
-      const token = localStorage.getItem("authToken");
-      
       const res = await apiFetch(`/admin/marketing/campaigns/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Failed to delete");
-      fetchCampaigns();
+        method: "DELETE"
+      })
+      if (!res.ok) throw new Error("Failed to delete")
+      fetchCampaigns()
     } catch (err: any) {
-      alert("Error deleting campaign: " + err.message);
+      alert("Error deleting campaign: " + err.message)
     }
-  };
+  }
 
   const getStatusStyle = (status: string) => {
     switch(status.toLowerCase()) {
-      case 'active': return 'bg-emerald-50 text-emerald-600';
-      case 'scheduled': return 'bg-blue-50 text-blue-600';
-      case 'ended': return 'bg-gray-100 text-gray-600';
-      default: return 'bg-gray-50 text-gray-600';
+      case 'active': return 'bg-emerald-50 text-emerald-600'
+      case 'scheduled': return 'bg-blue-50 text-blue-600'
+      case 'ended': return 'bg-gray-100 text-gray-600'
+      default: return 'bg-gray-50 text-gray-600'
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="animate-spin text-orange-500" size={32} />
       </div>
-    );
+    )
   }
 
   return (

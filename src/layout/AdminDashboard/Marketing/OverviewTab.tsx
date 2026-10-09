@@ -1,31 +1,60 @@
-import { BarChart3, Users, MousePointerClick, TrendingUp, PlusCircle, Radio, Image as ImageIcon } from "lucide-react"
-
+import { useState, useEffect } from "react"
+import { BarChart3, Users, MousePointerClick, TrendingUp, PlusCircle, Radio, Image as ImageIcon, Loader2 } from "lucide-react"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
-
-
-
-const chartData = [
-  { name: 'Mon', organic: 4000, paid: 2400 },
-  { name: 'Tue', organic: 3000, paid: 1398 },
-  { name: 'Wed', organic: 2000, paid: 9800 },
-  { name: 'Thu', organic: 2780, paid: 3908 },
-  { name: 'Fri', organic: 1890, paid: 4800 },
-  { name: 'Sat', organic: 2390, paid: 3800 },
-  { name: 'Sun', organic: 3490, paid: 4300 },
-];
+import { apiFetch } from "../../../lib/apiFetch"
 
 export default function OverviewTab() {
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [days, setDays] = useState(7)
+
+  useEffect(() => {
+    fetchOverview()
+  }, [days])
+
+  const fetchOverview = async () => {
+    setLoading(true)
+    try {
+      const res = await apiFetch(`/admin/marketing/overview?days=${days}`)
+      if (res.ok) {
+        const json = await res.json()
+        setData(json.data || json)
+      }
+    } catch (err) {
+      console.error("Failed to fetch marketing overview", err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const stats = [
+    { label: 'Active Campaigns', value: data?.activeCampaigns || '0', change: '+2', trend: 'up', icon: BarChart3, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { label: 'Total Reach', value: data?.totalReach || '0', change: '+12%', trend: 'up', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { label: 'Total Clicks', value: data?.totalClicks || '0', change: '-3%', trend: 'down', icon: MousePointerClick, color: 'text-orange-500', bg: 'bg-orange-50' },
+    { label: 'Conversion Rate', value: data?.conversionRate || '0%', change: '+0.5%', trend: 'up', icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-50' }
+  ]
+
+  const chartData = data?.performanceChart || [
+    { name: 'Mon', organic: 0, paid: 0 },
+    { name: 'Tue', organic: 0, paid: 0 },
+    { name: 'Wed', organic: 0, paid: 0 },
+    { name: 'Thu', organic: 0, paid: 0 },
+    { name: 'Fri', organic: 0, paid: 0 },
+    { name: 'Sat', organic: 0, paid: 0 },
+    { name: 'Sun', organic: 0, paid: 0 },
+  ]
+
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-300">
-      
+    <div className="flex flex-col gap-6 animate-in fade-in duration-300 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl">
+          <Loader2 className="animate-spin text-orange-500" size={32} />
+        </div>
+      )}
+
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Active Campaigns', value: '12', change: '+2', trend: 'up', icon: BarChart3, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-          { label: 'Total Reach', value: '45.2k', change: '+12%', trend: 'up', icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
-          { label: 'Total Clicks', value: '8.4k', change: '-3%', trend: 'down', icon: MousePointerClick, color: 'text-orange-500', bg: 'bg-orange-50' },
-          { label: 'Conversion Rate', value: '4.2%', change: '+0.5%', trend: 'up', icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-50' }
-        ].map((stat, idx) => {
+        {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
             <div key={idx} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between">
@@ -53,12 +82,16 @@ export default function OverviewTab() {
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Campaign Performance</h3>
-              <p className="text-sm text-gray-500">Reach vs Clicks over the last 7 days</p>
+              <p className="text-sm text-gray-500">Reach vs Clicks over the selected period</p>
             </div>
-            <select className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-orange-500">
-              <option>Last 7 Days</option>
-              <option>Last 30 Days</option>
-              <option>This Year</option>
+            <select 
+              value={days}
+              onChange={(e) => setDays(Number(e.target.value))}
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-orange-500"
+            >
+              <option value={7}>Last 7 Days</option>
+              <option value={30}>Last 30 Days</option>
+              <option value={365}>This Year</option>
             </select>
           </div>
           

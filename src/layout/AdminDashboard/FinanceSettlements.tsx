@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-
 import { 
   FileText, 
   CreditCard,
@@ -14,12 +13,10 @@ import {
   Eye,
   ArrowUpRight,
   Loader2,
-  Download
+  Download,
+  Calendar
 } from "lucide-react"
-
-import api from "../../lib/api"
-
-
+import { apiFetch } from "../../lib/apiFetch"
 
 interface Settlement {
   _id: string;
@@ -38,6 +35,13 @@ export default function FinanceSettlements() {
   // Modal states
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [reportTypes, setReportTypes] = useState<{value: string, label: string}[]>([])
+  const [selectedReportType, setSelectedReportType] = useState("")
+  const [reportDateFrom, setReportDateFrom] = useState("")
+  const [reportDateTo, setReportDateTo] = useState("")
+  const [isDownloading, setIsDownloading] = useState(false)
   
   // Data states
   const [settlements, setSettlements] = useState<Settlement[]>([])
@@ -60,15 +64,18 @@ export default function FinanceSettlements() {
     setError("")
     try {
       const [statsRes, historyRes] = await Promise.all([
-        api.get('/admin/finance'),
-        api.get('/admin/payments').catch(err => {
+        apiFetch('/admin/finance'),
+        apiFetch('/admin/payments').catch(err => {
           console.warn('Failed to fetch payment history', err);
-          return { data: { data: [] } };
+          return null;
         })
       ]);
       
-      const result = statsRes.data?.data || statsRes.data || {}
-      const historyData = historyRes.data?.data || historyRes.data || [];
+      const statsJson = statsRes.ok ? await statsRes.json() : {};
+      const historyJson = historyRes && historyRes.ok ? await historyRes.json() : { data: [] };
+      
+      const result = statsJson.data || statsJson || {}
+      const historyData = historyJson.data || historyJson || [];
       
       setStats({
         totalRevenue: result.totalRevenue || 0,
@@ -89,7 +96,7 @@ export default function FinanceSettlements() {
         setSettlements([])
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || "Failed to fetch finance data")
+      setError(err.message || "Failed to fetch finance data")
     } finally {
       setLoading(false)
     }
@@ -98,15 +105,78 @@ export default function FinanceSettlements() {
   const handleProcessPayouts = async () => {
     setIsProcessing(true)
     try {
-      await api.post('/admin/finance/process-payouts', {})
-      // refetch after successful payout processing
+      const res = await apiFetch('/admin/finance/process-payouts', { method: 'POST' })
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.message || "Failed to process payouts")
+      }
       await fetchData()
       setIsPayoutModalOpen(false)
       alert("Payouts processed successfully.")
     } catch (err: any) {
-      alert(err.response?.data?.message || err.message || "Failed to process payouts")
+      alert(err.message || "Failed to process payouts")
     } finally {
       setIsProcessing(false)
+    }
+  }
+
+  const openReportModal = async () => {
+    setIsReportModalOpen(true)
+    try {
+      const res = await apiFetch('/admin/finance/reports/types')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.data && Array.isArray(data.data)) {
+          setReportTypes(data.data.map((t: any) => ({ value: t.value || t, label: t.label || t })))
+          if (data.data.length > 0) setSelectedReportType(data.data[0].value || data.data[0])
+        }
+      } else {
+        // Fallback
+        setReportTypes([
+          { value: 'settlements', label: 'Settlements Report' },
+          { value: 'commissions', label: 'Commissions Report' },
+          { value: 'payments', label: 'Payments Report' },
+          { value: 'refunds', label: 'Refunds Report' }
+        ])
+        setSelectedReportType('settlements')
+      }
+    } catch (err) {
+      setReportTypes([
+        { value: 'settlements', label: 'Settlements Report' },
+        { value: 'commissions', label: 'Commissions Report' },
+        { value: 'payments', label: 'Payments Report' },
+        { value: 'refunds', label: 'Refunds Report' }
+      ])
+      setSelectedReportType('settlements')
+    }
+  }
+
+  const handleDownloadReport = async () => {
+    setIsDownloading(true)
+    try {
+      const params = new URLSearchParams()
+      if (selectedReportType) params.append('type', selectedReportType)
+      if (reportDateFrom) params.append('dateFrom', reportDateFrom)
+      if (reportDateTo) params.append('dateTo', reportDateTo)
+
+      const res = await apiFetch(`/admin/finance/reports/download?${params.toString()}`)
+      if (!res.ok) throw new Error("Failed to download report")
+      
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `finance_${selectedReportType}_${new Date().toISOString().split('T')[0]}.csv`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      setIsReportModalOpen(false)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to download report")
+    } finally {
+      setIsDownloading(false)
     }
   }
 
@@ -168,7 +238,10 @@ export default function FinanceSettlements() {
           <p className="text-gray-500 mt-1">Manage partner payouts, refunds, and financial reporting.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm">
+          <button 
+            onClick={openReportModal}
+            className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 shadow-sm"
+          >
             <FileText size={18} />
             Download Reports
           </button>
@@ -472,13 +545,6 @@ export default function FinanceSettlements() {
                 <div className="flex items-center gap-4">
                   <h2 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Platform Commissions</h2>
                 </div>
-                
-                <div className="flex gap-3 w-full sm:w-auto">
-                  <button className="px-4 py-2 bg-theme-surface border border-gray-200 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition flex items-center gap-2 text-sm shadow-sm">
-                    <Download size={16} />
-                    Export CSV
-                  </button>
-                </div>
               </div>
 
               <div className="overflow-x-auto">
@@ -614,6 +680,88 @@ export default function FinanceSettlements() {
                   <CreditCard size={18} />
                 )}
                 {isProcessing ? "Processing..." : "Confirm Payouts"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Download Modal */}
+      {isReportModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-theme-surface rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="px-6 py-5 flex justify-between items-start border-b border-gray-100">
+              <div>
+                <h3 className="text-xl font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Download Reports</h3>
+                <p className="text-sm text-gray-500 mt-1">Export financial data to CSV.</p>
+              </div>
+              <button 
+                onClick={() => !isDownloading && setIsReportModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 transition p-1"
+                disabled={isDownloading}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+                <select 
+                  value={selectedReportType} 
+                  onChange={(e) => setSelectedReportType(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                >
+                  {reportTypes.map((type, idx) => (
+                    <option key={idx} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                  <input 
+                    type="date" 
+                    value={reportDateFrom}
+                    onChange={(e) => setReportDateFrom(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                  <input 
+                    type="date" 
+                    value={reportDateTo}
+                    onChange={(e) => setReportDateTo(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+              <button 
+                onClick={() => setIsReportModalOpen(false)}
+                disabled={isDownloading}
+                className="px-5 py-2.5 bg-theme-surface border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition shadow-sm disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDownloadReport}
+                disabled={isDownloading || !selectedReportType}
+                className="px-5 py-2.5 bg-emerald-600 text-theme-text font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isDownloading ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Download size={18} />
+                )}
+                {isDownloading ? "Downloading..." : "Download"}
               </button>
             </div>
           </div>

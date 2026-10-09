@@ -1,122 +1,101 @@
-import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
-
-import { Search, Filter, Percent, DollarSign, Tag, Loader2, Plus, Trash2, X } from "lucide-react"
-
-
-import { apiFetch } from '../../../lib/apiFetch';
+import { Search, Filter, Percent, Tag, Loader2, Plus, Trash2, X } from "lucide-react"
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function CouponsTab() {
-  const [coupons, setCoupons] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [coupons, setCoupons] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   
   // Modal states
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
   // Form states
-  const [code, setCode] = useState("");
-  const [discountType, setDiscountType] = useState("percentage");
-  const [discountValue, setDiscountValue] = useState("");
-  const [maxUses, setMaxUses] = useState("");
+  const [code, setCode] = useState("")
+  const [discountType, setDiscountType] = useState("percentage")
+  const [discountValue, setDiscountValue] = useState("")
+  const [maxUses, setMaxUses] = useState("")
 
   useEffect(() => {
-    fetchCoupons();
-  }, []);
+    fetchCoupons()
+  }, [])
 
   const fetchCoupons = async () => {
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError("")
     try {
-      const token = localStorage.getItem("authToken");
+      const res = await apiFetch(`/admin/marketing/coupons`)
+      if (!res.ok) throw new Error("Failed to fetch coupons")
+      const data = await res.json()
       
-      const res = await apiFetch(`/admin/vouchers`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (!res.ok) throw new Error("Failed to fetch vouchers");
-      const data = await res.json();
-      
-      const fetchedCoupons = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      const fetchedCoupons = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
       setCoupons(fetchedCoupons.length > 0 ? fetchedCoupons.map((c: any) => ({
         _id: c._id,
         code: c.code || 'UNKNOWN',
         type: c.discountType === 'percentage' ? '%' : 'flat',
         discount: c.discountType === 'percentage' ? `${c.discountValue}%` : `$${c.discountValue}`,
-        status: c.isActive ? 'Active' : 'Inactive',
+        status: c.isActive || c.status === 'Active' ? 'Active' : 'Inactive',
         uses: c.usageCount || 0,
         maxUses: c.maxUses || c.usageLimit || '∞',
         validUntil: c.validUntil ? new Date(c.validUntil).toLocaleDateString() : 'No expiry',
-      })) : []);
+      })) : [])
     } catch (err: any) {
-      setError(err.message);
-      setCoupons([]);
+      setError(err.message)
+      setCoupons([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleCreateCoupon = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
     try {
-      const token = localStorage.getItem("authToken");
-      
-      
       const payload = {
         code,
         discountType,
         discountValue: Number(discountValue),
-        maxUses: maxUses ? Number(maxUses) : 1000
-      };
+        maxUses: maxUses ? Number(maxUses) : null
+      }
 
-      const res = await apiFetch(`/admin/vouchers`, {
+      const res = await apiFetch(`/admin/marketing/coupons`, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("Failed to create voucher");
+      })
+      if (!res.ok) throw new Error("Failed to create coupon")
       
-      // Refresh list
-      fetchCoupons();
-      setIsModalOpen(false);
-      setCode("");
-      setDiscountValue("");
-      setMaxUses("");
+      fetchCoupons()
+      setIsModalOpen(false)
+      setCode("")
+      setDiscountValue("")
+      setMaxUses("")
     } catch (err: any) {
-      alert("Error creating coupon: " + err.message);
+      alert("Error creating coupon: " + err.message)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this coupon?")) return;
+    if (!confirm("Are you sure you want to delete this coupon?")) return
     try {
-      const token = localStorage.getItem("authToken");
-      
-      const res = await apiFetch(`/admin/vouchers/${id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error("Failed to delete");
-      fetchCoupons();
+      const res = await apiFetch(`/admin/marketing/coupons/${id}`, {
+        method: "DELETE"
+      })
+      if (!res.ok) throw new Error("Failed to delete")
+      fetchCoupons()
     } catch (err: any) {
-      alert("Error deleting coupon: " + err.message);
+      alert("Error deleting coupon: " + err.message)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="animate-spin text-orange-500" size={32} />
       </div>
-    );
+    )
   }
 
   return (

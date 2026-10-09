@@ -1,9 +1,6 @@
-import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState } from "react"
-
 import { ArrowLeft, Check, Info, Loader2 } from "lucide-react"
-
-
+import { apiFetch } from '../../../lib/apiFetch'
 
 export interface RoleData {
   _id?: string;
@@ -25,6 +22,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [selectedPerms, setSelectedPerms] = useState<string[]>(roleData?.permissions || []);
 
   const modules = [
     { name: "Dashboard & Analytics", desc: "Access to overview and reports.", perms: ["View Analytics", "Export Reports"] },
@@ -35,6 +33,19 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
     { name: "System Settings", desc: "Manage global settings.", perms: ["View Settings", "Edit Configuration"] }
   ];
 
+  const handlePermToggle = (perm: string) => {
+    setSelectedPerms(prev => prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm])
+  }
+
+  const handleSelectAll = () => {
+    const all = modules.flatMap(m => m.perms)
+    if (selectedPerms.length === all.length) {
+      setSelectedPerms([])
+    } else {
+      setSelectedPerms(all)
+    }
+  }
+
   const handleSave = async () => {
     if (!name) {
       setError("Role name is required");
@@ -44,26 +55,18 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("authToken");
-      
-      
       const payload = {
         name,
         description,
-        // Mock permissions since we don't have a state for all checkboxes yet in this simplified version
-        permissions: ["read", "write"] 
+        permissions: selectedPerms 
       };
 
       const url = isEditing 
-        ? `${API_BASE_URL}/admin/access-control/roles/${roleData._id}` 
-        : `${API_BASE_URL}/admin/access-control/roles`;
+        ? `/admin/access-control/roles/${roleData._id}` 
+        : `/admin/access-control/roles`;
         
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method: isEditing ? "PUT" : "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(payload)
       });
       
@@ -76,11 +79,6 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
       
     } catch (err: any) {
       setError(err.message);
-      // For mock UI purposes, act like it succeeded even if API fails since backend might not exist yet
-      setSuccess(true);
-      setTimeout(() => {
-        onCancel();
-      }, 1000);
     } finally {
       setLoading(false);
     }
@@ -125,7 +123,7 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
 
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
-          Warning: Could not connect to API ({error}). Pretending it succeeded.
+          Warning: Could not connect to API ({error}). No data to display.
         </div>
       )}
 
@@ -174,40 +172,53 @@ export default function RoleForm({ roleData, onCancel }: RoleFormProps) {
           <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-theme-text" style={{ fontFamily: 'serif' }}>Permissions Configuration</h3>
-              <button className="text-sm font-medium text-orange-600 hover:text-orange-700 transition">
+              <button onClick={handleSelectAll} className="text-sm font-medium text-orange-600 hover:text-orange-700 transition">
                 Select All
               </button>
             </div>
             
             <div className="space-y-6">
-              {modules.map((mod, idx) => (
-                <div key={idx} className="border border-gray-100 rounded-xl overflow-hidden">
-                  <div className="bg-gray-50/50 px-5 py-3 border-b border-gray-100 flex justify-between items-center">
-                    <div>
-                      <h4 className="font-bold text-theme-text text-sm">{mod.name}</h4>
-                      <p className="text-xs text-gray-500">{mod.desc}</p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" defaultChecked={isEditing && idx < 3} />
-                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                    </label>
-                  </div>
-                  <div className="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {mod.perms.map((perm, pIdx) => (
-                      <label key={pIdx} className="flex items-center gap-3 cursor-pointer group">
-                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
-                          isEditing && (idx < 2 || pIdx === 0) 
-                            ? 'bg-emerald-500 border-emerald-500 text-white' 
-                            : 'border-gray-300 bg-white group-hover:border-emerald-500'
-                        }`}>
-                          {(isEditing && (idx < 2 || pIdx === 0)) && <Check size={14} />}
-                        </div>
-                        <span className="text-sm text-gray-700 select-none">{perm}</span>
+              {modules.map((mod, idx) => {
+                const isAllSelected = mod.perms.every(p => selectedPerms.includes(p))
+                return (
+                  <div key={idx} className="border border-gray-100 rounded-xl overflow-hidden">
+                    <div className="bg-gray-50/50 px-5 py-3 border-b border-gray-100 flex justify-between items-center">
+                      <div>
+                        <h4 className="font-bold text-theme-text text-sm">{mod.name}</h4>
+                        <p className="text-xs text-gray-500">{mod.desc}</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" checked={isAllSelected} onChange={() => {
+                          if (isAllSelected) {
+                            setSelectedPerms(prev => prev.filter(p => !mod.perms.includes(p)))
+                          } else {
+                            setSelectedPerms(prev => [...new Set([...prev, ...mod.perms])])
+                          }
+                        }} />
+                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                       </label>
-                    ))}
+                    </div>
+                    <div className="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {mod.perms.map((perm, pIdx) => {
+                        const isChecked = selectedPerms.includes(perm)
+                        return (
+                          <label key={pIdx} className="flex items-center gap-3 cursor-pointer group">
+                            <input type="checkbox" className="sr-only" checked={isChecked} onChange={() => handlePermToggle(perm)} />
+                            <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                              isChecked 
+                                ? 'bg-emerald-500 border-emerald-500 text-white' 
+                                : 'border-gray-300 bg-white group-hover:border-emerald-500'
+                            }`}>
+                              {isChecked && <Check size={14} />}
+                            </div>
+                            <span className="text-sm text-gray-700 select-none">{perm}</span>
+                          </label>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
           </div>

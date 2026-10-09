@@ -1,33 +1,48 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
-
 import { LayoutDashboard, Package, Truck, Database, Users, Tag, Navigation, Wallet, BarChart2, ArrowUpRight, ArrowDownRight } from "lucide-react"
-
+import { useState, useEffect } from "react"
+import { useCurrency } from "../../../context/CurrencyContext"
+import { apiFetch } from "../../../lib/apiFetch"
 
 import OverviewTab from "./OverviewTab"
-
 import ProductCatalogTab from "./ProductCatalogTab"
-
 import BulkOrdersTab from "./BulkOrdersTab"
-
 import WarehouseTab from "./WarehouseTab"
-
 import ClientsTab from "./ClientsTab"
-
 import LogisticsTab from "./LogisticsTab"
-
 import FinanceTab from "./FinanceTab"
-
 import ReportsTab from "./ReportsTab"
-
-
 
 export default function SupplierPanelLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { formatPrice } = useCurrency();
   
+  const [overviewData, setOverviewData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   const pathParts = location.pathname.replace(/\/$/, '').split('/');
   const lastPart = pathParts[pathParts.length - 1];
   const currentTab = lastPart === 'supplier-panel' ? 'overview' : lastPart;
+
+  useEffect(() => {
+    fetchOverview();
+  }, []);
+
+  const fetchOverview = async () => {
+    try {
+      setLoading(true);
+      const res = await apiFetch('/admin/supplier-panel/overview');
+      if (res.ok) {
+        const data = await res.json();
+        setOverviewData(data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch supplier overview", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard, path: '/admin/dashboard/supplier-panel' },
@@ -56,44 +71,42 @@ export default function SupplierPanelLayout() {
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Total Revenue</p>
-            <h3 className="text-3xl font-bold text-theme-text">$89,240</h3>
+            <h3 className="text-3xl font-bold text-theme-text">
+              {loading ? "..." : formatPrice(overviewData?.stats?.totalRevenue || 0)}
+            </h3>
           </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            +18%
-          </div>
+          {overviewData?.stats?.revenueChangePct !== undefined && (
+            <div className={`flex items-center font-medium text-sm gap-1 ${overviewData.stats.revenueChangePct >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+              {overviewData.stats.revenueChangePct >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {overviewData.stats.revenueChangePct > 0 && '+'}{overviewData.stats.revenueChangePct}%
+            </div>
+          )}
         </div>
         
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Active Bulk Orders</p>
-            <h3 className="text-3xl font-bold text-theme-text">127</h3>
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.activeOrders || 0)}</h3>
           </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            +22%
-          </div>
+          {overviewData?.stats?.ordersChangePct !== undefined && (
+            <div className={`flex items-center font-medium text-sm gap-1 ${overviewData.stats.ordersChangePct >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+              {overviewData.stats.ordersChangePct >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {overviewData.stats.ordersChangePct > 0 && '+'}{overviewData.stats.ordersChangePct}%
+            </div>
+          )}
         </div>
 
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Low Stock Items</p>
-            <h3 className="text-3xl font-bold text-theme-text">18</h3>
-          </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            -5%
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.lowStockItems || 0)}</h3>
           </div>
         </div>
 
         <div className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between h-[120px]">
           <div>
             <p className="text-sm font-medium text-gray-500 mb-1">Active Clients</p>
-            <h3 className="text-3xl font-bold text-theme-text">342</h3>
-          </div>
-          <div className="flex items-center text-emerald-500 font-medium text-sm gap-1">
-            <ArrowUpRight size={16} />
-            +12%
+            <h3 className="text-3xl font-bold text-theme-text">{loading ? "..." : (overviewData?.stats?.activeClients || 0)}</h3>
           </div>
         </div>
       </div>
@@ -123,8 +136,8 @@ export default function SupplierPanelLayout() {
       {/* Main Content Router */}
       <div className="flex-1 mt-2">
         <Routes>
-          <Route path="*" element={<OverviewTab />} />
-          <Route path="supplier-panel" element={<OverviewTab />} />
+          <Route path="*" element={<OverviewTab recentOrders={overviewData?.recentOrders || []} />} />
+          <Route path="supplier-panel" element={<OverviewTab recentOrders={overviewData?.recentOrders || []} />} />
           <Route path="supplier-panel/catalog" element={<ProductCatalogTab />} />
           <Route path="supplier-panel/orders" element={<BulkOrdersTab />} />
           <Route path="supplier-panel/warehouse" element={<WarehouseTab />} />

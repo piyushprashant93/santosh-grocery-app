@@ -1,35 +1,25 @@
-import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
-
-import { Search, Filter, Send, MoreVertical, CheckCircle2, Clock, Plus, X, Loader2 } from "lucide-react"
-
-
-import { apiFetch } from '../../../lib/apiFetch';
+import { Search, Filter, Send, MoreVertical, CheckCircle2, Clock, X, Loader2 } from "lucide-react"
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function NotificationsTab() {
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [notifications, setNotifications] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    fetchNotifications()
+  }, [])
 
   const fetchNotifications = async () => {
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError("")
     try {
-      const token = localStorage.getItem("authToken");
+      const res = await apiFetch(`/admin/marketing/notifications`)
+      if (!res.ok) throw new Error("Failed to fetch notifications")
+      const data = await res.json()
       
-      const res = await apiFetch(`/admin/notifications`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (!res.ok) throw new Error("Failed to fetch notifications");
-      const data = await res.json();
-      
-      const fetchedNotifs = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+      const fetchedNotifs = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
       setNotifications(fetchedNotifs.length > 0 ? fetchedNotifs.map((n: any) => ({
         id: n._id || n.id,
         title: n.title || "Notification",
@@ -38,9 +28,9 @@ export default function NotificationsTab() {
         audience: n.audience || n.targetRole || "N/A",
         sentAt: n.createdAt ? new Date(n.createdAt).toLocaleString() : "N/A",
         clicks: n.clicks !== undefined ? n.clicks : null
-      })) : []);
+      })) : [])
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message)
       // Fallback to mock data
       setNotifications([
         {
@@ -70,70 +60,55 @@ export default function NotificationsTab() {
           sentAt: "2024-06-20 12:00 PM",
           clicks: null,
         }
-      ]);
+      ])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [targetRole, setTargetRole] = useState("customer");
+  const [title, setTitle] = useState("")
+  const [message, setMessage] = useState("")
+  const [targetRole, setTargetRole] = useState("customer")
 
   const handleSendPush = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
     try {
-      const token = localStorage.getItem("authToken");
-      
-      
       const payload = {
         title,
         message,
         targetRole
-      };
+      }
 
       const res = await apiFetch(`/admin/marketing/notifications/send`, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("Failed to send push notification");
+      })
+      if (!res.ok) throw new Error("Failed to send push notification")
       
-      // Update mock list for UI feedback
-      setNotifications([{
-        id: Date.now(),
-        title,
-        message,
-        status: "Sent",
-        audience: targetRole,
-        sentAt: new Date().toLocaleString(),
-        clicks: 0
-      }, ...notifications]);
+      // Refresh list
+      fetchNotifications()
       
-      setIsModalOpen(false);
-      setTitle("");
-      setMessage("");
-      setTargetRole("customer");
+      setIsModalOpen(false)
+      setTitle("")
+      setMessage("")
+      setTargetRole("customer")
     } catch (err: any) {
-      alert("Error sending push notification: " + err.message);
+      alert("Error sending push notification: " + err.message)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="animate-spin text-blue-500" size={32} />
       </div>
-    );
+    )
   }
 
   return (

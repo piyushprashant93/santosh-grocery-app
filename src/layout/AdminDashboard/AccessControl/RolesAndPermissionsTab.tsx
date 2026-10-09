@@ -1,36 +1,25 @@
-import { API_BASE_URL, BASE_URL } from '../../../config';
 import { useState, useEffect } from "react"
-
-import { Shield, Users, Edit, Loader2 } from "lucide-react"
-
-
-import { apiFetch } from '../../../lib/apiFetch';
+import { Shield, Users, Edit, Loader2, Trash2 } from "lucide-react"
+import { apiFetch } from '../../../lib/apiFetch'
 
 export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (role: any) => void }) {
-  const [roles, setRoles] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [roles, setRoles] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
   useEffect(() => {
-    fetchRoles();
-  }, []);
+    fetchRoles()
+  }, [])
 
   const fetchRoles = async () => {
-    setLoading(true);
-    setError("");
+    setLoading(true)
+    setError("")
     try {
-      const token = localStorage.getItem("authToken");
+      const res = await apiFetch(`/admin/access-control/roles`)
+      if (!res.ok) throw new Error("Failed to fetch roles")
+      const data = await res.json()
       
-      const res = await apiFetch(`/admin/access-control/roles`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (!res.ok) throw new Error("Failed to fetch roles");
-      const data = await res.json();
-      
-      const fetchedRoles = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
-      // Map API data or fallback to some defaults if empty for visual purposes while testing
+      const fetchedRoles = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : [])
       setRoles(fetchedRoles.length > 0 ? fetchedRoles.map((r: any, idx: number) => ({
         _id: r._id,
         name: r.name || 'Unnamed Role',
@@ -40,28 +29,32 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
         score: r.securityScore || null,
         iconColor: idx % 2 === 0 ? "text-emerald-500" : "text-sky-500",
         iconBg: idx % 2 === 0 ? "bg-emerald-50" : "bg-sky-50",
-      })) : [
-        { name: "Super Admin", type: "System Default", admins: 1, description: "Full system access and security controls.", score: 100, iconColor: "text-purple-500", iconBg: "bg-purple-50" },
-        { name: "Admin", type: "System Default", admins: 3, description: "Manage users, partners, and analytics.", score: 95, iconColor: "text-emerald-500", iconBg: "bg-emerald-50" }
-      ]);
+      })) : [])
     } catch (err: any) {
-      setError(err.message);
-      // Fallback to mock data on error so UI doesn't look broken during development without backend
-      setRoles([
-        { name: "Super Admin", type: "System Default", admins: 1, description: "Full system access and security controls.", score: 100, iconColor: "text-purple-500", iconBg: "bg-purple-50" },
-        { name: "Admin", type: "System Default", admins: 3, description: "Manage users, partners, and analytics.", score: 95, iconColor: "text-emerald-500", iconBg: "bg-emerald-50" }
-      ]);
+      setError(err.message)
+      setRoles([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this role?")) return
+    try {
+      const res = await apiFetch(`/admin/access-control/roles/${id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error("Failed to delete role")
+      fetchRoles()
+    } catch (err: any) {
+      alert("Error deleting role: " + err.message)
+    }
+  }
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="animate-spin text-orange-500" size={32} />
       </div>
-    );
+    )
   }
 
   return (
@@ -106,17 +99,17 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
 
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm font-medium border border-red-100">
-          Warning: Could not connect to API ({error}). Showing mock data.
+          Warning: Could not connect to API ({error}). No data to display.
         </div>
       )}
 
       {/* Role Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {roles.map((role, idx) => (
-          <div key={idx} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between hover:shadow-md transition">
+          <div key={role._id || idx} className="bg-theme-surface rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-between hover:shadow-md transition">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${role.iconBg} ${role.iconColor}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${role.iconBg || "bg-gray-100"} ${role.iconColor || "text-gray-500"}`}>
                   <Shield size={20} />
                 </div>
                 <div>
@@ -138,13 +131,19 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
               )}
             </div>
             <p className="text-sm text-gray-600 mb-6">{role.description}</p>
-            <div className="pt-4 border-t border-gray-100 flex justify-end">
+            <div className="pt-4 border-t border-gray-100 flex justify-end gap-2">
               <button 
                 onClick={() => onEditRole(role)}
                 className="flex items-center gap-2 px-4 py-2 bg-theme-surface border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition shadow-sm"
               >
                 <Edit size={16} />
-                Edit Permissions
+                Edit
+              </button>
+              <button 
+                onClick={() => handleDelete(role._id)}
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 text-sm font-medium rounded-lg hover:bg-red-100 transition shadow-sm"
+              >
+                <Trash2 size={16} />
               </button>
             </div>
           </div>
@@ -152,7 +151,7 @@ export default function RolesAndPermissionsTab({ onEditRole }: { onEditRole: (ro
         
         {/* Create New Role Card */}
         <div 
-          onClick={() => onEditRole("New Role")}
+          onClick={() => onEditRole(null)}
           className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 p-5 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 hover:border-gray-300 transition text-gray-500 min-h-[200px]"
         >
           <div className="w-12 h-12 rounded-full bg-theme-surface shadow-sm flex items-center justify-center mb-3">
